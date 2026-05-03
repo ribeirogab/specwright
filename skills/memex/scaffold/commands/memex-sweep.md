@@ -184,6 +184,37 @@ The awk now treats *any* non-blank, non-heading line as content — including it
 
 WARN-level — ask the user before any change.
 
+### 7. Isolated specs
+
+A spec whose frontmatter+body has **zero outgoing wikilinks** beyond its own `plan-*` / `tasks-*` siblings is disconnected from the knowledge graph — the workflow unit shipped without recording what learnings/conventions/rules it touched. The `related:` field exists exactly to record those connections; an empty (or absent) `related:` plus zero body wikilinks is a graph island.
+
+This check uses the same `strip_code` preprocessor as checks 1–3 to ignore wikilinks inside fenced code blocks or inline backticks.
+
+```bash
+find context/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null | while read -r spec_dir; do
+  folder=$(basename "$spec_dir")
+  slug=$(echo "$folder" | sed 's/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-//')
+  spec="$spec_dir/spec-$slug.md"
+  [ -f "$spec" ] || continue
+  # Count outgoing wikilinks excluding the plan-/tasks- sibling pair, code-block-aware
+  count=$(awk '
+      /^```/ { in_fence = !in_fence; next }
+      !in_fence { gsub(/`[^`]*`/, ""); print }
+    ' "$spec" \
+    | grep -oE '\[\[[^]]+\]\]' \
+    | grep -vE "\[\[(\.\./)*(plan|tasks)-" \
+    | sort -u | wc -l | tr -d ' ')
+  if [ "$count" = "0" ]; then
+    echo "ISLAND: $spec — zero outgoing wikilinks beyond plan/tasks pair."
+    echo "  Suggest: /memex-link $folder"
+  fi
+done
+```
+
+An empty result is healthy. Each `ISLAND:` line is a finding to surface to the user. The sweep does not auto-fix; running `/memex-link <folder>` is the suggested next step (it analyzes the spec and offers `related:` candidates interactively).
+
+WARN-level — never blocks. Ask the user: review the spec and run `/memex-link`, or explicitly bless the spec as standalone (no action required, the flag will recur on next sweep until `related:` is populated).
+
 ## Output format
 
 ```
@@ -210,8 +241,11 @@ PASS
 ### Empty MOC sections (1)
 - `_index/conventions.md`: ## Tooling — no entries
 
+### Isolated specs (1)
+- `specs/2026-04-30-opensource-readiness/` — zero outgoing wikilinks beyond plan/tasks. Suggest: `/memex-link 2026-04-30-opensource-readiness`
+
 ### Summary
-14 findings across 6 categories. Walk through them?
+15 findings across 7 categories. Walk through them?
 ```
 
 After the table, walk the user through each finding **one item at a time** and apply the chosen action. Stop on user request. Do not batch-apply.
