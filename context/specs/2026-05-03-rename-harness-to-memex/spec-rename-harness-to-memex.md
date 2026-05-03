@@ -1,12 +1,12 @@
 ---
-status: draft
+status: shipped
 feature: rename-harness-to-memex
 created: 2026-05-03
-shipped: null
+shipped: 2026-05-03
 ---
 # Rename Harness Skill to Memex — Spec
 
-**Status:** Draft
+**Status:** Shipped (2026-05-03)
 **Scope:** Rename the `harness` skill (and every dependent identifier — bundled skills, slash commands, symlinks, vault references) to `memex` across this repo, while preserving the `harness` term where it refers to the published *harness engineering* literature (Fowler / Anthropic / OpenAI 2025-26 essays) rather than this skill.
 
 ## Context
@@ -44,7 +44,7 @@ The `harness` identifier is overloaded: it names both (a) this repo's flagship s
 
 ## Acceptance Criteria
 
-- [ ] `find . -name "*harness*" -not -path "./.git/*" -not -path "./node_modules/*"` returns **only** these 5 expected paths and nothing else:
+- [x] `find . -name "*harness*" -not -path "./.git/*" -not -path "./node_modules/*"` returns **only** these 5 expected paths and nothing else:
   - `./context/learnings/harness-engineering-foundations.md` (literature)
   - `./context/specs/2026-05-03-rename-harness-to-memex` (this spec's folder — slug contains "harness" because that's the topic)
   - `./context/specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex.md`
@@ -52,11 +52,11 @@ The `harness` identifier is overloaded: it names both (a) this repo's flagship s
   - `./context/specs/2026-05-03-rename-harness-to-memex/tasks-rename-harness-to-memex.md`
 
   Note: the `2026-04-30-opensource-readiness/` folder is preserved as historical record (Non-Goal #2), but its files do **not** match `find -name "*harness*"` because their basenames don't contain that word — only their content does. AC #2 below covers content survivors.
-- [ ] `grep -rIn "harness" AGENTS.md README.md context/constitution.md context/_index/ context/templates/ context/conventions/ context/rules/` returns zero lines (no leftover skill references in user-facing/active vault docs).
-- [ ] `grep -rIn "harness" context/learnings/` returns only mentions inside `harness-engineering-foundations.md` and the per-occurrence-reviewed survivors in the three mixed-context notes — every survivor is annotated in the commit message with a one-line justification.
-- [ ] Every entry under `.claude/skills/` resolves: `for f in .claude/skills/*; do [ -e "$f" ] || echo BROKEN $f; done` prints nothing.
-- [ ] Every renamed SKILL.md has `name:` matching the new directory: `memex`, `memex-recall`, `memex-brainstorming`, `memex-writing-plans` — verified by `grep -h '^name:' .agents/skills/memex-*/SKILL.md skills/memex/SKILL.md`.
-- [ ] Every renamed slash command file either has no `name:` field or has one that matches its basename — verified by:
+- [x] `grep -rIn "harness" AGENTS.md README.md context/constitution.md context/_index/ context/templates/ context/conventions/ context/rules/` returns zero lines (no leftover skill references in user-facing/active vault docs).
+- [x] `grep -rIn "harness" context/learnings/` returns only mentions inside `harness-engineering-foundations.md` and the per-occurrence-reviewed survivors in the three mixed-context notes — every survivor is annotated in the commit message with a one-line justification.
+- [x] Every entry under `.claude/skills/` resolves: `for f in .claude/skills/*; do [ -e "$f" ] || echo BROKEN $f; done` prints nothing.
+- [x] Every renamed SKILL.md has `name:` matching the new directory: `memex`, `memex-recall`, `memex-brainstorming`, `memex-writing-plans` — verified by `grep -h '^name:' .agents/skills/memex-*/SKILL.md skills/memex/SKILL.md`.
+- [x] Every renamed slash command file either has no `name:` field or has one that matches its basename — verified by:
 
   ```bash
   for f in .claude/commands/memex-*.md; do
@@ -66,10 +66,10 @@ The `harness` identifier is overloaded: it names both (a) this repo's flagship s
   ```
 
   Expected: empty output. Also `ls .claude/commands/ | grep -E '^harness-'` returns nothing (no leftover prefixes).
-- [ ] The 15 checks in `skills/memex/references/validation.md` pass (15/15) when run against this repo.
-- [ ] `git log --oneline | head -1` shows the rename commits on a branch named `feat/rename-harness-to-memex`, **not** `main`.
-- [ ] A reflection learning note (or an explicit "no new learnings" line in the closing PR description) exists per the project's after-completing-a-spec rule.
-- [ ] The spec file's frontmatter has `status: shipped` and a non-null `shipped:` date once the work is merged.
+- [x] The 15 checks in `skills/memex/references/validation.md` pass (15/15) when run against this repo.
+- [x] `git log --oneline | head -1` shows the rename commits on a branch named `feat/rename-harness-to-memex`, **not** `main`.
+- [x] A reflection learning note (or an explicit "no new learnings" line in the closing PR description) exists per the project's after-completing-a-spec rule.
+- [x] The spec file's frontmatter has `status: shipped` and a non-null `shipped:` date once the work is merged.
 
 ## Risks and Mitigations
 

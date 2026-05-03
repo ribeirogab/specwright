@@ -18,4 +18,5 @@ _No active specs. When a request requires the spec flow, link the new spec here.
 
 ## Shipped
 
+- [[../specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex|rename-harness-to-memex]] — full rename of the flagship skill (`harness/` → `memex/`), bundled skills (`harness-*` → `memex-*`), slash commands, and active vault references. Preserves the `harness engineering` literature term and the shipped 2026-04-30 spec. Shipped 2026-05-03.
 - [[../specs/2026-04-30-opensource-readiness/spec-opensource-readiness|opensource-readiness]] — added LICENSE, README, CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, NOTICE.md, .github templates, and restored vendored opensource-guide-coach LICENSE so the repo can be safely published as MIT-licensed open source. Shipped 2026-04-30.
