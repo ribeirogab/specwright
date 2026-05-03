@@ -3,11 +3,14 @@ status: draft
 feature: {{kebab-slug-of-feature}}
 created: {{YYYY-MM-DD}}
 shipped: null
+related: []
 ---
 # {{Feature Name}} — Spec
 
 **Status:** Draft
 **Scope:** {{one-sentence scope statement}}
+
+> **Note on `related:` frontmatter** — populate the `related:` list with wikilinks to learnings, conventions, or rules this spec touches, reads, or modifies. Empty `related:` is allowed only if the spec genuinely has no vault dependencies; `/memex-sweep` will flag isolated specs.
 
 ## Context
 

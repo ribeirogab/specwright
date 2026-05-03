@@ -3,6 +3,8 @@ status: shipped
 feature: opensource-readiness
 created: 2026-04-30
 shipped: 2026-04-30
+related:
+  - "[[../../learnings/vendoring-a-single-skill-loses-upstream-license]]"
 ---
 # Opensource Readiness — Spec
 

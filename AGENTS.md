@@ -30,7 +30,7 @@ If you discovered something non-obvious during implementation — a gotcha, a co
 When a spec is shipped (all tasks in `tasks-<slug>.md` done, spec marked `shipped`), always run an explicit reflection step before closing out — do not skip this:
 
 1. Ask yourself: "What did I learn implementing this that wasn't obvious from the spec?" Consider gotchas hit, constraints discovered, surprising framework/library behavior, decisions that reversed mid-implementation, and anything a future implementer would waste time rediscovering.
-2. If there is at least one useful learning, create an atomic note in `context/learnings/` per learning (one concept per note) using `context/templates/learning.md`, and link it back to the spec folder with a wikilink. Add each new note to `context/_index/learnings.md` under the appropriate category.
+2. If there is at least one useful learning, create an atomic note in `context/learnings/` per learning (one concept per note) using `context/templates/learning.md`. The new learning's `related:` field MUST include a wikilink back to the spec — bidirectional backlink is not optional. Symmetrically, if the spec gained a `related:` entry pointing at the new learning, add it. Add each new note to `context/_index/learnings.md` under the appropriate category.
 3. If nothing non-obvious came up, say so explicitly in the final report ("No new learnings from this spec") — silence is not the same as reflection.
 
 ## Commands (most used)
