@@ -9,7 +9,7 @@ created: 2026-04-30
 ---
 # Skill directory layout
 
-Every skill in this repo (under `skills/<name>/` and the dogfooded copies in `.claude/skills/<name>/`) must follow the canonical layout below. The structure is taken directly from Anthropic's platform docs and is what `harness-recall`, the skill-creator, and Claude's own discovery expect to find.
+Every skill in this repo (under `skills/<name>/` and the dogfooded copies in `.claude/skills/<name>/`) must follow the canonical layout below. The structure is taken directly from Anthropic's platform docs and is what `memex-recall`, the skill-creator, and Claude's own discovery expect to find.
 
 ## Why
 
@@ -51,7 +51,7 @@ skills/<name>/
 
 - `.claude/skills/skill-creator/` — `SKILL.md` + `agents/` + `assets/` + `eval-viewer/` + `references/` + `scripts/`. Note: `agents/` and `eval-viewer/` are non-canonical extensions; they work because the `SKILL.md` references them explicitly.
 - `.claude/skills/opensource-guide-coach/` — minimal: `SKILL.md` + `references/`.
-- `skills/harness/` — `SKILL.md` + `references/` + `scaffold/`. The `scaffold/` directory is a project-specific extension for the harness's "ship assets to a target repo" behavior — it is not part of Anthropic's canonical layout, but is permitted because it is referenced from `SKILL.md`.
+- `skills/memex/` — `SKILL.md` + `references/` + `scaffold/`. The `scaffold/` directory is a project-specific extension for the memex's "ship assets to a target repo" behavior — it is not part of Anthropic's canonical layout, but is permitted because it is referenced from `SKILL.md`.
 
 ### Anti-patterns
 

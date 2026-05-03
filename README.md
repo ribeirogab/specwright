@@ -8,23 +8,23 @@ Reusable agent skills for any tool that supports the open agent skills standard 
 
 ## Skills
 
-### `harness`
+### `memex`
 
-Idempotently scaffolds an agent harness into any repository — a `context/` knowledge vault, an `AGENTS.md` (with a `CLAUDE.md` symlink for back-compat), spec/plan/task templates, plus a set of bundled `harness-*` slash commands (open-pr, learn, spec, review-spec, sweep) and companion skills (brainstorming, recall, writing-plans). Audit-first, autonomous-fix, with a Phase-5 validator. Safe to re-run.
+Idempotently scaffolds a memex — an externalized, navigable project memory for agents — into any repository: a `context/` knowledge vault, an `AGENTS.md` (with a `CLAUDE.md` symlink for back-compat), spec/plan/task templates, plus a set of bundled `memex-*` slash commands (open-pr, learn, spec, review-spec, sweep) and companion skills (brainstorming, recall, writing-plans). Audit-first, autonomous-fix, with a Phase-5 validator. Safe to re-run.
 
 **Install:**
 
 ```bash
-npx skills add ribeirogab/agent-skills --skill harness
+npx skills add ribeirogab/agent-skills --skill memex
 ```
 
-**Use:** point an agent at any repo where you want the harness installed.
+**Use:** point an agent at any repo where you want the memex installed.
 
-> "Audit the harness in this repo and scaffold whatever is missing."
+> "Audit the memex in this repo and scaffold whatever is missing."
 
-After the first run the repo has a working `context/` vault, the `harness-*` commands, and the companion skills, all dogfood-tested by the harness's own 13-check validator.
+After the first run the repo has a working `context/` vault, the `memex-*` commands, and the companion skills, all dogfood-tested by the memex's own 13-check validator.
 
-**Source:** [`skills/harness/SKILL.md`](skills/harness/SKILL.md)
+**Source:** [`skills/memex/SKILL.md`](skills/memex/SKILL.md)
 
 ---
 
@@ -55,7 +55,7 @@ What matters for users is just `skills/`. Each subfolder is one publishable skil
 ```
 agent-skills/
 ├── skills/
-│   ├── harness/
+│   ├── memex/
 │   └── skill-improver/
 ├── LICENSE                    # MIT, this repository's original work
 ├── NOTICE.md                  # attribution for any vendored content inside skills/
@@ -65,7 +65,7 @@ agent-skills/
 └── README.md
 ```
 
-The repository also contains `.agents/`, `.claude/`, `context/`, and `evals/` — local-only dirs used by the maintainer to dogfood the harness, run skill evaluations, and store personal project notes. They are not part of the published surface and are not what `npx skills add` installs.
+The repository also contains `.agents/`, `.claude/`, `context/`, and `evals/` — local-only dirs used by the maintainer to dogfood the memex, run skill evaluations, and store personal project notes. They are not part of the published surface and are not what `npx skills add` installs.
 
 ## License
 

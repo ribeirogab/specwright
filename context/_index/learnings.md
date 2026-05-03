@@ -18,7 +18,7 @@ Learnings here are specific to agent-skills. Code style conventions live in `[[c
 
 ### Harness engineering (the runtime pattern, not skill authoring)
 
-- [[../learnings/harness-engineering-foundations|Harness engineering — the foundation behind this repo]] — the three articles (Anthropic, Fowler, OpenAI) that inform the existing `harness/` skill.
+- [[../learnings/harness-engineering-foundations|Harness engineering — the foundation behind this repo]] — the three articles (Anthropic, Fowler, OpenAI) that inform the existing `memex/` skill (the literature pattern is still called *harness engineering*; only the skill was renamed — see [[../learnings/memex]]).
 - [[../learnings/memex|Memex — Vannevar Bush's 1945 personal memory extender]] — the canonical name for "externalized, navigable personal memory"; conceptual frame for the `context/` vault and the rename of `harness` → `memex`.
 - [[../learnings/agents-md-as-map-not-encyclopedia|AGENTS.md is a map, not an encyclopedia]] — keep root agent instructions ~100 lines and point into `context/`; the four failure modes of the monolithic approach.
 - [[../learnings/mechanical-enforcement-over-prose|Mechanical enforcement beats prose rules]] — runnable checks > written rules; feedforward + feedback; embed remediation in error messages.

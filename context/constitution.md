@@ -10,21 +10,21 @@ If you are tempted to violate a rule here, stop and open a discussion first. Nev
 
 ## Why agent-skills exists
 
-`agent-skills` is the author's personal collection of Claude Code skills and slash commands. It exists so that high-leverage agentic workflows (scaffolding agent harnesses, recalling project context, structured brainstorming, plan-writing, etc.) can be developed once, version-controlled, and re-used across every other repo via symlinks.
+`agent-skills` is the author's personal collection of Claude Code skills and slash commands. It exists so that high-leverage agentic workflows (scaffolding memexes, recalling project context, structured brainstorming, plan-writing, etc.) can be developed once, version-controlled, and re-used across every other repo via symlinks.
 
-The flagship skill in this repo is `harness/`, which idempotently installs an agent infrastructure (`context/` vault, `AGENTS.md`, spec templates, bundled skills/commands) into any target repo. The repo's purpose is therefore twofold: (1) be a usable library of skills, and (2) dogfood those skills on itself so the author trusts what is shipped.
+The flagship skill in this repo is `memex/`, which idempotently installs a project memex (`context/` vault, `AGENTS.md`, spec templates, bundled skills/commands) into any target repo. The repo's purpose is therefore twofold: (1) be a usable library of skills, and (2) dogfood those skills on itself so the author trusts what is shipped.
 
 ## Scope guardrails
 
 - **In scope**: Claude Code skills (under `skills/`) and the assets they ship to other repos (under `skills/<skill>/scaffold/`).
 - **Out of scope**: application code, business logic, anything not directly related to authoring or distributing Claude Code skills.
-- **Symlink discipline**: per-skill symlinks under any agent discovery directory (`.claude/skills/<name>`, `.codex/skills/<name>`, `.cursor/skills/<name>`, etc.) are allowed and expected. The symlink may target either `skills/<name>/` (this repo's own published skills, dogfooded onto the maintainer's agent) or `.agents/skills/<name>/` (the canonical location for skills the harness scaffolds, agent-agnostic by design). **Never** re-introduce a blanket symlink that maps an entire agent dir to `skills/` or `.agents/skills/` — only one symlink per skill, named after the skill. Real directories committed under `.claude/skills/` are reserved for vendored personal references that the maintainer keeps locally and that are not part of any scaffolded surface (currently: `skill-creator`, `opensource-guide-coach`).
+- **Symlink discipline**: per-skill symlinks under any agent discovery directory (`.claude/skills/<name>`, `.codex/skills/<name>`, `.cursor/skills/<name>`, etc.) are allowed and expected. The symlink may target either `skills/<name>/` (this repo's own published skills, dogfooded onto the maintainer's agent) or `.agents/skills/<name>/` (the canonical location for skills the memex installer scaffolds, agent-agnostic by design). **Never** re-introduce a blanket symlink that maps an entire agent dir to `skills/` or `.agents/skills/` — only one symlink per skill, named after the skill. Real directories committed under `.claude/skills/` are reserved for vendored personal references that the maintainer keeps locally and that are not part of any scaffolded surface (currently: `skill-creator`, `opensource-guide-coach`).
 - **No build pipeline**: this repo intentionally has no `package.json`, no transpiler, no test runner. Skills are markdown + occasional shell scripts and must stay that way unless a clear need overrides this rule.
 
 ## Architecture principles
 
 - **Skills are self-contained**: every skill under `skills/<name>/` ships with its own `SKILL.md`, any `references/`, and (when applicable) a `scaffold/` directory with the assets it copies into target repos. A skill must be usable by copying or symlinking its directory alone.
-- **Idempotency over cleverness**: the `harness` skill (and any future scaffolding skill) must be safe to re-run on the same repo. Audit before write, ask before fix, never overwrite a healthy file.
+- **Idempotency over cleverness**: the `memex` skill (and any future scaffolding skill) must be safe to re-run on the same repo. Audit before write, ask before fix, never overwrite a healthy file.
 - **Reference docs split out**: long instructions live in `skills/<name>/references/*.md` and are loaded only when needed by the orchestrator (`SKILL.md`). This keeps the entry-point skill prompt small.
 - **Markdown is the source of truth**: skills are authored as markdown so the agent can read, diff, and reason about them directly. Avoid hidden state or generated artifacts.
 
@@ -32,9 +32,9 @@ The flagship skill in this repo is `harness/`, which idempotently installs an ag
 
 - **Language**: shell (bash) for scripts, markdown for skill content. No JS, TS, or Python tooling unless a specific skill demands it inside its own directory.
 - **No package manager** at the repo root. If a skill needs dependencies, they live inside that skill's directory and are documented in its `SKILL.md`.
-- **Linting / tests**: there is no global lint or test command. Each skill is responsible for its own validation (e.g. `harness` has Phase 5 validation in `references/validation.md`).
+- **Linting / tests**: there is no global lint or test command. Each skill is responsible for its own validation (e.g. `memex` has Phase 5 validation in `references/validation.md`).
 - **Project artifacts in English**: all committed files (skills, vault, specs, commits, PR descriptions) are written in English. Conversational chat with the author may be in PT-BR.
-- **Git hygiene**: never push to `main` directly. Every change goes through a feature branch and PR. Use `/harness-open-pr` to open PRs.
+- **Git hygiene**: never push to `main` directly. Every change goes through a feature branch and PR. Use `/memex-open-pr` to open PRs.
 - **No Claude attribution**: never add "Generated by Claude" / "Co-Authored-By: Claude" footers in commits, PRs, or any committed artifact.
 
 ## Spec-Driven workflow
@@ -45,7 +45,7 @@ Specs never get deleted. Shipped specs remain in `context/specs/` as historical 
 
 ## Knowledge layering
 
-- Project-specific knowledge lives in `context/`. Only add notes here for things unique to agent-skills (e.g. how the harness symlink works, conventions for authoring new skills).
+- Project-specific knowledge lives in `context/`. Only add notes here for things unique to agent-skills (e.g. how the memex symlink works, conventions for authoring new skills).
 - Generic patterns that apply to any project should not be duplicated in this vault — they belong in skill content under `skills/`, where they can be shipped to other repos.
 
 ## What this constitution is not
