@@ -132,18 +132,18 @@ while IFS= read -r src; do
 
     # Evidence 1: wikilink in body
     if printf '%s\n' "$src_body" | grep -qE "\[\[([^]|]*/)?$tgt_basename(\||\]\])"; then
-      line=$(printf '%s\n' "$src_body" | grep -nE "\[\[([^]|]*/)?$tgt_basename(\||\]\])" | head -1 | cut -d: -f1)
+      line=$(printf '%s\n' "$src_body" | grep -m1 -nE "\[\[([^]|]*/)?$tgt_basename(\||\]\])" | cut -d: -f1)
       evidence="wikilink_in_body"; detail="[[$tgt_basename]] cited at body line $line"
 
     # Evidence 2: filepath in body
     elif printf '%s\n' "$src_body" | grep -qF "$tgt"; then
-      line=$(printf '%s\n' "$src_body" | grep -nF "$tgt" | head -1 | cut -d: -f1)
+      line=$(printf '%s\n' "$src_body" | grep -m1 -nF "$tgt" | cut -d: -f1)
       evidence="filepath_in_body"; detail="filepath '$tgt' at body line $line"
 
     # Evidence 3: title in body (only for titles >= 10 chars to reduce false positives)
     elif [ -n "$tgt_title" ] && [ "${#tgt_title}" -ge 10 ] \
          && printf '%s\n' "$src_body" | grep -qiF "$tgt_title"; then
-      line=$(printf '%s\n' "$src_body" | grep -niF "$tgt_title" | head -1 | cut -d: -f1)
+      line=$(printf '%s\n' "$src_body" | grep -m1 -niF "$tgt_title" | cut -d: -f1)
       evidence="title_in_body"; detail="title '$tgt_title' at body line $line"
 
     # Evidence 4: shared title+H2 tokens >= 2
