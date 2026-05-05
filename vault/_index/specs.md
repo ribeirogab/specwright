@@ -14,7 +14,7 @@ Template: `[[../specs/_template/spec|_template/spec]]`
 
 ## Active
 
-_No active specs. When a request requires the spec flow, link the new spec here._
+- [[../specs/2026-05-05-memex-canonical-commands/spec-memex-canonical-commands|memex-canonical-commands]] — bring bundled slash commands under the same `.agents/<cmd>` canonical + `.claude/<cmd>` symlink layout that already governs bundled skills, and stop shipping `memex-open-pr`. Draft 2026-05-05.
 
 ## Shipped
 

@@ -7,7 +7,7 @@ Report results as a table. Any `FAIL` triggers an automatic fix attempt using th
 ## Contents
 
 - [Output format](#output-format)
-- [Checks](#checks) — 15 numbered checks (CLAUDE.md symlink, placeholder sweeps, AGENTS.md headers, frontmatter, Obsidian JSON, .gitignore, spec folder naming, copied skills/commands, executable scripts, MOC placeholders, spec template Acceptance Criteria, AGENTS.md size cap, spec-file slug naming)
+- [Checks](#checks) — 15 numbered checks (CLAUDE.md symlink, placeholder sweeps, AGENTS.md headers, frontmatter, Obsidian JSON, .gitignore, spec folder naming, canonical skills/commands installed, executable scripts, MOC placeholders, spec template Acceptance Criteria, AGENTS.md size cap, spec-file slug naming)
 - [When everything passes](#when-everything-passes)
 - [When something fails](#when-something-fails)
 
@@ -138,18 +138,14 @@ done
 
 Fix: `chmod +x .agents/skills/memex-brainstorming/scripts/*.sh`.
 
-### 11. Commands copied
+### 11. Canonical commands installed
 
-Slash commands are Claude Code-specific and only install if `.claude/` is present in the repo. If `.claude/` is absent, this check is `N/A`.
+Slash commands install canonically under `.agents/commands/<cmd>.md`. The canonical files are the source of truth; `.claude/commands/<cmd>.md` symlinks are bonus exposure and are validated as drift in Phase 1, not here. This check always runs (no `.claude/` gating) and always returns PASS or FAIL.
 
 ```bash
-if [ ! -d .claude ]; then
-  echo "N/A — no .claude/ directory; commands skipped by design"
-else
-  for c in memex-open-pr memex-learn memex-spec memex-review-spec memex-sweep; do
-    [ -f ".claude/commands/$c.md" ] && echo "PASS: $c" || echo "FAIL: $c"
-  done
-fi
+for c in memex-learn memex-spec memex-review-spec memex-sweep; do
+  [ -f ".agents/commands/$c.md" ] && echo "PASS: $c" || echo "FAIL: $c"
+done
 ```
 
 Fix: re-run the commands copy block from `SKILL.md` (Scaffolding section).

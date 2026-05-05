@@ -39,7 +39,6 @@ This repo has no package.json and no build system. The most used commands are gi
 
 - `git status` / `git diff` — inspect the working tree.
 - `git switch -c feat/<name>` — start a new feature branch (never commit directly to `main`).
-- `/memex-open-pr` — open a PR with auto-generated title and description (always use this, never raw `gh pr create`).
 - `/memex` — invoke this skill (in this repo or any other) to audit/scaffold the memex.
 - `/memex-spec` — turn the current conversation into a spec.
 - `/memex-sweep` — manual garbage-collection pass over `vault/`.
@@ -69,4 +68,3 @@ Skills live canonically under `.agents/skills/` (agent-agnostic) and are exposed
 - **`/memex-review-spec`** — external evaluator that reads `vault/constitution.md` + a spec and flags violations, vagueness, missing acceptance criteria, and duplication of existing learnings/rules. Run this **after** your own spec self-review and **before** moving to `memex-writing-plans`.
 - **`/memex-sweep`** — manual garbage-collection pass over the vault: orphan learnings, MOC entries pointing nowhere, constitution rules never cited, specs whose `tasks-<slug>.md` is fully checked but `status:` is still `draft`. Run on demand, never automatic.
 - **`/memex-learn`** — investigate a topic in the project and save findings as a learning note in `vault/learnings/`.
-- **`/memex-open-pr`** — **required** command to open pull requests with auto-generated title and description. Always use this command when creating a PR.

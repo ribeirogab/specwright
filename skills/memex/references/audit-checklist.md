@@ -50,11 +50,10 @@ CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
 .agents/skills/memex-writing-plans/             (full directory)
 .agents/skills/memex-link/                      (full directory — vault cross-link analyzer)
 
-.claude/commands/memex-open-pr.md               (slash commands — Claude Code only)
-.claude/commands/memex-learn.md
-.claude/commands/memex-spec.md
-.claude/commands/memex-review-spec.md
-.claude/commands/memex-sweep.md
+.agents/commands/memex-learn.md                 (canonical — slash commands, agent-agnostic location)
+.agents/commands/memex-spec.md
+.agents/commands/memex-review-spec.md
+.agents/commands/memex-sweep.md
 
 .gitignore                     (contains obsidian workspace exclusions)
 ```
@@ -64,6 +63,18 @@ CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
 For every agent-specific discovery directory present in the repo (`.claude/`, `.codex/`, `.cursor/`, `.opencode/`, `.aider/`, `.augment/`, etc.), each scaffold skill above should also be symlinked into that agent's `skills/` subdirectory so the agent can discover it. Example: when `.claude/` exists, `.claude/skills/memex-recall` is a symlink to `../../.agents/skills/memex-recall`.
 
 A missing per-agent symlink is **not `DRIFT`** — only the canonical files under `.agents/skills/` are required. If a per-agent dir exists but lacks the expected symlinks, the memex installer re-creates them on the next run (no prompt needed; symlinks are non-destructive). If a per-agent dir does not exist at all, no symlinks are created (the absence signals the user does not run that agent in this repo).
+
+### Per-agent command symlinks (Claude Code only)
+
+Slash commands are a Claude Code-specific concept today — no other current agent has an equivalent. When `.claude/` exists, each canonical command above should also be exposed as a symlink at `.claude/commands/<cmd>.md` pointing to `../../.agents/commands/<cmd>.md`.
+
+A missing per-agent symlink is **not `DRIFT`** — only the canonical files under `.agents/commands/` are required. If `.claude/` exists but a symlink is missing, the memex installer creates it on the next run (no prompt; symlinks are non-destructive).
+
+A regular file at the symlink target IS `DRIFT`. The fix in Phase 4 removes the regular file and creates the symlink — policy is "scaffold sempre vence", no content comparison, no prompt. The user has accepted that any file at this path is owned by the skill.
+
+A symlink that points somewhere wrong (e.g., to a deleted target) is also `DRIFT` — the fix removes the bad symlink and creates a correct one.
+
+If `.claude/` does not exist at all, no symlinks are checked or created (the absence signals the user does not run Claude Code in this repo).
 
 ## Additional checks
 

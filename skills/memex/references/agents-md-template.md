@@ -99,5 +99,4 @@ Skills are committed to `.agents/skills/` (canonical, agent-agnostic) and expose
 - **`/memex-review-spec`** — external evaluator that reads `vault/constitution.md` + a spec and flags violations, vagueness, missing acceptance criteria, and duplication of existing learnings/rules. Run this **after** your own spec self-review and **before** moving to `memex-writing-plans`.
 - **`/memex-sweep`** — manual garbage-collection pass over the vault: orphan learnings, MOC entries pointing nowhere, constitution rules never cited, specs whose `tasks-<slug>.md` is fully checked but `status:` is still `draft`. Run on demand, never automatic.
 - **`/memex-learn`** — investigate a topic in the project and save findings as a learning note in `vault/learnings/`.
-- **`/memex-open-pr`** — **required** command to open pull requests with auto-generated title and description. Always use this command when creating a PR.
 ```
