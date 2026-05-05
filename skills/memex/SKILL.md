@@ -120,22 +120,42 @@ for agent_dir in .claude .codex .cursor .opencode .aider .augment; do
 done
 ```
 
-**Slash commands** are a Claude Code-specific concept (no other current agent has an equivalent), so they install only into `.claude/commands/`. If `.claude/` does not exist in the repo, skip the command copy entirely — the workflows the commands encode are useful in any agent, but the user invokes them via prose prompts on those agents, not via `/foo` syntax.
+**Slash commands** install canonically under `.agents/commands/<cmd>.md` (single source of truth on disk, agent-agnostic location) and are exposed via per-agent symlinks. Slash-command UI is a Claude Code-specific concept today — no other current agent has an equivalent — so the symlink loop targets only `.claude/commands/`. If `.claude/` does not exist in the repo, the canonical files are still installed (they are the source of truth) but no symlinks are created. The workflows the commands encode are useful in any agent; users on other agents invoke them via prose prompts, not via `/foo` syntax.
 
 ```bash
+COMMAND_NAMES=(memex-learn memex-spec memex-review-spec memex-sweep)
+
+# 1. Canonical install — single source of truth on disk
+mkdir -p .agents/commands
+for cmd in "${COMMAND_NAMES[@]}"; do
+  [ -e ".agents/commands/$cmd.md" ] && continue   # idempotent: don't overwrite
+  cp "$MEMEX_DIR/scaffold/commands/$cmd.md" ".agents/commands/$cmd.md"
+done
+
+# 2. Per-agent symlinks — only into .claude/ (slash commands are Claude-only).
+#    Migration: if a regular file already sits at the symlink target, drop it
+#    and replace with a symlink. Policy is "scaffold sempre vence" — no diff,
+#    no prompt. Order matters: [ -L ] before [ -f ] because [ -f ] resolves
+#    through symlinks on macOS and would otherwise rm a working symlink.
 if [ -d .claude ]; then
   mkdir -p .claude/commands
-  for cmd in memex-open-pr memex-learn memex-spec memex-review-spec memex-sweep; do
+  for cmd in "${COMMAND_NAMES[@]}"; do
     target=".claude/commands/$cmd.md"
-    [ -e "$target" ] && continue
-    cp "$MEMEX_DIR/scaffold/commands/$cmd.md" "$target"
+    if [ -L "$target" ]; then
+      continue                                     # already symlink — leave it
+    elif [ -f "$target" ]; then
+      rm "$target"                                 # real file → drop (migration)
+    fi
+    ln -s "../../.agents/commands/$cmd.md" "$target"
   done
 fi
 ```
 
 Rules:
 - Skills always go to `.agents/skills/<name>` first (canonical), then symlinked into existing agent dirs.
-- Existing files are never overwritten — re-runs are no-ops on already-installed items.
+- Commands always go to `.agents/commands/<cmd>.md` first (canonical), then symlinked into `.claude/commands/` if `.claude/` exists. Slash commands are Claude-only today — no Codex/Cursor equivalent — so the symlink loop is single-agent.
+- Existing canonical files are never overwritten — re-runs are no-ops on already-installed items.
+- Existing regular files at a command symlink target are removed and replaced with a symlink (migration path). Existing symlinks are left alone.
 - Per-agent dirs that do not already exist are not auto-created by the skill copy; only an existing dir signals that agent is in use here.
 
 ### Spec folder migration (if drift was reported)
