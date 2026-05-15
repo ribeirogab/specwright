@@ -19,3 +19,4 @@ skills/*-workspace/
 # .skill packaging artifacts produced by skill-creator/scripts/package_skill.py
 *.skill
 .claude/skills/skill-creator/*.skill
+.claude/worktrees/
