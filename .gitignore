@@ -1,5 +1,5 @@
 # Obsidian vault config (machine-local — Obsidian rewrites these on every open)
-vault/.obsidian/
+.vault/.obsidian/
 
 # Python build artifacts (created when running skill-creator/scripts/*.py)
 __pycache__/

@@ -1,11 +1,11 @@
 ---
 name: link
-description: "Analyze the vault for missing related: frontmatter cross-links and present suggestions interactively. Conservative: only surfaces high-evidence (wikilink already in body) and medium-evidence (filepath/title in body, or shared title/H2 terms) candidates. Never edits without explicit per-item user confirmation. Use when the user asks to find missing related: links in the vault, when /memex-sweep flags an isolated spec, or as part of the After-completing-a-spec reflection."
+description: "Analyze the vault for missing related: frontmatter cross-links and present suggestions interactively. Conservative: only surfaces high-evidence (wikilink already in body) and medium-evidence (filepath/title in body, or shared title/H2 terms) candidates. Never edits without explicit per-item user confirmation. Use when the user asks to find missing related: links in the vault, when /memex:sweep flags an isolated spec, or as part of the After-completing-a-spec reflection."
 ---
 
 # Memex Link — Vault Cross-Link Suggestions
 
-Analyze the `vault/` vault and surface candidate `related:` frontmatter additions where genuinely necessary.
+Analyze the `.vault/` vault and surface candidate `related:` frontmatter additions where genuinely necessary.
 
 **Announce at start:** "Analyzing vault for missing cross-links..."
 
@@ -65,7 +65,7 @@ Render a markdown table grouped by confidence:
 For each candidate, in order, prompt the user:
 
 ```
-[1/3] HIGH — vault/specs/.../spec-X.md → vault/learnings/Y.md
+[1/3] HIGH — .vault/specs/.../spec-X.md → .vault/learnings/Y.md
        Reason: wikilink in body line 14
 
        Add to source's `related:`? (y/n/skip-rest)

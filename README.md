@@ -10,7 +10,7 @@ Reusable agent skills for any tool that supports the open agent skills standard 
 
 ### `memex`
 
-Idempotently scaffolds a memex — an externalized, navigable project memory for agents — into any repository: a `vault/` knowledge vault, an `AGENTS.md` (with a `CLAUDE.md` symlink for back-compat), spec/plan/task templates, plus a set of bundled `memex-*` slash commands (open-pr, learn, spec, review-spec, sweep) and companion skills (brainstorming, recall, writing-plans). Audit-first, autonomous-fix, with a Phase-5 validator. Safe to re-run.
+Idempotently scaffolds a memex — an externalized, navigable project memory for agents — into any repository: a `.vault/` knowledge vault, an `AGENTS.md` (with a `CLAUDE.md` symlink for back-compat), spec/plan/task templates, plus a set of bundled `memex-*` slash commands (open-pr, learn, spec, review-spec, sweep) and companion skills (brainstorming, recall, writing-plans). Audit-first, autonomous-fix, with a Phase-5 validator. Safe to re-run.
 
 **Install:**
 
@@ -22,7 +22,7 @@ npx skills add ribeirogab/agent-skills --skill memex
 
 > "Audit the memex in this repo and scaffold whatever is missing."
 
-After the first run the repo has a working `vault/` vault, the `memex-*` commands, and the companion skills, all dogfood-tested by the memex's own 13-check validator.
+After the first run the repo has a working `.vault/` vault, the `memex-*` commands, and the companion skills, all dogfood-tested by the memex's own 13-check validator.
 
 **Source:** [`skills/memex/SKILL.md`](skills/memex/SKILL.md)
 
@@ -65,7 +65,7 @@ agent-skills/
 └── README.md
 ```
 
-The repository also contains `.agents/`, `.claude/`, `vault/`, and `evals/` — local-only dirs used by the maintainer to dogfood the memex, run skill evaluations, and store personal project notes. They are not part of the published surface and are not what `npx skills add` installs.
+The repository also contains `.agents/`, `.claude/`, `.vault/`, and `evals/` — local-only dirs used by the maintainer to dogfood the memex, run skill evaluations, and store personal project notes. They are not part of the published surface and are not what `npx skills add` installs.
 
 ## License
 

@@ -22,7 +22,7 @@ If the audit finds nothing wrong **and** validation passes, just say "Memex is h
 
 ## Phase 1 — Audit
 
-Read `references/audit-checklist.md` for the full inventory of files and directories to check, the meaning of each status (`OK` / `MISSING` / `DRIFT`), drift criteria for `AGENTS.md` and `vault/constitution.md`, the report format, and special handling for date-prefixed spec folders.
+Read `references/audit-checklist.md` for the full inventory of files and directories to check, the meaning of each status (`OK` / `MISSING` / `DRIFT`), drift criteria for `AGENTS.md` and `.vault/constitution.md`, the report format, and special handling for date-prefixed spec folders.
 
 Apply each check, then assemble the report described in that reference.
 
@@ -46,7 +46,7 @@ Before creating files, gather project context:
 2. Detect the package manager (`pnpm-workspace.yaml` → pnpm, `yarn.lock` → yarn, `bun.lockb` → bun, else npm).
 3. Detect the tech stack (frameworks, languages, deploy targets) from dependencies and config files.
 
-This information is required to fill `AGENTS.md` and `vault/constitution.md` without surviving placeholders.
+This information is required to fill `AGENTS.md` and `.vault/constitution.md` without surviving placeholders.
 
 ## Phase 4 — Scaffold (only the items that need it)
 
@@ -58,7 +58,7 @@ For `.obsidian/*.json`, atomic note templates (`templates/learning.md`, `rule.md
 
 ### Constitution
 
-For `vault/constitution.md`, read `references/constitution-template.md`. It contains the template **and** filling rules — this is the most important file in the vault and must not be left with `{{placeholders}}`. If you don't have enough info to fill a section, ask the user; never commit unsubstituted placeholders.
+For `.vault/constitution.md`, read `references/constitution-template.md`. It contains the template **and** filling rules — this is the most important file in the vault and must not be left with `{{placeholders}}`. If you don't have enough info to fill a section, ask the user; never commit unsubstituted placeholders.
 
 ### AGENTS.md
 
@@ -80,7 +80,7 @@ Append these lines to the repo's `.gitignore` (skip if already present):
 
 ```
 # Obsidian vault config (machine-local — Obsidian rewrites these on every open)
-vault/.obsidian/
+.vault/.obsidian/
 ```
 
 Rationale: Obsidian rewrites `app.json`, `appearance.json`, `core-plugins.json`, and the workspace files every time the vault is opened, which creates constant `git status` noise. The memex installer still **creates** the three config JSONs locally during scaffolding (so `useMarkdownLinks: false` / `newLinkFormat: "relative"` are set the first time Obsidian opens — wikilinks in the MOCs depend on this), but they are not tracked. Obsidian preserves existing user settings when it rewrites these files, so the defaults persist locally on subsequent opens.
@@ -204,10 +204,10 @@ If the audit flagged any spec folder without a `YYYY-MM-DD-` prefix, migrate per
 
 If the audit detected a spec folder containing generic `spec.md` / `plan.md` / `tasks.md` files (instead of the `<type>-<slug>.md` convention), migrate the folder. Renaming tracked files is a destructive operation — surface each detected folder, get explicit user confirmation per folder, then run the recipe below.
 
-For each confirmed `<spec_dir>` (e.g. `vault/specs/2026-04-30-opensource-readiness/`):
+For each confirmed `<spec_dir>` (e.g. `.vault/specs/2026-04-30-opensource-readiness/`):
 
 ```bash
-spec_dir="<the folder, e.g. vault/specs/2026-04-30-opensource-readiness>"
+spec_dir="<the folder, e.g. .vault/specs/2026-04-30-opensource-readiness>"
 slug=$(basename "$spec_dir" | sed 's/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-//')
 
 # 1. Rename each generic file to include the slug, preserving git history
@@ -233,10 +233,10 @@ sed -i.bak \
   -e "s|/${folder}/spec\\([|\\]]\\)|/${folder}/spec-${slug}\\1|g" \
   -e "s|/${folder}/plan\\([|\\]]\\)|/${folder}/plan-${slug}\\1|g" \
   -e "s|/${folder}/tasks\\([|\\]]\\)|/${folder}/tasks-${slug}\\1|g" \
-  vault/_index/specs.md && rm vault/_index/specs.md.bak
+  .vault/_index/specs.md && rm .vault/_index/specs.md.bak
 ```
 
-After the recipe runs, also `grep -rln "\[\[spec\]\]\|\[\[plan\]\]\|\[\[tasks\]\]" vault/learnings/ vault/conventions/ vault/rules/` to surface any external wikilinks that might have pointed at the old basenames; update those manually with the user's confirmation (those references are not always intra-spec — they could legitimately mean "the spec template").
+After the recipe runs, also `grep -rln "\[\[spec\]\]\|\[\[plan\]\]\|\[\[tasks\]\]" .vault/learnings/ .vault/conventions/ .vault/rules/` to surface any external wikilinks that might have pointed at the old basenames; update those manually with the user's confirmation (those references are not always intra-spec — they could legitimately mean "the spec template").
 
 Note for the `sed` `-e` line: `[|\\]]` is a character class matching `|` or `]` — this scopes the replacement to wikilink edges so we do not match `<folder>/spec-tweaks.md` or other longer paths that happen to start with `spec`.
 
@@ -259,7 +259,7 @@ Validation is non-negotiable — this is what catches `{{placeholders}}` that su
 
 {{only if first-time setup:}}
 Next steps:
-1. Review vault/constitution.md — make sure it captures your non-negotiables
-2. Run the project and start adding learnings to vault/learnings/
-3. First feature? Copy vault/specs/_template/ and start a spec
+1. Review .vault/constitution.md — make sure it captures your non-negotiables
+2. Run the project and start adding learnings to .vault/learnings/
+3. First feature? Copy .vault/specs/_template/ and start a spec
 ```

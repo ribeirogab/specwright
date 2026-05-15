@@ -5,7 +5,7 @@ argument-hint: <optional: scope filter — learnings, specs, rules, conventions,
 
 # Sweep — Vault Garbage Collection
 
-Manual sweep of the `vault/` vault to surface drift that the memex audit does not catch: orphan notes, broken cross-references, shipped-but-still-draft specs, and rules nobody cites.
+Manual sweep of the `.vault/` vault to surface drift that the memex audit does not catch: orphan notes, broken cross-references, shipped-but-still-draft specs, and rules nobody cites.
 
 This command **never deletes or rewrites** anything on its own. It produces a report and asks the user, item by item, what to do.
 
@@ -41,7 +41,7 @@ A learning that no other file links to is invisible to the agent — the vault i
 The regex must match wikilinks regardless of optional path prefix (`[[../learnings/foo]]`) or display-text suffix (`[[foo|display]]`) — Obsidian and the canonical vault scaffold use both styles. References inside fenced code blocks or inline backticks do **not** count as inbound links.
 
 ```bash
-for f in vault/learnings/*.md; do
+for f in .vault/learnings/*.md; do
   base=$(basename "$f" .md)
   # Match [[base]], [[base|...]], [[base#anchor]], or [[<any-path>/base...]]
   # but only outside fenced code blocks and inline backticks
@@ -52,15 +52,15 @@ for f in vault/learnings/*.md; do
       !in_fence { gsub(/`[^`]*`/, ""); print }
     ' "$candidate" \
       | grep -qE "\[\[([^]|#]*/)?${base}([]|#])" && hits=$((hits + 1))
-  done < <(find vault/ -name '*.md' -not -path 'vault/learnings/*' 2>/dev/null)
+  done < <(find .vault/ -name '*.md' -not -path '.vault/learnings/*' 2>/dev/null)
   [ "$hits" = "0" ] && echo "ORPHAN: $f"
 done
 ```
 
 For each orphan, ask the user one of:
-- **Keep** — propose a MOC entry under `vault/_index/learnings.md`.
+- **Keep** — propose a MOC entry under `.vault/_index/learnings.md`.
 - **Merge** — point at a related note to merge into.
-- **Archive** — move to `vault/learnings/_archive/` (do not delete).
+- **Archive** — move to `.vault/learnings/_archive/` (do not delete).
 
 ### 2. Broken wikilinks
 
@@ -69,7 +69,7 @@ A wikilink whose target file does not exist breaks the navigation contract.
 Resolve targets Obsidian-style: strip the path prefix and search the vault for any file or directory whose basename matches. Skip files inside `templates/` and `_template/` — those legitimately use placeholder wikilinks like `[[plan]]`, `[[spec]]`, `[[related-note]]`, `[[wikilinks]]` that are filled in when the template is copied. Wikilinks inside fenced code blocks or inline backticks are also skipped (illustrative examples, not navigation contracts).
 
 ```bash
-find vault/ -name '*.md' -not -path '*/templates/*' -not -path '*/_template/*' 2>/dev/null \
+find .vault/ -name '*.md' -not -path '*/templates/*' -not -path '*/_template/*' 2>/dev/null \
   | while read -r f; do
       awk '
         /^```/ { in_fence = !in_fence; next }
@@ -84,21 +84,21 @@ find vault/ -name '*.md' -not -path '*/templates/*' -not -path '*/_template/*' 2
       base="${base%/}"
       [ -z "$base" ] && continue
       # Search the whole vault for a matching file or directory basename
-      found=$(find vault/ \( -name "$base.md" -o \( -type d -name "$base" \) \) -print -quit 2>/dev/null)
+      found=$(find .vault/ \( -name "$base.md" -o \( -type d -name "$base" \) \) -print -quit 2>/dev/null)
       [ -z "$found" ] && echo "BROKEN: [[$target]]"
     done
 ```
 
-For each broken link, locate the source file with `grep -rln "\[\[$target" vault/` and ask the user whether to fix the target name or remove the link.
+For each broken link, locate the source file with `grep -rln "\[\[$target" .vault/` and ask the user whether to fix the target name or remove the link.
 
 ### 3. MOC entries pointing nowhere
 
-`vault/_index/*.md` files list notes by topic. An entry whose target was renamed or archived is a stale MOC line.
+`.vault/_index/*.md` files list notes by topic. An entry whose target was renamed or archived is a stale MOC line.
 
 Same Obsidian-style resolution as check 2, with the same code-block-aware preprocessing.
 
 ```bash
-for moc in vault/_index/*.md; do
+for moc in .vault/_index/*.md; do
   awk '
     /^```/ { in_fence = !in_fence; next }
     !in_fence { gsub(/`[^`]*`/, ""); print }
@@ -109,7 +109,7 @@ for moc in vault/_index/*.md; do
         base="${t##*/}"
         base="${base%/}"
         [ -z "$base" ] && continue
-        found=$(find vault/ \( -name "$base.md" -o \( -type d -name "$base" \) \) -print -quit 2>/dev/null)
+        found=$(find .vault/ \( -name "$base.md" -o \( -type d -name "$base" \) \) -print -quit 2>/dev/null)
         [ -z "$found" ] && echo "STALE in $(basename "$moc"): [[$t]]"
       done
 done
@@ -119,7 +119,7 @@ Ask the user per entry whether to update or remove.
 
 ### 4. Constitution rules nobody cites
 
-A rule in `vault/constitution.md` that no spec, learning, convention, or rule file references is either too universal to need citing — or it is dead weight nobody remembers.
+A rule in `.vault/constitution.md` that no spec, learning, convention, or rule file references is either too universal to need citing — or it is dead weight nobody remembers.
 
 **This check only applies to rule-numbered constitutions** — those organized as a list of discrete named rules (e.g., `## Rule of Currency`, `## Rule of Caution`, or sections under a top-level `## Rules` header). Many constitutions use a different shape: principle-by-section (`## Architecture principles`, `## Scope guardrails`, `## Tooling and workflow principles`). The "uncited rules" framing does not apply there — those headings are categories of guidance, not individual rules to be cited.
 
@@ -129,23 +129,23 @@ Detect the shape first. Run:
 # Heuristic: rule-numbered if any heading begins with "Rule of",
 # OR there is an explicit "## Rules" section,
 # OR the file has a `severity:` frontmatter / table column.
-grep -qE '^##+ +Rule of |^## Rules\b' vault/constitution.md \
-  || grep -q '^severity:' vault/constitution.md \
+grep -qE '^##+ +Rule of |^## Rules\b' .vault/constitution.md \
+  || grep -q '^severity:' .vault/constitution.md \
   && echo RULE_NUMBERED || echo SECTION_BASED
 ```
 
 If the result is `SECTION_BASED`, **skip this check** and report `N/A — constitution is section-based (no discrete named rules to cite)`. Do not produce per-section findings; principle headings are not "uncited rules", they are category headers.
 
-If the result is `RULE_NUMBERED`, proceed: identify rules by their `## ` or `### ` headings inside the constitution. For each, search the rest of the vault for the rule's slug or a paraphrase. Report the rules with **zero hits** as a **WARN** — ask the user to keep as-is, rephrase to be more memorable, or move to `vault/_archive/constitution-history.md`.
+If the result is `RULE_NUMBERED`, proceed: identify rules by their `## ` or `### ` headings inside the constitution. For each, search the rest of the vault for the rule's slug or a paraphrase. Report the rules with **zero hits** as a **WARN** — ask the user to keep as-is, rephrase to be more memorable, or move to `.vault/_archive/constitution-history.md`.
 
 ### 5. Specs done in `tasks-<slug>.md` but still `status: draft`
 
 A spec where every task is checked but the frontmatter still says `draft` is a missed bookkeeping step — the vault thinks the work is in flight when it shipped weeks ago.
 
-The glob `vault/specs/[0-9]*-*/` aborts the entire script under zsh's default `nomatch` setting when no spec folders exist yet — collect matches with `find` instead, which handles the empty case silently. Inside each folder, derive the slug from the folder name and look for the slugged file names (`spec-<slug>.md`, `tasks-<slug>.md`).
+The glob `.vault/specs/[0-9]*-*/` aborts the entire script under zsh's default `nomatch` setting when no spec folders exist yet — collect matches with `find` instead, which handles the empty case silently. Inside each folder, derive the slug from the folder name and look for the slugged file names (`spec-<slug>.md`, `tasks-<slug>.md`).
 
 ```bash
-find vault/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null | while read -r spec_dir; do
+find .vault/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null | while read -r spec_dir; do
   slug=$(basename "$spec_dir" | sed 's/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-//')
   tasks="$spec_dir/tasks-$slug.md"
   spec="$spec_dir/spec-$slug.md"
@@ -167,7 +167,7 @@ A section heading in a MOC that has **nothing under it at all** — no content l
 A section with `_(none yet)_` or `_No ... yet._` italics placeholders is **not** flagged: the canonical scaffold writes those whenever a category is reserved but empty, so the placeholder represents an explicit acknowledgement that the category exists and is waiting for its first entry. Flagging those would produce constant noise on every young vault and train the user to ignore the sweep.
 
 ```bash
-for moc in vault/_index/*.md; do
+for moc in .vault/_index/*.md; do
   awk '
     /^## /{
       if (h && c == 0) print FILENAME ": " h
@@ -191,7 +191,7 @@ A spec whose frontmatter+body has **zero outgoing wikilinks** beyond its own `pl
 This check uses the same `strip_code` preprocessor as checks 1–3 to ignore wikilinks inside fenced code blocks or inline backticks.
 
 ```bash
-find vault/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null | while read -r spec_dir; do
+find .vault/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null | while read -r spec_dir; do
   folder=$(basename "$spec_dir")
   slug=$(echo "$folder" | sed 's/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-//')
   spec="$spec_dir/spec-$slug.md"

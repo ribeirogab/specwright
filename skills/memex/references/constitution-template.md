@@ -1,6 +1,6 @@
 # Constitution Template
 
-The constitution (`vault/constitution.md`) is the most important file in the vault. Load this reference when creating, repairing, or auditing it.
+The constitution (`.vault/constitution.md`) is the most important file in the vault. Load this reference when creating, repairing, or auditing it.
 
 ## Filling rules
 
@@ -11,7 +11,7 @@ This is **not a skeleton to commit as-is**. Use the project info gathered in Pre
 3. **Architecture principles** — the load-bearing technical decisions.
 4. **Tooling and workflow principles** — linter, package manager, test runner, deploy target, CI expectations.
 5. **Spec-Driven workflow** — the trigger rule for when to spec vs go direct.
-6. **Knowledge layering** — `vault/` holds project-specific knowledge only.
+6. **Knowledge layering** — `.vault/` holds project-specific knowledge only.
 
 **If you don't have enough info to fill a section, ask the user specific questions.** Do **not** leave `{{placeholders}}` in the final file — either fill it or ask. Surviving placeholders are caught by Phase 6 validation and fail the run.
 
@@ -48,18 +48,18 @@ If you are tempted to violate a rule here, stop and open a discussion first. Nev
 
 Before implementing any user request, assess whether the solution is obvious. If you cannot describe the complete solution in one sentence, use the Spec Kit flow: brainstorm → `spec-<slug>.md` → `plan-<slug>.md` → `tasks-<slug>.md` → implement. If the solution is obvious, go direct. If almost obvious but with 1-2 open decisions, ask the user whether to spec or go direct.
 
-Specs never get deleted. Shipped specs remain in `vault/specs/` as historical record.
+Specs never get deleted. Shipped specs remain in `.vault/specs/` as historical record.
 
 ## Knowledge layering
 
-- Project-specific knowledge lives in `vault/`. Only add notes here for things unique to {{Project Name}}.
+- Project-specific knowledge lives in `.vault/`. Only add notes here for things unique to {{Project Name}}.
 - Generic patterns that apply to any project should not be duplicated in this vault.
 
 ## What this constitution is not
 
-- Not an architecture document. See `vault/_index/learnings.md` for architecture notes.
-- Not a style guide. See `vault/conventions/` for code style conventions.
-- Not a spec for any feature. Specs live in `vault/specs/`.
+- Not an architecture document. See `.vault/_index/learnings.md` for architecture notes.
+- Not a style guide. See `.vault/conventions/` for code style conventions.
+- Not a spec for any feature. Specs live in `.vault/specs/`.
 
 This document exists to hold the things that would be catastrophic to forget.
 ```
