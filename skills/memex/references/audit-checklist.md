@@ -50,11 +50,6 @@ CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
 .agents/skills/memex-writing-plans/             (full directory)
 .agents/skills/memex-link/                      (full directory — vault cross-link analyzer)
 
-.agents/commands/memex-learn.md                 (canonical — slash commands, agent-agnostic location)
-.agents/commands/memex-spec.md
-.agents/commands/memex-review-spec.md
-.agents/commands/memex-sweep.md
-
 .gitignore                     (contains obsidian workspace exclusions)
 ```
 
@@ -64,19 +59,45 @@ For every agent-specific discovery directory present in the repo (`.claude/`, `.
 
 A missing per-agent symlink is **not `DRIFT`** — only the canonical files under `.agents/skills/` are required. If a per-agent dir exists but lacks the expected symlinks, the memex installer re-creates them on the next run (no prompt needed; symlinks are non-destructive). If a per-agent dir does not exist at all, no symlinks are created (the absence signals the user does not run that agent in this repo).
 
-### Per-agent command symlinks (Claude Code only)
-
-Slash commands are a Claude Code-specific concept today — no other current agent has an equivalent. When `.claude/` exists, each canonical command above should also be exposed as a symlink at `.claude/commands/<cmd>.md` pointing to `../../.agents/commands/<cmd>.md`.
-
-A missing per-agent symlink is **not `DRIFT`** — only the canonical files under `.agents/commands/` are required. If `.claude/` exists but a symlink is missing, the memex installer creates it on the next run (no prompt; symlinks are non-destructive).
-
-A regular file at the symlink target IS `DRIFT`. The fix in Phase 4 removes the regular file and creates the symlink — policy is "scaffold sempre vence", no content comparison, no prompt. The user has accepted that any file at this path is owned by the skill.
-
-A symlink that points somewhere wrong (e.g., to a deleted target) is also `DRIFT` — the fix removes the bad symlink and creates a correct one.
-
-If `.claude/` does not exist at all, no symlinks are checked or created (the absence signals the user does not run Claude Code in this repo).
-
 ## Additional checks
+
+### Legacy paths to remove (pre-plugin migration)
+
+The pre-plugin memex installed slash commands as files at:
+
+- `.agents/commands/memex-{spec,learn,sweep,review-spec}.md` (canonical)
+- `.claude/commands/memex-{spec,learn,sweep,review-spec}.md` (symlink)
+
+These are obsolete — slash commands now ship as a Claude Code plugin from the upstream marketplace `agent-skills`. Any of these files (regular or symlink) is `DRIFT`. Fix: `rm` the file in Phase 4. This is a non-destructive op per the "scaffold sempre vence" policy — no prompt.
+
+If `.agents/commands/` becomes empty after the removals, the directory itself is also removed (`rmdir` succeeds only on empty dirs, so this is safe even if an unrelated file still sits there).
+
+Legacy `.claude/commands/memex-open-pr.md` is **not** in scope here — orphan policy B from the previous canonical-commands spec leaves it untouched.
+
+### Claude plugin settings present (when `.claude/` exists)
+
+When the target repo has a `.claude/` directory (signal that the user runs Claude Code in this repo), `.claude/settings.json` must declare:
+
+- `extraKnownMarketplaces["agent-skills"]` with a non-empty `source` object (either `{ "source": "github", "repo": "ribeirogab/agent-skills" }` for target repos, or `{ "source": "local", "path": "." }` for this repo's own dogfood).
+- `enabledPlugins["memex@agent-skills"]` set to `true`.
+
+Detection:
+
+```bash
+if [ -d .claude ]; then
+  if [ ! -f .claude/settings.json ]; then
+    echo "DRIFT — .claude/settings.json missing"
+  else
+    has_mp=$(jq 'has("extraKnownMarketplaces") and (.extraKnownMarketplaces | has("agent-skills"))' .claude/settings.json)
+    has_plugin=$(jq '.enabledPlugins["memex@agent-skills"] == true' .claude/settings.json)
+    if [ "$has_mp" != "true" ] || [ "$has_plugin" != "true" ]; then
+      echo "DRIFT — settings.json missing marketplace or plugin entry"
+    fi
+  fi
+fi
+```
+
+If `.claude/` is absent, this check does not run (no signal to gate on). Fix in Phase 4: run the jq merge recipe from `references/claude-plugin-settings.md`.
 
 ### CLAUDE.md is a symlink (Claude Code back-compat)
 
