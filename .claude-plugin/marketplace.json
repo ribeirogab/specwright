@@ -1,0 +1,13 @@
+{
+  "name": "agent-skills",
+  "owner": {
+    "name": "ribeirogab"
+  },
+  "plugins": [
+    {
+      "name": "memex",
+      "source": "./plugins/memex",
+      "description": "Memex slash commands for Claude Code — /memex:spec, /memex:learn, /memex:sweep, /memex:review-spec."
+    }
+  ]
+}
