@@ -120,7 +120,7 @@ for agent_dir in .claude .codex .cursor .opencode .aider .augment; do
 done
 ```
 
-**Slash commands** ship as a Claude Code plugin published from the upstream marketplace `agent-skills` (this repo's root `.claude-plugin/marketplace.json`). The four slash commands — `/memex:spec`, `/memex:learn`, `/memex:sweep`, `/memex:review-spec` — live in `plugins/memex/commands/` upstream and are fetched by Claude Code at workspace-trust time. The memex skill **does not copy command files into the target repo** — it only declares the marketplace and pre-enables the plugin via `.claude/settings.json`.
+**Slash commands** ship as a Claude Code plugin published from the upstream marketplace `ribeirogab-agent-skills` (this repo's root `.claude-plugin/marketplace.json`). The four slash commands — `/memex:spec`, `/memex:learn`, `/memex:sweep`, `/memex:review-spec` — live in `plugins/memex/commands/` upstream and are fetched by Claude Code at workspace-trust time. The memex skill **does not copy command files into the target repo** — it only declares the marketplace and pre-enables the plugin via `.claude/settings.json`.
 
 The skill does two things at install time, both gated on the target repo having a `.claude/` directory (its absence signals the user does not run Claude Code in this repo):
 
@@ -146,9 +146,9 @@ fi
 #    for the canonical coordinates, JSON shapes, jq recipe, and Python fallback.
 if [ -d .claude ]; then
   # Detect dogfood: if this repo's own .claude-plugin/marketplace.json declares
-  # name = "agent-skills", use the local-path source. Otherwise use github.
+  # name = "ribeirogab-agent-skills", use the local-path source. Otherwise use github.
   if [ -f .claude-plugin/marketplace.json ] && \
-     [ "$(jq -r '.name' .claude-plugin/marketplace.json 2>/dev/null)" = "agent-skills" ]; then
+     [ "$(jq -r '.name' .claude-plugin/marketplace.json 2>/dev/null)" = "ribeirogab-agent-skills" ]; then
     MARKETPLACE_SOURCE='{"source":"directory","path":"."}'
   else
     MARKETPLACE_SOURCE='{"source":"github","repo":"ribeirogab/agent-skills"}'
@@ -163,8 +163,8 @@ if [ -d .claude ]; then
   fi
 
   jq --argjson src "$MARKETPLACE_SOURCE" '
-    .extraKnownMarketplaces["agent-skills"] = { "source": $src } |
-    .enabledPlugins["memex@agent-skills"] = true
+    .extraKnownMarketplaces["ribeirogab-agent-skills"] = { "source": $src } |
+    .enabledPlugins["memex@ribeirogab-agent-skills"] = true
   ' "$TMP" > "$SETTINGS"
   rm "$TMP"
 fi
@@ -174,7 +174,7 @@ If `jq` is not installed, fall back to the Python recipe documented in `referenc
 
 Rules:
 - Skills always go to `.agents/skills/<name>` first (canonical), then symlinked into existing agent dirs.
-- Slash commands ship as a Claude Code plugin from the upstream marketplace `agent-skills`. The skill writes `.claude/settings.json` (extraKnownMarketplaces + enabledPlugins) so Claude Code installs the plugin at workspace-trust time. No command files are copied into the target repo.
+- Slash commands ship as a Claude Code plugin from the upstream marketplace `ribeirogab-agent-skills`. The skill writes `.claude/settings.json` (extraKnownMarketplaces + enabledPlugins) so Claude Code installs the plugin at workspace-trust time. No command files are copied into the target repo.
 - Existing canonical skill files are never overwritten — re-runs are no-ops on already-installed items.
 - Legacy `.claude/commands/memex-{spec,learn,sweep,review-spec}.md` and `.agents/commands/memex-*.md` files (from pre-plugin installs) are removed unconditionally on every run. `rm` works for regular files and symlinks.
 - Per-agent dirs that do not already exist are not auto-created by the skill copy; only an existing dir signals that agent is in use here.

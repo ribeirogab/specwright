@@ -13,12 +13,14 @@ Claude Code's `.claude/settings.json` validates `extraKnownMarketplaces[name].so
 ```json
 {
   "extraKnownMarketplaces": {
-    "agent-skills": {
+    "ribeirogab-agent-skills": {
       "source": { "source": "directory", "path": "." }
     }
   }
 }
 ```
+
+> Note: `agent-skills` was the original marketplace name in the spec, but Claude Code reserves that name for official Anthropic marketplaces (`failed to add marketplace: The name 'agent-skills' is reserved`). Renamed to `ribeirogab-agent-skills` in a follow-up fix — see [[claude-code-reserved-marketplace-names]].
 
 ## Context
 
