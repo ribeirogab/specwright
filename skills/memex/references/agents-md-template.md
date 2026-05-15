@@ -92,7 +92,7 @@ Full command catalog: `vault/learnings/commands-catalog.md` _(create this note a
 
 > Slash commands shown in Claude Code syntax (plugin namespace `memex:`). Codex users invoke as `$memex-<verb>` via skill mention. Cursor users as `@memex-<verb>` via rule reference. Companion skills (`memex-brainstorming`, `memex-writing-plans`, `memex-recall`, `memex-link`) keep the hyphen form on every agent.
 
-Skills are committed to `.agents/skills/` (canonical, agent-agnostic) and exposed via per-agent symlinks (`.claude/skills/`, `.codex/skills/`, etc.) for agents that scan their own discovery dir. Slash commands ship as a Claude Code plugin from the upstream marketplace `agent-skills` (declared in this repo's `.claude/settings.json`); other agents invoke the same workflows via prose prompts.
+Skills are committed to `.agents/skills/` (canonical, agent-agnostic) and exposed via per-agent symlinks (`.claude/skills/`, `.codex/skills/`, etc.) for agents that scan their own discovery dir. Slash commands ship as a Claude Code plugin from the upstream marketplace `ribeirogab-agent-skills` (declared in this repo's `.claude/settings.json`); other agents invoke the same workflows via prose prompts.
 
 - **`memex-brainstorming`** — design exploration before writing a spec.
 - **`memex-writing-plans`** — turn an approved design into a task list.

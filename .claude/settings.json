@@ -1,6 +1,6 @@
 {
   "extraKnownMarketplaces": {
-    "agent-skills": {
+    "ribeirogab-agent-skills": {
       "source": {
         "source": "directory",
         "path": "."
@@ -8,6 +8,6 @@
     }
   },
   "enabledPlugins": {
-    "memex@agent-skills": true
+    "memex@ribeirogab-agent-skills": true
   }
 }

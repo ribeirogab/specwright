@@ -68,7 +68,7 @@ The pre-plugin memex installed slash commands as files at:
 - `.agents/commands/memex-{spec,learn,sweep,review-spec}.md` (canonical)
 - `.claude/commands/memex-{spec,learn,sweep,review-spec}.md` (symlink)
 
-These are obsolete — slash commands now ship as a Claude Code plugin from the upstream marketplace `agent-skills`. Any of these files (regular or symlink) is `DRIFT`. Fix: `rm` the file in Phase 4. This is a non-destructive op per the "scaffold sempre vence" policy — no prompt.
+These are obsolete — slash commands now ship as a Claude Code plugin from the upstream marketplace `ribeirogab-agent-skills`. Any of these files (regular or symlink) is `DRIFT`. Fix: `rm` the file in Phase 4. This is a non-destructive op per the "scaffold sempre vence" policy — no prompt.
 
 If `.agents/commands/` becomes empty after the removals, the directory itself is also removed (`rmdir` succeeds only on empty dirs, so this is safe even if an unrelated file still sits there).
 
@@ -78,8 +78,8 @@ Legacy `.claude/commands/memex-open-pr.md` is **not** in scope here — orphan p
 
 When the target repo has a `.claude/` directory (signal that the user runs Claude Code in this repo), `.claude/settings.json` must declare:
 
-- `extraKnownMarketplaces["agent-skills"]` with a non-empty `source` object (either `{ "source": "github", "repo": "ribeirogab/agent-skills" }` for target repos, or `{ "source": "directory", "path": "." }` for this repo's own dogfood).
-- `enabledPlugins["memex@agent-skills"]` set to `true`.
+- `extraKnownMarketplaces["ribeirogab-agent-skills"]` with a non-empty `source` object (either `{ "source": "github", "repo": "ribeirogab/agent-skills" }` for target repos, or `{ "source": "directory", "path": "." }` for this repo's own dogfood).
+- `enabledPlugins["memex@ribeirogab-agent-skills"]` set to `true`.
 
 Detection:
 
@@ -88,8 +88,8 @@ if [ -d .claude ]; then
   if [ ! -f .claude/settings.json ]; then
     echo "DRIFT — .claude/settings.json missing"
   else
-    has_mp=$(jq 'has("extraKnownMarketplaces") and (.extraKnownMarketplaces | has("agent-skills"))' .claude/settings.json)
-    has_plugin=$(jq '.enabledPlugins["memex@agent-skills"] == true' .claude/settings.json)
+    has_mp=$(jq 'has("extraKnownMarketplaces") and (.extraKnownMarketplaces | has("ribeirogab-agent-skills"))' .claude/settings.json)
+    has_plugin=$(jq '.enabledPlugins["memex@ribeirogab-agent-skills"] == true' .claude/settings.json)
     if [ "$has_mp" != "true" ] || [ "$has_plugin" != "true" ]; then
       echo "DRIFT — settings.json missing marketplace or plugin entry"
     fi
