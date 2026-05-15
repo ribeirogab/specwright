@@ -8,7 +8,7 @@
 2. **Read `vault/constitution.md`** for non-negotiable principles.
 3. **If the user is asking you to implement, modify, or create something**, assess the request: "Can I describe the complete solution in one sentence?"
    - **Yes** → implement directly.
-   - **No** → invoke `memex-brainstorming` → `spec-<slug>.md` → self-review the spec → `/memex-review-spec` for an external evaluator pass → `memex-writing-plans` → `plan-<slug>.md` + `tasks-<slug>.md` → implement.
+   - **No** → invoke `memex-brainstorming` → `spec-<slug>.md` → self-review the spec → `/memex:review-spec` for an external evaluator pass → `memex-writing-plans` → `plan-<slug>.md` + `tasks-<slug>.md` → implement.
    - **Almost** (1-2 open decisions) → ask the user whether to spec or go direct.
 
    If the user is asking a question, investigating, or exploring — just answer.
@@ -40,8 +40,8 @@ This repo has no package.json and no build system. The most used commands are gi
 - `git status` / `git diff` — inspect the working tree.
 - `git switch -c feat/<name>` — start a new feature branch (never commit directly to `main`).
 - `/memex` — invoke this skill (in this repo or any other) to audit/scaffold the memex.
-- `/memex-spec` — turn the current conversation into a spec.
-- `/memex-sweep` — manual garbage-collection pass over `vault/`.
+- `/memex:spec` — turn the current conversation into a spec.
+- `/memex:sweep` — manual garbage-collection pass over `vault/`.
 
 Full command catalog: `vault/learnings/commands-catalog.md` _(create this note after setup)_.
 
@@ -59,12 +59,14 @@ Full command catalog: `vault/learnings/commands-catalog.md` _(create this note a
 
 ## Skills and slash commands
 
-Skills live canonically under `.agents/skills/` (agent-agnostic) and are exposed via per-agent symlinks (`.claude/skills/`, `.codex/skills/`, etc.) for whichever agent is in use. Slash commands live in `.claude/commands/` only — slash commands are a Claude Code-specific concept; on other agents the same workflows are invoked via prose prompts.
+> Slash commands shown in Claude Code syntax (plugin namespace `memex:`). Codex users invoke as `$memex-<verb>` via skill mention. Cursor users as `@memex-<verb>` via rule reference. Companion skills (`memex-brainstorming`, `memex-writing-plans`, `memex-recall`, `memex-link`) keep the hyphen form on every agent.
+
+Skills live canonically under `.agents/skills/` (agent-agnostic) and are exposed via per-agent symlinks (`.claude/skills/`, `.codex/skills/`, etc.) for whichever agent is in use. Slash commands ship as a Claude Code plugin from the upstream marketplace `agent-skills` (declared in `.claude/settings.json`); on other agents the same workflows are invoked via prose prompts.
 
 - **`memex-brainstorming`** — design exploration before writing a spec.
 - **`memex-writing-plans`** — turn an approved design into a task list.
 - **`memex-recall`** — quick project reconnaissance of the `vault/` vault.
-- **`/memex-spec`** — take the current conversation and enter the spec flow, skipping already-discussed questions.
-- **`/memex-review-spec`** — external evaluator that reads `vault/constitution.md` + a spec and flags violations, vagueness, missing acceptance criteria, and duplication of existing learnings/rules. Run this **after** your own spec self-review and **before** moving to `memex-writing-plans`.
-- **`/memex-sweep`** — manual garbage-collection pass over the vault: orphan learnings, MOC entries pointing nowhere, constitution rules never cited, specs whose `tasks-<slug>.md` is fully checked but `status:` is still `draft`. Run on demand, never automatic.
-- **`/memex-learn`** — investigate a topic in the project and save findings as a learning note in `vault/learnings/`.
+- **`/memex:spec`** — take the current conversation and enter the spec flow, skipping already-discussed questions.
+- **`/memex:review-spec`** — external evaluator that reads `vault/constitution.md` + a spec and flags violations, vagueness, missing acceptance criteria, and duplication of existing learnings/rules. Run this **after** your own spec self-review and **before** moving to `memex-writing-plans`.
+- **`/memex:sweep`** — manual garbage-collection pass over the vault: orphan learnings, MOC entries pointing nowhere, constitution rules never cited, specs whose `tasks-<slug>.md` is fully checked but `status:` is still `draft`. Run on demand, never automatic.
+- **`/memex:learn`** — investigate a topic in the project and save findings as a learning note in `vault/learnings/`.
