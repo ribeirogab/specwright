@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "agent-skills": {
+      "source": {
+        "source": "local",
+        "path": "."
+      }
+    }
+  },
+  "enabledPlugins": {
+    "memex@agent-skills": true
+  }
+}
