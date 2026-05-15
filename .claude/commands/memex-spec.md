@@ -1,1 +1,0 @@
-../../.agents/commands/memex-spec.md

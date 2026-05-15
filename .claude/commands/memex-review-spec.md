@@ -1,1 +1,0 @@
-../../.agents/commands/memex-review-spec.md
