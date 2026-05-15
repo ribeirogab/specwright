@@ -109,7 +109,13 @@ done
 # 2. Per-agent symlinks — only into discovery dirs that already exist
 #    (do NOT auto-create agent dirs; their absence means the user does
 #    not run that agent in this repo).
-for agent_dir in .claude .codex .cursor .opencode .aider .augment; do
+#
+#    Skip .claude/ — Claude Code gets companion skills through the plugin
+#    (ribeirogab-agent-skills → memex), invoked as /memex:recall etc.
+#    Creating .claude/skills/memex-recall symlinks here would duplicate
+#    the skill under both `/memex-recall` (symlink) and `/memex:recall`
+#    (plugin) in Claude Code's slash menu.
+for agent_dir in .codex .cursor .opencode .aider .augment; do
   [ -d "$agent_dir" ] || continue
   mkdir -p "$agent_dir/skills"
   for name in "${SKILL_NAMES[@]}"; do
@@ -118,6 +124,16 @@ for agent_dir in .claude .codex .cursor .opencode .aider .augment; do
     ln -s "../../.agents/skills/$name" "$target"
   done
 done
+
+# Legacy cleanup: remove any pre-plugin .claude/skills/memex-* symlinks that
+# earlier memex installs created. Plugin provides /memex:<verb> on Claude now.
+if [ -d .claude/skills ]; then
+  for name in "${SKILL_NAMES[@]}"; do
+    rm -f ".claude/skills/$name" 2>/dev/null
+  done
+  # Remove .claude/skills/ if now empty
+  [ -z "$(ls -A .claude/skills 2>/dev/null)" ] && rmdir .claude/skills
+fi
 ```
 
 **Slash commands** ship as a Claude Code plugin published from the upstream marketplace `ribeirogab-agent-skills` (this repo's root `.claude-plugin/marketplace.json`). The four slash commands — `/memex:spec`, `/memex:learn`, `/memex:sweep`, `/memex:review-spec` — live in `plugins/memex/commands/` upstream and are fetched by Claude Code at workspace-trust time. The memex skill **does not copy command files into the target repo** — it only declares the marketplace and pre-enables the plugin via `.claude/settings.json`.
