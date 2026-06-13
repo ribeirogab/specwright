@@ -4,17 +4,11 @@ tags:
 ---
 # Learnings — Map of Content
 
-Atomic notes about agent-skills's architecture, patterns, and gotchas. Categorized by tag.
+Atomic notes about memex's architecture, patterns, and gotchas. Categorized by tag.
 
-Learnings here are specific to agent-skills. Code style conventions live in `[[conventions|Conventions MOC]]`.
+Learnings here are specific to memex. Code style conventions live in `[[conventions|Conventions MOC]]`.
 
 ## `#concept` — Architecture and patterns
-
-### Skill authoring (Anthropic platform)
-
-- [[../learnings/skill-progressive-disclosure|Progressive disclosure — the three-level loading model]] — frontmatter (always loaded) → SKILL.md body (on trigger) → linked files (on demand); why the directory layout exists.
-- [[../learnings/skill-degrees-of-freedom|Degrees of freedom — match instruction specificity to task fragility]] — high / medium / low; pick by cost-of-variation; mix levels within one skill.
-- [[../learnings/skill-development-workflow|Skill development workflow — eval-first, Claude A / Claude B]] — build evals before docs; iterate one task to working; use a two-Claude feedback loop.
 
 ### Harness engineering (the runtime pattern, not skill authoring)
 
@@ -22,7 +16,6 @@ Learnings here are specific to agent-skills. Code style conventions live in `[[c
 - [[../learnings/memex|Memex — Vannevar Bush's 1945 personal memory extender]] — the canonical name for "externalized, navigable personal memory"; conceptual frame for the `.vault/` vault and the rename of `harness` → `memex`.
 - [[../learnings/agents-md-as-map-not-encyclopedia|AGENTS.md is a map, not an encyclopedia]] — keep root agent instructions ~100 lines and point into `.vault/`; the four failure modes of the monolithic approach.
 - [[../learnings/mechanical-enforcement-over-prose|Mechanical enforcement beats prose rules]] — runnable checks > written rules; feedforward + feedback; embed remediation in error messages.
-- [[../learnings/generator-evaluator-separation|Always separate the generator from the evaluator]] — agents praise their own work; ship a calibrated evaluator for any artifact that's graded subjectively.
 
 ## `#reference` — Environment and commands
 
@@ -35,3 +28,5 @@ _No references yet._
 - [[../learnings/bash-strict-mode-grep-filter|Bash strict mode + grep filter exits 1 — wrap with `\|\| true`]] — `set -euo pipefail` + `grep -Ev` / `grep -c` that produces zero matches kills the script silently; wrap the failing step in a brace block with `\|\| true`, never the whole pipeline.
 - [[../learnings/claude-code-extra-known-marketplaces-source-schema|Claude Code `extraKnownMarketplaces` rejects `local` source — use `directory`]] — the discriminated union in settings.json schema accepts `url`/`hostPattern`/`github`/`git`/`npm`/`file`/`directory`; `local` is invalid and Claude Code skips the entire settings file on failure. Cross-check `json.schemastore.org/claude-code-settings.json`, not just the prose docs.
 - [[../learnings/claude-code-reserved-marketplace-names|Claude Code reserves marketplace names like `agent-skills` for Anthropic]] — the CLI rejects `claude plugin marketplace add` with `name 'X' is reserved` unless source is `github:anthropics/<repo>`. Always owner-prefix marketplace names (`ribeirogab-agent-skills`) and test `marketplace add` before shipping.
+- [[../learnings/memex-marketplace-name-not-reserved|Bare `memex` is NOT a reserved marketplace name]] — confirmed via an isolated-dir `marketplace add` probe; testing a name requires a throwaway path, since adding the repo's own dir no-ops against its existing registration.
+- [[../learnings/git-rm-leaves-gitignored-leftovers|`git rm -r <dir>` leaves the dir on disk when it holds gitignored files]] — tracked files are removed but `__pycache__`/`workspace/`/`*.skill` remain; `rm -rf` after `git ls-files <dir>` comes up empty.

@@ -1,6 +1,6 @@
-# agent-skills — Agent Instructions
+# memex — Agent Instructions
 
-`agent-skills` is the author's personal library of agent skills and slash commands, written in markdown with occasional shell scripts. The flagship is `skills/memex/`, an idempotent scaffolder that installs an externalized project memory (the "memex") into target repos. There is no build system, no package manager, and no test runner at the repo root — each skill is self-contained under `skills/<name>/`. The repo dogfoods its own memex: scaffolded helper skills live canonically under `.agents/skills/<name>/` and are exposed via per-agent symlinks (`.claude/skills/<name>` → `.agents/skills/<name>`); the `/memex-*` slash commands live in `.claude/commands/` (Claude Code-specific concept).
+This repository **is** memex — a single agent skill that idempotently installs an externalized project memory (a "memex") into any repo: a `.vault/` knowledge vault, an `AGENTS.md`, spec/plan/task templates, and bundled companion skills + slash commands. It is written in markdown with occasional shell scripts; there is no build system, no package manager, and no test runner at the repo root. The skill source lives under `skills/memex/`; its bundled companion skills live canonically under `.agents/skills/memex-*/` and are exposed via per-agent symlinks (`.claude/skills/<name>` → `.agents/skills/<name>`); the `/memex:*` slash commands ship as a Claude Code plugin (`plugins/memex/`). The repo dogfoods its own memex.
 
 ## Before starting any work
 
@@ -61,7 +61,7 @@ Full command catalog: `.vault/learnings/commands-catalog.md` _(create this note 
 
 > All memex entries shown in Claude Code syntax (plugin namespace `memex:`). Codex users invoke as `$memex-<verb>` via skill mention. Cursor users as `@memex-<verb>` via rule reference.
 
-Memex commands and companion skills both ship through the `memex` plugin from the upstream marketplace `ribeirogab-agent-skills` (declared in `.claude/settings.json`). Non-Claude agents read canonical skill copies under `.agents/skills/memex-<name>/` (exposed via per-agent symlinks to `.codex/skills/`, `.cursor/skills/`, etc., when those discovery dirs exist).
+Memex commands and companion skills both ship through the `memex` plugin from the upstream marketplace `memex` (declared in `.claude/settings.json`). Non-Claude agents read canonical skill copies under `.agents/skills/memex-<name>/` (exposed via per-agent symlinks to `.codex/skills/`, `.cursor/skills/`, etc., when those discovery dirs exist).
 
 - **`/memex:brainstorming`** — design exploration before writing a spec.
 - **`/memex:writing-plans`** — turn an approved design into a task list.

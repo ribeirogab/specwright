@@ -140,7 +140,7 @@ Fix: `chmod +x .agents/skills/memex-brainstorming/scripts/*.sh`.
 
 ### 11. Claude plugin settings present (when `.claude/` exists)
 
-Slash commands ship as a Claude Code plugin from the upstream marketplace `ribeirogab-agent-skills`. When the target repo has a `.claude/` directory, `.claude/settings.json` must declare both `extraKnownMarketplaces["ribeirogab-agent-skills"]` (with any non-empty `source` object) and `enabledPlugins["memex@ribeirogab-agent-skills"] = true`. If `.claude/` is absent, this check trivially PASSes — the user does not run Claude Code here, so no settings.json is required.
+Slash commands ship as a Claude Code plugin from the upstream marketplace `memex`. When the target repo has a `.claude/` directory, `.claude/settings.json` must declare both `extraKnownMarketplaces["memex"]` (with any non-empty `source` object) and `enabledPlugins["memex@memex"] = true`. If `.claude/` is absent, this check trivially PASSes — the user does not run Claude Code here, so no settings.json is required.
 
 ```bash
 if [ ! -d .claude ]; then
@@ -148,9 +148,9 @@ if [ ! -d .claude ]; then
 elif [ ! -f .claude/settings.json ]; then
   echo FAIL
 else
-  has_mp=$(jq 'has("extraKnownMarketplaces") and (.extraKnownMarketplaces | has("ribeirogab-agent-skills"))' .claude/settings.json 2>/dev/null)
-  has_src=$(jq '.extraKnownMarketplaces["ribeirogab-agent-skills"].source != null' .claude/settings.json 2>/dev/null)
-  has_plugin=$(jq '.enabledPlugins["memex@ribeirogab-agent-skills"] == true' .claude/settings.json 2>/dev/null)
+  has_mp=$(jq 'has("extraKnownMarketplaces") and (.extraKnownMarketplaces | has("memex"))' .claude/settings.json 2>/dev/null)
+  has_src=$(jq '.extraKnownMarketplaces["memex"].source != null' .claude/settings.json 2>/dev/null)
+  has_plugin=$(jq '.enabledPlugins["memex@memex"] == true' .claude/settings.json 2>/dev/null)
   if [ "$has_mp" = "true" ] && [ "$has_src" = "true" ] && [ "$has_plugin" = "true" ]; then
     echo PASS
   else

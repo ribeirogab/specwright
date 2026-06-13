@@ -57,7 +57,7 @@ CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
 
 For every **non-Claude** agent-specific discovery directory present in the repo (`.codex/`, `.cursor/`, `.opencode/`, `.aider/`, `.augment/`, etc.), each scaffold skill above should also be symlinked into that agent's `skills/` subdirectory so the agent can discover it. Example: when `.codex/` exists, `.codex/skills/memex-recall` is a symlink to `../../.agents/skills/memex-recall`.
 
-**Claude Code is excluded from this loop.** Claude users get the companion skills through the `memex` plugin (marketplace `ribeirogab-agent-skills`), invoked as `/memex:recall`, `/memex:brainstorming`, `/memex:writing-plans`, `/memex:link`. Creating `.claude/skills/memex-<name>` symlinks here would surface the same skill twice in `/help` — once as `/memex-recall` (hyphen-form symlink) and once as `/memex:recall` (plugin namespace). Legacy `.claude/skills/memex-{recall,brainstorming,writing-plans,link}` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks).
+**Claude Code is excluded from this loop.** Claude users get the companion skills through the `memex` plugin (marketplace `memex`), invoked as `/memex:recall`, `/memex:brainstorming`, `/memex:writing-plans`, `/memex:link`. Creating `.claude/skills/memex-<name>` symlinks here would surface the same skill twice in `/help` — once as `/memex-recall` (hyphen-form symlink) and once as `/memex:recall` (plugin namespace). Legacy `.claude/skills/memex-{recall,brainstorming,writing-plans,link}` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks).
 
 A missing per-agent symlink is **not `DRIFT`** — only the canonical files under `.agents/skills/` are required. If a per-agent dir exists but lacks the expected symlinks, the memex installer re-creates them on the next run (no prompt needed; symlinks are non-destructive). If a per-agent dir does not exist at all, no symlinks are created (the absence signals the user does not run that agent in this repo).
 
@@ -70,7 +70,7 @@ The pre-plugin memex installed slash commands as files at:
 - `.agents/commands/memex-{spec,learn,sweep,review-spec}.md` (canonical)
 - `.claude/commands/memex-{spec,learn,sweep,review-spec}.md` (symlink)
 
-These are obsolete — slash commands now ship as a Claude Code plugin from the upstream marketplace `ribeirogab-agent-skills`. Any of these files (regular or symlink) is `DRIFT`. Fix: `rm` the file in Phase 4. This is a non-destructive op per the "scaffold sempre vence" policy — no prompt.
+These are obsolete — slash commands now ship as a Claude Code plugin from the upstream marketplace `memex`. Any of these files (regular or symlink) is `DRIFT`. Fix: `rm` the file in Phase 4. This is a non-destructive op per the "scaffold sempre vence" policy — no prompt.
 
 If `.agents/commands/` becomes empty after the removals, the directory itself is also removed (`rmdir` succeeds only on empty dirs, so this is safe even if an unrelated file still sits there).
 
@@ -80,8 +80,8 @@ Legacy `.claude/commands/memex-open-pr.md` is **not** in scope here — orphan p
 
 When the target repo has a `.claude/` directory (signal that the user runs Claude Code in this repo), `.claude/settings.json` must declare:
 
-- `extraKnownMarketplaces["ribeirogab-agent-skills"]` with a non-empty `source` object (either `{ "source": "github", "repo": "ribeirogab/agent-skills" }` for target repos, or `{ "source": "directory", "path": "." }` for this repo's own dogfood).
-- `enabledPlugins["memex@ribeirogab-agent-skills"]` set to `true`.
+- `extraKnownMarketplaces["memex"]` with a non-empty `source` object (either `{ "source": "github", "repo": "ribeirogab/memex" }` for target repos, or `{ "source": "directory", "path": "." }` for this repo's own dogfood).
+- `enabledPlugins["memex@memex"]` set to `true`.
 
 Detection:
 
@@ -90,8 +90,8 @@ if [ -d .claude ]; then
   if [ ! -f .claude/settings.json ]; then
     echo "DRIFT — .claude/settings.json missing"
   else
-    has_mp=$(jq 'has("extraKnownMarketplaces") and (.extraKnownMarketplaces | has("ribeirogab-agent-skills"))' .claude/settings.json)
-    has_plugin=$(jq '.enabledPlugins["memex@ribeirogab-agent-skills"] == true' .claude/settings.json)
+    has_mp=$(jq 'has("extraKnownMarketplaces") and (.extraKnownMarketplaces | has("memex"))' .claude/settings.json)
+    has_plugin=$(jq '.enabledPlugins["memex@memex"] == true' .claude/settings.json)
     if [ "$has_mp" != "true" ] || [ "$has_plugin" != "true" ]; then
       echo "DRIFT — settings.json missing marketplace or plugin entry"
     fi

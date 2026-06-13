@@ -1,75 +1,47 @@
-# agent-skills
+# memex
 
-Reusable agent skills for any tool that supports the open agent skills standard — Claude Code, Codex, Cursor, OpenCode, Gemini CLI, Aider, Cline, Augment, and others. Skills are framework-agnostic by design: a skill is a folder with a `SKILL.md` and any helpers it needs; agents discover them by description.
+An externalized, navigable project memory for coding agents — Claude Code, Codex, Cursor, OpenCode, Gemini CLI, Aider, and any other tool that supports the open agent skills standard. `memex` is a single skill that idempotently scaffolds a `.vault/` knowledge vault, an `AGENTS.md` (with a `CLAUDE.md` symlink for back-compat), spec/plan/task templates, and a set of bundled companion skills + slash commands into any repository — then dogfoods that same memory on its own development.
 
-> Personal project, solo maintenance, best-effort, no SLA. Published so anyone can pull a skill into their setup.
+> Personal project, solo maintenance, best-effort, no SLA. Published so anyone can install it.
 
 ---
 
-## Skills
-
-### `memex`
-
-Idempotently scaffolds a memex — an externalized, navigable project memory for agents — into any repository: a `.vault/` knowledge vault, an `AGENTS.md` (with a `CLAUDE.md` symlink for back-compat), spec/plan/task templates, plus a set of bundled `memex-*` slash commands (open-pr, learn, spec, review-spec, sweep) and companion skills (brainstorming, recall, writing-plans). Audit-first, autonomous-fix, with a Phase-5 validator. Safe to re-run.
-
-**Install:**
+## Install
 
 ```bash
-npx skills add ribeirogab/agent-skills --skill memex
+npx skills add ribeirogab/memex --skill memex
 ```
 
-**Use:** point an agent at any repo where you want the memex installed.
+## Use
+
+Point an agent at any repo where you want the memex installed:
 
 > "Audit the memex in this repo and scaffold whatever is missing."
 
-After the first run the repo has a working `.vault/` vault, the `memex-*` commands, and the companion skills, all dogfood-tested by the memex's own 13-check validator.
+The skill is audit-first, autonomous-fix, and safe to re-run. After the first run the repo has a working `.vault/` vault, the bundled `memex-*` companion skills, the `/memex:*` slash commands, and an `AGENTS.md` — all dogfood-tested by the memex's own Phase-5 validator.
 
 **Source:** [`skills/memex/SKILL.md`](skills/memex/SKILL.md)
 
----
-
-### `skill-improver`
-
-Audits an existing agent skill against the canonical authoring rules (frontmatter, layout, body style, progressive disclosure, description quality, degrees of freedom) and applies safe fixes autonomously. Defers high-regression-risk findings for manual review. Self-contained — bundles vendored copies of `quick_validate.py` and `package_skill.py` so it does not require the upstream `skill-creator` to be installed.
-
-**Install:**
-
-```bash
-npx skills add ribeirogab/agent-skills --skill skill-improver
-```
-
-**Use:** point it at any skill folder.
-
-> "Audit the skill at `skills/my-skill` and apply safe fixes."
-
-The skill walks a 10-section canonical checklist, applies anything `Low` or `Medium` regression-risk autonomously, and produces a final report with a `Skipped` section for `High`-risk findings the maintainer should review by hand.
-
-**Source:** [`skills/skill-improver/SKILL.md`](skills/skill-improver/SKILL.md)
-
----
-
 ## Repository layout
 
-What matters for users is just `skills/`. Each subfolder is one publishable skill:
-
 ```
-agent-skills/
-├── skills/
-│   ├── memex/
-│   └── skill-improver/
-├── LICENSE                    # MIT, this repository's original work
-├── NOTICE.md                  # attribution for any vendored content inside skills/
+memex/
+├── skills/memex/            # the skill: SKILL.md, references/, scaffold/, scripts/
+├── plugins/memex/           # Claude Code plugin — the /memex:* slash commands
+├── .claude-plugin/          # marketplace manifest
+├── LICENSE                  # MIT
+├── NOTICE.md                # attribution for vendored validator scripts
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
 ├── SECURITY.md
 └── README.md
 ```
 
-The repository also contains `.agents/`, `.claude/`, `.vault/`, and `evals/` — local-only dirs used by the maintainer to dogfood the memex, run skill evaluations, and store personal project notes. They are not part of the published surface and are not what `npx skills add` installs.
+The repository also contains `.agents/`, `.claude/`, and `.vault/` — local dirs used to dogfood memex on its own development (the bundled companion skills, the per-agent symlinks, and the maintainer's knowledge vault). They are not what `npx skills add` installs.
 
 ## License
 
-This repository's original work is licensed under the [MIT License](LICENSE). Any vendored third-party content inside the published skills is governed by its upstream license; see [`NOTICE.md`](NOTICE.md) for the full attribution.
+This repository's original work is licensed under the [MIT License](LICENSE). The vendored validator scripts under `skills/memex/scripts/` are Apache-2.0; see [`NOTICE.md`](NOTICE.md) for attribution.
 
 ## Contributing
 

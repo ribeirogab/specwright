@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for considering a contribution to `agent-skills`. The repository accepts pull requests for the published skills under [`skills/`](skills/) and for the documentation that supports them, with a small quality bar that this document explains.
+Thanks for considering a contribution to `memex`. The repository accepts pull requests for the `memex` skill (and its bundled companions) and the documentation that supports them, with a small quality bar that this document explains.
 
 The maintenance model is **solo, best-effort, no SLA**. Pull requests are reviewed when the maintainer is available; complex changes may take time to land. Please do not interpret silence as rejection — a polite ping after a couple of weeks is welcome.
 
@@ -8,13 +8,13 @@ The maintenance model is **solo, best-effort, no SLA**. Pull requests are review
 
 ### What is in scope
 
-- **Bug fixes and improvements to any skill under `skills/`** — including bundled payloads (e.g., scaffold content the skill copies into a target repo, or vendored helper scripts the skill ships).
+- **Bug fixes and improvements to `memex`** — including bundled payloads (the scaffold content it copies into target repos, the bundled companion skills under `.agents/skills/memex-*/`, and the vendored validator scripts under `skills/memex/scripts/`).
 - **Documentation fixes** to `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `NOTICE.md`.
 - **Vendored-content updates** when a skill bundles upstream code that was refreshed; update `NOTICE.md` accordingly.
 
 ### What is out of scope
 
-- **New unrelated top-level skills.** This is a curated personal collection. Open an issue first if you think a new skill belongs here; otherwise the [skills CLI](https://github.com/vercel-labs/skills) makes any public GitHub repo installable, so a separate repo is usually the right home.
+- **Skills unrelated to memex.** This repository is dedicated to memex. The [skills CLI](https://github.com/vercel-labs/skills) makes any public GitHub repo installable, so publish unrelated skills from your own repo.
 - **`.vault/`, `.agents/`, `.claude/`, `evals/`** — these are the maintainer's local-only dirs (personal knowledge vault, dogfooded memex output, eval workspaces). They are not part of the published skill surface and PRs touching them will be closed without merge.
 - **Governance proposals**, maintainer hierarchies, decision-making frameworks, funding models, sponsorship, and similar process documents. The project is intentionally solo and lightweight.
 
@@ -27,19 +27,17 @@ The maintenance model is **solo, best-effort, no SLA**. Pull requests are review
 
 ## Quality bar
 
-Mechanical checks must pass on the modified skill before the PR is opened. Both checks ship inside the `skill-improver` skill and are vendored copies of the canonical authoring validators (Apache-2.0, see [`NOTICE.md`](NOTICE.md)):
+Mechanical checks must pass on the modified skill before the PR is opened. Both scripts are vendored copies of the canonical authoring validators (Apache-2.0, see [`NOTICE.md`](NOTICE.md)) and ship under `skills/memex/scripts/`:
 
 ```bash
-python skills/skill-improver/scripts/quick_validate.py skills/<the-skill-you-changed>
+python skills/memex/scripts/quick_validate.py skills/<the-skill-you-changed>
 # expected output: "Skill is valid!"
 
-python skills/skill-improver/scripts/package_skill.py skills/<the-skill-you-changed> /tmp
+python skills/memex/scripts/package_skill.py skills/<the-skill-you-changed> /tmp
 # expected output: ends with "Successfully packaged skill to: /tmp/<skill-name>.skill"
 ```
 
 `quick_validate.py` enforces the frontmatter contract (kebab-case `name`, `description` ≤ 1024 chars, no XML angle brackets, no reserved words, only canonical top-level keys). `package_skill.py` re-runs that validation and additionally confirms the skill packages cleanly into a `.skill` artifact (no broken file references, no excluded patterns left behind).
-
-For a deeper audit, invoke the `skill-improver` skill itself in an agent session ("audit the skill at `skills/<the-skill-you-changed>`"). It walks the full 10-section canonical checklist (folder/file naming, layout, body style, description quality, progressive disclosure, degrees of freedom, workflow patterns, scripts, anti-regression) and applies safe fixes autonomously.
 
 ## Pull request checklist
 

@@ -92,7 +92,7 @@ Full command catalog: `.vault/learnings/commands-catalog.md` _(create this note 
 
 > All memex entries shown in Claude Code syntax (plugin namespace `memex:`). Codex users invoke as `$memex-<verb>` via skill mention. Cursor users as `@memex-<verb>` via rule reference.
 
-Memex commands and companion skills both ship through the `memex` plugin from the upstream marketplace `ribeirogab-agent-skills` (declared in this repo's `.claude/settings.json`). Non-Claude agents read canonical skill copies under `.agents/skills/memex-<name>/` (exposed via per-agent symlinks to `.codex/skills/`, `.cursor/skills/`, etc., when those discovery dirs exist).
+Memex commands and companion skills both ship through the `memex` plugin from the upstream marketplace `memex` (declared in this repo's `.claude/settings.json`). Non-Claude agents read canonical skill copies under `.agents/skills/memex-<name>/` (exposed via per-agent symlinks to `.codex/skills/`, `.cursor/skills/`, etc., when those discovery dirs exist).
 
 - **`/memex:brainstorming`** — design exploration before writing a spec.
 - **`/memex:writing-plans`** — turn an approved design into a task list.

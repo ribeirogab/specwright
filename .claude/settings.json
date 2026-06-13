@@ -1,13 +1,13 @@
 {
+  "enabledPlugins": {
+    "memex@memex": true
+  },
   "extraKnownMarketplaces": {
-    "ribeirogab-agent-skills": {
+    "memex": {
       "source": {
         "source": "directory",
         "path": "."
       }
     }
-  },
-  "enabledPlugins": {
-    "memex@ribeirogab-agent-skills": true
   }
 }

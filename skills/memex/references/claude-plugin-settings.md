@@ -1,33 +1,33 @@
 # Claude Plugin Settings — Reference
 
-The memex skill writes (or merges into) the target repo's `.claude/settings.json` so that Claude Code installs the upstream marketplace `ribeirogab-agent-skills` plus the `memex` plugin at trust time. This reference is the **single source of truth** for the marketplace coordinates, the JSON shapes, and the merge recipe.
+The memex skill writes (or merges into) the target repo's `.claude/settings.json` so that Claude Code installs the upstream marketplace `memex` plus the `memex` plugin at trust time. This reference is the **single source of truth** for the marketplace coordinates, the JSON shapes, and the merge recipe.
 
 ## Canonical coordinates
 
 | Key             | Value                       |
 | --------------- | --------------------------- |
-| Marketplace name | `ribeirogab-agent-skills`             |
-| Marketplace source (target repos) | `{ "source": "github", "repo": "ribeirogab/agent-skills" }` |
+| Marketplace name | `memex`             |
+| Marketplace source (target repos) | `{ "source": "github", "repo": "ribeirogab/memex" }` |
 | Marketplace source (this repo dogfood only) | `{ "source": "directory", "path": "." }` |
 | Plugin name     | `memex`                     |
-| Enabled-plugins key | `memex@ribeirogab-agent-skills`    |
+| Enabled-plugins key | `memex@memex`    |
 
 ## JSON shapes
 
 The two keys to write under the top-level object are `extraKnownMarketplaces` and `enabledPlugins`.
 
-`extraKnownMarketplaces["ribeirogab-agent-skills"]` (target repos):
+`extraKnownMarketplaces["memex"]` (target repos):
 
 ```json
 {
   "source": {
     "source": "github",
-    "repo": "ribeirogab/agent-skills"
+    "repo": "ribeirogab/memex"
   }
 }
 ```
 
-`enabledPlugins["memex@ribeirogab-agent-skills"]`:
+`enabledPlugins["memex@memex"]`:
 
 ```json
 true
@@ -49,10 +49,10 @@ else
 fi
 
 jq '
-  .extraKnownMarketplaces["ribeirogab-agent-skills"] = {
-    "source": { "source": "github", "repo": "ribeirogab/agent-skills" }
+  .extraKnownMarketplaces["memex"] = {
+    "source": { "source": "github", "repo": "ribeirogab/memex" }
   } |
-  .enabledPlugins["memex@ribeirogab-agent-skills"] = true
+  .enabledPlugins["memex@memex"] = true
 ' "$TMP" > "$SETTINGS"
 
 rm "$TMP"
@@ -73,10 +73,10 @@ python3 - <<'PY'
 import json, pathlib
 p = pathlib.Path(".claude/settings.json")
 data = json.loads(p.read_text()) if p.exists() and p.read_text().strip() else {}
-data.setdefault("extraKnownMarketplaces", {})["ribeirogab-agent-skills"] = {
-    "source": {"source": "github", "repo": "ribeirogab/agent-skills"}
+data.setdefault("extraKnownMarketplaces", {})["memex"] = {
+    "source": {"source": "github", "repo": "ribeirogab/memex"}
 }
-data.setdefault("enabledPlugins", {})["memex@ribeirogab-agent-skills"] = True
+data.setdefault("enabledPlugins", {})["memex@memex"] = True
 p.write_text(json.dumps(data, indent=2) + "\n")
 PY
 ```
@@ -85,7 +85,7 @@ If neither `jq` nor `python3` is available, the skill must report a clear error 
 
 ## Dogfood note (this repo only)
 
-When the memex skill runs **inside `ribeirogab/agent-skills` itself** (the marketplace repo), the dogfood `.claude/settings.json` declares the marketplace source as `{ "source": "directory", "path": "." }` instead of the GitHub source above. This keeps the maintainer's inner dev loop fast — local edits to `plugins/memex/` are picked up on `/plugin marketplace update` without commit-push-fetch. The github source is for **target repos** (every other repo). The skill detects this case by checking whether the current repo's `.claude-plugin/marketplace.json` declares `name = "ribeirogab-agent-skills"`; if it does, use the local source.
+When the memex skill runs **inside `ribeirogab/memex` itself** (the marketplace repo), the dogfood `.claude/settings.json` declares the marketplace source as `{ "source": "directory", "path": "." }` instead of the GitHub source above. This keeps the maintainer's inner dev loop fast — local edits to `plugins/memex/` are picked up on `/plugin marketplace update` without commit-push-fetch. The github source is for **target repos** (every other repo). The skill detects this case by checking whether the current repo's `.claude-plugin/marketplace.json` declares `name = "memex"`; if it does, use the local source.
 
 ## Trade-off-rejected alternatives (from Architecture Decision 3)
 

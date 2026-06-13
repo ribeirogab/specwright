@@ -111,7 +111,7 @@ done
 #    not run that agent in this repo).
 #
 #    Skip .claude/ — Claude Code gets companion skills through the plugin
-#    (ribeirogab-agent-skills → memex), invoked as /memex:recall etc.
+#    (memex → memex), invoked as /memex:recall etc.
 #    Creating .claude/skills/memex-recall symlinks here would duplicate
 #    the skill under both `/memex-recall` (symlink) and `/memex:recall`
 #    (plugin) in Claude Code's slash menu.
@@ -136,7 +136,7 @@ if [ -d .claude/skills ]; then
 fi
 ```
 
-**Slash commands** ship as a Claude Code plugin published from the upstream marketplace `ribeirogab-agent-skills` (this repo's root `.claude-plugin/marketplace.json`). The four slash commands — `/memex:spec`, `/memex:learn`, `/memex:sweep`, `/memex:review-spec` — live in `plugins/memex/commands/` upstream and are fetched by Claude Code at workspace-trust time. The memex skill **does not copy command files into the target repo** — it only declares the marketplace and pre-enables the plugin via `.claude/settings.json`.
+**Slash commands** ship as a Claude Code plugin published from the upstream marketplace `memex` (this repo's root `.claude-plugin/marketplace.json`). The four slash commands — `/memex:spec`, `/memex:learn`, `/memex:sweep`, `/memex:review-spec` — live in `plugins/memex/commands/` upstream and are fetched by Claude Code at workspace-trust time. The memex skill **does not copy command files into the target repo** — it only declares the marketplace and pre-enables the plugin via `.claude/settings.json`.
 
 The skill does two things at install time, both gated on the target repo having a `.claude/` directory (its absence signals the user does not run Claude Code in this repo):
 
@@ -162,12 +162,12 @@ fi
 #    for the canonical coordinates, JSON shapes, jq recipe, and Python fallback.
 if [ -d .claude ]; then
   # Detect dogfood: if this repo's own .claude-plugin/marketplace.json declares
-  # name = "ribeirogab-agent-skills", use the local-path source. Otherwise use github.
+  # name = "memex", use the local-path source. Otherwise use github.
   if [ -f .claude-plugin/marketplace.json ] && \
-     [ "$(jq -r '.name' .claude-plugin/marketplace.json 2>/dev/null)" = "ribeirogab-agent-skills" ]; then
+     [ "$(jq -r '.name' .claude-plugin/marketplace.json 2>/dev/null)" = "memex" ]; then
     MARKETPLACE_SOURCE='{"source":"directory","path":"."}'
   else
-    MARKETPLACE_SOURCE='{"source":"github","repo":"ribeirogab/agent-skills"}'
+    MARKETPLACE_SOURCE='{"source":"github","repo":"ribeirogab/memex"}'
   fi
 
   SETTINGS=".claude/settings.json"
@@ -179,8 +179,8 @@ if [ -d .claude ]; then
   fi
 
   jq --argjson src "$MARKETPLACE_SOURCE" '
-    .extraKnownMarketplaces["ribeirogab-agent-skills"] = { "source": $src } |
-    .enabledPlugins["memex@ribeirogab-agent-skills"] = true
+    .extraKnownMarketplaces["memex"] = { "source": $src } |
+    .enabledPlugins["memex@memex"] = true
   ' "$TMP" > "$SETTINGS"
   rm "$TMP"
 fi
@@ -190,7 +190,7 @@ If `jq` is not installed, fall back to the Python recipe documented in `referenc
 
 Rules:
 - Skills always go to `.agents/skills/<name>` first (canonical), then symlinked into existing agent dirs.
-- Slash commands ship as a Claude Code plugin from the upstream marketplace `ribeirogab-agent-skills`. The skill writes `.claude/settings.json` (extraKnownMarketplaces + enabledPlugins) so Claude Code installs the plugin at workspace-trust time. No command files are copied into the target repo.
+- Slash commands ship as a Claude Code plugin from the upstream marketplace `memex`. The skill writes `.claude/settings.json` (extraKnownMarketplaces + enabledPlugins) so Claude Code installs the plugin at workspace-trust time. No command files are copied into the target repo.
 - Existing canonical skill files are never overwritten — re-runs are no-ops on already-installed items.
 - Legacy `.claude/commands/memex-{spec,learn,sweep,review-spec}.md` and `.agents/commands/memex-*.md` files (from pre-plugin installs) are removed unconditionally on every run. `rm` works for regular files and symlinks.
 - Per-agent dirs that do not already exist are not auto-created by the skill copy; only an existing dir signals that agent is in use here.

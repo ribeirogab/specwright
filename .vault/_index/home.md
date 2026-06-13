@@ -2,9 +2,9 @@
 tags:
   - moc
 ---
-# agent-skills — Project Knowledge Vault
+# memex — Project Knowledge Vault
 
-This vault contains all project-specific knowledge for agent-skills: constitution, specs, learnings, and rules.
+This vault contains all project-specific knowledge for memex: constitution, specs, learnings, and rules.
 
 ## Where to go
 

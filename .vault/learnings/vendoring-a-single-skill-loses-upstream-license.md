@@ -12,7 +12,7 @@ When a target skill lives inside a larger upstream repository, the upstream's `L
 
 ## Context
 
-Discovered while preparing `agent-skills` for open-source publication. We had vendored two third-party skills:
+Discovered while preparing `memex` for open-source publication. We had vendored two third-party skills:
 
 - `.claude/skills/skill-creator/` from anthropics/skills — Apache-2.0. Anthropic packages its `LICENSE.txt` *inside* the skill folder, so vendoring preserved it automatically.
 - `.claude/skills/opensource-guide-coach/` from xixu-me/skills — MIT (Xi Xu). The upstream carries `LICENSE` at the repo root only; vendoring the skill subdir dropped the notice.

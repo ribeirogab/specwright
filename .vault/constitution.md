@@ -2,29 +2,29 @@
 status: canonical
 created: 2026-04-30
 ---
-# agent-skills — Constitution
+# memex — Constitution
 
-This document declares the non-negotiable principles of the agent-skills project. Everything here has earned its place by being a decision we never want to re-litigate or a constraint we never want to forget. Agents and humans must read this file before making any substantive change.
+This document declares the non-negotiable principles of the memex project. Everything here has earned its place by being a decision we never want to re-litigate or a constraint we never want to forget. Agents and humans must read this file before making any substantive change.
 
 If you are tempted to violate a rule here, stop and open a discussion first. Never silently work around the constitution.
 
-## Why agent-skills exists
+## Why memex exists
 
-`agent-skills` is the author's personal collection of Claude Code skills and slash commands. It exists so that high-leverage agentic workflows (scaffolding memexes, recalling project context, structured brainstorming, plan-writing, etc.) can be developed once, version-controlled, and re-used across every other repo via symlinks.
+`memex` is a single agent skill that idempotently installs a project *memex* — an externalized, navigable project memory — into any repository: a `.vault/` knowledge vault, an `AGENTS.md`, spec/plan/task templates, and a set of bundled companion skills and slash commands. (The name is Vannevar Bush's *memex*, 1945 — an externalized, navigable personal memory.)
 
-The flagship skill in this repo is `memex/`, which idempotently installs a project memex (`.vault/` vault, `AGENTS.md`, spec templates, bundled skills/commands) into any target repo. The repo's purpose is therefore twofold: (1) be a usable library of skills, and (2) dogfood those skills on itself so the author trusts what is shipped.
+This repository **is** memex: the skill's source, its bundled companions, its Claude Code distribution surface (marketplace + plugin), and the `.vault/` that dogfoods the skill on its own development. The repo's purpose is singular — build and ship memex — and it dogfoods memex on itself so the maintainer trusts what is shipped.
 
 ## Scope guardrails
 
-- **In scope**: Claude Code skills (under `skills/`) and the assets they ship to other repos (under `skills/<skill>/scaffold/`). Also in scope: the Claude Code marketplace manifest (`.claude-plugin/marketplace.json` at repo root) and Claude Code plugin sources (`plugins/<name>/` at repo root) — these are the Claude Code surface needed to distribute skills' slash commands under a colon namespace.
-- **Out of scope**: application code, business logic, anything not directly related to authoring or distributing Claude Code skills.
-- **Symlink discipline**: per-skill symlinks under any agent discovery directory (`.claude/skills/<name>`, `.codex/skills/<name>`, `.cursor/skills/<name>`, etc.) are allowed and expected. The symlink may target either `skills/<name>/` (this repo's own published skills, dogfooded onto the maintainer's agent) or `.agents/skills/<name>/` (the canonical location for skills the memex installer scaffolds, agent-agnostic by design). **Never** re-introduce a blanket symlink that maps an entire agent dir to `skills/` or `.agents/skills/` — only one symlink per skill, named after the skill. Real directories committed under `.claude/skills/` are reserved for vendored personal references that the maintainer keeps locally and that are not part of any scaffolded surface (currently: `skill-creator`, `opensource-guide-coach`).
+- **In scope**: the `memex` skill under `skills/memex/` (including `skills/memex/scaffold/`, `skills/memex/references/`, and `skills/memex/scripts/`), the bundled companion skills under `.agents/skills/memex-*/`, and the Claude Code distribution surface — the marketplace manifest (`.claude-plugin/marketplace.json` at repo root) and the plugin source (`plugins/memex/` at repo root) needed to distribute the slash commands under a colon namespace.
+- **Out of scope**: any skill unrelated to memex, application code, business logic, anything not directly related to authoring or distributing memex.
+- **Symlink discipline**: the bundled companions are canonical under `.agents/skills/memex-*/` and exposed via one symlink per skill under each agent discovery directory (`.claude/skills/<name>`, `.codex/skills/<name>`, `.cursor/skills/<name>`, etc.). The `memex` skill itself is dogfooded onto the maintainer's agent via `.claude/skills/memex` → `skills/memex/`. **Never** re-introduce a blanket symlink that maps an entire agent dir to `skills/` or `.agents/skills/` — only one symlink per skill, named after the skill.
 - **No build pipeline**: this repo intentionally has no `package.json`, no transpiler, no test runner. Skills are markdown + occasional shell scripts and must stay that way unless a clear need overrides this rule.
 
 ## Architecture principles
 
-- **Skills are self-contained**: every skill under `skills/<name>/` ships with its own `SKILL.md`, any `references/`, and (when applicable) a `scaffold/` directory with the assets it copies into target repos. A skill must be usable by copying or symlinking its directory alone.
-- **Idempotency over cleverness**: the `memex` skill (and any future scaffolding skill) must be safe to re-run on the same repo. Audit before write, ask before fix, never overwrite a healthy file.
+- **Self-contained**: `memex` (under `skills/memex/`) ships with its own `SKILL.md`, its `references/`, its `scripts/`, and a `scaffold/` directory with the assets it copies into target repos; each bundled companion under `.agents/skills/memex-*/` is likewise usable by copying or symlinking its directory alone.
+- **Idempotency over cleverness**: the `memex` skill must be safe to re-run on the same repo. Audit before write, ask before fix, never overwrite a healthy file.
 - **Reference docs split out**: long instructions live in `skills/<name>/references/*.md` and are loaded only when needed by the orchestrator (`SKILL.md`). This keeps the entry-point skill prompt small.
 - **Markdown is the source of truth**: skills are authored as markdown so the agent can read, diff, and reason about them directly. Avoid hidden state or generated artifacts.
 
@@ -45,8 +45,8 @@ Specs never get deleted. Shipped specs remain in `.vault/specs/` as historical r
 
 ## Knowledge layering
 
-- Project-specific knowledge lives in `.vault/`. Only add notes here for things unique to agent-skills (e.g. how the memex symlink works, conventions for authoring new skills).
-- Generic patterns that apply to any project should not be duplicated in this vault — they belong in skill content under `skills/`, where they can be shipped to other repos.
+- Project-specific knowledge lives in `.vault/`. Only add notes here for things unique to memex (e.g. how the memex symlink works, how the scaffold layer embeds the marketplace coordinates).
+- Generic patterns that apply to any project should not be duplicated in this vault — they belong in memex's own content under `skills/memex/`, where they ship to other repos.
 
 ## What this constitution is not
 
