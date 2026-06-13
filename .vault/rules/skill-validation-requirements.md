@@ -45,7 +45,7 @@ When creating or modifying any skill in this repo, the following must be true. I
 - Non-empty.
 - Maximum **1024 characters**.
 - **No XML angle brackets** (`<` or `>`).
-- Should describe both **what the skill does** and **when to use it**. (Style guidance lives in `[[../conventions/skill-md-style]]`.)
+- Should describe both **what the skill does** and **when to use it**.
 
 ### Frontmatter — optional fields
 

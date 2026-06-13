@@ -5,13 +5,12 @@ tags:
 related:
   - "[[agents-md-as-map-not-encyclopedia]]"
   - "[[mechanical-enforcement-over-prose]]"
-  - "[[generator-evaluator-separation]]"
   - "[[memex]]"
 created: 2026-04-30
 ---
 # Harness engineering — the foundation behind this repo
 
-Every skill in `agent-skills/` is, by definition, a *harness* in the technical sense formalized by three 2025-2026 essays. Treat this not as a buzzword but as the load-bearing frame: when you author a new skill (or modify an existing one), the questions you ask come from this literature.
+memex and its bundled companion skills are, by definition, *harnesses* in the technical sense formalized by three 2025-2026 essays. Treat this not as a buzzword but as the load-bearing frame: when you author or modify memex, the questions you ask come from this literature.
 
 ## Context
 
@@ -31,7 +30,7 @@ Seven principles all three articles agree on:
 2. **Map, not encyclopedia.** A short root entry point (`AGENTS.md` ~100 lines) that *points* into a structured knowledge directory. One giant instructions file fails predictably — context crowding, "everything is important means nothing is", silent rot, no mechanical verification. See `[[agents-md-as-map-not-encyclopedia]]`.
 3. **Repository is the system of record.** "Anything the agent doesn't have in-context effectively doesn't exist" (OpenAI). Tribal knowledge, Slack threads, Google Docs are invisible. Push everything load-bearing into the repo as markdown.
 4. **Reset, not compaction.** When a long task fills the window, a fresh agent with a structured handoff beats summarizing-in-place. Compaction leaves "context anxiety" intact (Anthropic).
-5. **Separate the generator from the evaluator.** Agents reliably praise their own work. Ship a calibrated evaluator with explicit grading criteria. See `[[generator-evaluator-separation]]`.
+5. **Separate the generator from the evaluator.** Agents reliably praise their own work. Ship a calibrated evaluator with explicit grading criteria.
 6. **Mechanical enforcement over prose.** Prose rules in `SKILL.md` get pattern-matched and ignored. Runnable checks (linters, validation scripts, structural tests) fire deterministically and can carry their own remediation instructions in error messages. See `[[mechanical-enforcement-over-prose]]`.
 7. **Garbage collection is continuous, not periodic.** Drift is inevitable in agent-driven repos. Manual cleanup does not scale (OpenAI's team burned a Friday/week before automating it). Encode taste once as "golden principles", then run background sweepers that open auto-mergeable refactor PRs.
 
