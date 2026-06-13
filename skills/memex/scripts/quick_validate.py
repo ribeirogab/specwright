@@ -3,7 +3,7 @@
 Quick validation script for skills - minimal version.
 
 Vendored verbatim from https://github.com/anthropics/skills (Apache-2.0,
-skill-creator/scripts/quick_validate.py). Kept inline so skill-improver
+skill-creator/scripts/quick_validate.py). Kept inline so memex
 remains self-contained and does not depend on skill-creator being
 installed alongside it.
 """
