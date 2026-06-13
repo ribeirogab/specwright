@@ -1,13 +1,13 @@
 ---
 name: Bug report
-about: Report a problem with a skill in this repository
+about: Report a problem with memex or a bundled companion
 title: "[bug] "
 labels: ["bug"]
 ---
 
-## Skill affected
+## Component affected
 
-Path under `skills/` (e.g. `skills/memex`, `skills/skill-improver`).
+The `memex` skill, a bundled companion (`memex-brainstorming`, `memex-recall`, `memex-writing-plans`, `memex-link`), or a `/memex:*` command.
 
 ## Agent and version
 
