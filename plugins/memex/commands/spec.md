@@ -15,7 +15,7 @@ Take what was discussed so far in this conversation and enter the spec flow.
 
 2. **Enter the `memex-brainstorming` skill** — use the conversation as context, but run the full flow. The prior discussion gives you a head start, not a shortcut. If something important was mentioned casually, confirm it explicitly before locking it into the spec.
 
-3. **Follow the brainstorming flow normally** — clarifying questions, approaches, design sections, user approval, write spec, spec self-review loop, user review gate, then `/memex:review-spec` for an external evaluator pass, and finally hand off to `memex-writing-plans`.
+3. **Follow the brainstorming flow normally** — clarifying questions, approaches, design sections, user approval, then **ask the execution mode (autonomous or reviewed)** and record `branch:`/`mode:` in the spec. In **reviewed** mode: write spec → spec self-review loop → user review gate → `/memex:review-spec` external pass → hand off to `memex-writing-plans`. In **autonomous** mode: skip the review loop and the user gate and hand straight off to `memex-writing-plans` (then implement → quality gate → `/memex:new-pr` → `memex:code-review` cycle). See `AGENTS.md` (`## Workflow Spec Driven`).
 
 ## If `$ARGUMENTS` is provided
 

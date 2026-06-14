@@ -35,7 +35,7 @@ These files describe the current project specifically. Substitute every occurren
 - `.vault/_index/specs.md`
 - `.vault/_index/learnings.md`
 - `.vault/_index/conventions.md`
-- `.vault/_index/rules.md`
+- `.vault/rules.md`
 
 Surviving `{{Project Name}}` in any Group B file is caught by Phase 5 validation (check #12) and fails the run.
 
@@ -176,6 +176,8 @@ status: draft
 feature: {{kebab-slug-of-feature}}
 created: {{YYYY-MM-DD}}
 shipped: null
+branch: {{feat/kebab-slug-of-feature}}
+mode: {{autonomous | reviewed}}
 ---
 # {{Feature Name}} — Spec
 
@@ -305,14 +307,14 @@ This vault contains all project-specific knowledge for {{Project Name}}: constit
 - **[[specs|Specs MOC]]** — all specs, past and present, indexed by status.
 - **[[learnings|Learnings MOC]]** — architecture, patterns, gotchas.
 - **[[conventions|Conventions MOC]]** — code style choices the team has made.
-- **[[rules|Rules MOC]]** — project-specific safety and workflow rules.
+- **[[../rules|Rules]]** — non-negotiable operational rules: philosophy, git & delivery, code.
 
 ## How to use this vault
 
 - New feature or refactor → copy `../specs/_template/` and fill in.
 - New learning discovered → copy `../templates/learning.md` and add to `../learnings/`.
 - New convention agreed → copy `../templates/convention.md` and add to `../conventions/`.
-- New rule needed → copy `../templates/rule.md` and add to `../rules/`.
+- New non-negotiable rule → add it to the relevant section of `../rules.md`.
 - Always cross-link notes using Obsidian's `[[ ]]` syntax so backlinks aggregate concepts over time.
 ```
 
@@ -381,27 +383,52 @@ Deliberate code style choices that all code in {{Project Name}} must follow. The
 _No conventions yet. Add the first one when a team decision is made._
 ```
 
-**`.vault/_index/rules.md`:**
+**`.vault/rules.md`:**
 ```markdown
 ---
-tags:
-  - moc
+status: canonical
+created: {{YYYY-MM-DD}}
 ---
-# Rules — Map of Content
+# {{Project Name}} — Rules
 
-{{Project Name}}-specific safety and workflow rules.
+The non-negotiable operational rules for working in {{Project Name}}: philosophy, git & delivery, and code. These are conduct rules — the *how*. Security and architecture non-negotiables are defined in detail in `.vault/constitution.md`; this file points at them, it does not restate them.
 
-**Nothing here yet.** Rules are added when a project-specific safety or workflow constraint is discovered.
+A finding, review, or decision that invokes a rule here cites it by name (e.g. "Meaningful Comments rule", "Explicit Consent rule").
 
-## `severity: critical`
+## Philosophy (Unix, ESR)
 
-_(none yet)_
+1. **Rule of Modularity** — write simple parts connected by clean interfaces.
+2. **Rule of Clarity** — clarity is better than cleverness.
+3. **Rule of Composition** — design programs to be connected to other programs.
+4. **Rule of Separation** — separate policy from mechanism; separate interfaces from engines.
+5. **Rule of Simplicity** — design for simplicity; add complexity only where you must.
+6. **Rule of Parsimony** — write a big program only when it is clear by demonstration that nothing else will do.
+7. **Rule of Transparency** — design for visibility to make inspection and debugging easier.
+8. **Rule of Robustness** — robustness is the child of transparency and simplicity.
+9. **Rule of Representation** — fold knowledge into data so program logic can be stupid and robust.
+10. **Rule of Least Surprise** — in interface design, always do the least surprising thing.
+11. **Rule of Silence** — when a program has nothing surprising to say, it should say nothing.
+12. **Rule of Repair** — when you must fail, fail noisily and as soon as possible.
+13. **Rule of Economy** — programmer time is expensive; conserve it in preference to machine time.
+14. **Rule of Generation** — avoid hand-hacking; write programs to write programs when you can.
+15. **Rule of Optimization** — prototype before polishing. Get it working before you optimize it.
+16. **Rule of Diversity** — distrust all claims for "one true way".
+17. **Rule of Extensibility** — design for the future, because it will be here sooner than you think.
 
-## `severity: important`
+## Git & delivery
 
-_(none yet)_
+1. **Conventional Commits** — every commit follows Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, …). Work starts on a branch cut from `main` and reaches `main` through a PR.
+2. **Explicit Consent (recorded form)** — never run `git add`, `git commit`, or `git push` without authorization. A spec's recorded `mode:` **is** that authorization: it consents to committing, pushing the **feature branch**, and opening the PR for that spec's work. Outside a recorded spec, ask. **Never push to `main`/`master`.**
+3. **Branch Naming** — follow the repo's existing convention (check `git branch -a`). Never inject tool/author identifiers ("claude", "ai", "assistant", etc.).
+4. **No Attribution** — never include agent citations, credits, or footers ("Co-Authored-By", "Generated by …", etc.) in commits, PRs, issues, or any project artifact.
+5. **PR via Command** — every PR is opened with `/memex:new-pr`. Never open a PR another way (manual `gh pr create`, the GitHub UI).
 
-## `severity: advisory`
+## Code
 
-_(none yet)_
+1. **Meaningful Comments** — the default is no comments. Only comment when the *why* is non-obvious: a hidden constraint, a subtle invariant, a workaround for a specific bug, or behavior that would surprise a reader. Never explain *what* the code does (well-named identifiers already do that). Never reference the current task, fix, or callers — that belongs in the PR description and rots over time. If removing the comment would not confuse a future reader, do not write it.
+2. **Currency** — use the latest documentation and prefer the latest library versions in new projects.
+
+## Security
+
+Security non-negotiables are defined in detail in `.vault/constitution.md`. A security finding cites the constitution by section.
 ```

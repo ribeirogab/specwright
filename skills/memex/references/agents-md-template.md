@@ -4,18 +4,19 @@
 
 ## Filling rules
 
-Use the project info gathered in Prerequisites to fill `{{Project Name}}` and the project description. The `## Commands (most used)` section should be populated from detected `package.json` scripts (or equivalents) — list the 5-6 most important.
+- The intro is exactly two lines: `Instructions for AI coding assistants and developers working on the {{project}} codebase.` followed by a blank line and `**Never give up on the right solution.**`. No repo-structure paragraph.
+- Fill `{{Project Name}}` and `{{project}}` from the project info gathered in Prerequisites.
+- The `### Spec flow` is fixed — the same 7 steps for every project (it encodes the memex delivery pipeline, not project specifics).
 
 Do **not** leave `{{placeholders}}` in the final file. Phase 5 validation will catch them.
 
 ## Size constraint
 
-The final `AGENTS.md` must be **≤ 80 lines** (target 70–80). The file is loaded into every agent session as the entry-point contract; longer than that and it crowds out conversation context, restates content that belongs in `.vault/`, and starts rotting (see `.vault/learnings/agents-md-as-map-not-encyclopedia.md`). Phase 5 validation enforces the cap.
+The final `AGENTS.md` must be **≤ 80 lines** (target 45–70). The file is loaded into every agent session as the entry-point contract; longer than that and it crowds out conversation context, restates content that belongs in `.vault/`, and starts rotting (see `.vault/learnings/agents-md-as-map-not-encyclopedia.md`). Phase 5 validation enforces the cap.
 
 When trimming to fit:
 
-- Tighten the project-description paragraph rather than dropping required section headers.
-- Trim the `## Commands (most used)` list to 5–6 entries — it is a list of the most-used commands, not a catalog.
+- Tighten body prose rather than dropping a required section header.
 - Replace any longer narrative inside a section with a one-line pointer into `.vault/` (e.g., "See `.vault/learnings/X.md` for the full story").
 - Never drop a required section header — the validator checks for all of them.
 
@@ -23,13 +24,9 @@ When trimming to fit:
 
 The audit checklist (`references/audit-checklist.md`) checks for these section headers — none may be missing:
 
-- `## Before starting any work`
-- `## Work ethic — never the lazy path`
-- `## When stuck or in doubt — read the vault first`
-- `## After completing any task`
-- `## After completing a spec`
-- `## Commands (most used)`
-- `## Knowledge locations`
+- `## Workflow Spec Driven`
+- `## Non-negotiable rules`
+- `## Vault — read from it, write to it`
 - `## Skills and slash commands`
 
 ## Template
@@ -37,69 +34,50 @@ The audit checklist (`references/audit-checklist.md`) checks for these section h
 ```markdown
 # {{Project Name}} — Agent Instructions
 
-{{One paragraph: what the project is, its tech stack, and repo structure.}}
+Instructions for AI coding assistants and developers working on the {{project}} codebase.
 
-## Before starting any work
+**Never give up on the right solution.**
 
-1. **Read `.vault/_index/home.md`** for project-specific knowledge.
-2. **Read `.vault/constitution.md`** for non-negotiable principles.
-3. **If the user is asking you to implement, modify, or create something**, assess the request: "Can I describe the complete solution in one sentence?"
-   - **Yes** → implement directly.
-   - **No** → invoke `memex-brainstorming` → `spec-<slug>.md` → self-review the spec → `/memex:review-spec` for an external evaluator pass → `memex-writing-plans` → `plan-<slug>.md` + `tasks-<slug>.md` → implement.
-   - **Almost** (1-2 open decisions) → ask the user whether to spec or go direct.
+## Workflow Spec Driven
 
-   If the user is asking a question, investigating, or exploring — just answer.
+Before any work, read `.vault/_index/home.md` (project knowledge), `.vault/constitution.md` (non-negotiables), and `.vault/rules.md` (operational rules).
 
-## Work ethic — never the lazy path
+Implementing, modifying, or creating something? Ask: "Can I describe the complete solution in one sentence?"
+- **Yes** → implement directly.
+- **Almost** (1-2 open decisions) → ask the user: spec or go direct?
+- **No** → enter the Spec flow.
 
-When you see two ways to do something — one quick-and-shallow, one correct-and-thorough — **default to correct**. You may *surface* the lighter option to the user with the tradeoffs ("here's a faster path that skips X, here's the proper one that handles X — which do you want?"), but never silently pick the worse one to finish faster. Cutting corners now creates work later, and the user notices. If the task is hard, the answer is to do it right, not to redefine "done" downward.
+If the user is asking, investigating, or exploring — just answer.
 
-## When stuck or in doubt — read the vault first
+### Spec flow
 
-`.vault/` is your project brain. You have been writing to it; **read from it too**. Before grinding on a hard problem, before guessing, before asking the user a question whose answer might already be captured: search `.vault/learnings/`, `.vault/conventions/`, `.vault/rules/`, the relevant spec in `.vault/specs/`, and `.vault/constitution.md`. Use the `memex-recall` skill or grep directly. Reading the vault is the **first move** on a hard problem, not the last. If the vault answers the question, cite the note; if it almost answers it, update the note after you fill the gap.
+1. `memex-brainstorming` → `spec-<slug>.md`. After the design is approved, brainstorming asks the execution **mode: autonomous or reviewed**; the spec records `branch:` + `mode:`. The recorded mode is registered consent for the feature branch.
+2. Create the branch. **One branch + one PR per spec** — spec, plan, tasks, implementation, and learnings all live in it.
+3. **reviewed** → `/memex:review-spec` → `memex-writing-plans` → `plan-<slug>.md` + `tasks-<slug>.md` → implement. **autonomous** → skip the review, straight to `memex-writing-plans` → implement.
+4. Reflect; write learnings to `.vault/learnings/` if genuinely useful, without asking — part of delivery. Nothing useful → say "No new learnings".
+5. **Quality gate.** Detect the touched modules' code-quality processes (test, lint, typecheck, build — Makefile, `package.json` scripts, the area's CI) and run them all; nothing you did may break them. Logic added or changed in a tested area without a test → write the missing tests first.
+6. **PR via `/memex:new-pr`.** autonomous → open right after the quality gate; reviewed → wait for the user to validate and ask.
+7. **Review cycle.** Dispatch a sub-agent running `memex:code-review` over the branch. Fix the findings that make sense; contest the rest until consensus. Push, request a fresh review, repeat until `lgtm`.
 
-## After completing any task
+## Non-negotiable rules
 
-If you discovered something non-obvious during implementation — a gotcha, a constraint, a surprising behavior — create an atomic note in `.vault/learnings/` using the template at `.vault/templates/learning.md`. Link it to the relevant spec with a wikilink if applicable. Do this without asking permission.
+All in `.vault/rules.md` — philosophy, git, security, code. Security and architecture are detailed in `.vault/constitution.md`.
 
-## After completing a spec
+## Vault — read from it, write to it
 
-When a spec is shipped (all tasks in `tasks-<slug>.md` done, spec marked `shipped`), always run an explicit reflection step before closing out — do not skip this:
-
-1. Ask yourself: "What did I learn implementing this that wasn't obvious from the spec?" Consider gotchas hit, constraints discovered, surprising framework/library behavior, decisions that reversed mid-implementation, and anything a future implementer would waste time rediscovering.
-2. If there is at least one useful learning, create an atomic note in `.vault/learnings/` per learning (one concept per note) using `.vault/templates/learning.md`, and link it back to the spec folder with a wikilink. Add each new note to `.vault/_index/learnings.md` under the appropriate category.
-3. If nothing non-obvious came up, say so explicitly in the final report ("No new learnings from this spec") — silence is not the same as reflection.
-
-## Commands (most used)
-
-{{Fill from detected package.json scripts — list the 5-6 most important ones}}
-
-Full command catalog: `.vault/learnings/commands-catalog.md` _(create this note after setup)_.
-
-## Knowledge locations
-
-| What | Where |
-|---|---|
-| Non-negotiable principles | `.vault/constitution.md` |
-| Specs (active + shipped) | `.vault/specs/` |
-| Architecture, patterns, gotchas | `.vault/learnings/` (indexed by `.vault/_index/learnings.md`) |
-| Code style conventions | `.vault/conventions/` (indexed by `.vault/_index/conventions.md`) |
-| Project-specific rules | `.vault/rules/` |
-| Spec template | `.vault/specs/_template/` |
-| Note templates (learning, rule) | `.vault/templates/` |
+`.vault/` is the project brain. Stuck? Search `learnings/`, `conventions/`, `rules.md`, the relevant spec, and the constitution **before** guessing or asking the user. A non-obvious discovery (gotcha, constraint, surprising behavior) → an atomic note in `.vault/learnings/` (template in `.vault/templates/`), indexed in `.vault/_index/learnings.md`, linked to its spec with a wikilink — without asking permission. On a shipped spec, run the reflection step: one note per non-obvious thing, or say "No new learnings".
 
 ## Skills and slash commands
 
-> All memex entries shown in Claude Code syntax (plugin namespace `memex:`). Codex users invoke as `$memex-<verb>` via skill mention. Cursor users as `@memex-<verb>` via rule reference.
+> All memex entries shown in Claude Code syntax (plugin namespace `memex:`). Codex users invoke as `$memex-<verb>`; Cursor users as `@memex-<verb>`.
 
-Memex commands and companion skills both ship through the `memex` plugin from the upstream marketplace `memex` (declared in this repo's `.claude/settings.json`). Non-Claude agents read canonical skill copies under `.agents/skills/memex-<name>/` (exposed via per-agent symlinks to `.codex/skills/`, `.cursor/skills/`, etc., when those discovery dirs exist).
-
-- **`/memex:brainstorming`** — design exploration before writing a spec.
-- **`/memex:writing-plans`** — turn an approved design into a task list.
-- **`/memex:recall`** — quick project reconnaissance of the `.vault/` vault.
-- **`/memex:link`** — analyze the vault for missing cross-links and propose them interactively.
-- **`/memex:spec`** — take the current conversation and enter the spec flow, skipping already-discussed questions.
-- **`/memex:review-spec`** — external evaluator that reads `.vault/constitution.md` + a spec and flags violations, vagueness, missing acceptance criteria, and duplication of existing learnings/rules. Run this **after** your own spec self-review and **before** moving to `/memex:writing-plans`.
-- **`/memex:sweep`** — manual garbage-collection pass over the vault: orphan learnings, MOC entries pointing nowhere, constitution rules never cited, specs whose `tasks-<slug>.md` is fully checked but `status:` is still `draft`. Run on demand, never automatic.
-- **`/memex:learn`** — investigate a topic in the project and save findings as a learning note in `.vault/learnings/`.
+Commands + companion skills ship through the `memex` plugin (marketplace `memex`, in this repo's `.claude/settings.json`). Non-Claude agents read canonical copies under `.agents/skills/memex-<name>/`.
+- **`/memex:brainstorming`** — design exploration; asks autonomous/reviewed after design approval.
+- **`/memex:writing-plans`** — turn an approved design into plan + tasks.
+- **`/memex:recall`** / **`/memex:link`** — vault reconnaissance / cross-link analysis.
+- **`/memex:spec`** — enter the spec flow from the conversation.
+- **`/memex:review-spec`** — external evaluator pass (reviewed mode).
+- **`/memex:new-pr`** — open the PR per the spec's mode.
+- **`/memex:code-review`** — bespoke, portable review cycle to `lgtm`.
+- **`/memex:sweep`** / **`/memex:learn`** — vault GC / investigate-and-save.
 ```

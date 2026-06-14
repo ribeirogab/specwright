@@ -30,8 +30,8 @@ For each item, check existence and content correctness. Report status as:
   .vault/_index/specs.md
   .vault/_index/learnings.md
   .vault/_index/conventions.md
-  .vault/_index/rules.md
   .vault/constitution.md
+  .vault/rules.md
   .vault/specs/_template/spec.md
   .vault/specs/_template/plan.md
   .vault/specs/_template/tasks.md
@@ -40,7 +40,6 @@ For each item, check existence and content correctness. Report status as:
   .vault/templates/convention.md
   .vault/learnings/           (directory exists)
   .vault/conventions/         (directory exists)
-  .vault/rules/               (directory exists)
 
 AGENTS.md                      (repo root)
 CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
@@ -49,6 +48,8 @@ CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
 .agents/skills/memex-brainstorming/             (full directory)
 .agents/skills/memex-writing-plans/             (full directory)
 .agents/skills/memex-link/                      (full directory — vault cross-link analyzer)
+.agents/skills/memex-new-pr/                    (full directory — opens the spec's PR)
+.agents/skills/memex-code-review/               (full directory — branch review to lgtm)
 
 .gitignore                     (contains obsidian workspace exclusions)
 ```
@@ -152,18 +153,14 @@ If `.gitignore` is missing, or contains the older fine-grained pattern set (`wor
 
 `AGENTS.md` must contain all of these section headers — missing any one is `DRIFT`:
 
-- `## Before starting any work`
-- `## Work ethic — never the lazy path`
-- `## When stuck or in doubt — read the vault first`
-- `## After completing any task`
-- `## After completing a spec`
-- `## Commands (most used)`
-- `## Knowledge locations`
+- `## Workflow Spec Driven`
+- `## Non-negotiable rules`
+- `## Vault — read from it, write to it`
 - `## Skills and slash commands`
 
 When reporting drift, name the missing section(s) explicitly so the fix step knows what to insert.
 
-`AGENTS.md` must also be **≤ 80 lines** (target range 70–80). The file is loaded into every agent session as the entry-point contract; growing past this cap crowds context and reintroduces the "encyclopedia" anti-pattern that the canonical authoring rules reject. If `AGENTS.md` exceeds 80 lines, status is `DRIFT` and the fix is to trim the body per the guidance in `references/agents-md-template.md` (`## Size constraint`) — never by dropping a required section header.
+`AGENTS.md` must also be **≤ 80 lines** (target range 45–70). The file is loaded into every agent session as the entry-point contract; growing past this cap crowds context and reintroduces the "encyclopedia" anti-pattern that the canonical authoring rules reject. If `AGENTS.md` exceeds 80 lines, status is `DRIFT` and the fix is to trim the body per the guidance in `references/agents-md-template.md` (`## Size constraint`) — never by dropping a required section header.
 
 ## Constitution drift detection (required sections)
 

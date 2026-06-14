@@ -55,13 +55,9 @@ Same fix as #2.
 
 ```bash
 required=(
-  "## Before starting any work"
-  "## Work ethic — never the lazy path"
-  "## When stuck or in doubt — read the vault first"
-  "## After completing any task"
-  "## After completing a spec"
-  "## Commands (most used)"
-  "## Knowledge locations"
+  "## Workflow Spec Driven"
+  "## Non-negotiable rules"
+  "## Vault — read from it, write to it"
   "## Skills and slash commands"
 )
 missing=()
@@ -119,7 +115,7 @@ FAIL lists the offending folder names. Fix: rename per the migration prompt in `
 Skills are canonically under `.agents/skills/<name>/`. Per-agent symlinks (`.claude/skills/<name>`, etc.) are bonus exposure, not the source of truth.
 
 ```bash
-for s in memex-recall memex-brainstorming memex-writing-plans memex-link; do
+for s in memex-recall memex-brainstorming memex-writing-plans memex-link memex-new-pr memex-code-review; do
   [ -f ".agents/skills/$s/SKILL.md" ] && echo "PASS: $s" || echo "FAIL: $s"
 done
 ```
@@ -192,7 +188,7 @@ lines=$(wc -l < AGENTS.md | tr -d ' ')
 [ "$lines" -le 80 ] && echo "PASS ($lines lines)" || echo "FAIL ($lines lines, cap 80)"
 ```
 
-FAIL means `AGENTS.md` exceeded the cap. Fix: trim the body per the guidance in `references/agents-md-template.md` (`## Size constraint`) — tighten the project-description paragraph, cap `## Commands (most used)` at 5–6 entries, replace any longer narrative with a one-line pointer into `.vault/`. Never drop a required section header (check #4 enforces those).
+FAIL means `AGENTS.md` exceeded the cap. Fix: trim the body per the guidance in `references/agents-md-template.md` (`## Size constraint`) — tighten body prose and replace any longer narrative with a one-line pointer into `.vault/`. Never drop a required section header (check #4 enforces those).
 
 ### 15. No spec folder contains generic `spec.md` / `plan.md` / `tasks.md`
 
