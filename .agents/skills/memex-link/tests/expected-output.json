@@ -38,5 +38,13 @@
     "target_title": "Target Of Wikilink",
     "evidence_type": "wikilink_in_body",
     "evidence_detail": "[[target-of-wikilink]] cited at body line 3"
+  },
+  {
+    "source": ".vault/learnings/source-links-spec-a.md",
+    "target": ".vault/specs/2026-01-02-other-spec/spec.md",
+    "source_title": "Sourcelinks Quux",
+    "target_title": "Otherspec Qux",
+    "evidence_type": "wikilink_in_body",
+    "evidence_detail": "[[2026-01-02-other-spec/spec]] cited at body line 3"
   }
 ]
