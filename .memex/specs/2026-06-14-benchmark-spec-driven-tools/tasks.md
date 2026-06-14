@@ -62,8 +62,8 @@ created: 2026-06-14
 
 ### Task 7: Quality gate
 
-- [ ] Step 1: Run the vault checks relevant to touched areas (link/index integrity; `quick_validate` is for skills, not vault — note if N/A)
-- [ ] Step 2: Reflect — write a meta-learning to `.memex/learnings/` only if genuinely useful; else record "No new learnings"
+- [x] Step 1: Run the vault checks relevant to touched areas (link/index integrity; `quick_validate` is for skills, not vault — note if N/A)
+- [x] Step 2: Reflect — write a meta-learning to `.memex/learnings/` only if genuinely useful; else record "No new learnings"
 
 ## Phase 7: Deliver (autonomous)
 

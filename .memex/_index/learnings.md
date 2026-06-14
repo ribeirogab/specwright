@@ -22,6 +22,7 @@ Learnings here are specific to memex. Code style conventions live in `[[conventi
 
 - [[../learnings/companion-skill-distribution-topology|A memex companion skill ships in three real copies, not as a command]] — `.agents/skills/memex-<name>` (name=memex-<name>) + `plugins/memex/skills/<name>` (name=<name>) + scaffold; plugin skills are the portable `/memex:` mechanism, commands are Claude-only.
 - [[../learnings/quick-validate-needs-pyyaml-via-uv|Run the skill validators with `uv run --with pyyaml`]] — the system `python3` lacks PyYAML; `uv run --quiet --with pyyaml python skills/memex/scripts/quick_validate.py <path>` resolves it ephemerally.
+- [[../learnings/validate-vault-mermaid-with-mmdc|Validate vault mermaid with mermaid-cli (no-build, one-off)]] — extract ` ```mermaid ` blocks and render them with `npx @mermaid-js/mermaid-cli -p pptr.json` (no-sandbox puppeteer config); exit 0 = parses, honors the no-build-pipeline rule.
 
 ## `#benchmark` — Peer spec-driven tools (comparative analyses)
 
