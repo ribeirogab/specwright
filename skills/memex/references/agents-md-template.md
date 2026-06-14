@@ -51,14 +51,14 @@ If the user is asking, investigating, or exploring — just answer.
 
 ### Spec flow
 
-1. `memex-brainstorming` → design. After the design is approved, the **post-design batch** confirms three things: the **branch name**, the **mode** (`autonomous` / `reviewed`), and whether to **compact** before implementing. The spec records `branch:` + `mode:`.
-2. Create the branch. **One branch + one PR per spec** — spec, plan, tasks, implementation, and learnings all live in it.
-3. The agent writes `spec.md` and **reviews its own spec** — the spec-document-reviewer subagent (clarity) **and** `/memex:review-spec` (constitution); both run in **both** modes. **No human spec review** — design approval is the only human review. Then `memex-writing-plans` → `plan.md` + `tasks.md`.
-4. **Compact handoff (either mode)** — if compact was chosen, once spec/plan/tasks are written print a `txt` handoff prompt (summary + the three paths + mode) and stop; you `/compact` or open a new chat and paste it to resume. Never compact before the artifacts exist.
+1. `memex-brainstorming` → design exploration. After the design is approved, the **post-design batch** confirms the **branch name**, the **mode** (`autonomous` / `reviewed`), and whether to **compact**. Brainstorming writes `design.md` (non-technical: purpose, motivation, definitions, non-goals) — the durable write-up of the approved design, not a second review gate.
+2. Create the branch. **One branch + one PR per spec** — design, spec, tasks, implementation, and learnings all live in it.
+3. `memex-writing-plans` → the fused technical `spec.md` (architecture, file structure, phases, `AC-N` acceptance criteria; records `scope:`/`branch:`/`mode:`) + `tasks.md` (each task names its `AC:` + `Delegable:`). The agent **reviews its own spec** — the spec-document-reviewer subagent (clarity) **and** `/memex:review-spec` (constitution + the `validate-spec.sh` mechanical gate); both run in **both** modes. **No human spec review** — design approval is the only human review.
+4. **Compact handoff (either mode)** — if compact was chosen, once design/spec/tasks are written print a `txt` handoff prompt (summary + the three paths + mode) and stop; you `/compact` or open a new chat and paste it to resume. Never compact before the artifacts exist.
 5. **Implement.**
 6. **Quality gate.** Detect the touched modules' code-quality processes (test, lint, typecheck, build — Makefile, `package.json` scripts, the area's CI) and run them all; nothing you did may break them. Logic added or changed in a tested area without a test → write the missing tests first.
 7. Reflect; write learnings to `.memex/learnings/` if genuinely useful, without asking — part of delivery. Nothing useful → say "No new learnings".
-8. **Deliver.** `autonomous` → open the PR (`/memex:new-pr`) and run the `memex:code-review` cycle to `lgtm`, hands-off — the recorded mode tells the agent to finish alone. `reviewed` → after reflect, ask "open the PR and run code-review?", then the same on your go-ahead.
+8. **Deliver.** `autonomous` → open the PR (`/memex:new-pr`) and run the `memex:code-review` cycle (two subagents: project-law generalist + spec-conformance against the spec's `AC-N`) to `lgtm`, hands-off — the recorded mode tells the agent to finish alone. `reviewed` → after reflect, ask "open the PR and run code-review?", then the same on your go-ahead.
 
 ## Non-negotiable rules
 
@@ -74,7 +74,7 @@ All in `.memex/rules.md` — philosophy, git, security, code. Security and archi
 
 Commands + companion skills ship through the `memex` plugin (marketplace `memex`, in this repo's `.claude/settings.json`). Non-Claude agents read canonical copies under `.agents/skills/memex-<name>/`.
 - **`/memex:brainstorming`** — design exploration; asks autonomous/reviewed after design approval.
-- **`/memex:writing-plans`** — turn an approved design into plan + tasks.
+- **`/memex:writing-plans`** — turn an approved design into the technical spec + tasks.
 - **`/memex:recall`** / **`/memex:link`** — vault reconnaissance / cross-link analysis.
 - **`/memex:spec`** — enter the spec flow from the conversation.
 - **`/memex:review-spec`** — external evaluator spec pass (agent self-review, both modes).
