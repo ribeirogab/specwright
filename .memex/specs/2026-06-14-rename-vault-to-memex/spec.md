@@ -1,8 +1,8 @@
 ---
-status: draft
+status: shipped
 feature: rename-vault-to-memex
 created: 2026-06-14
-shipped: null
+shipped: 2026-06-14
 branch: feat/rename-vault-to-memex
 mode: autonomous
 related:
@@ -14,7 +14,7 @@ related:
 ---
 # Rename `.vault/` to `.memex/` — Spec
 
-**Status:** Draft
+**Status:** Shipped (2026-06-14)
 **Scope:** Rename the scaffolded knowledge-vault directory from `.vault/` to `.memex/` across this repo and across every artifact the `memex` skill installs into target repos. Hard cut — the renamed `memex` only knows `.memex/`. Directory and path references only; the conceptual term *vault* in prose and conceptual filenames are preserved.
 
 ## Context
@@ -87,7 +87,7 @@ The directory at `.vault/` holds a repo's memex — its externalized, navigable 
 - [x] The validation checks in `skills/memex/references/validation.md` PASS when run against this repo, with the checks themselves now looking at `.memex/` paths.
 - [x] `git log --follow .memex/constitution.md` shows history reaching before this branch (the `git mv` preserved history).
 - [x] Branch is `feat/rename-vault-to-memex`, not `main`. Verified by `git branch --show-current`.
-- [ ] Spec frontmatter has `status: shipped` and a non-null `shipped:` date once merged. (Self-referential — this spec moves under `.memex/specs/.../` and ticks itself.)
+- [x] Spec frontmatter has `status: shipped` and a non-null `shipped:` date once merged. (Self-referential — this spec moves under `.memex/specs/.../` and ticks itself.)
 
 ## Risks and Mitigations
 
