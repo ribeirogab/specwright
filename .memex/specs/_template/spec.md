@@ -1,6 +1,7 @@
 ---
 status: draft
 feature: {{kebab-slug-of-feature}}
+scope: {{low | medium | high | complex}}
 created: {{YYYY-MM-DD}}
 shipped: null
 branch: {{feat/kebab-slug-of-feature}}
@@ -10,21 +11,26 @@ related: []
 # {{Feature Name}} — Spec
 
 **Status:** Draft
+**Design:** [[design]]
 **Scope:** {{one-sentence scope statement}}
 
-> **Note on `related:` frontmatter** — populate the `related:` list with wikilinks to learnings, conventions, or rules this spec touches, reads, or modifies. Empty `related:` is allowed only if the spec genuinely has no vault dependencies; `/memex:sweep` will flag isolated specs.
+> **Note on `scope:` frontmatter** — `scope` is one of `low | medium | high | complex`. It is **recorded only**: reserved for a future quick-mode and does **not** yet gate which artifacts are written. Set it honestly; nothing branches on it today.
+>
+> **Note on `related:` frontmatter** — populate with wikilinks to learnings, conventions, or rules this spec touches, reads, or modifies. Empty `related:` is allowed only if the spec genuinely has no vault dependencies; `/memex:sweep` will flag isolated specs.
 
-## Context
+This is the **technical** spec — the *how*. The non-technical *why* (purpose, motivation, definitions, non-goals) lives in `[[design]]`.
 
-{{why this feature exists, what triggered it, relevant constraints}}
+## Architecture
 
-## Problem Statement
+{{the high-level technical approach and why it was chosen over alternatives; diagrams, component breakdown, data flow}}
 
-{{what specific problem this feature solves}}
+## File Structure
 
-## Non-Goals
+{{files to be created, modified, or deleted, with one-line responsibilities}}
 
-{{what this feature explicitly does NOT solve — prevents scope creep}}
+## Phase Ordering
+
+{{if the work has natural phases, list them with dependencies; otherwise "Single phase."}}
 
 ## Constraints
 
@@ -36,14 +42,14 @@ related: []
 
 ## Acceptance Criteria
 
-Each criterion must be a binary, observable check that someone other than the implementer can verify in under a minute. **No vague verbs** ("works well", "is fast", "is robust", "handles errors gracefully") — replace them with specific, measurable conditions. If a criterion cannot be verified without reading the implementation, it is not an acceptance criterion; rewrite it.
+Number each criterion `AC-1`, `AC-2`, … — the IDs are stable handles that `tasks.md` references (each task names the `AC-N` it satisfies) and that `memex-code-review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check that someone other than the implementer can verify in under a minute. **No vague verbs** ("works well", "is fast", "is robust", "handles errors gracefully") — replace them with specific, measurable conditions. If a criterion cannot be verified without reading the implementation, it is not an acceptance criterion; rewrite it.
 
-- [ ] {{ e.g. `POST /users` with a duplicate email returns 409 and body `{"code":"DUPLICATE_EMAIL"}` }}
-- [ ] {{ e.g. p95 latency for `GET /feed` stays under 200ms with a 1k-row fixture }}
-- [ ] {{ e.g. the migration script runs idempotently — running it twice on the same DB yields no diff }}
-- [ ] {{ ... }}
+- [ ] **AC-1** {{ e.g. `POST /users` with a duplicate email returns 409 and body `{"code":"DUPLICATE_EMAIL"}` }}
+- [ ] **AC-2** {{ e.g. p95 latency for `GET /feed` stays under 200ms with a 1k-row fixture }}
+- [ ] **AC-3** {{ e.g. the migration script runs idempotently — running it twice on the same DB yields no diff }}
+- [ ] **AC-N** {{ ... }}
 
-Tick each `[x]` when verified. A spec is **not shippable** with empty or `{{placeholder}}` acceptance criteria — `/memex:review-spec` will reject it.
+Tick each `[x]` when verified. A spec is **not shippable** with empty or `{{placeholder}}` acceptance criteria — `.memex/scripts/validate-spec.sh` and `/memex:review-spec` will reject it.
 
 ## Risks and Mitigations
 
@@ -53,4 +59,4 @@ Tick each `[x]` when verified. A spec is **not shippable** with empty or `{{plac
 
 ## Open Questions
 
-{{use [NEEDS CLARIFICATION: specific question] markers for unresolved points}}
+{{use [NEEDS CLARIFICATION: specific question] markers for unresolved points; write `None.` if there are none — silence is not resolution}}
