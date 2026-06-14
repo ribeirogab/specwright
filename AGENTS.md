@@ -17,13 +17,14 @@ If the user is asking, investigating, or exploring — just answer.
 
 ### Spec flow
 
-1. `memex-brainstorming` → `spec-<slug>.md`. After the design is approved, brainstorming asks the execution **mode: autonomous or reviewed**; the spec records `branch:` + `mode:`. The recorded mode is registered consent for the feature branch.
+1. `memex-brainstorming` → design. After the design is approved, confirm the **branch name** and the execution **mode** (`autonomous` / `reviewed`). **reviewed** also asks: open a **PR** at the end? and **compact** before implementing? The spec records `branch:` + `mode:`.
 2. Create the branch. **One branch + one PR per spec** — spec, plan, tasks, implementation, and learnings all live in it.
-3. **reviewed** → `/memex:review-spec` → `memex-writing-plans` → `plan-<slug>.md` + `tasks-<slug>.md` → implement. **autonomous** → skip the review, straight to `memex-writing-plans` → implement.
-4. Reflect; write learnings to `.vault/learnings/` if genuinely useful, without asking — part of delivery. Nothing useful → say "No new learnings".
-5. **Quality gate.** Detect the touched modules' code-quality processes (test, lint, typecheck, build — Makefile, `package.json` scripts, the area's CI) and run them all; nothing you did may break them. Logic added or changed in a tested area without a test → write the missing tests first.
-6. **PR via `/memex:new-pr`.** autonomous → open right after the quality gate; reviewed → wait for the user to validate and ask.
-7. **Review cycle.** Dispatch a sub-agent running `memex:code-review` over the branch. Fix the findings that make sense; contest the rest until consensus. Push, request a fresh review, repeat until `lgtm`.
+3. The agent writes `spec-<slug>.md` and **reviews its own spec** — the spec-document-reviewer subagent (clarity) **and** `/memex:review-spec` (constitution); both run in **both** modes. **No human spec review** — design approval is the only human review. Then `memex-writing-plans` → `plan-<slug>.md` + `tasks-<slug>.md`.
+4. **Compact handoff** *(reviewed + compact)* — once spec/plan/tasks are written and ready to implement, print a `txt` handoff prompt (summary + the three paths + mode + PR decision) and stop; you `/compact` or open a new chat and paste it. Never compact before the artifacts exist.
+5. **Implement.** autonomous → straight in. reviewed without compact → after you confirm "start implementation?".
+6. **Quality gate.** Detect the touched modules' code-quality processes (test, lint, typecheck, build — Makefile, `package.json` scripts, the area's CI) and run them all; nothing you did may break them. Logic added or changed in a tested area without a test → write the missing tests first.
+7. Reflect; write learnings to `.vault/learnings/` if genuinely useful, without asking — part of delivery. Nothing useful → say "No new learnings".
+8. **Deliver.** autonomous → open the PR (`/memex:new-pr`) and run the `memex:code-review` cycle to `lgtm`, hands-off. reviewed → if you chose a PR, the same; if not, stop with the committed branch for you to PR later.
 
 ## Non-negotiable rules
 
