@@ -6,6 +6,9 @@ shipped: null
 branch: docs/benchmark-spec-driven-tools
 mode: autonomous
 related:
+  - "[[tlc-spec-driven-workflow]]"
+  - "[[openspec-workflow]]"
+  - "[[memex-improvement-insights]]"
   - "[[agents-md-as-map-not-encyclopedia]]"
   - "[[mechanical-enforcement-over-prose]]"
   - "[[companion-skill-distribution-topology]]"

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tlc-spec-driven — workflow (memex benchmark)</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --border:#30363d;
+    --ink:#e6edf3; --muted:#9da7b3; --blue:#58a6ff; --blueD:#1f6feb;
+    --amber:#d29922; --green:#3fb950; --red:#f85149; --violet:#bc8cff;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#15243b 0,transparent 60%),var(--bg);
+    color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:48px 20px;}
+  .wrap{max-width:1040px;margin:0 auto}
+  .tag{display:inline-block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);
+    border:1px solid var(--border);border-radius:999px;padding:4px 12px;background:var(--panel)}
+  h1{font-size:38px;line-height:1.15;margin:18px 0 8px;letter-spacing:-.02em}
+  h1 .sub{color:var(--blue)}
+  .lede{color:var(--muted);font-size:18px;max-width:80ch}
+  h2{margin:48px 0 14px;font-size:24px;letter-spacing:-.01em;border-bottom:1px solid var(--border);padding-bottom:8px}
+  h3{margin:26px 0 8px;font-size:18px;color:var(--ink)}
+  p{max-width:82ch}
+  a{color:var(--blue)}
+  code{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:.86em;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace}
+  .grid{display:grid;gap:14px}
+  .cards{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:18px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+  .card h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .card p{margin:0;font-size:15px}
+  .two{grid-template-columns:1fr 1fr}
+  @media(max-width:760px){.two{grid-template-columns:1fr}}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:14px}
+  .mermaid{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:16px 0;text-align:center}
+  table{width:100%;border-collapse:collapse;margin-top:14px;font-size:14.5px;background:var(--panel);
+    border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+  th{background:var(--panel2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+  ul{padding-left:20px} li{margin:6px 0;max-width:82ch}
+  .pill{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+  .pos{color:var(--green);border:1px solid #2ea04366;background:#2ea04318}
+  .neg{color:var(--red);border:1px solid #f8514966;background:#f8514918}
+  .callout{border-left:3px solid var(--blue);background:var(--panel);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;margin-top:16px}
+  .foot{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);padding-top:16px}
+  .kbd{color:var(--amber);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="tag">memex benchmark · reference</span>
+  <h1>tlc-spec-driven <span class="sub">— Tech Lead's Club spec-driven skill</span></h1>
+  <p class="lede">memex's closest sibling: a single <b>markdown Agent Skill</b> that drives an agent through a <b>complexity-adaptive</b> pipeline — Specify → Design → Tasks → Execute — auto-sizing its own ceremony, threading requirement-traceability IDs, and baking test-first discipline into every task. Like memex, <b>all rigor is prose — zero machine enforcement.</b></p>
+
+  <div class="grid cards">
+    <div class="card"><h4>Medium</h4><p>1 <code>SKILL.md</code> (216 lines) + 16 <code>references/*.md</code>. Pure prose &amp; templates.</p></div>
+    <div class="card"><h4>Core idea</h4><p>"The complexity is in the system, not in your workflow." Scope decides depth.</p></div>
+    <div class="card"><h4>Memory</h4><p>On-disk <code>.specs/</code> vault. <code>STATE.md</code> = durable brain (AD/B/L entries).</p></div>
+    <div class="card"><h4>Enforcement</h4><p><span class="pill neg">prose only</span> No validator, no CLI gate. Model-compliance dependent.</p></div>
+  </div>
+
+  <h2>Auto-sizing — depth follows scope</h2>
+  <table>
+    <tr><th>Scope</th><th>Specify</th><th>Design</th><th>Tasks</th><th>Execute</th></tr>
+    <tr><td><b>Small</b> ≤3 files</td><td colspan="4"><b>Quick mode</b> — skip the pipeline entirely</td></tr>
+    <tr><td><b>Medium</b> &lt;10 tasks</td><td>brief spec</td><td>inline (skip)</td><td>implicit (skip)</td><td>implement + verify</td></tr>
+    <tr><td><b>Large</b> multi-component</td><td>full + req IDs</td><td>architecture</td><td>full + deps</td><td>per-task verify</td></tr>
+    <tr><td><b>Complex</b> new domain</td><td>full + Discuss</td><td>research + arch</td><td>+ parallel plan</td><td>interactive UAT</td></tr>
+  </table>
+  <div class="callout"><b>Safety valve:</b> even when Tasks is skipped, Execute lists atomic steps first; if that reveals <span class="kbd">&gt;5 steps</span>, it STOPs and creates a real <code>tasks.md</code>. Auto-skip self-corrects.</div>
+
+  <h2>The full adaptive flow</h2>
+  <pre class="mermaid">
+flowchart TD
+    Start(["User describes work in natural language"]) --> Assess{"Assess scope (auto-sizing)"}
+    Assess -->|"Small: <=3 files"| Quick["Quick Mode"]
+    Assess -->|"Medium / Large / Complex"| Setup{"Project context exists?"}
+    Setup -->|"New project"| Init["Project Init -> PROJECT.md"]
+    Setup -->|"Existing codebase"| Map["Brownfield Mapping -> 7 docs"]
+    Init --> Road["Roadmap -> ROADMAP.md"]
+    Map --> Road
+    Setup -->|"Already set up"| Spec
+    Road --> Spec
+    Spec["SPECIFY (required) -> spec.md + req IDs"] --> Gray{"Ambiguous gray areas?"}
+    Gray -->|"Yes"| Discuss["Discuss -> context.md"]
+    Gray -->|"No"| DesignQ
+    Discuss --> DesignQ{"Architectural decisions?"}
+    DesignQ -->|"Yes"| Design["DESIGN -> design.md (reuse + KVC)"]
+    DesignQ -->|"No: inline"| TasksQ
+    Design --> TasksQ{">3 obvious steps?"}
+    TasksQ -->|"Yes"| Tasks["TASKS -> tasks.md (3 pre-approval checks)"]
+    TasksQ -->|"No"| Exec
+    Tasks --> Exec
+    Exec["EXECUTE: per task RED -> GREEN -> gate -> atomic commit"] --> Valve{"Inline plan >5 steps?"}
+    Valve -->|"Yes: wrongly skipped"| Tasks
+    Valve -->|"No"| Validate["Feature Validation + optional UAT"]
+    Validate --> Pass{"AC + build gate pass?"}
+    Pass -->|"No"| Fix["Fix tasks (max 3 diagnostics)"]
+    Fix --> Exec
+    Pass -->|"Yes"| Done(["Requirements -> Verified"])
+    Quick --> QGuard{"<=3 files, <=1h, no design, no deps?"}
+    QGuard -->|"No"| Spec
+    QGuard -->|"Yes"| QShip(["Implement -> verify -> commit -> log STATE.md"])
+  </pre>
+
+  <h2>Requirement lifecycle — idea to archived</h2>
+  <pre class="mermaid">
+stateDiagram-v2
+    [*] --> Pending: requirement created in spec.md
+    Pending --> InDesign: design.md drafted
+    InDesign --> InTasks: tasks.md breakdown
+    Pending --> InTasks: design skipped (medium)
+    InTasks --> Implementing: Execute picks up task
+    Implementing --> Verified: validation passes
+    Implementing --> NeedsFix: validation fails
+    NeedsFix --> Implementing: fix task executed
+    Verified --> Complete: roadmap feature COMPLETE
+    Complete --> Archived: decisions >60d to STATE-ARCHIVE.md
+    Archived --> [*]
+  </pre>
+
+  <h2>Distribution &amp; artifact architecture</h2>
+  <pre class="mermaid">
+flowchart LR
+    subgraph Dist["Distribution monorepo @tech-leads-club/agent-skills"]
+        Cat["skills-catalog: SKILL.md + references"] --> Gen["generate-registry.ts (SHA-256)"]
+        Gen --> Reg["skills-registry.json (jsDelivr + unpkg fallback)"]
+        Reg --> CLI["CLI installer (copy/symlink)"]
+        Reg --> MCP["MCP server (progressive disclosure)"]
+        CLI --> Lock[".agents/.skill-lock.json (Zod, atomic)"]
+    end
+    CLI -->|"installs into"| Agent[".claude/skills (or 18 other agents)"]
+    subgraph Vault[".specs/ project brain (runtime)"]
+        Proj["project: PROJECT, ROADMAP, STATE"]
+        Code["codebase: 7 brownfield docs"]
+        Feat["features/[feat]: spec, context, design, tasks"]
+        H["HANDOFF.md (overwritten each pause)"]
+    end
+    Agent -->|"reads SKILL.md, writes"| Vault
+    Proj -->|"base load ~15k"| Ctx["context target <40k"]
+    Feat -->|"on-demand"| Ctx
+  </pre>
+
+  <h2>What makes it rigorous (all prose)</h2>
+  <ul>
+    <li><b>Traceability IDs</b> — <code>AUTH-01</code> threaded spec→design→task→commit→validation, with a coverage line <code>X total, Y mapped, Z unmapped ⚠️</code>.</li>
+    <li><b>Three pre-approval checks</b> in Tasks (granularity, diagram-definition cross-check, test co-location) — two emitted as tables before the user sees anything.</li>
+    <li><b>Test co-location</b> — tests live in the same task as the code; "tested in another task" is banned.</li>
+    <li><b>RED→GREEN</b> with hard constraints: never modify/weaken/skip/delete the RED tests.</li>
+    <li><b>Test-integrity checks</b> — test count must not silently drop; weakened assertions = regression. <span class="pill pos">targets AI failure modes</span></li>
+    <li><b>Knowledge Verification Chain</b> — Codebase → Project docs → Context7 → Web → flag uncertain. Absolute anti-fabrication rule.</li>
+  </ul>
+
+  <h2>Strengths &amp; limitations</h2>
+  <div class="grid two">
+    <div class="panel">
+      <h3 style="color:var(--green)">Strengths</h3>
+      <ul>
+        <li>Genuinely adaptive — one tool for a one-liner and a big feature.</li>
+        <li>Concrete AI-aware rigor (traceability, test-integrity, anti-fabrication).</li>
+        <li>Externalized human-readable memory with token budgets.</li>
+        <li>First-class sub-agent delegation, parallelism gated by test-safety.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3 style="color:var(--red)">Limitations</h3>
+      <ul>
+        <li><b>No machine enforcement</b> — every "MANDATORY" is prose.</li>
+        <li>Auto-sizing relies on the agent's own scope judgment.</li>
+        <li><b>No branch / PR / mode concept</b> — stops at atomic commits.</li>
+        <li>Effectiveness is explicitly model-dependent.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>vs memex</h2>
+  <div class="callout">
+    <b>TLC has, memex lacks:</b> graded tiers + safety valve · traceability IDs · test machinery (coverage matrix, parallelism, co-location, integrity checks) · interactive UAT · anti-fabrication chain.<br><br>
+    <b>memex has, TLC lacks:</b> branch + PR discipline · autonomous/reviewed mode · spec self-review vs a constitution · constitution+rules law layer · wikilinked learnings vault + reflection + GC.<br><br>
+    <b>Net:</b> TLC is deeper on per-task engineering rigor; memex is deeper on lifecycle governance.
+  </div>
+
+  <div class="foot">
+    Source of truth: <code>tlc-spec-driven-workflow.md</code>. Companion: <code>openspec-workflow.md</code> · synthesis: <code>memex-improvement-insights.md</code>.
+    Produced by the <code>2026-06-14-benchmark-spec-driven-tools</code> spec — subagent analysis + adversarial verification against the cloned source.
+  </div>
+</div>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({startOnLoad:true, theme:"dark", securityLevel:"loose",
+    themeVariables:{fontFamily:"-apple-system,Segoe UI,Roboto,sans-serif", primaryColor:"#1c2230",
+      primaryBorderColor:"#30363d", primaryTextColor:"#e6edf3", lineColor:"#58a6ff"}});
+</script>
+</body>
+</html>
