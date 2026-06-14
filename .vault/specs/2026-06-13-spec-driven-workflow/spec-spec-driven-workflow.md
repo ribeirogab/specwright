@@ -1,12 +1,14 @@
 ---
-status: draft
+status: shipped
 feature: spec-driven-workflow
 created: 2026-06-13
-shipped: null
+shipped: 2026-06-13
 branch: feat/spec-driven-workflow
 mode: autonomous
 related:
   - "[[constitution]]"
+  - "[[companion-skill-distribution-topology]]"
+  - "[[quick-validate-needs-pyyaml-via-uv]]"
 ---
 # Spec-Driven Workflow — Spec
 
@@ -158,27 +160,27 @@ Changes to each copy:
 
 ## Acceptance Criteria
 
-- [ ] `.vault/rules.md` exists with exactly four H2 sections: `## Philosophy (Unix, ESR)` (17 numbered rules), `## Git & delivery` (5 numbered rules), `## Code` (2 numbered rules), `## Security` (a pointer to the constitution).
-- [ ] `.vault/rules/` directory no longer exists; `.vault/conventions/skill-validation-requirements.md` exists with the content formerly at `.vault/rules/skill-validation-requirements.md`.
-- [ ] `.vault/_index/conventions.md` lists the relocated `skill-validation-requirements.md`; no vault file links to a path under `.vault/rules/` (grep for `rules/` returns no live links).
-- [ ] `AGENTS.md` contains a `## Workflow Spec Driven` section whose `### Spec flow` is a numbered list of exactly 7 steps matching Design §B, and a `## Non-negotiable rules` section pointing to `.vault/rules.md`.
-- [ ] `AGENTS.md` retains the triage gate ("Can I describe the complete solution in one sentence?") with the Yes/Almost/No branches, and its pre-work reads name `.vault/_index/home.md`, `.vault/constitution.md`, and `.vault/rules.md`.
-- [ ] `AGENTS.md` no longer contains a `## Commands (most used)`, `## Knowledge locations`, or `## Work ethic — never the lazy path` section; it has exactly 5 sections (intro + 4 H2 headers).
-- [ ] `AGENTS.md` intro is the two-line form: a "...working on the memex codebase." line and a bold `**Never give up on the right solution.**` line — no repo-structure paragraph.
-- [ ] `wc -l AGENTS.md` returns ≤ 80.
-- [ ] `.vault/_index/rules.md` no longer exists; `.vault/_index/home.md` links `.vault/rules.md` directly and contains no `[[rules|Rules MOC]]` link.
-- [ ] Each of the three `memex-brainstorming` SKILL copies (`plugins/memex/skills/brainstorming/`, `.agents/skills/memex-brainstorming/`, `skills/memex/scaffold/skills/memex-brainstorming/`) has a checklist step that asks the execution mode after design approval, and marks the spec-review loop + user-review gate as conditional on `mode: reviewed`.
-- [ ] `skills/memex/references/audit-checklist.md` required-AGENTS.md-headers list is exactly the new 4 headers (contains `## Workflow Spec Driven` and `## Non-negotiable rules`; no longer contains `## Before starting any work`, `## Work ethic — never the lazy path`, `## Commands (most used)`, or `## Knowledge locations`); its file checks reference `.vault/rules.md` (not the `.vault/rules/` directory) and no longer require `.vault/_index/rules.md`.
-- [ ] `.vault/specs/_template/spec.md` frontmatter contains the keys `branch:` and `mode:`; running a grep for both keys in the template returns a match.
-- [ ] Each new skill exists in all three copies with the correct `name:` field: `.agents/skills/memex-new-pr/SKILL.md` (`name: memex-new-pr`), `plugins/memex/skills/new-pr/SKILL.md` (`name: new-pr`), `skills/memex/scaffold/skills/memex-new-pr/SKILL.md`; and the same trio for `code-review` (`memex-code-review` / `code-review`).
-- [ ] No `plugins/memex/commands/new-pr.md` or `plugins/memex/commands/code-review.md` is created (the two are plugin skills, not commands).
-- [ ] `.vault/constitution.md` contains the string `/memex:new-pr` and does not contain `/memex-open-pr`.
-- [ ] The Explicit-Consent rule text in `.vault/rules.md` explicitly states that a spec's recorded `mode:` authorizes feature-branch commit/push/PR and that `main`/`master` is never pushed.
-- [ ] `skills/memex/references/agents-md-template.md` section list and Template block reflect the new section ordering (grep for `## Workflow Spec Driven` returns a match; the old `## Before starting any work` heading is gone or folded).
-- [ ] `python3 skills/memex/scripts/quick_validate.py` (or the documented validator) passes for the two new scaffold skills.
-- [ ] Both `memex-code-review` and `memex-new-pr` SKILL bodies state their portable-degradation behavior (no native `/code-review` dependency; `gh`/remote absence handling).
-- [ ] `memex-code-review` SKILL defines the four severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the `lgtm` approval token, the read-project-law-first order, and the never-approve-under-pressure rule.
-- [ ] `memex-new-pr` SKILL stops when the current branch is `main`/`master`, resolves `.github/PULL_REQUEST_TEMPLATE.md` with an embedded fallback, and produces an English Conventional-Commit title + English body with no AI attribution.
+- [x] `.vault/rules.md` exists with exactly four H2 sections: `## Philosophy (Unix, ESR)` (17 numbered rules), `## Git & delivery` (5 numbered rules), `## Code` (2 numbered rules), `## Security` (a pointer to the constitution).
+- [x] `.vault/rules/` directory no longer exists; `.vault/conventions/skill-validation-requirements.md` exists with the content formerly at `.vault/rules/skill-validation-requirements.md`.
+- [x] `.vault/_index/conventions.md` lists the relocated `skill-validation-requirements.md`; no vault file links to a path under `.vault/rules/` (grep for `rules/` returns no live links).
+- [x] `AGENTS.md` contains a `## Workflow Spec Driven` section whose `### Spec flow` is a numbered list of exactly 7 steps matching Design §B, and a `## Non-negotiable rules` section pointing to `.vault/rules.md`.
+- [x] `AGENTS.md` retains the triage gate ("Can I describe the complete solution in one sentence?") with the Yes/Almost/No branches, and its pre-work reads name `.vault/_index/home.md`, `.vault/constitution.md`, and `.vault/rules.md`.
+- [x] `AGENTS.md` no longer contains a `## Commands (most used)`, `## Knowledge locations`, or `## Work ethic — never the lazy path` section; it has exactly 5 sections (intro + 4 H2 headers).
+- [x] `AGENTS.md` intro is the two-line form: a "...working on the memex codebase." line and a bold `**Never give up on the right solution.**` line — no repo-structure paragraph.
+- [x] `wc -l AGENTS.md` returns ≤ 80.
+- [x] `.vault/_index/rules.md` no longer exists; `.vault/_index/home.md` links `.vault/rules.md` directly and contains no `[[rules|Rules MOC]]` link.
+- [x] Each of the three `memex-brainstorming` SKILL copies (`plugins/memex/skills/brainstorming/`, `.agents/skills/memex-brainstorming/`, `skills/memex/scaffold/skills/memex-brainstorming/`) has a checklist step that asks the execution mode after design approval, and marks the spec-review loop + user-review gate as conditional on `mode: reviewed`.
+- [x] `skills/memex/references/audit-checklist.md` required-AGENTS.md-headers list is exactly the new 4 headers (contains `## Workflow Spec Driven` and `## Non-negotiable rules`; no longer contains `## Before starting any work`, `## Work ethic — never the lazy path`, `## Commands (most used)`, or `## Knowledge locations`); its file checks reference `.vault/rules.md` (not the `.vault/rules/` directory) and no longer require `.vault/_index/rules.md`.
+- [x] `.vault/specs/_template/spec.md` frontmatter contains the keys `branch:` and `mode:`; running a grep for both keys in the template returns a match.
+- [x] Each new skill exists in all three copies with the correct `name:` field: `.agents/skills/memex-new-pr/SKILL.md` (`name: memex-new-pr`), `plugins/memex/skills/new-pr/SKILL.md` (`name: new-pr`), `skills/memex/scaffold/skills/memex-new-pr/SKILL.md`; and the same trio for `code-review` (`memex-code-review` / `code-review`).
+- [x] No `plugins/memex/commands/new-pr.md` or `plugins/memex/commands/code-review.md` is created (the two are plugin skills, not commands).
+- [x] `.vault/constitution.md` contains the string `/memex:new-pr` and does not contain `/memex-open-pr`.
+- [x] The Explicit-Consent rule text in `.vault/rules.md` explicitly states that a spec's recorded `mode:` authorizes feature-branch commit/push/PR and that `main`/`master` is never pushed.
+- [x] `skills/memex/references/agents-md-template.md` section list and Template block reflect the new section ordering (grep for `## Workflow Spec Driven` returns a match; the old `## Before starting any work` heading is gone or folded).
+- [x] `python3 skills/memex/scripts/quick_validate.py` (or the documented validator) passes for the two new scaffold skills.
+- [x] Both `memex-code-review` and `memex-new-pr` SKILL bodies state their portable-degradation behavior (no native `/code-review` dependency; `gh`/remote absence handling).
+- [x] `memex-code-review` SKILL defines the four severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the `lgtm` approval token, the read-project-law-first order, and the never-approve-under-pressure rule.
+- [x] `memex-new-pr` SKILL stops when the current branch is `main`/`master`, resolves `.github/PULL_REQUEST_TEMPLATE.md` with an embedded fallback, and produces an English Conventional-Commit title + English body with no AI attribution.
 
 ## Risks and Mitigations
 
