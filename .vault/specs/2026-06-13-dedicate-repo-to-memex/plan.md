@@ -1,11 +1,11 @@
 ---
 feature: dedicate-repo-to-memex
-spec: "[[spec-dedicate-repo-to-memex]]"
+spec: "[[2026-06-13-dedicate-repo-to-memex/spec|spec]]"
 created: 2026-06-13
 ---
 # Dedicate Repo to Memex — Plan
 
-**For this spec:** `[[spec-dedicate-repo-to-memex]]`
+**For this spec:** `[[2026-06-13-dedicate-repo-to-memex/spec|spec]]`
 
 > **For agentic workers:** implement this plan task-by-task from `tasks-dedicate-repo-to-memex.md`. Steps use checkbox (`- [ ]`) syntax. There is no test runner in this repo — "verification" steps are grep/shell assertions and the memex Phase-5 validator, not unit tests.
 

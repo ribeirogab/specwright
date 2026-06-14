@@ -1,12 +1,12 @@
 ---
 feature: refine-spec-flow
-plan: "[[plan-refine-spec-flow]]"
-spec: "[[spec-refine-spec-flow]]"
+plan: "[[2026-06-14-refine-spec-flow/plan|plan]]"
+spec: "[[2026-06-14-refine-spec-flow/spec|spec]]"
 created: 2026-06-14
 ---
 # Refine Spec Flow — Tasks
 
-**For this plan:** `[[plan-refine-spec-flow]]`
+**For this plan:** `[[2026-06-14-refine-spec-flow/plan|plan]]`
 
 Branch `feat/refine-spec-flow`. No test runner — verification is grep/`wc` + `uv run --quiet --with pyyaml python skills/memex/scripts/quick_validate.py`. Conventional Commits, no AI attribution. Mode: **autonomous**.
 

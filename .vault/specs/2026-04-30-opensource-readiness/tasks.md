@@ -1,12 +1,12 @@
 ---
 feature: opensource-readiness
-plan: "[[plan-opensource-readiness]]"
-spec: "[[spec-opensource-readiness]]"
+plan: "[[2026-04-30-opensource-readiness/plan|plan]]"
+spec: "[[2026-04-30-opensource-readiness/spec|spec]]"
 created: 2026-04-30
 ---
 # Opensource Readiness — Tasks
 
-**For this plan:** `[[plan-opensource-readiness]]`
+**For this plan:** `[[2026-04-30-opensource-readiness/plan|plan]]`
 
 ## Phase 1: Author the artifacts
 

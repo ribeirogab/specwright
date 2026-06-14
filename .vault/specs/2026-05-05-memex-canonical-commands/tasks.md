@@ -1,12 +1,12 @@
 ---
 feature: memex-canonical-commands
-plan: "[[plan-memex-canonical-commands]]"
-spec: "[[spec-memex-canonical-commands]]"
+plan: "[[2026-05-05-memex-canonical-commands/plan|plan]]"
+spec: "[[2026-05-05-memex-canonical-commands/spec|spec]]"
 created: 2026-05-05
 ---
 # Memex Canonical Commands + Drop `memex-open-pr` — Tasks
 
-**For this plan:** `[[plan-memex-canonical-commands]]`
+**For this plan:** `[[2026-05-05-memex-canonical-commands/plan|plan]]`
 
 > All tasks operate on this repo (`/Users/gabriel/www/ribeirogab/agent-skills`). Work on a feature branch — never `main`. Open PR via `/memex-open-pr` (this repo still has it locally; spec policy B keeps it as an orphan in this repo).
 
@@ -685,7 +685,7 @@ git push -u origin feat/memex-canonical-commands
 
 - [ ] **Step 3: Open PR via `/memex-open-pr`**
 
-Use the slash command. Title should be a one-liner like `Memex: canonical commands at .agents/commands + drop memex-open-pr`. Body should reference the spec at `.vault/specs/2026-05-05-memex-canonical-commands/spec-memex-canonical-commands.md` and note that:
+Use the slash command. Title should be a one-liner like `Memex: canonical commands at .agents/commands + drop memex-open-pr`. Body should reference the spec at `.vault/specs/2026-05-05-memex-canonical-commands/spec.md` and note that:
 
 - this repo's own `.claude/commands/memex-*.md` files are NOT migrated by this PR (out of scope per the spec — escopo A)
 - this repo's `AGENTS.md` `## Commands (most used)` line for `/memex-open-pr` is NOT removed by this PR (out of scope, manual cleanup later)
@@ -698,7 +698,7 @@ Use the slash command. Title should be a one-liner like `Memex: canonical comman
 ### Task 12: Update spec status
 
 **Files:**
-- Modify: `.vault/specs/2026-05-05-memex-canonical-commands/spec-memex-canonical-commands.md` (frontmatter)
+- Modify: `.vault/specs/2026-05-05-memex-canonical-commands/spec.md` (frontmatter)
 - Modify: `.vault/_index/specs.md` (move entry from Active to Shipped)
 - Modify: `tasks-memex-canonical-commands.md` (this file — tick all `[ ]` to `[x]`)
 

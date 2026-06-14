@@ -1,12 +1,12 @@
 ---
 feature: dedicate-repo-to-memex
-plan: "[[plan-dedicate-repo-to-memex]]"
-spec: "[[spec-dedicate-repo-to-memex]]"
+plan: "[[2026-06-13-dedicate-repo-to-memex/plan|plan]]"
+spec: "[[2026-06-13-dedicate-repo-to-memex/spec|spec]]"
 created: 2026-06-13
 ---
 # Dedicate Repo to Memex — Tasks
 
-**For this plan:** `[[plan-dedicate-repo-to-memex]]`
+**For this plan:** `[[2026-06-13-dedicate-repo-to-memex/plan|plan]]`
 
 Work on branch `feat/dedicate-repo-to-memex` (already created; the spec is committed there). No test runner exists — verification steps are shell/grep assertions and the memex Phase-5 validator. Every task ends with a Conventional-Commits commit, **no AI-attribution footer**.
 

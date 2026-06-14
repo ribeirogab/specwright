@@ -2,7 +2,7 @@
 tags:
   - reference
 related:
-  - "[[spec-spec-driven-workflow]]"
+  - "[[2026-06-13-spec-driven-workflow/spec|spec-driven-workflow]]"
 created: 2026-06-13
 ---
 # Run the skill validators with `uv run --with pyyaml`
@@ -18,7 +18,7 @@ A valid skill prints `Skill is valid!`; packaging prints `Successfully packaged 
 
 ## Context
 
-Hit while running the quality gate for `[[spec-spec-driven-workflow]]`. The repo has no `requirements.txt` or virtualenv (constitution: no package manager at the root), so the validator's lone third-party dependency is not installed globally. `uv` is present at `~/.local/bin/uv`.
+Hit while running the quality gate for `[[2026-06-13-spec-driven-workflow/spec|spec-driven-workflow]]`. The repo has no `requirements.txt` or virtualenv (constitution: no package manager at the root), so the validator's lone third-party dependency is not installed globally. `uv` is present at `~/.local/bin/uv`.
 
 ## How to Apply
 

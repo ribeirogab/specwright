@@ -1,12 +1,12 @@
 ---
 feature: spec-driven-workflow
-plan: "[[plan-spec-driven-workflow]]"
-spec: "[[spec-spec-driven-workflow]]"
+plan: "[[2026-06-13-spec-driven-workflow/plan|plan]]"
+spec: "[[2026-06-13-spec-driven-workflow/spec|spec]]"
 created: 2026-06-13
 ---
 # Spec-Driven Workflow — Tasks
 
-**For this plan:** `[[plan-spec-driven-workflow]]`
+**For this plan:** `[[2026-06-13-spec-driven-workflow/plan|plan]]`
 
 Work on branch `feat/spec-driven-workflow` (created; spec/plan/tasks committed there). No test runner — verification is grep/`wc`/shell + the memex validators. Every phase ends with a Conventional-Commits commit, **no AI-attribution footer**. Mode: **autonomous** — implement straight through, then quality gate, then PR, then the `memex-code-review` cycle to `lgtm`.
 

@@ -1,12 +1,12 @@
 ---
 feature: rename-context-to-vault
-plan: "[[plan-rename-context-to-vault]]"
-spec: "[[spec-rename-context-to-vault]]"
+plan: "[[2026-05-03-rename-context-to-vault/plan|plan]]"
+spec: "[[2026-05-03-rename-context-to-vault/spec|spec]]"
 created: 2026-05-03
 ---
 # Rename `context/` to `.vault/` — Tasks
 
-**For this plan:** `[[plan-rename-context-to-vault]]`
+**For this plan:** `[[2026-05-03-rename-context-to-vault/plan|plan]]`
 
 > **Execution mode:** Inline. Branch `feat/rename-context-to-vault` already checked out.
 
@@ -257,7 +257,7 @@ created: 2026-05-03
 
 ### Task 5: Mark spec shipped, index, push, PR
 
-- [ ] **Step 5.1**: Mark spec frontmatter shipped (path: `.vault/specs/2026-05-03-rename-context-to-vault/spec-rename-context-to-vault.md`).
+- [ ] **Step 5.1**: Mark spec frontmatter shipped (path: `.vault/specs/2026-05-03-rename-context-to-vault/spec.md`).
 
   - `status: draft` → `status: shipped`
   - `shipped: null` → `shipped: 2026-05-03`
@@ -266,8 +266,8 @@ created: 2026-05-03
 - [ ] **Step 5.2**: Tick all `[ ]` checkboxes in Acceptance Criteria.
 
   ```bash
-  sed -i.bak 's/^- \[ \]/- [x]/g' .vault/specs/2026-05-03-rename-context-to-vault/spec-rename-context-to-vault.md \
-    && rm .vault/specs/2026-05-03-rename-context-to-vault/spec-rename-context-to-vault.md.bak
+  sed -i.bak 's/^- \[ \]/- [x]/g' .vault/specs/2026-05-03-rename-context-to-vault/spec.md \
+    && rm .vault/specs/2026-05-03-rename-context-to-vault/spec.md.bak
   ```
 
 - [ ] **Step 5.3**: Add to `.vault/_index/specs.md` under "Shipped".
@@ -277,7 +277,7 @@ created: 2026-05-03
 - [ ] **Step 5.5**: Commit + push.
 
   ```bash
-  git add .vault/specs/2026-05-03-rename-context-to-vault/spec-rename-context-to-vault.md .vault/_index/specs.md
+  git add .vault/specs/2026-05-03-rename-context-to-vault/spec.md .vault/_index/specs.md
   # plus any reflection learning
   git commit -m "ship: rename-context-to-vault — spec marked shipped, indexed, reflection captured"
   git push -u origin feat/rename-context-to-vault

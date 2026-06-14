@@ -3,7 +3,7 @@ tags:
   - learning
   - gotcha
 related:
-  - "[[../specs/2026-05-03-rename-context-to-vault/spec-rename-context-to-vault]]"
+  - "[[../specs/2026-05-03-rename-context-to-vault/spec]]"
   - "[[rename-spec-grep-first]]"
   - "[[bash-strict-mode-grep-filter]]"
 created: 2026-05-03

@@ -6,7 +6,7 @@ shipped: 2026-06-14
 branch: feat/refine-spec-flow
 mode: autonomous
 related:
-  - "[[spec-spec-driven-workflow]]"
+  - "[[2026-06-13-spec-driven-workflow/spec|spec-driven-workflow]]"
   - "[[constitution]]"
 ---
 # Refine Spec Flow — Spec
@@ -16,7 +16,7 @@ related:
 
 ## Context
 
-The spec-driven flow shipped in `[[spec-spec-driven-workflow]]` (PR #16) coupled the review gates to the execution mode: `reviewed` ran the spec-document-reviewer loop + a user-review gate + `/memex:review-spec`; `autonomous` skipped all three. Two things were off:
+The spec-driven flow shipped in `[[2026-06-13-spec-driven-workflow/spec|spec-driven-workflow]]` (PR #16) coupled the review gates to the execution mode: `reviewed` ran the spec-document-reviewer loop + a user-review gate + `/memex:review-spec`; `autonomous` skipped all three. Two things were off:
 
 1. **Human spec review is unwanted.** The maintainer wants exactly one human checkpoint before any artifact — **design approval** — and nothing else asking the human to read/approve the written spec. The agent should review its own spec.
 2. **The mode no longer maps cleanly to "review vs not".** Both modes should self-review the spec (agent-only). What actually differs is the human's involvement at **delivery** — a `reviewed` run asks before opening the PR + running code-review, an `autonomous` run does it on its own — plus the option to hand off implementation to a fresh, compacted context.

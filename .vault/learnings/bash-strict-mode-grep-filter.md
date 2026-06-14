@@ -3,7 +3,7 @@ tags:
   - learning
   - gotcha
 related:
-  - "[[../specs/2026-05-03-strengthen-vault-cross-links/spec-strengthen-vault-cross-links]]"
+  - "[[../specs/2026-05-03-strengthen-vault-cross-links/spec]]"
   - "[[mechanical-enforcement-over-prose]]"
 created: 2026-05-03
 ---

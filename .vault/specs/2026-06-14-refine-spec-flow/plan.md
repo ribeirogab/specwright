@@ -1,11 +1,11 @@
 ---
 feature: refine-spec-flow
-spec: "[[spec-refine-spec-flow]]"
+spec: "[[2026-06-14-refine-spec-flow/spec|spec]]"
 created: 2026-06-14
 ---
 # Refine Spec Flow — Plan
 
-**For this spec:** `[[spec-refine-spec-flow]]`
+**For this spec:** `[[2026-06-14-refine-spec-flow/spec|spec]]`
 
 > **For agentic workers:** implement task-by-task from `tasks-refine-spec-flow.md`. No test runner — verification is grep/`wc`/`uv run --with pyyaml … quick_validate.py`.
 

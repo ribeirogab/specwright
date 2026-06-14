@@ -1,11 +1,11 @@
 ---
 feature: rename-context-to-vault
-spec: "[[spec-rename-context-to-vault]]"
+spec: "[[2026-05-03-rename-context-to-vault/spec|spec]]"
 created: 2026-05-03
 ---
 # Rename `context/` to `.vault/` — Plan
 
-**For this spec:** `[[spec-rename-context-to-vault]]`
+**For this spec:** `[[2026-05-03-rename-context-to-vault/spec|spec]]`
 
 **Goal:** Rename the `context/` directory to `.vault/` across this repo and across every artifact the `memex` skill installs into target repos. Hard cut.
 

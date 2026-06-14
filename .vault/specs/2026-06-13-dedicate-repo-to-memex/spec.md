@@ -9,9 +9,9 @@ related:
   - "[[../../learnings/rename-spec-grep-first|rename-spec-grep-first]]"
   - "[[../../learnings/sed-rename-pattern-completeness|sed-rename-pattern-completeness]]"
   - "[[../../learnings/vendoring-a-single-skill-loses-upstream-license|vendoring-a-single-skill-loses-upstream-license]]"
-  - "[[../2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex|rename-harness-to-memex]]"
-  - "[[../2026-05-15-memex-claude-plugin-namespace/spec-memex-claude-plugin-namespace|memex-claude-plugin-namespace]]"
-  - "[[../2026-04-30-opensource-readiness/spec-opensource-readiness|opensource-readiness]]"
+  - "[[../2026-05-03-rename-harness-to-memex/spec|rename-harness-to-memex]]"
+  - "[[../2026-05-15-memex-claude-plugin-namespace/spec|memex-claude-plugin-namespace]]"
+  - "[[../2026-04-30-opensource-readiness/spec|opensource-readiness]]"
   - "[[../../learnings/memex-marketplace-name-not-reserved|memex-marketplace-name-not-reserved]]"
   - "[[../../learnings/git-rm-leaves-gitignored-leftovers|git-rm-leaves-gitignored-leftovers]]"
 ---
@@ -24,7 +24,7 @@ related:
 
 The repo was created as "the author's personal collection of Claude Code skills" that happens to flag `memex` as its flagship (see `.vault/constitution.md:11-15`). In practice the repo's whole value has converged on `memex` — the externalized project-memory scaffolder — plus its four bundled companion skills (`memex-brainstorming`, `memex-recall`, `memex-writing-plans`, `memex-link`). The "library of skills" framing now produces friction: a second published skill (`skill-improver`), two vendored maintainer-local skills (`skill-creator`, `opensource-guide-coach`), and an open door for new-skill PRs all dilute the project's identity and the constitution's scope.
 
-The maintainer has decided to dedicate the repo exclusively to memex. This is an **identity change**, not a feature: the dominant work is deletion, renaming, and prose rewriting across ~30 files. A prior full rename (`harness → memex`, [[../2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex|rename-harness-to-memex]]) is the playbook precedent for the mechanics (grep-first, `git mv`, symlink re-creation, validation gate).
+The maintainer has decided to dedicate the repo exclusively to memex. This is an **identity change**, not a feature: the dominant work is deletion, renaming, and prose rewriting across ~30 files. A prior full rename (`harness → memex`, [[../2026-05-03-rename-harness-to-memex/spec|rename-harness-to-memex]]) is the playbook precedent for the mechanics (grep-first, `git mv`, symlink re-creation, validation gate).
 
 ## Problem Statement
 
@@ -104,7 +104,7 @@ Whichever name survives Phase 0 is referred to below as **`<MKT>`**. The enabled
 
 ## Constraints
 
-- **Phase 0 gates the cascade.** No marketplace-name substitution lands until the reservation test resolves `<MKT>` (see gate section). Mitigates shipping a broken install (precedent: [[../2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex|the prior rename]] shipped a reserved name and had to be patched post-merge).
+- **Phase 0 gates the cascade.** No marketplace-name substitution lands until the reservation test resolves `<MKT>` (see gate section). Mitigates shipping a broken install (precedent: [[../2026-05-03-rename-harness-to-memex/spec|the prior rename]] shipped a reserved name and had to be patched post-merge).
 - The repo dogfoods its own scaffolder: `.agents/skills/` is canonical, `.claude/skills/*` are symlinks. `.claude/skills/` currently holds four entries: `memex` (symlink, **keep**), `skill-improver` (symlink, delete), `skill-creator` (real dir, delete), `opensource-guide-coach` (real dir, delete). The `memex` symlink already exists and is only preserved — not created. After the deletions, `.claude/skills/` must contain exactly the `memex` symlink, and it must resolve.
 - `CLAUDE.md` is a symlink to `AGENTS.md`; editing `AGENTS.md` propagates. The symlink must survive (`test -L CLAUDE.md`).
 - Use `git mv` / `git rm` for every move/delete so history follows (precedent risk table).

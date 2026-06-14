@@ -1,12 +1,12 @@
 ---
 feature: rename-harness-to-memex
-plan: "[[plan-rename-harness-to-memex]]"
-spec: "[[spec-rename-harness-to-memex]]"
+plan: "[[2026-05-03-rename-harness-to-memex/plan|plan]]"
+spec: "[[2026-05-03-rename-harness-to-memex/spec|spec]]"
 created: 2026-05-03
 ---
 # Rename Harness Skill to Memex — Tasks
 
-**For this plan:** `[[plan-rename-harness-to-memex]]`
+**For this plan:** `[[2026-05-03-rename-harness-to-memex/plan|plan]]`
 
 > **Execution mode:** Inline. The implementer reads each task in order, executes the steps, and commits at the end of each phase. Do not invoke any `/harness-*` or `/memex-*` slash command during Phases 1-4 — slash command files are mid-flight. Use raw `git`, `Edit`, and shell for everything until Phase 8.
 >
@@ -751,9 +751,9 @@ These files are templates: the agent-md-template will be written into other repo
   Expected output (exactly):
   ```
   ./context/learnings/harness-engineering-foundations.md
-  ./context/specs/2026-04-30-opensource-readiness/plan-opensource-readiness.md
-  ./context/specs/2026-04-30-opensource-readiness/spec-opensource-readiness.md
-  ./context/specs/2026-04-30-opensource-readiness/tasks-opensource-readiness.md
+  ./context/specs/2026-04-30-opensource-readiness/plan.md
+  ./context/specs/2026-04-30-opensource-readiness/spec.md
+  ./context/specs/2026-04-30-opensource-readiness/tasks.md
   ```
 
   Anything else → fix.
@@ -832,7 +832,7 @@ These files are templates: the agent-md-template will be written into other repo
 ### Task 22: Mark spec status `shipped`
 
 **Files:**
-- Modify: `context/specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex.md`
+- Modify: `context/specs/2026-05-03-rename-harness-to-memex/spec.md`
 
 - [ ] **Step 22.1**: Update the frontmatter:
 
@@ -849,7 +849,7 @@ These files are templates: the agent-md-template will be written into other repo
 - [ ] **Step 23.1**: Add an entry under the appropriate heading (likely "Shipped" or whatever the convention in `_index/specs.md` is).
 
   ```markdown
-  - [[../specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex|2026-05-03 — Rename harness skill to memex]] — full rename of the skill identifier; preserves the literature term "harness engineering".
+  - [[../specs/2026-05-03-rename-harness-to-memex/spec|2026-05-03 — Rename harness skill to memex]] — full rename of the skill identifier; preserves the literature term "harness engineering".
   ```
 
   Read the existing file first to match its format.
@@ -899,7 +899,7 @@ These files are templates: the agent-md-template will be written into other repo
   - [x] All `.claude/skills/` symlinks resolve.
   - [x] 15/15 validation checks pass per `skills/memex/references/validation.md`.
 
-  Spec: `context/specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex.md`
+  Spec: `context/specs/2026-05-03-rename-harness-to-memex/spec.md`
   EOF
   )"
   ```

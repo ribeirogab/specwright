@@ -2,7 +2,7 @@
 tags:
   - reference
 related:
-  - "[[spec-spec-driven-workflow]]"
+  - "[[2026-06-13-spec-driven-workflow/spec|spec-driven-workflow]]"
 created: 2026-06-13
 ---
 # A memex companion skill ships in three real copies, not as a command
@@ -17,7 +17,7 @@ Plugin **skills** (not commands) are the portable mechanism: a plugin skill is r
 
 ## Context
 
-Discovered while adding `memex-new-pr` and `memex-code-review` in the `[[spec-spec-driven-workflow]]` rework. The spec first described them as `plugins/memex/commands/*.md` — wrong: that would have made them Claude-only and broken the cross-agent goal. Diffing an existing companion (`memex-recall`) revealed the 3-copy topology and the name-field-only difference.
+Discovered while adding `memex-new-pr` and `memex-code-review` in the `[[2026-06-13-spec-driven-workflow/spec|spec-driven-workflow]]` rework. The spec first described them as `plugins/memex/commands/*.md` — wrong: that would have made them Claude-only and broken the cross-agent goal. Diffing an existing companion (`memex-recall`) revealed the 3-copy topology and the name-field-only difference.
 
 ## Adding a skill also means registering it in the installer (separate gotcha)
 

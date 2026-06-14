@@ -1,11 +1,11 @@
 ---
 feature: memex-claude-plugin-namespace
-spec: "[[spec-memex-claude-plugin-namespace]]"
+spec: "[[2026-05-15-memex-claude-plugin-namespace/spec|spec]]"
 created: 2026-05-15
 ---
 # Memex Claude Plugin Namespace — Plan
 
-**For this spec:** `[[spec-memex-claude-plugin-namespace]]`
+**For this spec:** `[[2026-05-15-memex-claude-plugin-namespace/spec|spec]]`
 
 ## Approach
 

@@ -3,7 +3,7 @@ tags:
   - learning
   - gotcha
 related:
-  - "[[../specs/2026-05-15-memex-claude-plugin-namespace/spec-memex-claude-plugin-namespace]]"
+  - "[[../specs/2026-05-15-memex-claude-plugin-namespace/spec]]"
 created: 2026-05-15
 ---
 # Claude Code `extraKnownMarketplaces` Source Schema

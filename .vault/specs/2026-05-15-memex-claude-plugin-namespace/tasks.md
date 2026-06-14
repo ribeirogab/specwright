@@ -1,12 +1,12 @@
 ---
 feature: memex-claude-plugin-namespace
-plan: "[[plan-memex-claude-plugin-namespace]]"
-spec: "[[spec-memex-claude-plugin-namespace]]"
+plan: "[[2026-05-15-memex-claude-plugin-namespace/plan|plan]]"
+spec: "[[2026-05-15-memex-claude-plugin-namespace/spec|spec]]"
 created: 2026-05-15
 ---
 # Memex Claude Plugin Namespace — Tasks
 
-**For this plan:** `[[plan-memex-claude-plugin-namespace]]`
+**For this plan:** `[[2026-05-15-memex-claude-plugin-namespace/plan|plan]]`
 
 > All tasks operate on this repo (`/Users/gabriel/www/ribeirogab/agent-skills`). Work on a feature branch — never `main`. The PR is opened at the end (Phase 6) with both the spec and the implementation in the same diff per the maintainer's "ship spec in same PR" rule.
 
@@ -1288,9 +1288,9 @@ gh pr create \
 
 ## Spec
 
-- [spec-memex-claude-plugin-namespace.md](.vault/specs/2026-05-15-memex-claude-plugin-namespace/spec-memex-claude-plugin-namespace.md)
-- [plan-memex-claude-plugin-namespace.md](.vault/specs/2026-05-15-memex-claude-plugin-namespace/plan-memex-claude-plugin-namespace.md)
-- [tasks-memex-claude-plugin-namespace.md](.vault/specs/2026-05-15-memex-claude-plugin-namespace/tasks-memex-claude-plugin-namespace.md)
+- [spec-memex-claude-plugin-namespace.md](.vault/specs/2026-05-15-memex-claude-plugin-namespace/spec.md)
+- [plan-memex-claude-plugin-namespace.md](.vault/specs/2026-05-15-memex-claude-plugin-namespace/plan.md)
+- [tasks-memex-claude-plugin-namespace.md](.vault/specs/2026-05-15-memex-claude-plugin-namespace/tasks.md)
 
 ## Test plan
 

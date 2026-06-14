@@ -4,7 +4,7 @@ tags:
   - gotcha
 related:
   - "[[claude-code-reserved-marketplace-names]]"
-  - "[[../specs/2026-06-13-dedicate-repo-to-memex/spec-dedicate-repo-to-memex]]"
+  - "[[../specs/2026-06-13-dedicate-repo-to-memex/spec]]"
 created: 2026-06-13
 ---
 # Bare `memex` is NOT a reserved Claude Code marketplace name

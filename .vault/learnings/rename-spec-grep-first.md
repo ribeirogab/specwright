@@ -3,7 +3,7 @@ tags:
   - learning
   - gotcha
 related:
-  - "[[../specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex]]"
+  - "[[../specs/2026-05-03-rename-harness-to-memex/spec]]"
 created: 2026-05-03
 ---
 # Rename specs must start with `git grep <oldname>` — never list scope from memory

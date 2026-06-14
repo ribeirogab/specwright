@@ -19,7 +19,7 @@ related:
 
 In the broader knowledge-management ecosystem (Obsidian, Logseq, Foam) the established term for "the directory containing your notes" is **vault**. The `memex` skill already produces an Obsidian-compatible layout (`.obsidian/` config, wikilinks, MOCs, frontmatter), so calling that directory `context/` rather than `.vault/` is a naming inconsistency the project has been carrying. This spec resolves it.
 
-This is a sibling-in-spirit to the `harness → memex` rename (`[[../2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex]]`): a deliberate vocabulary cleanup that removes a load-bearing inconsistency in user-facing terminology. Same precedent applies for shipped specs (frozen historical record), per-occurrence judgment in mixed-context notes, and `git grep` discipline before listing scope ([[../../learnings/rename-spec-grep-first]]).
+This is a sibling-in-spirit to the `harness → memex` rename (`[[../2026-05-03-rename-harness-to-memex/spec]]`): a deliberate vocabulary cleanup that removes a load-bearing inconsistency in user-facing terminology. Same precedent applies for shipped specs (frozen historical record), per-occurrence judgment in mixed-context notes, and `git grep` discipline before listing scope ([[../../learnings/rename-spec-grep-first]]).
 
 ## Problem Statement
 
@@ -53,7 +53,7 @@ The directory at `context/` IS an Obsidian vault — same layout, same wikilink 
 2. **Existing user re-running `/memex` on this repo** post-rename runs an audit that reports `.vault/` healthy, `context/` does not exist (it was renamed). No drift, no double-scaffolding.
 3. **External user installing `npx skills add ribeirogab/agent-skills --skill memex` on a fresh repo** gets `.vault/` scaffolded (the new convention).
 4. **Existing user with a downstream repo that ran the old memex (has `context/`)** runs the new `/memex`. The audit creates `.vault/` alongside the legacy `context/`. User decides: migrate manually (`git mv context/* .vault/ && rmdir context`), keep both, or revert the new `.vault/` install. **Documented in Non-Goals; not auto-handled.**
-5. **Reader opens a shipped spec** like `.vault/specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex.md`. The body still says `context/` because that was the directory name at ship time — preserved as historical record per Non-Goal #3. The spec's location (now under `.vault/`) is just structural.
+5. **Reader opens a shipped spec** like `.vault/specs/2026-05-03-rename-harness-to-memex/spec.md`. The body still says `context/` because that was the directory name at ship time — preserved as historical record per Non-Goal #3. The spec's location (now under `.vault/`) is just structural.
 6. **`/memex-link` smoke run** post-rename works — its `find-candidates.sh` walks `.vault/learnings`, `.vault/conventions`, etc., the test fixtures live under `.vault/` inside `tests/fixtures/`, and the script's bundled tests still PASS.
 
 ## Acceptance Criteria

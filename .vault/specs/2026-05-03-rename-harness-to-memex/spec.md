@@ -47,9 +47,9 @@ The `harness` identifier is overloaded: it names both (a) this repo's flagship s
 - [x] `find . -name "*harness*" -not -path "./.git/*" -not -path "./node_modules/*"` returns **only** these 5 expected paths and nothing else:
   - `./context/learnings/harness-engineering-foundations.md` (literature)
   - `./context/specs/2026-05-03-rename-harness-to-memex` (this spec's folder — slug contains "harness" because that's the topic)
-  - `./context/specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex.md`
-  - `./context/specs/2026-05-03-rename-harness-to-memex/plan-rename-harness-to-memex.md`
-  - `./context/specs/2026-05-03-rename-harness-to-memex/tasks-rename-harness-to-memex.md`
+  - `./context/specs/2026-05-03-rename-harness-to-memex/spec.md`
+  - `./context/specs/2026-05-03-rename-harness-to-memex/plan.md`
+  - `./context/specs/2026-05-03-rename-harness-to-memex/tasks.md`
 
   Note: the `2026-04-30-opensource-readiness/` folder is preserved as historical record (Non-Goal #2), but its files do **not** match `find -name "*harness*"` because their basenames don't contain that word — only their content does. AC #2 below covers content survivors.
 - [x] `grep -rIn "harness" AGENTS.md README.md context/constitution.md context/_index/ context/templates/ context/conventions/ context/rules/` returns zero lines (no leftover skill references in user-facing/active vault docs).

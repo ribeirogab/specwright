@@ -1,11 +1,11 @@
 ---
 feature: bare-spec-filenames
-spec: "[[spec-bare-spec-filenames]]"
+spec: "[[2026-06-14-bare-spec-filenames/spec|spec]]"
 created: 2026-06-14
 ---
 # Bare Spec Filenames — Plan
 
-**For this spec:** `[[spec-bare-spec-filenames]]`
+**For this spec:** `[[2026-06-14-bare-spec-filenames/spec|spec]]`
 
 > **For agentic workers:** implement task-by-task from `tasks-bare-spec-filenames.md`. The only executable test is `bash .agents/skills/memex-link/tests/run.sh` (needs `jq`); everything else is verified with `find`/`grep`/`diff`/`wc` and the markdown validators via `uv run --quiet --with pyyaml python skills/memex/scripts/quick_validate.py`.
 

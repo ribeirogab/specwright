@@ -1,11 +1,11 @@
 ---
 feature: spec-driven-workflow
-spec: "[[spec-spec-driven-workflow]]"
+spec: "[[2026-06-13-spec-driven-workflow/spec|spec]]"
 created: 2026-06-13
 ---
 # Spec-Driven Workflow — Plan
 
-**For this spec:** `[[spec-spec-driven-workflow]]`
+**For this spec:** `[[2026-06-13-spec-driven-workflow/spec|spec]]`
 
 > **For agentic workers:** implement this plan task-by-task from `tasks-spec-driven-workflow.md`. Steps use checkbox (`- [ ]`) syntax. There is no test runner in this repo — "verification" steps are grep/`wc`/shell assertions and the memex validators (`skills/memex/scripts/quick_validate.py`, `package_skill.py`), not unit tests.
 

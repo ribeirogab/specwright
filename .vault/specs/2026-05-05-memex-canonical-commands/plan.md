@@ -1,11 +1,11 @@
 ---
 feature: memex-canonical-commands
-spec: "[[spec-memex-canonical-commands]]"
+spec: "[[2026-05-05-memex-canonical-commands/spec|spec]]"
 created: 2026-05-05
 ---
 # Memex Canonical Commands + Drop `memex-open-pr` — Plan
 
-**For this spec:** `[[spec-memex-canonical-commands]]`
+**For this spec:** `[[2026-05-05-memex-canonical-commands/spec|spec]]`
 
 ## Approach
 

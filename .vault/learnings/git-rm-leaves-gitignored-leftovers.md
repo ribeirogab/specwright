@@ -3,7 +3,7 @@ tags:
   - learning
   - gotcha
 related:
-  - "[[../specs/2026-06-13-dedicate-repo-to-memex/spec-dedicate-repo-to-memex]]"
+  - "[[../specs/2026-06-13-dedicate-repo-to-memex/spec]]"
 created: 2026-06-13
 ---
 # `git rm -r <dir>` leaves the directory on disk when it holds gitignored files

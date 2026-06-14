@@ -1,12 +1,12 @@
 ---
 feature: strengthen-vault-cross-links
-plan: "[[plan-strengthen-vault-cross-links]]"
-spec: "[[spec-strengthen-vault-cross-links]]"
+plan: "[[2026-05-03-strengthen-vault-cross-links/plan|plan]]"
+spec: "[[2026-05-03-strengthen-vault-cross-links/spec|spec]]"
 created: 2026-05-03
 ---
 # Strengthen Vault Cross-Links — Tasks
 
-**For this plan:** `[[plan-strengthen-vault-cross-links]]`
+**For this plan:** `[[2026-05-03-strengthen-vault-cross-links/plan|plan]]`
 
 > **Execution mode:** Inline. The implementer reads each task in order, executes the steps, and commits at the end of each phase. Branch `feat/strengthen-vault-cross-links` is already checked out.
 >
@@ -21,7 +21,7 @@ created: 2026-05-03
 **Files:**
 - Modify: `context/specs/_template/spec.md`
 - Modify: `AGENTS.md`
-- Modify: `context/specs/2026-04-30-opensource-readiness/spec-opensource-readiness.md`
+- Modify: `context/specs/2026-04-30-opensource-readiness/spec.md`
 
 - [ ] **Step 1.1**: Add `related: []` to `context/specs/_template/spec.md` frontmatter, after `shipped: null`.
 
@@ -80,7 +80,7 @@ created: 2026-05-03
 
 - [ ] **Step 1.4**: Backfill `related:` on the shipped opensource-readiness spec.
 
-  Use `Edit` on `context/specs/2026-04-30-opensource-readiness/spec-opensource-readiness.md`:
+  Use `Edit` on `context/specs/2026-04-30-opensource-readiness/spec.md`:
   - old:
     ```
     ---
@@ -113,7 +113,7 @@ created: 2026-05-03
 - [ ] **Step 1.6**: Commit.
 
   ```bash
-  git add context/specs/_template/spec.md AGENTS.md context/specs/2026-04-30-opensource-readiness/spec-opensource-readiness.md
+  git add context/specs/_template/spec.md AGENTS.md context/specs/2026-04-30-opensource-readiness/spec.md
   git commit -m "feat(vault): add related: to spec template, harden post-spec backlink rule, backfill opensource-readiness"
   ```
 
@@ -1359,7 +1359,7 @@ created: 2026-05-03
 - [ ] **Step 11.4**: AC #4 — opensource-readiness `related:` populated.
 
   ```bash
-  awk '/^---$/{n++} n==2{exit} {print}' context/specs/2026-04-30-opensource-readiness/spec-opensource-readiness.md \
+  awk '/^---$/{n++} n==2{exit} {print}' context/specs/2026-04-30-opensource-readiness/spec.md \
     | grep -c '^[[:space:]]*-[[:space:]]*"\[\['
   ```
 
@@ -1549,13 +1549,13 @@ created: 2026-05-03
 ### Task 13: Mark spec status `shipped` + index + reflection
 
 **Files:**
-- Modify: `context/specs/2026-05-03-strengthen-vault-cross-links/spec-strengthen-vault-cross-links.md`
+- Modify: `context/specs/2026-05-03-strengthen-vault-cross-links/spec.md`
 - Modify: `context/_index/specs.md`
 - Maybe-create: a reflection learning note.
 
 - [ ] **Step 13.1**: Mark spec frontmatter shipped.
 
-  Use `Edit` on `context/specs/2026-05-03-strengthen-vault-cross-links/spec-strengthen-vault-cross-links.md`:
+  Use `Edit` on `context/specs/2026-05-03-strengthen-vault-cross-links/spec.md`:
   - old:
     ```
     status: draft
@@ -1578,8 +1578,8 @@ created: 2026-05-03
 - [ ] **Step 13.2**: Tick all `[ ]` checkboxes in the spec's Acceptance Criteria section to `[x]`.
 
   ```bash
-  sed -i.bak 's/^- \[ \]/- [x]/g' context/specs/2026-05-03-strengthen-vault-cross-links/spec-strengthen-vault-cross-links.md \
-    && rm context/specs/2026-05-03-strengthen-vault-cross-links/spec-strengthen-vault-cross-links.md.bak
+  sed -i.bak 's/^- \[ \]/- [x]/g' context/specs/2026-05-03-strengthen-vault-cross-links/spec.md \
+    && rm context/specs/2026-05-03-strengthen-vault-cross-links/spec.md.bak
   ```
 
 - [ ] **Step 13.3**: Index the spec under "Shipped" in `context/_index/specs.md`.
@@ -1590,14 +1590,14 @@ created: 2026-05-03
     ```
     ## Shipped
 
-    - [[../specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex|rename-harness-to-memex]]
+    - [[../specs/2026-05-03-rename-harness-to-memex/spec|rename-harness-to-memex]]
     ```
   - new:
     ```
     ## Shipped
 
-    - [[../specs/2026-05-03-strengthen-vault-cross-links/spec-strengthen-vault-cross-links|strengthen-vault-cross-links]] — added `related:` to spec template, hardened post-spec backlink rule, extended `/memex-sweep` with isolated-specs detector, backfilled `opensource-readiness`, and shipped new `/memex-link` skill+command for interactive cross-link suggestions. Shipped 2026-05-03.
-    - [[../specs/2026-05-03-rename-harness-to-memex/spec-rename-harness-to-memex|rename-harness-to-memex]]
+    - [[../specs/2026-05-03-strengthen-vault-cross-links/spec|strengthen-vault-cross-links]] — added `related:` to spec template, hardened post-spec backlink rule, extended `/memex-sweep` with isolated-specs detector, backfilled `opensource-readiness`, and shipped new `/memex-link` skill+command for interactive cross-link suggestions. Shipped 2026-05-03.
+    - [[../specs/2026-05-03-rename-harness-to-memex/spec|rename-harness-to-memex]]
     ```
 
   (Adjust the surrounding context to match the actual line layout — only the new bullet is being added.)
@@ -1610,14 +1610,14 @@ created: 2026-05-03
   - Edge cases in frontmatter parsing.
   - Edit-safety races during the interactive loop.
 
-  If at least one non-obvious learning surfaced: create a new note under `context/learnings/<slug>.md` using the template `context/templates/learning.md`, populate it (including `related: [[../specs/2026-05-03-strengthen-vault-cross-links/spec-strengthen-vault-cross-links]]`), and add an entry to `context/_index/learnings.md` under the appropriate `#concept`/`#gotcha`/`#reference` heading.
+  If at least one non-obvious learning surfaced: create a new note under `context/learnings/<slug>.md` using the template `context/templates/learning.md`, populate it (including `related: [[../specs/2026-05-03-strengthen-vault-cross-links/spec]]`), and add an entry to `context/_index/learnings.md` under the appropriate `#concept`/`#gotcha`/`#reference` heading.
 
   If nothing non-obvious came up: state "**Reflection:** No new learnings from this spec." in the PR description body. (Per CLAUDE.md — silence is not the same as reflection.)
 
 - [ ] **Step 13.5**: Commit Phase 7.
 
   ```bash
-  git add context/specs/2026-05-03-strengthen-vault-cross-links/spec-strengthen-vault-cross-links.md context/_index/specs.md
+  git add context/specs/2026-05-03-strengthen-vault-cross-links/spec.md context/_index/specs.md
   # plus any reflection learning, if created
   git status --short
   git commit -m "ship: strengthen-vault-cross-links — spec marked shipped, indexed, reflection captured"
@@ -1653,7 +1653,7 @@ created: 2026-05-03
   - [x] Live vault smoke test of `/memex-link` produces suggestions
   - [x] Sweep test fixture flagged correctly; live populated specs not flagged
 
-  Spec: `context/specs/2026-05-03-strengthen-vault-cross-links/spec-strengthen-vault-cross-links.md`
+  Spec: `context/specs/2026-05-03-strengthen-vault-cross-links/spec.md`
   EOF
   )"
   ```

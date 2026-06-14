@@ -1,11 +1,11 @@
 ---
 feature: rename-harness-to-memex
-spec: "[[spec-rename-harness-to-memex]]"
+spec: "[[2026-05-03-rename-harness-to-memex/spec|spec]]"
 created: 2026-05-03
 ---
 # Rename Harness Skill to Memex — Plan
 
-**For this spec:** `[[spec-rename-harness-to-memex]]`
+**For this spec:** `[[2026-05-03-rename-harness-to-memex/spec|spec]]`
 
 **Goal:** Rename every `harness*` identifier in this repo to `memex*` — files, directories, symlinks, frontmatter, prose, and shell snippets — except where `harness` refers to the published *harness engineering* literature.
 

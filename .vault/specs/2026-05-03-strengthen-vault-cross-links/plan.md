@@ -1,11 +1,11 @@
 ---
 feature: strengthen-vault-cross-links
-spec: "[[spec-strengthen-vault-cross-links]]"
+spec: "[[2026-05-03-strengthen-vault-cross-links/spec|spec]]"
 created: 2026-05-03
 ---
 # Strengthen Vault Cross-Links — Plan
 
-**For this spec:** `[[spec-strengthen-vault-cross-links]]`
+**For this spec:** `[[2026-05-03-strengthen-vault-cross-links/spec|spec]]`
 
 **Goal:** Make the `context/` knowledge graph denser by shipping (1) frontmatter+rule changes that prompt cross-linking at write time, (2) a sweep check that flags isolated specs, (3) a retroactive backfill of the existing island, and (4) a new `/memex-link` skill that detects missing `related:` entries with a deterministic Bash detector and an interactive accept loop.
 
@@ -36,7 +36,7 @@ Component 3 — Sweep check
   └── + ### Isolated specs section (detector logic)
 
 Component 4 — Retroactive backfill
-  context/specs/2026-04-30-opensource-readiness/spec-opensource-readiness.md
+  context/specs/2026-04-30-opensource-readiness/spec.md
   └── frontmatter: + related: with one wikilink
 
 Component 5 — New memex-link skill
@@ -73,7 +73,7 @@ Component 5 — New memex-link skill
 |---|---|---|
 | `context/specs/_template/spec.md` | Modify (frontmatter + body) | 1 |
 | `AGENTS.md` | Modify (one section) | 1 |
-| `context/specs/2026-04-30-opensource-readiness/spec-opensource-readiness.md` | Modify (frontmatter only) | 1 |
+| `context/specs/2026-04-30-opensource-readiness/spec.md` | Modify (frontmatter only) | 1 |
 | `.claude/commands/memex-sweep.md` | Modify (append section) | 2 |
 | `skills/memex/scaffold/commands/memex-sweep.md` | Modify (append section, mirror) | 2 |
 | `.agents/skills/memex-link/SKILL.md` | Create | 3 |

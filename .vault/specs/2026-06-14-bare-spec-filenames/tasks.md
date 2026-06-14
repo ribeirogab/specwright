@@ -1,12 +1,12 @@
 ---
 feature: bare-spec-filenames
-plan: "[[plan-bare-spec-filenames]]"
-spec: "[[spec-bare-spec-filenames]]"
+plan: "[[2026-06-14-bare-spec-filenames/plan|plan]]"
+spec: "[[2026-06-14-bare-spec-filenames/spec|spec]]"
 created: 2026-06-14
 ---
 # Bare Spec Filenames — Tasks
 
-**For this plan:** `[[plan-bare-spec-filenames]]`
+**For this plan:** `[[2026-06-14-bare-spec-filenames/plan|plan]]`
 
 Branch `feat/bare-spec-filenames`. Mode **autonomous**. Conventional Commits, no AI attribution. Only executable test: `bash .agents/skills/memex-link/tests/run.sh` (needs `jq`). Markdown validators: `uv run --quiet --with pyyaml python skills/memex/scripts/quick_validate.py <path>`.
 

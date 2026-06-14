@@ -4,7 +4,7 @@ tags:
   - gotcha
 related:
   - "[[claude-code-extra-known-marketplaces-source-schema]]"
-  - "[[../specs/2026-05-15-memex-claude-plugin-namespace/spec-memex-claude-plugin-namespace]]"
+  - "[[../specs/2026-05-15-memex-claude-plugin-namespace/spec]]"
 created: 2026-05-15
 ---
 # Claude Code Reserves Certain Marketplace Names
