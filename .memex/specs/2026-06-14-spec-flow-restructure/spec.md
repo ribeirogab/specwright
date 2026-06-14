@@ -14,6 +14,8 @@ related:
   - "[[companion-skill-distribution-topology]]"
   - "[[memex-link-copies-have-drifted]]"
   - "[[bash-strict-mode-grep-filter]]"
+  - "[[skill-for-type-loop-is-legacy-rename-not-scaffolding]]"
+  - "[[validate-spec-flags-template-meta-specs]]"
 ---
 # Spec-Flow Restructure — Spec
 
