@@ -31,7 +31,7 @@ The audit checklist (`references/audit-checklist.md`) checks for these section h
 
 ## Template
 
-```markdown
+````markdown
 # {{Project Name}} — Agent Instructions
 
 Instructions for AI coding assistants and developers working on the {{project}} codebase.
@@ -61,6 +61,22 @@ If the user is asking, investigating, or exploring — just answer.
 8. **Deliver.** `autonomous` → open the PR (`/memex:new-pr`) and run the `memex:code-review` cycle — several specialized review subagents that must **all** reach `lgtm` (their roles live in the skill) — hands-off, the recorded mode tells the agent to finish alone. `reviewed` → after reflect, ask "open the PR and run code-review?", then the same on your go-ahead.
 9. **Ship the spec.** **PR opened + code-review `lgtm` = shipped.** On `lgtm`, set the spec's frontmatter `status: shipped` + `shipped:` date and move its entry to **Shipped** in `.memex/_index/specs.md`. Do this on the spec's own branch (part of its PR) — not after merge; the later merge to `main` is the maintainer's.
 
+```mermaid
+flowchart TD
+    A(["brainstorm → design.md"]) --> B{"design approved?"}
+    B -- "no, revise" --> A
+    B -- yes --> C["branch + mode + compact"]
+    C --> D["writing-plans → spec.md + tasks.md + self-review"]
+    D --> E{"compact?"}
+    E -- yes --> F["print txt handoff, stop; resume later"]
+    E -- no --> G["implement"]
+    F --> G
+    G --> H["quality gate + test-integrity"]
+    H --> I["reflect + learnings"]
+    I --> J["new-pr → code-review: all subagents lgtm"]
+    J --> K(["lgtm = shipped"])
+```
+
 ## Non-negotiable rules
 
 All in `.memex/rules.md` — philosophy, git, security, code. Security and architecture are detailed in `.memex/constitution.md`.
@@ -82,4 +98,4 @@ Commands + companion skills ship through the `memex` plugin (marketplace `memex`
 - **`/memex:new-pr`** — open the PR per the spec's mode.
 - **`/memex:code-review`** — bespoke, portable review cycle to `lgtm`.
 - **`/memex:sweep`** / **`/memex:learn`** — vault GC / investigate-and-save.
-```
+````
