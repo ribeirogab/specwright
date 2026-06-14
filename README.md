@@ -1,6 +1,6 @@
 # memex
 
-An externalized, navigable project memory for coding agents — Claude Code, Codex, Cursor, OpenCode, Gemini CLI, Aider, and any other tool that supports the open agent skills standard. `memex` is a single skill that idempotently scaffolds a `.vault/` knowledge vault, an `AGENTS.md` (with a `CLAUDE.md` symlink for back-compat), spec/plan/task templates, and a set of bundled companion skills + slash commands into any repository — then dogfoods that same memory on its own development.
+`memex` gives any repository a durable, navigable **project memory** and an explicit **spec-driven workflow**. It idempotently scaffolds a `.vault/` knowledge vault — constitution, rules, specs, plans, and learnings — plus an `AGENTS.md` that drives every non-trivial change through one pipeline: brainstorm → spec → plan → tasks → implement → quality gate → PR → review-to-`lgtm`. It is agent-agnostic (any tool that follows the open agent skills standard) and self-hosting — it dogfoods the same vault and workflow on its own development.
 
 > Personal project, solo maintenance, best-effort, no SLA. Published so anyone can install it.
 
