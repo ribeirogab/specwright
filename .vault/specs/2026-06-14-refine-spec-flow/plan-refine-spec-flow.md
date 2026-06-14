@@ -9,7 +9,7 @@ created: 2026-06-14
 
 > **For agentic workers:** implement task-by-task from `tasks-refine-spec-flow.md`. No test runner — verification is grep/`wc`/`uv run --with pyyaml … quick_validate.py`.
 
-**Goal:** Rewrite the spec-driven flow's human-interaction model — design approval is the only human review; the agent self-reviews in both modes; post-design asks a single conditional batch (branch + mode, reviewed also PR + compact); a reviewed+compact run emits a `txt` handoff after the artifacts are written.
+**Goal:** Rewrite the spec-driven flow's human-interaction model — design approval is the only human review; the agent self-reviews in both modes; post-design asks a single 3-question batch (branch + mode + compact, no PR question, both modes); a compact run (either mode) emits a `txt` handoff after the artifacts are written; the mode decides only delivery (reviewed asks before opening the PR).
 
 **Architecture:** Markdown-only edits across `AGENTS.md`, the three `memex-brainstorming` copies, the scaffold template, the `/memex:spec` command, and the README. The brainstorming skill is the canonical driver; edit `.agents` then regenerate plugin + scaffold copies. No code, no new frontmatter.
 
