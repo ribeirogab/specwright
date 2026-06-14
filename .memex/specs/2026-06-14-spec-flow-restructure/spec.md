@@ -1,8 +1,8 @@
 ---
-status: draft
+status: shipped
 feature: spec-flow-restructure
 created: 2026-06-14
-shipped: null
+shipped: 2026-06-14
 branch: feat/spec-flow-restructure
 mode: autonomous
 related:
@@ -19,7 +19,7 @@ related:
 ---
 # Spec-Flow Restructure — Spec
 
-**Status:** Draft
+**Status:** Shipped
 **Scope:** Restructure the memex spec-flow artifact model (introduce `design.md`, fuse `spec.md`+`plan.md`, add a `scope` field, add AC traceability IDs + subagent-delegation to `tasks.md`) and implement four benchmark insights (#1 traceability, #2 test-integrity, #3 two-subagent spec-conformance review, #4 a mechanical artifact validator).
 
 ## Context

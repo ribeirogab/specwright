@@ -182,4 +182,4 @@ Before starting: capture a baseline `diff -rq` of the three copies of each skill
 - [x] Step 1: Reflect — write learnings to `.memex/learnings/` if any non-obvious thing surfaced (e.g. folding two reviewer prompts, the scaffold copy-step pattern); else "No new learnings".
 - [x] Step 2: `/memex:new-pr`.
 - [x] Step 3: `memex:code-review` cycle to `lgtm` (autonomous), hands-off.
-- [ ] Step 4: On merge-ready, flip spec `status: shipped` + `shipped:` date.
+- [x] Step 4: On `lgtm` (PR opened + reviewed), flip spec `status: shipped` + `shipped:` date.

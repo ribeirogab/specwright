@@ -6,7 +6,7 @@
 
 - The intro is exactly two lines: `Instructions for AI coding assistants and developers working on the {{project}} codebase.` followed by a blank line and `**Never give up on the right solution.**`. No repo-structure paragraph.
 - Fill `{{Project Name}}` and `{{project}}` from the project info gathered in Prerequisites.
-- The `### Spec flow` is fixed — the same 8 steps for every project (it encodes the memex delivery pipeline, not project specifics).
+- The `### Spec flow` is fixed — the same 9 steps for every project (it encodes the memex delivery pipeline, not project specifics).
 
 Do **not** leave `{{placeholders}}` in the final file. Phase 5 validation will catch them.
 
@@ -59,6 +59,7 @@ If the user is asking, investigating, or exploring — just answer.
 6. **Quality gate.** Detect the touched modules' code-quality processes (test, lint, typecheck, build — Makefile, `package.json` scripts, the area's CI) and run them all; nothing you did may break them. Logic added or changed in a tested area without a test → write the missing tests first. **Test integrity:** in a tested area the test count must not silently drop and assertions must not be weakened, skipped, or deleted to pass the gate without an in-spec justification.
 7. Reflect; write learnings to `.memex/learnings/` if genuinely useful, without asking — part of delivery. Nothing useful → say "No new learnings".
 8. **Deliver.** `autonomous` → open the PR (`/memex:new-pr`) and run the `memex:code-review` cycle (two subagents: project-law generalist + spec-conformance against the spec's `AC-N`) to `lgtm`, hands-off — the recorded mode tells the agent to finish alone. `reviewed` → after reflect, ask "open the PR and run code-review?", then the same on your go-ahead.
+9. **Ship the spec.** **PR opened + code-review `lgtm` = shipped.** On `lgtm`, set the spec's frontmatter `status: shipped` + `shipped:` date and move its entry to **Shipped** in `.memex/_index/specs.md`. Do this on the spec's own branch (part of its PR) — not after merge; the later merge to `main` is the maintainer's.
 
 ## Non-negotiable rules
 
