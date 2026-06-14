@@ -68,7 +68,7 @@ memex's current artifacts mix concerns and leave verification open: `spec.md` bl
 - [ ] `.memex/specs/_template/spec.md` is the technical doc: frontmatter includes `scope: {{low | medium | high | complex}}`; body contains a `design: "[[design]]"` link, Architecture, File Structure, Phase Ordering, an Acceptance Criteria section using `AC-N` IDs, and Risks; it no longer contains Context/Problem Statement/Motivation (those moved to `design.md`).
 - [ ] `.memex/specs/_template/tasks.md` shows, per task, an `AC:` field listing the `AC-N` it satisfies and a `Delegable:` field (`yes`/`no` + one-line isolated-context note).
 - [ ] `skills/memex/references/vault-files.md` embeds the same four template changes (design.md added, plan.md removed, spec.md technical+scope+AC-N, tasks.md AC+Delegable) so new installs scaffold the new model.
-- [ ] `skills/memex/SKILL.md`'s spec-folder copy loop (`for type in spec plan tasks`) is updated to `spec design tasks` so the scaffolder handles the new artifact set.
+- [ ] `skills/memex/SKILL.md`'s legacy slug→bare rename loop (`for type in spec plan tasks`) is updated to include `design` (→ `spec design plan tasks`); `plan` is **retained** so pre-design-era specs still migrate their filenames to bare names (this loop renames filenames only; it never converts `plan.md` into `design.md`). The current artifact set scaffolds via the `_template/` copy in `vault-files.md`, not a per-type loop.
 
 **Flow + skills (Phase 1)**
 
