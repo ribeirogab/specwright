@@ -15,6 +15,16 @@ Run an **independent** review of a spec written by the agent. It runs inside `me
 2. **Constitution.** Read `.memex/constitution.md` in full — it defines the non-negotiables this spec must respect.
 3. **Vault background.** Skim the relevant indices: `.memex/_index/learnings.md`, `.memex/_index/conventions.md`, and the rules in `.memex/rules.md`. You are looking for prior knowledge the spec may have ignored or duplicated.
 
+## Step 0 — mechanical pre-check (run first)
+
+Before the prose review, run the mechanical validator over the spec folder:
+
+```bash
+.memex/scripts/validate-spec.sh <spec-folder>
+```
+
+It deterministically checks required frontmatter keys + the `scope` enum, surviving `{{placeholder}}`s, vague-verb acceptance criteria, and `AC-N` task coverage. A **non-zero exit is a blocking FAIL** — record it as the `0. Mechanical validator` row, and the verdict is `Block` regardless of the prose findings. Still complete the prose review below so the author fixes everything in one pass. If the script is absent (older install), note `validator missing` and proceed with the prose review only.
+
 ## What to evaluate
 
 For the target `spec.md`, return a finding for each of the categories below. Each finding is one of `PASS`, `WARN`, or `FAIL`. Reserve `FAIL` for issues that should block handoff.
@@ -76,6 +86,7 @@ Every `[NEEDS CLARIFICATION: ...]` marker is a blocker. Same for any acceptance 
 
 | # | Category                                | Status | Note |
 |---|-----------------------------------------|--------|------|
+| 0 | Mechanical validator                    | PASS   | validate-spec.sh exit 0 |
 | 1 | Constitution compliance                 | PASS   |      |
 | 2 | Acceptance Criteria — concrete/testable | FAIL   | Bullet 3: "handles errors gracefully" — no observable check |
 | 3 | Required sections present               | WARN   | Non-Goals is empty |
@@ -97,6 +108,7 @@ Every `[NEEDS CLARIFICATION: ...]` marker is a blocker. Same for any acceptance 
 
 ## Verdict rules
 
+- **A non-zero validator exit (Step 0)** → `Block`, always — the spec is structurally invalid.
 - **Any FAIL** → `Block`. Do not proceed to implementation; fix the spec first.
 - **Only WARNs** → `Approve with notes`. May proceed but should address WARNs in the next pass.
 - **All PASS** → `Approved`. Proceed to implementation.
