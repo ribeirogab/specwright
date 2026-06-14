@@ -14,6 +14,7 @@ Template: `[[../specs/_template/spec|_template/spec]]`
 
 ## Active
 
+- [[../specs/2026-06-14-bare-spec-filenames/spec|bare-spec-filenames]] — reverse the spec-file naming convention from `<type>-<slug>.md` to bare `spec.md`/`plan.md`/`tasks.md` ship-wide; the dated folder becomes the link discriminator (path-qualified wikilinks) and `find-candidates.sh` re-keys on folder-relative identity. Migrated the 10 existing spec folders. Draft 2026-06-14.
 - [[../specs/2026-05-05-memex-canonical-commands/spec|memex-canonical-commands]] — bring bundled slash commands under the same `.agents/<cmd>` canonical + `.claude/<cmd>` symlink layout that already governs bundled skills, and stop shipping `memex-open-pr`. Draft 2026-05-05.
 
 ## Shipped
