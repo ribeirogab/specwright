@@ -5,7 +5,7 @@
 tmp/
 
 # Obsidian vault config (machine-local — Obsidian rewrites these on every open)
-.vault/.obsidian/
+.memex/.obsidian/
 
 # Python build artifacts (created when running skill-creator/scripts/*.py)
 __pycache__/
