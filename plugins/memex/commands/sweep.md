@@ -66,7 +66,7 @@ For each orphan, ask the user one of:
 
 A wikilink whose target file does not exist breaks the navigation contract.
 
-Resolve targets Obsidian-style: strip the path prefix and search the vault for any file or directory whose basename matches. **Exception — path-qualified spec-folder links:** a link to a bare spec-folder file carries its dated folder (`[[…/<YYYY-MM-DD-slug>/spec]]`, or `plan`/`tasks`); resolve it against that **specific** folder — the target exists only if `.memex/specs/<YYYY-MM-DD-slug>/spec.md` exists. Do not fall back to a bare `spec.md`-anywhere match for these, or a link to a deleted spec would resolve to an unrelated spec's `spec.md`. Skip files inside `templates/` and `_template/` — those legitimately use placeholder wikilinks like `[[plan]]`, `[[spec]]`, `[[related-note]]`, `[[wikilinks]]` that are filled in when the template is copied. Wikilinks inside fenced code blocks or inline backticks are also skipped (illustrative examples, not navigation contracts).
+Resolve targets Obsidian-style: strip the path prefix and search the vault for any file or directory whose basename matches. **Exception — path-qualified spec-folder links:** a link to a bare spec-folder file carries its dated folder (`[[…/<YYYY-MM-DD-slug>/spec]]`, or `design`/`tasks`; legacy specs may also carry `plan`); resolve it against that **specific** folder — the target exists only if `.memex/specs/<YYYY-MM-DD-slug>/spec.md` exists. Do not fall back to a bare `spec.md`-anywhere match for these, or a link to a deleted spec would resolve to an unrelated spec's `spec.md`. Skip files inside `templates/` and `_template/` — those legitimately use placeholder wikilinks like `[[design]]`, `[[spec]]`, `[[related-note]]`, `[[wikilinks]]` that are filled in when the template is copied. Wikilinks inside fenced code blocks or inline backticks are also skipped (illustrative examples, not navigation contracts).
 
 ```bash
 find .memex/ -name '*.md' -not -path '*/templates/*' -not -path '*/_template/*' 2>/dev/null \
@@ -196,7 +196,7 @@ WARN-level — ask the user before any change.
 
 ### 7. Isolated specs
 
-A spec whose frontmatter+body has **zero outgoing wikilinks** beyond its own `plan` / `tasks` siblings is disconnected from the knowledge graph — the workflow unit shipped without recording what learnings/conventions/rules it touched. The `related:` field exists exactly to record those connections; an empty (or absent) `related:` plus zero body wikilinks is a graph island.
+A spec whose frontmatter+body has **zero outgoing wikilinks** beyond its own `design` / `tasks` siblings is disconnected from the knowledge graph — the workflow unit shipped without recording what learnings/conventions/rules it touched. The `related:` field exists exactly to record those connections; an empty (or absent) `related:` plus zero body wikilinks is a graph island.
 
 This check uses the same `strip_code` preprocessor as checks 1–3 to ignore wikilinks inside fenced code blocks or inline backticks.
 
@@ -205,16 +205,16 @@ find .memex/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null |
   folder=$(basename "$spec_dir")
   spec="$spec_dir/spec.md"
   [ -f "$spec" ] || continue
-  # Count outgoing wikilinks excluding the plan/tasks sibling pair, code-block-aware
+  # Count outgoing wikilinks excluding the design/tasks siblings, code-block-aware
   count=$(awk '
       /^```/ { in_fence = !in_fence; next }
       !in_fence { gsub(/`[^`]*`/, ""); print }
     ' "$spec" \
     | grep -oE '\[\[[^]]+\]\]' \
-    | grep -vE "\[\[([^]|]*/)?(plan|tasks)(\||\]\])" \
+    | grep -vE "\[\[([^]|]*/)?(design|plan|tasks)(\||\]\])" \
     | sort -u | wc -l | tr -d ' ')
   if [ "$count" = "0" ]; then
-    echo "ISLAND: $spec — zero outgoing wikilinks beyond plan/tasks pair."
+    echo "ISLAND: $spec — zero outgoing wikilinks beyond design/tasks siblings."
     echo "  Suggest: memex-link $folder"
   fi
 done
@@ -251,7 +251,7 @@ PASS
 - `_index/conventions.md`: ## Tooling — no entries
 
 ### Isolated specs (1)
-- `specs/2026-04-30-opensource-readiness/` — zero outgoing wikilinks beyond plan/tasks. Suggest: `memex-link 2026-04-30-opensource-readiness`
+- `specs/2026-04-30-opensource-readiness/` — zero outgoing wikilinks beyond design/tasks siblings. Suggest: `memex-link 2026-04-30-opensource-readiness`
 
 ### Summary
 15 findings across 7 categories. Walk through them?

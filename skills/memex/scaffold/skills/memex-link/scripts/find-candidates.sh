@@ -38,6 +38,7 @@ all_notes() {
     -type f -name '*.md' 2>/dev/null \
     | grep -v '^.memex/specs/_template/' \
     | grep -Ev '/plan\.md$' \
+    | grep -Ev '/design\.md$' \
     | grep -Ev '/tasks\.md$' \
     | sort
 }
@@ -97,7 +98,7 @@ precompute() {
     [ -f "$CACHE/$enc.h2s" ]   || : > "$CACHE/$enc.h2s"
 
     # related[] link keys from frontmatter. Key rule: base = last path
-    # segment; for spec-folder files (spec/plan/tasks) key = <folder>/<base>
+    # segment; for spec-folder files (design/spec/plan/tasks) key = <folder>/<base>
     # so two bare spec.md don't collide; otherwise key = <base>.
     awk '
       BEGIN { n=0; in_rel=0 }
@@ -112,7 +113,7 @@ precompute() {
         if (i) $0 = substr($0, 1, i-1)
         nseg = split($0, seg, "/")
         base = seg[nseg]
-        if (base == "spec" || base == "plan" || base == "tasks") {
+        if (base == "design" || base == "spec" || base == "plan" || base == "tasks") {
           if (nseg >= 2) print seg[nseg-1] "/" base; else print base
         } else {
           print base
@@ -193,7 +194,7 @@ while IFS= read -r src; do
 
     # Link key: folder-qualify spec-folder files so two bare spec.md don't collide.
     case "$tgt_basename" in
-      spec|plan|tasks)
+      design|spec|plan|tasks)
         tgt_parent="${tgt%/*}"; tgt_parent="${tgt_parent##*/}"
         tgt_key="$tgt_parent/$tgt_basename" ;;
       *) tgt_key="$tgt_basename" ;;
@@ -204,11 +205,11 @@ while IFS= read -r src; do
       *" $tgt_key "*) continue ;;
     esac
 
-    # Filter: plan/tasks intra-pair within same spec folder.
+    # Filter: design/plan/tasks intra-pair within same spec folder.
     tgt_dir="${tgt%/*}"
     if [ "$src_dir" = "$tgt_dir" ]; then
       case "$tgt_basename" in
-        plan|tasks) continue ;;
+        design|plan|tasks) continue ;;
       esac
     fi
 
