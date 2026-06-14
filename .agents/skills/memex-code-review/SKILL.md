@@ -1,6 +1,6 @@
 ---
 name: memex-code-review
-description: "Review a branch diff (or any diff/files pointed at) against the memex project law — .memex/rules.md, the constitution, and conventions — classify findings (blocker/suggestion/nitpick/question) and reply as plain text ending in a verdict. Portable: no dependency on a native code-review tool. Trigger on 'review this branch', 'code review', 'review the diff', 'review again', or step 7 of the spec flow."
+description: "Review a branch diff (or any diff/files pointed at) against the memex project law — .memex/rules.md, the constitution, and conventions — plus spec-conformance against the spec's acceptance criteria; classify findings (blocker/suggestion/nitpick/question) and reply as plain text ending in a verdict. Portable: no dependency on a native code-review tool. Trigger on 'review this branch', 'code review', 'review the diff', 'review again', or the delivery step of the spec flow."
 ---
 
 # code-review — review against the project's own law
@@ -92,6 +92,7 @@ A blocker MUST change before merge. Real blockers here:
 - `AGENTS.md` over its 80-line cap.
 - a broken vault cross-link (a `[[wikilink]]` or path with no target) introduced by the diff.
 - new logic with zero tests in an area that has tests.
+- an acceptance criterion (`AC-N`) in the spec satisfied by no change in the diff — the spec-conformance pass flags it by ID (Completeness miss).
 
 NOT blockers — these are nits or suggestions, never request-changes:
 
@@ -114,10 +115,19 @@ Scan your draft for: any emoji; the strings `## Review` / `### Blocker` / `### S
 4. Review in order: correctness/bugs → security → tests → rules/conventions compliance → readability → DRY/SOLID. Classify each finding per the calibration list.
 5. Run the pre-reply gate, then send exactly one template.
 
-## Orchestration and degradation
+## Two-subagent review (spec flow) and degradation
 
-- In the spec flow (step 7), this runs as a **sub-agent** dispatched over the open branch. The sub-agent only *finds* — it never edits code. The **main agent** triages: fixes the findings that make sense, contests the rest until consensus, pushes the fixes, and re-requests review.
-- On an agent without sub-agent spawning, run the review inline in a delimited fresh-context pass — same templates, same law.
+In the spec flow's delivery step, code-review runs as **two** find-only sub-agents over the open branch (neither edits code):
+
+- **Subagent A — project-law generalist.** Everything above: reviews the diff against `.memex/rules.md`, the constitution, the area `AGENTS.md`, and `.memex/conventions/`, producing findings in the four-template shape.
+- **Subagent B — spec-conformance.** Reads the spec's Acceptance Criteria (`AC-N`) and the diff and reports three dimensions, citing the `AC-N` by ID:
+  - **Completeness** — every `AC-N` is satisfied by a concrete change in the diff; an `AC-N` with no satisfying change is a **blocker**.
+  - **Correctness** — the change actually meets the criterion (and its edge cases), not just gestures at it.
+  - **Coherence** — the spec's architecture / file-structure decisions appear in the code as written.
+
+The **main agent merges** both subagents' findings into a **single** reply in one of the A/B/C/D templates: union and dedupe the findings, blockers first, then triage — fix what makes sense, contest the rest to consensus, push, and re-request review.
+
+Degradation: on an agent without sub-agent spawning, run both passes inline as two delimited fresh-context reads — the law review, then the spec-conformance review — then merge into one verdict. Same templates, same law. (Ad-hoc reviews with no spec run subagent A only.)
 
 ## Re-review
 
