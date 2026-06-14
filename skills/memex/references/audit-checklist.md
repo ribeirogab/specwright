@@ -57,7 +57,7 @@ CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
 
 For every **non-Claude** agent-specific discovery directory present in the repo (`.codex/`, `.cursor/`, `.opencode/`, `.aider/`, `.augment/`, etc.), each scaffold skill above should also be symlinked into that agent's `skills/` subdirectory so the agent can discover it. Example: when `.codex/` exists, `.codex/skills/memex-recall` is a symlink to `../../.agents/skills/memex-recall`.
 
-**Claude Code is excluded from this loop.** Claude users get the companion skills through the `memex` plugin (marketplace `memex`), invoked as `/memex:recall`, `/memex:brainstorming`, `/memex:writing-plans`, `/memex:link`. Creating `.claude/skills/memex-<name>` symlinks here would surface the same skill twice in `/help` — once as `/memex-recall` (hyphen-form symlink) and once as `/memex:recall` (plugin namespace). Legacy `.claude/skills/memex-{recall,brainstorming,writing-plans,link}` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks).
+**Claude Code is excluded from this loop.** Claude users get the companion skills through the `memex` plugin (marketplace `memex`), invoked as `/memex:recall`, `/memex:brainstorming`, `/memex:writing-plans`, `/memex:link`, `/memex:new-pr`, `/memex:code-review`. Creating `.claude/skills/memex-<name>` symlinks here would surface the same skill twice in `/help` — once as `/memex-recall` (hyphen-form symlink) and once as `/memex:recall` (plugin namespace). Legacy `.claude/skills/memex-{recall,brainstorming,writing-plans,link}` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks).
 
 A missing per-agent symlink is **not `DRIFT`** — only the canonical files under `.agents/skills/` are required. If a per-agent dir exists but lacks the expected symlinks, the memex installer re-creates them on the next run (no prompt needed; symlinks are non-destructive). If a per-agent dir does not exist at all, no symlinks are created (the absence signals the user does not run that agent in this repo).
 
@@ -189,7 +189,7 @@ Each MOC and template must begin with valid YAML frontmatter (between `---` fenc
 | OK     | .vault/constitution.md |
 | MISSING| .vault/_index/conventions.md |
 | DRIFT  | .vault/specs/old-feature/ (not date-prefixed) |
-| DRIFT  | AGENTS.md (missing section: "Work ethic — never the lazy path") |
+| DRIFT  | AGENTS.md (missing section: "## Vault — read from it, write to it") |
 | ...    | ... |
 
 ### Summary

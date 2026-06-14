@@ -12,7 +12,7 @@ related: []
 **Status:** Draft
 **Scope:** {{one-sentence scope statement}}
 
-> **Note on `related:` frontmatter** — populate the `related:` list with wikilinks to learnings, conventions, or rules this spec touches, reads, or modifies. Empty `related:` is allowed only if the spec genuinely has no vault dependencies; `/memex-sweep` will flag isolated specs.
+> **Note on `related:` frontmatter** — populate the `related:` list with wikilinks to learnings, conventions, or rules this spec touches, reads, or modifies. Empty `related:` is allowed only if the spec genuinely has no vault dependencies; `/memex:sweep` will flag isolated specs.
 
 ## Context
 
@@ -43,7 +43,7 @@ Each criterion must be a binary, observable check that someone other than the im
 - [ ] {{ e.g. the migration script runs idempotently — running it twice on the same DB yields no diff }}
 - [ ] {{ ... }}
 
-Tick each `[x]` when verified. A spec is **not shippable** with empty or `{{placeholder}}` acceptance criteria — `/harness-review-spec` will reject it.
+Tick each `[x]` when verified. A spec is **not shippable** with empty or `{{placeholder}}` acceptance criteria — `/memex:review-spec` will reject it.
 
 ## Risks and Mitigations
 

@@ -1,6 +1,9 @@
 # macOS Finder metadata
 .DS_Store
 
+# E2E scaffold test sandbox (throwaway projects for testing the memex skill)
+tmp/
+
 # Obsidian vault config (machine-local — Obsidian rewrites these on every open)
 .vault/.obsidian/
 

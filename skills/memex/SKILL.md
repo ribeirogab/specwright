@@ -93,7 +93,7 @@ All bundled skills and commands live in `scaffold/` alongside this `SKILL.md`.
 
 ```bash
 MEMEX_DIR="<directory where this SKILL.md lives>"
-SKILL_NAMES=(memex-recall memex-brainstorming memex-writing-plans memex-link)
+SKILL_NAMES=(memex-recall memex-brainstorming memex-writing-plans memex-link memex-new-pr memex-code-review)
 
 # 1. Canonical install — single source of truth on disk
 mkdir -p .agents/skills

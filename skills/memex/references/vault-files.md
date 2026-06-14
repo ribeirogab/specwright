@@ -6,9 +6,9 @@ All concrete file contents the orchestrator writes when scaffolding the `.vault/
 
 - [Substitution rules — read first](#substitution-rules--read-first)
 - [Obsidian config (3 JSONs)](#obsidian-config)
-- [Atomic note templates (3 files)](#atomic-note-templates)
+- [Atomic note templates (2 files)](#atomic-note-templates)
 - [Spec templates (3 files) + naming convention](#spec-templates)
-- [MOCs (5 files)](#mocs)
+- [MOCs (4 files)](#mocs)
 
 ---
 
@@ -153,11 +153,14 @@ created: {{YYYY-MM-DD}}
 shipped: null
 branch: {{feat/kebab-slug-of-feature}}
 mode: {{autonomous | reviewed}}
+related: []
 ---
 # {{Feature Name}} — Spec
 
 **Status:** Draft
 **Scope:** {{one-sentence scope statement}}
+
+> **Note on `related:` frontmatter** — populate the `related:` list with wikilinks to learnings, conventions, or rules this spec touches, reads, or modifies. Empty `related:` is allowed only if the spec genuinely has no vault dependencies; `/memex:sweep` will flag isolated specs.
 
 ## Context
 
@@ -188,7 +191,7 @@ Each criterion must be a binary, observable check that someone other than the im
 - [ ] {{ e.g. the migration script runs idempotently — running it twice on the same DB yields no diff }}
 - [ ] {{ ... }}
 
-Tick each `[x]` when verified. A spec is **not shippable** with empty or `{{placeholder}}` acceptance criteria — `/memex-review-spec` will reject it.
+Tick each `[x]` when verified. A spec is **not shippable** with empty or `{{placeholder}}` acceptance criteria — `/memex:review-spec` will reject it.
 
 ## Risks and Mitigations
 

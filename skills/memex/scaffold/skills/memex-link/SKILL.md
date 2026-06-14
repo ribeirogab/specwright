@@ -1,6 +1,6 @@
 ---
 name: memex-link
-description: "Analyze the vault for missing related: frontmatter cross-links and present suggestions interactively. Conservative: only surfaces high-evidence (wikilink already in body) and medium-evidence (filepath/title in body, or shared title/H2 terms) candidates. Never edits without explicit per-item user confirmation. Use when the user asks to find missing related: links in the vault, when /memex-sweep flags an isolated spec, or as part of the After-completing-a-spec reflection."
+description: "Analyze the vault for missing related: frontmatter cross-links and present suggestions interactively. Conservative: only surfaces high-evidence (wikilink already in body) and medium-evidence (filepath/title in body, or shared title/H2 terms) candidates. Never edits without explicit per-item user confirmation. Use when the user asks to find missing related: links in the vault, when /memex:sweep flags an isolated spec, or as part of the After-completing-a-spec reflection."
 ---
 
 # Memex Link — Vault Cross-Link Suggestions

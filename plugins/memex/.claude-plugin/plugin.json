@@ -1,4 +1,4 @@
 {
   "name": "memex",
-  "description": "Memex slash commands: spec, learn, sweep, review-spec. Wraps the memex agent-memory workflow as Claude Code plugin commands."
+  "description": "Memex slash commands (spec, learn, sweep, review-spec) and companion skills (brainstorming, writing-plans, recall, link, new-pr, code-review) — the memex spec-driven agent-memory workflow as a Claude Code plugin."
 }
