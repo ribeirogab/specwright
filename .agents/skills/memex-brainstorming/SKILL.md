@@ -27,7 +27,7 @@ You MUST create a task for each of these items and complete them in order:
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
 6. **Post-design batch** — once the design is approved, ask in **one** batch exactly three things: confirm the **branch name**, choose the **mode** (`autonomous` | `reviewed`), and whether to **compact** before implementing. Record `branch:` + `mode:` into the spec frontmatter.
-7. **Write design doc** — save to `.vault/specs/YYYY-MM-DD-<slug>/spec-<slug>.md` (with the recorded `branch:`/`mode:`) and commit
+7. **Write design doc** — save to `.vault/specs/YYYY-MM-DD-<slug>/spec.md` (with the recorded `branch:`/`mode:`) and commit
 8. **Self-review the spec — both modes** — dispatch the spec-document-reviewer subagent (completeness/clarity; fix + re-dispatch until approved, max 3 iterations then surface to human), then run `/memex:review-spec` (constitution + vault compliance; fix any FAIL). Both passes run in **both** modes. **There is no human spec-review gate** — design approval (step 5) is the only human review.
 9. **Transition to implementation** — invoke writing-plans skill → `plan`/`tasks`, then follow the `AGENTS.md` `### Spec flow` tail: **compact (either mode)** → after plan/tasks exist, print a ```` ```txt ```` handoff prompt and stop (never compact earlier); otherwise implement → quality gate → reflect, then **deliver per mode** — `autonomous` opens the PR + runs the `memex:code-review` cycle to `lgtm` on its own; `reviewed` first asks "open the PR and run code-review?".
 
@@ -116,7 +116,7 @@ Both modes self-review the spec and may use the compact handoff. The design-appr
 
 **Documentation:**
 
-- Write the validated design (spec) to `.vault/specs/YYYY-MM-DD-<slug>/spec-<slug>.md`, including the recorded `branch:`/`mode:`
+- Write the validated design (spec) to `.vault/specs/YYYY-MM-DD-<slug>/spec.md`, including the recorded `branch:`/`mode:`
   - (User preferences for spec location override this default)
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
@@ -131,7 +131,7 @@ The user is **not** asked to review the spec — design approval already gated t
 
 **Implementation handoff:**
 
-- Invoke the writing-plans skill to create `plan-<slug>.md` + `tasks-<slug>.md`. Do NOT invoke any other skill — writing-plans is the next step.
+- Invoke the writing-plans skill to create `plan.md` + `tasks.md`. Do NOT invoke any other skill — writing-plans is the next step.
 - Once plan + tasks exist, follow the `AGENTS.md` `### Spec flow` tail:
   - **compact = yes (either mode)** → print a ```` ```txt ```` **handoff prompt** (a one-paragraph summary + the paths to `spec`/`plan`/`tasks` + the mode) and stop. The user runs `/compact` (or opens a new chat) and pastes it to resume. **Never compact before the artifacts exist** — the preference was recorded up front; the handoff is produced only now.
   - **compact = no** → implement straight away.
