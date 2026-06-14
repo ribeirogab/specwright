@@ -202,43 +202,56 @@ If the audit flagged any spec folder without a `YYYY-MM-DD-` prefix, migrate per
 
 ### Spec file rename migration (if drift was reported)
 
-If the audit detected a spec folder containing generic `spec.md` / `plan.md` / `tasks.md` files (instead of the `<type>-<slug>.md` convention), migrate the folder. Renaming tracked files is a destructive operation — surface each detected folder, get explicit user confirmation per folder, then run the recipe below.
+If the audit detected a spec folder containing slug-named `spec-<slug>.md` / `plan-<slug>.md` / `tasks-<slug>.md` files (instead of the bare-name convention), migrate the folder. Renaming tracked files is a destructive operation — surface each detected folder, get explicit user confirmation per folder, then run the recipe below.
 
 For each confirmed `<spec_dir>` (e.g. `.vault/specs/2026-04-30-opensource-readiness/`):
 
 ```bash
 spec_dir="<the folder, e.g. .vault/specs/2026-04-30-opensource-readiness>"
 slug=$(basename "$spec_dir" | sed 's/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-//')
+folder=$(basename "$spec_dir")
 
-# 1. Rename each generic file to include the slug, preserving git history
+# 1. Rename each slug-named file to its bare name, preserving git history
 for type in spec plan tasks; do
-  src="$spec_dir/${type}.md"
-  dst="$spec_dir/${type}-${slug}.md"
+  src="$spec_dir/${type}-${slug}.md"
+  dst="$spec_dir/${type}.md"
   [ -f "$src" ] && [ ! -e "$dst" ] && git mv "$src" "$dst"
 done
 
-# 2. Update internal wikilinks inside every file in the folder
-#    [[spec]] / [[plan]] / [[tasks]] → [[<type>-<slug>]]
+# 2. Rewrite intra-folder wikilinks: [[<type>-<slug>]] → [[<folder>/<type>|<type>]]
 for f in "$spec_dir"/*.md; do
   sed -i.bak \
-    -e "s/\\[\\[spec\\]\\]/[[spec-${slug}]]/g" \
-    -e "s/\\[\\[plan\\]\\]/[[plan-${slug}]]/g" \
-    -e "s/\\[\\[tasks\\]\\]/[[tasks-${slug}]]/g" \
+    -e "s|\\[\\[spec-${slug}\\]\\]|[[${folder}/spec\\|spec]]|g" \
+    -e "s|\\[\\[plan-${slug}\\]\\]|[[${folder}/plan\\|plan]]|g" \
+    -e "s|\\[\\[tasks-${slug}\\]\\]|[[${folder}/tasks\\|tasks]]|g" \
     "$f" && rm "$f.bak"
 done
 
-# 3. Update the specs MOC entry that pointed at the old basename
-folder=$(basename "$spec_dir")
-sed -i.bak \
-  -e "s|/${folder}/spec\\([|\\]]\\)|/${folder}/spec-${slug}\\1|g" \
-  -e "s|/${folder}/plan\\([|\\]]\\)|/${folder}/plan-${slug}\\1|g" \
-  -e "s|/${folder}/tasks\\([|\\]]\\)|/${folder}/tasks-${slug}\\1|g" \
-  .vault/_index/specs.md && rm .vault/_index/specs.md.bak
+# 3. Rewrite path-qualified links anywhere they kept the slugged filename:
+#    /<folder>/spec-<slug> → /<folder>/spec
+grep -rl "/${folder}/spec-${slug}\|/${folder}/plan-${slug}\|/${folder}/tasks-${slug}" .vault 2>/dev/null \
+  | while IFS= read -r f; do
+      sed -i.bak \
+        -e "s|/${folder}/spec-${slug}|/${folder}/spec|g" \
+        -e "s|/${folder}/plan-${slug}|/${folder}/plan|g" \
+        -e "s|/${folder}/tasks-${slug}|/${folder}/tasks|g" \
+        "$f" && rm "$f.bak"
+    done
+
+# 4. Rewrite bare-basename inbound links: [[spec-<slug>]] → [[<folder>/spec|<slug>]]
+grep -rl "\\[\\[spec-${slug}\\]\\]\|\\[\\[plan-${slug}\\]\\]\|\\[\\[tasks-${slug}\\]\\]" .vault 2>/dev/null \
+  | while IFS= read -r f; do
+      sed -i.bak \
+        -e "s|\\[\\[spec-${slug}\\]\\]|[[${folder}/spec\\|${slug}]]|g" \
+        -e "s|\\[\\[plan-${slug}\\]\\]|[[${folder}/plan\\|${slug}]]|g" \
+        -e "s|\\[\\[tasks-${slug}\\]\\]|[[${folder}/tasks\\|${slug}]]|g" \
+        "$f" && rm "$f.bak"
+    done
 ```
 
-After the recipe runs, also `grep -rln "\[\[spec\]\]\|\[\[plan\]\]\|\[\[tasks\]\]" .vault/learnings/ .vault/conventions/ .vault/rules.md` to surface any external wikilinks that might have pointed at the old basenames; update those manually with the user's confirmation (those references are not always intra-spec — they could legitimately mean "the spec template").
+After the recipe runs, `grep -rn "spec-${slug}\|plan-${slug}\|tasks-${slug}" .vault` to confirm no slugged reference survived; update any straggler manually with the user's confirmation.
 
-Note for the `sed` `-e` line: `[|\\]]` is a character class matching `|` or `]` — this scopes the replacement to wikilink edges so we do not match `<folder>/spec-tweaks.md` or other longer paths that happen to start with `spec`.
+Note: steps 3–4 scope edits to `/<folder>/<type>-<slug>` path segments and `[[<type>-<slug>]]` wikilink forms, so they do not match `<folder>/spec-tweaks.md` or other longer names that merely start with `spec`.
 
 ## Phase 5 — Validate
 
