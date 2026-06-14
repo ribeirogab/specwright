@@ -11,9 +11,9 @@ Run an **independent** review of a spec written by the agent. This is the second
 
 ## Inputs
 
-1. **Target spec.** If `$ARGUMENTS` is a path under `.vault/specs/`, read that folder. Otherwise scan `.vault/specs/` for the most recent `YYYY-MM-DD-*` folder modified and confirm with the user before proceeding.
-2. **Constitution.** Read `.vault/constitution.md` in full — it defines the non-negotiables this spec must respect.
-3. **Vault background.** Skim the relevant indices: `.vault/_index/learnings.md`, `.vault/_index/conventions.md`, and the rules in `.vault/rules.md`. You are looking for prior knowledge the spec may have ignored or duplicated.
+1. **Target spec.** If `$ARGUMENTS` is a path under `.memex/specs/`, read that folder. Otherwise scan `.memex/specs/` for the most recent `YYYY-MM-DD-*` folder modified and confirm with the user before proceeding.
+2. **Constitution.** Read `.memex/constitution.md` in full — it defines the non-negotiables this spec must respect.
+3. **Vault background.** Skim the relevant indices: `.memex/_index/learnings.md`, `.memex/_index/conventions.md`, and the rules in `.memex/rules.md`. You are looking for prior knowledge the spec may have ignored or duplicated.
 
 ## What to evaluate
 
@@ -21,7 +21,7 @@ For the target `spec.md`, return a finding for each of the categories below. Eac
 
 ### 1. Constitution compliance
 
-Read every rule in `.vault/constitution.md`. For each rule, ask: does this spec violate, weaken, or sidestep it? Quote the constitution line and the spec line when reporting.
+Read every rule in `.memex/constitution.md`. For each rule, ask: does this spec violate, weaken, or sidestep it? Quote the constitution line and the spec line when reporting.
 
 `FAIL` if any rule is violated. `WARN` if a rule is sidestepped without acknowledgement. `PASS` otherwise.
 
@@ -48,7 +48,7 @@ The spec template defines: Context, Problem Statement, Non-Goals, Constraints, U
 
 ### 4. Duplication of existing knowledge
 
-For each major decision in the spec, search `.vault/learnings/`, `.vault/conventions/`, and `.vault/rules.md` for prior notes covering the same ground. If a learning already answers a question the spec re-litigates, surface it.
+For each major decision in the spec, search `.memex/learnings/`, `.memex/conventions/`, and `.memex/rules.md` for prior notes covering the same ground. If a learning already answers a question the spec re-litigates, surface it.
 
 `FAIL` if the spec contradicts an existing learning without acknowledging it. `WARN` if it duplicates without citing. `PASS` if existing notes are correctly referenced.
 
@@ -91,7 +91,7 @@ Every `[NEEDS CLARIFICATION: ...]` marker is a blocker. Same for any acceptance 
 1. Rewrite Acceptance Criteria bullet 3:
    - Was: "Handles errors gracefully"
    - Suggested: "On a 5xx upstream response, the endpoint returns 502 with body `{\"code\":\"UPSTREAM_ERROR\"}` and emits a `upstream_error` log line"
-2. Resolve [NEEDS CLARIFICATION: which auth provider?] before continuing — propose: "Use the same provider as the rest of the project (see `.vault/learnings/auth-stack.md`)"
+2. Resolve [NEEDS CLARIFICATION: which auth provider?] before continuing — propose: "Use the same provider as the rest of the project (see `.memex/learnings/auth-stack.md`)"
 ```
 
 ## Verdict rules

@@ -15,7 +15,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Context:** This should be run in a dedicated worktree (created by brainstorming skill).
 
-**Save plans to:** `.vault/specs/YYYY-MM-DD-<slug>/plan.md` (alongside the spec at `spec.md`)
+**Save plans to:** `.memex/specs/YYYY-MM-DD-<slug>/plan.md` (alongside the spec at `spec.md`)
 - (User preferences for plan location override this default)
 - **Wikilinks are path-qualified** — the dated folder is the discriminator, since filenames are bare. In `plan.md`/`tasks.md` frontmatter and body, write sibling links with the folder prefix and a display alias: `[[YYYY-MM-DD-<slug>/spec|spec]]` and `[[YYYY-MM-DD-<slug>/plan|plan]]` (not bare `[[spec]]`, which is ambiguous across specs).
 

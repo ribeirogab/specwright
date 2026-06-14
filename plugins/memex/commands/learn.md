@@ -5,7 +5,7 @@ argument-hint: <what to investigate>
 
 # Learn — Deep Dive and Document
 
-Investigate `$ARGUMENTS` in the current project, then — **only if the finding clears the bar below** — save it as an atomic learning note in `.vault/learnings/`.
+Investigate `$ARGUMENTS` in the current project, then — **only if the finding clears the bar below** — save it as an atomic learning note in `.memex/learnings/`.
 
 **Announce at start:** "Investigating: $ARGUMENTS"
 
@@ -46,17 +46,17 @@ Before writing anything, evaluate the finding against the **What to learn — an
 
 ### 3. Check for duplicates
 
-Search `.vault/learnings/` for existing notes on the same topic:
+Search `.memex/learnings/` for existing notes on the same topic:
 
 ```
-grep -rl "<keywords>" .vault/learnings/
+grep -rl "<keywords>" .memex/learnings/
 ```
 
 If a related note already exists, update it instead of creating a new one.
 
 ### 4. Write the learning note
 
-Create `.vault/learnings/<kebab-slug>.md` using the project template:
+Create `.memex/learnings/<kebab-slug>.md` using the project template:
 
 ```markdown
 ---
@@ -87,7 +87,7 @@ Write enough that someone reading this note can act on it without re-investigati
 
 ### 5. Update the MOC
 
-Add a wikilink to the new note in `.vault/_index/learnings.md` under the appropriate category section.
+Add a wikilink to the new note in `.memex/_index/learnings.md` under the appropriate category section.
 
 ### 6. Report
 

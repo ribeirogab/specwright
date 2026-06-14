@@ -27,7 +27,7 @@ You MUST create a task for each of these items and complete them in order:
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
 6. **Post-design batch** — once the design is approved, ask in **one** batch exactly three things: confirm the **branch name**, choose the **mode** (`autonomous` | `reviewed`), and whether to **compact** before implementing. Record `branch:` + `mode:` into the spec frontmatter.
-7. **Write design doc** — save to `.vault/specs/YYYY-MM-DD-<slug>/spec.md` (with the recorded `branch:`/`mode:`) and commit
+7. **Write design doc** — save to `.memex/specs/YYYY-MM-DD-<slug>/spec.md` (with the recorded `branch:`/`mode:`) and commit
 8. **Self-review the spec — both modes** — dispatch the spec-document-reviewer subagent (completeness/clarity; fix + re-dispatch until approved, max 3 iterations then surface to human), then run `/memex:review-spec` (constitution + vault compliance; fix any FAIL). Both passes run in **both** modes. **There is no human spec-review gate** — design approval (step 5) is the only human review.
 9. **Transition to implementation** — invoke writing-plans skill → `plan`/`tasks`, then follow the `AGENTS.md` `### Spec flow` tail: **compact (either mode)** → after plan/tasks exist, print a ```` ```txt ```` handoff prompt and stop (never compact earlier); otherwise implement → quality gate → reflect, then **deliver per mode** — `autonomous` opens the PR + runs the `memex:code-review` cycle to `lgtm` on its own; `reviewed` first asks "open the PR and run code-review?".
 
@@ -107,7 +107,7 @@ digraph brainstorming {
 ## After the Design
 
 **Post-design batch (ask once, right after the design is approved):**
-In **one** batch, ask exactly three things: confirm the **branch name**, choose the **mode** (`autonomous` | `reviewed`), and whether to **compact** before implementing. Record `branch:` and `mode:` in the spec frontmatter — the recorded `mode:` is registered consent for the feature branch (per `.vault/rules.md`, Git §2). There is no PR question; a PR is always the delivery — the mode only decides whether the agent opens it on its own.
+In **one** batch, ask exactly three things: confirm the **branch name**, choose the **mode** (`autonomous` | `reviewed`), and whether to **compact** before implementing. Record `branch:` and `mode:` in the spec frontmatter — the recorded `mode:` is registered consent for the feature branch (per `.memex/rules.md`, Git §2). There is no PR question; a PR is always the delivery — the mode only decides whether the agent opens it on its own.
 
 - **`autonomous`** — the recorded mode tells the agent to run all the way to delivery on its own: write spec → self-review → writing-plans → implement → quality gate → reflect → open the PR (`/memex:new-pr`) → `memex:code-review` cycle to `lgtm`, with no further prompts.
 - **`reviewed`** — identical up to and including reflect; then, before delivery, the agent **asks** "open the PR and run code-review?" and proceeds on your go-ahead.
@@ -116,7 +116,7 @@ Both modes self-review the spec and may use the compact handoff. The design-appr
 
 **Documentation:**
 
-- Write the validated design (spec) to `.vault/specs/YYYY-MM-DD-<slug>/spec.md`, including the recorded `branch:`/`mode:`
+- Write the validated design (spec) to `.memex/specs/YYYY-MM-DD-<slug>/spec.md`, including the recorded `branch:`/`mode:`
   - (User preferences for spec location override this default)
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
@@ -125,7 +125,7 @@ Both modes self-review the spec and may use the compact handoff. The design-appr
 After writing the spec, the agent reviews its own spec. This runs in **both** `autonomous` and `reviewed`:
 
 1. Dispatch the spec-document-reviewer subagent (see spec-document-reviewer-prompt.md) — completeness/clarity. If Issues Found: fix, re-dispatch, repeat until Approved (max 3 iterations, then surface to human).
-2. Run `/memex:review-spec` — the external evaluator that checks `.vault/constitution.md` + vault compliance, vague acceptance criteria, and duplication. Fix any `FAIL`.
+2. Run `/memex:review-spec` — the external evaluator that checks `.memex/constitution.md` + vault compliance, vague acceptance criteria, and duplication. Fix any `FAIL`.
 
 The user is **not** asked to review the spec — design approval already gated the work.
 

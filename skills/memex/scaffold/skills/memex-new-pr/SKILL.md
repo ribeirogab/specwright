@@ -25,7 +25,7 @@ If it is `main` or `master`, **stop** and tell the user to create a feature bran
 
 ## Resolve consent — read the spec
 
-Find the spec driving this branch: the `spec.md` whose `branch:` matches the current branch (else the most recently modified spec under `.vault/specs/`). Read its frontmatter:
+Find the spec driving this branch: the `spec.md` whose `branch:` matches the current branch (else the most recently modified spec under `.memex/specs/`). Read its frontmatter:
 
 - `mode: autonomous` → you may open the PR now without asking (recorded consent — rules.md, Git §2).
 - `mode: reviewed` → only open when the user has asked for it. If you reached here mid-flow without that ask, stop and wait.
@@ -51,7 +51,7 @@ Use the repo's template as the body skeleton:
 cat .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null || cat .github/pull_request_template.md 2>/dev/null
 ```
 
-If present, fill its sections (do not drop required checklist items — answer them honestly; for a maintainer dogfood PR that edits `.vault/`/`.agents/`, annotate rather than silently tick). If absent, print one line — `PR template not found; using embedded fallback` — and use the **Embedded fallback** at the bottom of this file.
+If present, fill its sections (do not drop required checklist items — answer them honestly; for a maintainer dogfood PR that edits `.memex/`/`.agents/`, annotate rather than silently tick). If absent, print one line — `PR template not found; using embedded fallback` — and use the **Embedded fallback** at the bottom of this file.
 
 ## Title and body
 

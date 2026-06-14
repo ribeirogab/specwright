@@ -1,6 +1,6 @@
 ---
 name: memex-code-review
-description: "Review a branch diff (or any diff/files pointed at) against the memex project law — .vault/rules.md, the constitution, and conventions — classify findings (blocker/suggestion/nitpick/question) and reply as plain text ending in a verdict. Portable: no dependency on a native code-review tool. Trigger on 'review this branch', 'code review', 'review the diff', 'review again', or step 7 of the spec flow."
+description: "Review a branch diff (or any diff/files pointed at) against the memex project law — .memex/rules.md, the constitution, and conventions — classify findings (blocker/suggestion/nitpick/question) and reply as plain text ending in a verdict. Portable: no dependency on a native code-review tool. Trigger on 'review this branch', 'code review', 'review the diff', 'review again', or step 7 of the spec flow."
 ---
 
 # code-review — review against the project's own law
@@ -19,10 +19,10 @@ You are about to write a code review. LLM training pushes you toward headers, em
 
 The review enforces what the repo already defines. Read, in order:
 
-1. `.vault/rules.md` — philosophy, git & delivery, code rules. Every section applies.
-2. `.vault/constitution.md` — scope guardrails, architecture principles, security non-negotiables.
+1. `.memex/rules.md` — philosophy, git & delivery, code rules. Every section applies.
+2. `.memex/constitution.md` — scope guardrails, architecture principles, security non-negotiables.
 3. The `AGENTS.md` of each area the diff touches.
-4. `.vault/conventions/` — any convention relevant to the changed files (e.g. skill validation requirements when a `SKILL.md` changed).
+4. `.memex/conventions/` — any convention relevant to the changed files (e.g. skill validation requirements when a `SKILL.md` changed).
 
 A finding that maps to a rule or convention cites it by name (e.g. "Meaningful Comments rule", "constitution — scope guardrails", "Conventional Commits rule").
 
@@ -85,7 +85,7 @@ You may also list line-anchorable findings below it, same shape as Template C.
 
 A blocker MUST change before merge. Real blockers here:
 
-- a violation of any rule in `.vault/rules.md` (e.g. AI attribution in a commit — Git §4; a comment that restates *what* the code does or embeds a task/issue ref — Meaningful Comments; a non-Conventional commit on the branch).
+- a violation of any rule in `.memex/rules.md` (e.g. AI attribution in a commit — Git §4; a comment that restates *what* the code does or embeds a task/issue ref — Meaningful Comments; a non-Conventional commit on the branch).
 - a violation of the constitution: out-of-scope or speculative work (scope guardrails / Rule of Parsimony), a security non-negotiable crossed.
 - a `SKILL.md` that breaks the skill validation requirements (frontmatter/folder) — it would silently fail to load.
 - a committed artifact not in English (constitution — artifacts in English); chat may be PT-BR, files may not.
