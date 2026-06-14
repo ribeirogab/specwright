@@ -66,7 +66,7 @@ For each orphan, ask the user one of:
 
 A wikilink whose target file does not exist breaks the navigation contract.
 
-Resolve targets Obsidian-style: strip the path prefix and search the vault for any file or directory whose basename matches. Skip files inside `templates/` and `_template/` — those legitimately use placeholder wikilinks like `[[plan]]`, `[[spec]]`, `[[related-note]]`, `[[wikilinks]]` that are filled in when the template is copied. Wikilinks inside fenced code blocks or inline backticks are also skipped (illustrative examples, not navigation contracts).
+Resolve targets Obsidian-style: strip the path prefix and search the vault for any file or directory whose basename matches. **Exception — path-qualified spec-folder links:** a link to a bare spec-folder file carries its dated folder (`[[…/<YYYY-MM-DD-slug>/spec]]`, or `plan`/`tasks`); resolve it against that **specific** folder — the target exists only if `.vault/specs/<YYYY-MM-DD-slug>/spec.md` exists. Do not fall back to a bare `spec.md`-anywhere match for these, or a link to a deleted spec would resolve to an unrelated spec's `spec.md`. Skip files inside `templates/` and `_template/` — those legitimately use placeholder wikilinks like `[[plan]]`, `[[spec]]`, `[[related-note]]`, `[[wikilinks]]` that are filled in when the template is copied. Wikilinks inside fenced code blocks or inline backticks are also skipped (illustrative examples, not navigation contracts).
 
 ```bash
 find .vault/ -name '*.md' -not -path '*/templates/*' -not -path '*/_template/*' 2>/dev/null \
@@ -83,8 +83,19 @@ find .vault/ -name '*.md' -not -path '*/templates/*' -not -path '*/_template/*' 
       base="${target##*/}"
       base="${base%/}"
       [ -z "$base" ] && continue
-      # Search the whole vault for a matching file or directory basename
-      found=$(find .vault/ \( -name "$base.md" -o \( -type d -name "$base" \) \) -print -quit 2>/dev/null)
+      case "$base" in
+        spec|plan|tasks)
+          if [ "$target" != "$base" ]; then
+            # Path-qualified spec-folder link: resolve against its specific folder.
+            parent="${target%/*}"; parent="${parent##*/}"
+            found=$(find .vault/specs -type f -path "*/$parent/$base.md" -print -quit 2>/dev/null)
+          else
+            found=$(find .vault/ -name "$base.md" -print -quit 2>/dev/null)
+          fi ;;
+        *)
+          # Search the whole vault for a matching file or directory basename
+          found=$(find .vault/ \( -name "$base.md" -o \( -type d -name "$base" \) \) -print -quit 2>/dev/null) ;;
+      esac
       [ -z "$found" ] && echo "BROKEN: [[$target]]"
     done
 ```
@@ -138,17 +149,16 @@ If the result is `SECTION_BASED`, **skip this check** and report `N/A — consti
 
 If the result is `RULE_NUMBERED`, proceed: identify rules by their `## ` or `### ` headings inside the constitution. For each, search the rest of the vault for the rule's slug or a paraphrase. Report the rules with **zero hits** as a **WARN** — ask the user to keep as-is, rephrase to be more memorable, or move to `.vault/_archive/constitution-history.md`.
 
-### 5. Specs done in `tasks-<slug>.md` but still `status: draft`
+### 5. Specs done in `tasks.md` but still `status: draft`
 
 A spec where every task is checked but the frontmatter still says `draft` is a missed bookkeeping step — the vault thinks the work is in flight when it shipped weeks ago.
 
-The glob `.vault/specs/[0-9]*-*/` aborts the entire script under zsh's default `nomatch` setting when no spec folders exist yet — collect matches with `find` instead, which handles the empty case silently. Inside each folder, derive the slug from the folder name and look for the slugged file names (`spec-<slug>.md`, `tasks-<slug>.md`).
+The glob `.vault/specs/[0-9]*-*/` aborts the entire script under zsh's default `nomatch` setting when no spec folders exist yet — collect matches with `find` instead, which handles the empty case silently. Inside each folder, the three files use bare names (`spec.md`, `tasks.md`).
 
 ```bash
 find .vault/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null | while read -r spec_dir; do
-  slug=$(basename "$spec_dir" | sed 's/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-//')
-  tasks="$spec_dir/tasks-$slug.md"
-  spec="$spec_dir/spec-$slug.md"
+  tasks="$spec_dir/tasks.md"
+  spec="$spec_dir/spec.md"
   [ -f "$tasks" ] && [ -f "$spec" ] || continue
   unchecked=$(grep -cE '^\s*-\s*\[ \]' "$tasks" 2>/dev/null || echo 0)
   status=$(awk '/^---$/{n++; next} n==1 && /^status:/{print $2}' "$spec")
@@ -186,23 +196,22 @@ WARN-level — ask the user before any change.
 
 ### 7. Isolated specs
 
-A spec whose frontmatter+body has **zero outgoing wikilinks** beyond its own `plan-*` / `tasks-*` siblings is disconnected from the knowledge graph — the workflow unit shipped without recording what learnings/conventions/rules it touched. The `related:` field exists exactly to record those connections; an empty (or absent) `related:` plus zero body wikilinks is a graph island.
+A spec whose frontmatter+body has **zero outgoing wikilinks** beyond its own `plan` / `tasks` siblings is disconnected from the knowledge graph — the workflow unit shipped without recording what learnings/conventions/rules it touched. The `related:` field exists exactly to record those connections; an empty (or absent) `related:` plus zero body wikilinks is a graph island.
 
 This check uses the same `strip_code` preprocessor as checks 1–3 to ignore wikilinks inside fenced code blocks or inline backticks.
 
 ```bash
 find .vault/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null | while read -r spec_dir; do
   folder=$(basename "$spec_dir")
-  slug=$(echo "$folder" | sed 's/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-//')
-  spec="$spec_dir/spec-$slug.md"
+  spec="$spec_dir/spec.md"
   [ -f "$spec" ] || continue
-  # Count outgoing wikilinks excluding the plan-/tasks- sibling pair, code-block-aware
+  # Count outgoing wikilinks excluding the plan/tasks sibling pair, code-block-aware
   count=$(awk '
       /^```/ { in_fence = !in_fence; next }
       !in_fence { gsub(/`[^`]*`/, ""); print }
     ' "$spec" \
     | grep -oE '\[\[[^]]+\]\]' \
-    | grep -vE "\[\[(\.\./)*(plan|tasks)-" \
+    | grep -vE "\[\[([^]|]*/)?(plan|tasks)(\||\]\])" \
     | sort -u | wc -l | tr -d ' ')
   if [ "$count" = "0" ]; then
     echo "ISLAND: $spec — zero outgoing wikilinks beyond plan/tasks pair."
