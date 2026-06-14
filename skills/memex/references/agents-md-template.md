@@ -53,7 +53,7 @@ If the user is asking, investigating, or exploring — just answer.
 
 1. `memex-brainstorming` → design. After the design is approved, the **post-design batch** confirms three things: the **branch name**, the **mode** (`autonomous` / `reviewed`), and whether to **compact** before implementing. The spec records `branch:` + `mode:`.
 2. Create the branch. **One branch + one PR per spec** — spec, plan, tasks, implementation, and learnings all live in it.
-3. The agent writes `spec-<slug>.md` and **reviews its own spec** — the spec-document-reviewer subagent (clarity) **and** `/memex:review-spec` (constitution); both run in **both** modes. **No human spec review** — design approval is the only human review. Then `memex-writing-plans` → `plan-<slug>.md` + `tasks-<slug>.md`.
+3. The agent writes `spec.md` and **reviews its own spec** — the spec-document-reviewer subagent (clarity) **and** `/memex:review-spec` (constitution); both run in **both** modes. **No human spec review** — design approval is the only human review. Then `memex-writing-plans` → `plan.md` + `tasks.md`.
 4. **Compact handoff (either mode)** — if compact was chosen, once spec/plan/tasks are written print a `txt` handoff prompt (summary + the three paths + mode) and stop; you `/compact` or open a new chat and paste it to resume. Never compact before the artifacts exist.
 5. **Implement.**
 6. **Quality gate.** Detect the touched modules' code-quality processes (test, lint, typecheck, build — Makefile, `package.json` scripts, the area's CI) and run them all; nothing you did may break them. Logic added or changed in a tested area without a test → write the missing tests first.
