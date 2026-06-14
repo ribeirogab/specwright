@@ -1,8 +1,6 @@
 # memex
 
-`memex` gives any repository a durable, navigable **project memory** and an explicit **spec-driven workflow**. It idempotently scaffolds a `.vault/` knowledge vault — constitution, rules, specs, plans, and learnings — plus an `AGENTS.md` that drives every non-trivial change through one pipeline: brainstorm → spec → plan → tasks → implement → quality gate → PR → review-to-`lgtm`. It is agent-agnostic (any tool that follows the open agent skills standard) and self-hosting — it dogfoods the same vault and workflow on its own development.
-
-> Personal project, solo maintenance, best-effort, no SLA. Published so anyone can install it.
+`memex` gives any repository a durable **project memory** and an explicit **spec-driven workflow**. One skill scaffolds a `.vault/` knowledge vault and an `AGENTS.md` that runs every non-trivial change through one pipeline: brainstorm → spec → plan → tasks → implement → quality gate → PR → review-to-`lgtm`. Agent-agnostic and self-hosting.
 
 ---
 
