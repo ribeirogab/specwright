@@ -113,23 +113,22 @@ Actively scan `.vault/specs/` (excluding `_template/`) — any folder whose name
 
 > "`<old-name>/` is not date-prefixed. Date prefixes prevent the naming conflicts that numeric prefixes (`01-`, `02-`) cause when multiple specs land in parallel. Rename to `<YYYY-MM-DD>-<slug>/`?"
 
-Pull the date from the folder's `spec-<slug>.md` frontmatter `created:` field when present; if absent, ask the user. **Never rename without confirmation.**
+Pull the date from the folder's `spec.md` frontmatter `created:` field when present; if absent, ask the user. **Never rename without confirmation.**
 
-### Spec file naming follows `<spec|plan|tasks>-<slug>.md`
+### Spec file naming follows bare `spec.md` / `plan.md` / `tasks.md`
 
-Inside any date-prefixed spec folder, the three files must use the slug-included naming convention: `spec-<slug>.md`, `plan-<slug>.md`, `tasks-<slug>.md`, where `<slug>` is the same kebab slug used in the folder name (the part after the `YYYY-MM-DD-` prefix). Generic `spec.md` / `plan.md` / `tasks.md` files inside a real spec folder are `DRIFT` — they make every spec's tab indistinguishable in editors and search.
+Inside any date-prefixed spec folder, the three files use **bare** names — `spec.md`, `plan.md`, `tasks.md`. The dated folder is the discriminator, so cross-references are path-qualified wikilinks (`[[YYYY-MM-DD-<slug>/spec|spec]]`). A surviving slug-named file — `spec-<slug>.md`, `plan-<slug>.md`, `tasks-<slug>.md` — inside a real spec folder is `DRIFT` from before the bare-filename convention.
 
-The `_template/` folder is the only exception — its files stay named `spec.md` / `plan.md` / `tasks.md` because they are blueprints, not real specs.
+The `_template/` folder uses the same bare names — its files are blueprints with unqualified `[[spec]]` / `[[plan]]` placeholders that the generating skills qualify on copy.
 
 **Detection** (run during the audit pass, alongside the date-prefix check):
 
 ```bash
 find .vault/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null | while read -r spec_dir; do
-  slug=$(basename "$spec_dir" | sed 's/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-//')
-  for generic in spec.md plan.md tasks.md; do
-    if [ -f "$spec_dir/$generic" ]; then
-      echo "DRIFT: $spec_dir/$generic → should be ${generic%.md}-$slug.md"
-    fi
+  for f in "$spec_dir"/spec-*.md "$spec_dir"/plan-*.md "$spec_dir"/tasks-*.md; do
+    [ -e "$f" ] || continue
+    type="${f##*/}"; type="${type%%-*}"
+    echo "DRIFT: $f → should be $type.md"
   done
 done
 ```
