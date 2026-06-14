@@ -208,12 +208,12 @@ Tick each `[x]` when verified. A spec is **not shippable** with empty or `{{plac
 ```markdown
 ---
 feature: {{kebab-slug-of-feature}}
-spec: "[[spec-{{kebab-slug-of-feature}}]]"
+spec: "[[spec]]"
 created: {{YYYY-MM-DD}}
 ---
 # {{Feature Name}} — Plan
 
-**For this spec:** `[[spec-{{kebab-slug-of-feature}}]]`
+**For this spec:** `[[spec]]`
 
 ## Approach
 
@@ -240,13 +240,13 @@ created: {{YYYY-MM-DD}}
 ```markdown
 ---
 feature: {{kebab-slug-of-feature}}
-plan: "[[plan-{{kebab-slug-of-feature}}]]"
-spec: "[[spec-{{kebab-slug-of-feature}}]]"
+plan: "[[plan]]"
+spec: "[[spec]]"
 created: {{YYYY-MM-DD}}
 ---
 # {{Feature Name}} — Tasks
 
-**For this plan:** `[[plan-{{kebab-slug-of-feature}}]]`
+**For this plan:** `[[plan]]`
 
 ## Phase 1: {{name}}
 
@@ -261,7 +261,7 @@ created: {{YYYY-MM-DD}}
 
 **Spec folder naming convention:** `YYYY-MM-DD-<kebab-slug>/` where `YYYY-MM-DD` is the date the spec was created. Examples: `2026-04-15-user-auth`, `2026-04-16-mobile-responsiveness`, `2026-04-17-api-refactoring`. Use today's date when creating a new spec; if multiple specs are created on the same day, the `<kebab-slug>` disambiguates them. The `_template/` folder is excluded from listings.
 
-**Spec file naming convention:** when copying the template into a new spec folder, rename each file from the generic template name to one that includes the slug — `spec.md` → `spec-<kebab-slug>.md`, `plan.md` → `plan-<kebab-slug>.md`, `tasks.md` → `tasks-<kebab-slug>.md`. The slug is the same `<kebab-slug>` used in the folder name. The reason: agent sessions, editor tabs, and search results often show only the basename, and a vault with many specs would otherwise be a wall of indistinguishable `spec.md` entries. Substitute every occurrence of `{{kebab-slug-of-feature}}` (in frontmatter wikilinks and body cross-refs) with the same slug at the same time. Templates inside `_template/` keep their canonical short names — they are blueprints, not real specs.
+**Spec file naming convention:** the three files inside a spec folder keep **bare** names — `spec.md`, `plan.md`, `tasks.md`. The dated folder (`YYYY-MM-DD-<kebab-slug>/`) is the discriminator, so cross-references are **path-qualified wikilinks** that carry the folder: a sibling link is `[[YYYY-MM-DD-<kebab-slug>/spec|spec]]`, and an inbound link from elsewhere in the vault is `[[../specs/YYYY-MM-DD-<kebab-slug>/spec|<kebab-slug>]]`. This keeps every `[[ ]]` globally unique — Obsidian and the `/memex:link` resolver key on the path, not the basename — while filenames stay clean. Templates inside `_template/` keep bare, **unqualified** placeholders (`[[spec]]`, `[[plan]]`); the generating skills (`memex-brainstorming`, `memex-writing-plans`) inject the `YYYY-MM-DD-<kebab-slug>/` folder prefix when they copy the template into a real dated folder. Trade-off, accepted deliberately: editor tabs and fuzzy-finder entries show `spec.md` for every spec, distinguished only by their parent folder.
 
 ---
 
