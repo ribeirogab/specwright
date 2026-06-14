@@ -42,9 +42,8 @@ flowchart TD
     E --> F[memex-writing-plans: plan + tasks]
     F --> G{compact?}
     G -- "yes — either mode" --> H["Print txt handoff, then stop<br/>you /compact or open a new chat, paste, resume"]
-    G -- no --> I{mode?}
-    I -- autonomous --> K[Implement]
-    I -- reviewed --> J{Start implementation?}
+    G -- "no, autonomous" --> K[Implement]
+    G -- "no, reviewed" --> J{Start implementation?}
     J -- yes --> K
     H --> K
     K --> L[Quality gate]
