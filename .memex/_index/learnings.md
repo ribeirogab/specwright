@@ -22,6 +22,13 @@ Learnings here are specific to memex. Code style conventions live in `[[conventi
 
 - [[../learnings/companion-skill-distribution-topology|A memex companion skill ships in three real copies, not as a command]] — `.agents/skills/memex-<name>` (name=memex-<name>) + `plugins/memex/skills/<name>` (name=<name>) + scaffold; plugin skills are the portable `/memex:` mechanism, commands are Claude-only.
 - [[../learnings/quick-validate-needs-pyyaml-via-uv|Run the skill validators with `uv run --with pyyaml`]] — the system `python3` lacks PyYAML; `uv run --quiet --with pyyaml python skills/memex/scripts/quick_validate.py <path>` resolves it ephemerally.
+- [[../learnings/validate-vault-mermaid-with-mmdc|Validate vault mermaid with mermaid-cli (no-build, one-off)]] — extract ` ```mermaid ` blocks and render them with `npx @mermaid-js/mermaid-cli -p pptr.json` (no-sandbox puppeteer config); exit 0 = parses, honors the no-build-pipeline rule.
+
+## `#benchmark` — Peer spec-driven tools (comparative analyses)
+
+- [[../learnings/tlc-spec-driven-workflow|tlc-spec-driven — the Tech Lead's Club spec-driven skill]] — memex's markdown sibling: complexity-adaptive Specify→Design→Tasks→Execute, traceability IDs, test-integrity checks, all-prose (no machine enforcement); has a `.html` companion. From the [[../specs/2026-06-14-benchmark-spec-driven-tools/spec|benchmark spec]].
+- [[../learnings/openspec-workflow|OpenSpec — the Fission-AI spec-driven CLI]] — the structural opposite: compiled CLI + Zod schemas, gate-free "actions not phases", filesystem-derived state, delta specs that merge into a living source of truth (two distinct archive paths — CLI vs skill); has a `.html` companion.
+- [[../learnings/memex-improvement-insights|memex improvement insights (benchmark synthesis)]] — capability comparison + 6 ranked, high-impact-only recommendations (traceability IDs, test-integrity check, spec-conformance verify, mechanical spec validator, scope safety valve, anti-fabrication rule) with a "considered & parked" list; has a `.html` companion.
 
 ## `#gotcha` — Things that tripped us up
 

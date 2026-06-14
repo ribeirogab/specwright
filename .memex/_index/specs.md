@@ -14,6 +14,7 @@ Template: `[[../specs/_template/spec|_template/spec]]`
 
 ## Active
 
+- [[../specs/2026-06-14-benchmark-spec-driven-tools/spec|benchmark-spec-driven-tools]] — deep, source-grounded benchmark of two peer spec-driven tools (`tlc-spec-driven`, `OpenSpec`): two reference learnings (md + visual html, mermaid flows) plus a synthesis learning of ranked, high-impact improvements for memex. Analysis-only — implementing the insights is left to future specs. Draft 2026-06-14.
 - [[../specs/2026-05-05-memex-canonical-commands/spec|memex-canonical-commands]] — bring bundled slash commands under the same `.agents/<cmd>` canonical + `.claude/<cmd>` symlink layout that already governs bundled skills, and stop shipping `memex-open-pr`. Draft 2026-05-05.
 
 ## Shipped
