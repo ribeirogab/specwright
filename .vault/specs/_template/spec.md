@@ -3,6 +3,8 @@ status: draft
 feature: {{kebab-slug-of-feature}}
 created: {{YYYY-MM-DD}}
 shipped: null
+branch: {{feat/kebab-slug-of-feature}}
+mode: {{autonomous | reviewed}}
 related: []
 ---
 # {{Feature Name}} — Spec
