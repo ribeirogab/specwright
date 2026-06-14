@@ -22,12 +22,28 @@ The skill is audit-first, autonomous-fix, and safe to re-run. After the first ru
 
 **Source:** [`skills/memex/SKILL.md`](skills/memex/SKILL.md)
 
+## What you get
+
+After install, the repo has an `AGENTS.md` describing a **spec-driven workflow** and a set of `/memex:*` commands and companion skills:
+
+- **The flow** — for any non-trivial change: `brainstorming` → spec → (branch) → plan + tasks → implement → quality gate → PR → review-to-`lgtm`. After the design is approved, brainstorming asks for an execution **mode**: `reviewed` (you validate the spec and ask for the PR) or `autonomous` (hands-off through to the open PR). The chosen mode is recorded in the spec and counts as consent for committing/pushing that feature branch.
+- **Commands** — `/memex:spec`, `/memex:review-spec`, `/memex:sweep`, `/memex:learn`.
+- **Companion skills** — `/memex:brainstorming`, `/memex:writing-plans`, `/memex:recall`, `/memex:link`, `/memex:new-pr` (opens the spec's PR), `/memex:code-review` (reviews the branch to `lgtm`).
+
+## Customizing
+
+The workflow ships with opinionated defaults. They are plain markdown — change them to fit your team. Companion skills exist in three kept-in-sync copies: `.agents/skills/memex-<name>/` (canonical, what non-Claude agents read), `plugins/memex/skills/<name>/` (the Claude Code plugin copy), and `skills/memex/scaffold/skills/memex-<name>/` (what new installs receive). Edit the copy your agent loads; to change what **future** installs get, edit the `scaffold/` copy too, and keep the three in sync.
+
+- **PR conventions (`/memex:new-pr`)** — title/body format, the draft-vs-ready choice, labels, the PR-template fill, push behavior all live in the `memex-new-pr` `SKILL.md`. Edit it to change how PRs are opened (e.g. write the body in another language, change the default base branch, or add labels).
+- **Code-review rules (`/memex:code-review`)** — there are two levers. (1) **What gets flagged** is the project law the reviewer reads: your installed repo's `.vault/rules.md`, `.vault/constitution.md`, and `.vault/conventions/` — edit those to change the standard. (2) **How it reviews** — the severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the blocker calibration, and the output format — lives in the `memex-code-review` `SKILL.md`.
+- **The spec-flow steps** — the 7-step flow is documented in `AGENTS.md` under `### Spec flow`. To change the steps for an already-installed repo, edit that block; to change what new installs get, edit `### Spec flow` in `skills/memex/references/agents-md-template.md` (keep the two consistent). The `autonomous`/`reviewed` switch is wired across the three `memex-brainstorming` `SKILL.md` copies and the spec template's `branch:`/`mode:` fields, so deeper changes to mode behavior touch those too.
+
 ## Repository layout
 
 ```
 memex/
 ├── skills/memex/            # the skill: SKILL.md, references/, scaffold/, scripts/
-├── plugins/memex/           # Claude Code plugin — the /memex:* slash commands
+├── plugins/memex/           # Claude Code plugin — /memex:* commands (commands/) + companion skills (skills/)
 ├── .claude-plugin/          # marketplace manifest
 ├── LICENSE                  # MIT
 ├── NOTICE.md                # attribution for vendored validator scripts
