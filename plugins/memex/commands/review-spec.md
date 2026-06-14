@@ -13,7 +13,7 @@ Run an **independent** review of a spec written by the agent. This is the second
 
 1. **Target spec.** If `$ARGUMENTS` is a path under `.vault/specs/`, read that folder. Otherwise scan `.vault/specs/` for the most recent `YYYY-MM-DD-*` folder modified and confirm with the user before proceeding.
 2. **Constitution.** Read `.vault/constitution.md` in full — it defines the non-negotiables this spec must respect.
-3. **Vault background.** Skim the relevant indices: `.vault/_index/learnings.md`, `.vault/_index/conventions.md`, `.vault/_index/rules.md`. You are looking for prior knowledge the spec may have ignored or duplicated.
+3. **Vault background.** Skim the relevant indices: `.vault/_index/learnings.md`, `.vault/_index/conventions.md`, and the rules in `.vault/rules.md`. You are looking for prior knowledge the spec may have ignored or duplicated.
 
 ## What to evaluate
 
@@ -48,7 +48,7 @@ The spec template defines: Context, Problem Statement, Non-Goals, Constraints, U
 
 ### 4. Duplication of existing knowledge
 
-For each major decision in the spec, search `.vault/learnings/`, `.vault/conventions/`, and `.vault/rules/` for prior notes covering the same ground. If a learning already answers a question the spec re-litigates, surface it.
+For each major decision in the spec, search `.vault/learnings/`, `.vault/conventions/`, and `.vault/rules.md` for prior notes covering the same ground. If a learning already answers a question the spec re-litigates, surface it.
 
 `FAIL` if the spec contradicts an existing learning without acknowledging it. `WARN` if it duplicates without citing. `PASS` if existing notes are correctly referenced.
 
