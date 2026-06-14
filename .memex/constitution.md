@@ -10,7 +10,7 @@ If you are tempted to violate a rule here, stop and open a discussion first. Nev
 
 ## Why memex exists
 
-`memex` is a single agent skill that idempotently installs a project *memex* — an externalized, navigable project memory — into any repository: a `.memex/` knowledge vault, an `AGENTS.md`, spec/plan/task templates, and a set of bundled companion skills and slash commands. (The name is Vannevar Bush's *memex*, 1945 — an externalized, navigable personal memory.)
+`memex` is a single agent skill that idempotently installs a project *memex* — an externalized, navigable project memory — into any repository: a `.memex/` knowledge vault, an `AGENTS.md`, design/spec/task templates, and a set of bundled companion skills and slash commands. (The name is Vannevar Bush's *memex*, 1945 — an externalized, navigable personal memory.)
 
 This repository **is** memex: the skill's source, its bundled companions, its Claude Code distribution surface (marketplace + plugin), and the `.memex/` that dogfoods the skill on its own development. The repo's purpose is singular — build and ship memex — and it dogfoods memex on itself so the maintainer trusts what is shipped.
 
@@ -40,7 +40,7 @@ This repository **is** memex: the skill's source, its bundled companions, its Cl
 
 ## Spec-Driven workflow
 
-Before implementing any user request, assess whether the solution is obvious. If you cannot describe the complete solution in one sentence, use the Spec Kit flow: brainstorm → `spec.md` → `plan.md` → `tasks.md` → implement. If the solution is obvious, go direct. If almost obvious but with 1-2 open decisions, ask the user whether to spec or go direct. The full pipeline — the autonomous/reviewed execution switch, the quality gate, and the `/memex:new-pr` + `memex:code-review` delivery tail — is defined in `AGENTS.md` (`## Workflow Spec Driven`).
+Before implementing any user request, assess whether the solution is obvious. If you cannot describe the complete solution in one sentence, use the Spec Kit flow: brainstorm → `design.md` → `spec.md` → `tasks.md` → implement. If the solution is obvious, go direct. If almost obvious but with 1-2 open decisions, ask the user whether to spec or go direct. The full pipeline — the autonomous/reviewed execution switch, the quality gate, and the `/memex:new-pr` + `memex:code-review` delivery tail — is defined in `AGENTS.md` (`## Workflow Spec Driven`).
 
 Specs never get deleted. Shipped specs remain in `.memex/specs/` as historical record.
 
