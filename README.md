@@ -36,21 +36,20 @@ The spec flow, end to end (design approval is the only human review):
 flowchart TD
     A([memex-brainstorming: explore + design]) --> B{Design approved?}
     B -- "no, revise" --> A
-    B -- yes --> C["Post-design batch: confirm branch + mode<br/>reviewed also asks: open a PR? compact?"]
+    B -- yes --> C["Post-design batch:<br/>branch + mode + compact?"]
     C --> D[Create branch]
     D --> E["Write spec, then agent self-reviews it<br/>spec-document-reviewer + memex:review-spec<br/>both modes — no human spec review"]
     E --> F[memex-writing-plans: plan + tasks]
-    F --> G{mode?}
-    G -- autonomous --> K[Implement]
-    G -- "reviewed + compact" --> H["Print txt handoff, then stop<br/>you /compact or open a new chat, paste, resume"]
-    G -- "reviewed, no compact" --> I{Start implementation?}
+    F --> G{compact?}
+    G -- "yes — either mode" --> H["Print txt handoff, then stop<br/>you /compact or open a new chat, paste, resume"]
+    G -- no --> I{mode?}
+    I -- autonomous --> K[Implement]
+    I -- reviewed --> J{Start implementation?}
+    J -- yes --> K
     H --> K
-    I -- yes --> K
     K --> L[Quality gate]
     L --> M[Reflect + learnings]
-    M --> N{Deliver}
-    N -- "autonomous, or reviewed with PR" --> O["memex:new-pr, then memex:code-review cycle to lgtm"]
-    N -- "reviewed, no PR" --> P[Stop: committed branch]
+    M --> O["Deliver: memex:new-pr, then memex:code-review cycle to lgtm"]
 ```
 
 ## Customizing
