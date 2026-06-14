@@ -1,6 +1,6 @@
 # memex
 
-`memex` gives any repository a durable **project memory** and an explicit **spec-driven workflow**. One skill scaffolds a `.vault/` knowledge vault and an `AGENTS.md` that runs every non-trivial change through one pipeline: brainstorm → spec → plan → tasks → implement → quality gate → PR → review-to-`lgtm`. Agent-agnostic and self-hosting.
+`memex` gives any repository a durable **project memory** and an explicit **spec-driven workflow**. One skill scaffolds a `.memex/` knowledge vault and an `AGENTS.md` that runs every non-trivial change through one pipeline: brainstorm → spec → plan → tasks → implement → quality gate → PR → review-to-`lgtm`. Agent-agnostic and self-hosting.
 
 ---
 
@@ -16,7 +16,7 @@ Point an agent at any repo where you want the memex installed:
 
 > "Audit the memex in this repo and scaffold whatever is missing."
 
-The skill is audit-first, autonomous-fix, and safe to re-run. After the first run the repo has a working `.vault/` vault, the bundled `memex-*` companion skills, the `/memex:*` slash commands, and an `AGENTS.md` — all dogfood-tested by the memex's own Phase-5 validator.
+The skill is audit-first, autonomous-fix, and safe to re-run. After the first run the repo has a working `.memex/` vault, the bundled `memex-*` companion skills, the `/memex:*` slash commands, and an `AGENTS.md` — all dogfood-tested by the memex's own Phase-5 validator.
 
 **Source:** [`skills/memex/SKILL.md`](skills/memex/SKILL.md)
 
@@ -55,7 +55,7 @@ flowchart TD
 The workflow ships with opinionated defaults. They are plain markdown — change them to fit your team. Companion skills exist in three kept-in-sync copies: `.agents/skills/memex-<name>/` (canonical, what non-Claude agents read), `plugins/memex/skills/<name>/` (the Claude Code plugin copy), and `skills/memex/scaffold/skills/memex-<name>/` (what new installs receive). Edit the copy your agent loads; to change what **future** installs get, edit the `scaffold/` copy too, and keep the three in sync.
 
 - **PR conventions (`/memex:new-pr`)** — title/body format, the draft-vs-ready choice, labels, the PR-template fill, push behavior all live in the `memex-new-pr` `SKILL.md`. Edit it to change how PRs are opened (e.g. write the body in another language, change the default base branch, or add labels).
-- **Code-review rules (`/memex:code-review`)** — there are two levers. (1) **What gets flagged** is the project law the reviewer reads: your installed repo's `.vault/rules.md`, `.vault/constitution.md`, and `.vault/conventions/` — edit those to change the standard. (2) **How it reviews** — the severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the blocker calibration, and the output format — lives in the `memex-code-review` `SKILL.md`.
+- **Code-review rules (`/memex:code-review`)** — there are two levers. (1) **What gets flagged** is the project law the reviewer reads: your installed repo's `.memex/rules.md`, `.memex/constitution.md`, and `.memex/conventions/` — edit those to change the standard. (2) **How it reviews** — the severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the blocker calibration, and the output format — lives in the `memex-code-review` `SKILL.md`.
 - **The spec-flow steps** — the 8-step flow is documented in `AGENTS.md` under `### Spec flow`. To change the steps for an already-installed repo, edit that block; to change what new installs get, edit `### Spec flow` in `skills/memex/references/agents-md-template.md` (keep the two consistent). The `autonomous`/`reviewed` switch is wired across the three `memex-brainstorming` `SKILL.md` copies and the spec template's `branch:`/`mode:` fields, so deeper changes to mode behavior touch those too.
 
 ## Repository layout
@@ -73,7 +73,7 @@ memex/
 └── README.md
 ```
 
-The repository also contains `.agents/`, `.claude/`, and `.vault/` — local dirs used to dogfood memex on its own development (the bundled companion skills, the per-agent symlinks, and the maintainer's knowledge vault). They are not what `npx skills add` installs.
+The repository also contains `.agents/`, `.claude/`, and `.memex/` — local dirs used to dogfood memex on its own development (the bundled companion skills, the per-agent symlinks, and the maintainer's knowledge vault). They are not what `npx skills add` installs.
 
 ## License
 

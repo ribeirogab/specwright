@@ -15,7 +15,7 @@ The maintenance model is **solo, best-effort, no SLA**. Pull requests are review
 ### What is out of scope
 
 - **Skills unrelated to memex.** This repository is dedicated to memex. The [skills CLI](https://github.com/vercel-labs/skills) makes any public GitHub repo installable, so publish unrelated skills from your own repo.
-- **`.vault/`, `.agents/`, `.claude/`, `evals/`** — these are the maintainer's local-only dirs (personal knowledge vault, dogfooded memex output, eval workspaces). They are not part of the published skill surface and PRs touching them will be closed without merge.
+- **`.memex/`, `.agents/`, `.claude/`, `evals/`** — these are the maintainer's local-only dirs (personal knowledge vault, dogfooded memex output, eval workspaces). They are not part of the published skill surface and PRs touching them will be closed without merge.
 - **Governance proposals**, maintainer hierarchies, decision-making frameworks, funding models, sponsorship, and similar process documents. The project is intentionally solo and lightweight.
 
 ## How to fix a bug or improve a skill
@@ -46,7 +46,7 @@ The PR template carries this checklist; the items below explain each entry.
 - [ ] **Branch name** is descriptive and not `main`. Suggested prefixes: `feat/`, `fix/`, `docs/`.
 - [ ] **`quick_validate.py` and `package_skill.py` pass** on every modified skill (or N/A — your PR doesn't touch a skill).
 - [ ] **`NOTICE.md` updated** when vendored content is refreshed or modified.
-- [ ] **No edits under `.vault/`, `.agents/`, `.claude/`, or `evals/`** (maintainer-local dirs, out of scope).
+- [ ] **No edits under `.memex/`, `.agents/`, `.claude/`, or `evals/`** (maintainer-local dirs, out of scope).
 - [ ] **Commit messages** follow Conventional Commits style (`feat(<scope>): ...`, `fix(<scope>): ...`, `docs: ...`, `chore: ...`).
 - [ ] **No AI-attribution footers** in commits or PR description (e.g. `Co-Authored-By: Claude`, `Generated with Cursor`, `Co-authored-by: Codex`, etc.).
 
