@@ -1,6 +1,6 @@
 ---
 feature: test-spec
-spec: "[[spec-test-spec]]"
+spec: "[[2026-01-01-test-spec/spec|spec]]"
 created: 2026-01-01
 ---
 # Test Spec — Plan
