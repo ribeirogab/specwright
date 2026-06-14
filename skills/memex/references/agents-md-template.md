@@ -77,7 +77,7 @@ Commands + companion skills ship through the `memex` plugin (marketplace `memex`
 - **`/memex:writing-plans`** — turn an approved design into plan + tasks.
 - **`/memex:recall`** / **`/memex:link`** — vault reconnaissance / cross-link analysis.
 - **`/memex:spec`** — enter the spec flow from the conversation.
-- **`/memex:review-spec`** — external evaluator pass (reviewed mode).
+- **`/memex:review-spec`** — external evaluator spec pass (agent self-review, both modes).
 - **`/memex:new-pr`** — open the PR per the spec's mode.
 - **`/memex:code-review`** — bespoke, portable review cycle to `lgtm`.
 - **`/memex:sweep`** / **`/memex:learn`** — vault GC / investigate-and-save.
