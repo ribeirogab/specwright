@@ -9,3 +9,7 @@ Deliberate code style choices that all code in memex must follow. These are not 
 ## Code style
 
 _No conventions yet. Add the first one when a team decision is made._
+
+## Skill authoring
+
+- [[../conventions/skill-validation-requirements|Skill validation requirements (frontmatter and folder)]] — hard format constraints from Anthropic's runtime validators; violating them silently fails to load the skill.
