@@ -17,7 +17,7 @@ When upstream memex changes scaffolded content, every installed repo is a stale,
 
 ## Definitions
 
-- **Managed file** — a scaffolded file that `/memex:update` reconciles: the companion skills, `spec-driven-development.md`, the spec/note templates, `validate-spec.sh`, `rules.md`, and the **`### Spec flow` block** of `AGENTS.md`. Upstream owns these.
+- **Managed file** — a scaffolded item that `/memex:update` reconciles: the companion skills' `SKILL.md`, `spec-driven-development.md`, the scaffolded scripts (`validate-spec.sh`, `memex-update.sh`), and the **`### Spec flow` block** of `AGENTS.md`. Upstream owns these, and each is backed by a **discrete file** in the upstream `skills/memex/scaffold/` tree (or `references/agents-md-template.md` for the AGENTS block) — that is what makes a clean hash-diff possible.
 - **Living vault content** — files the user/agent fills over time: `_index/*` MOCs, `learnings/`, `conventions/`, `specs/`, and the per-repo intro of `AGENTS.md`. **Never** managed.
 - **Baseline (`B`)** — the content hash of each managed file as last installed or updated, recorded in the **manifest**. The reference point that distinguishes "user edited this" from "upstream changed this".
 - **Manifest** — a tracked file (`.memex/.update-manifest.json`) mapping each managed path (and the AGENTS.md spec-flow block) to its baseline `sha256`.
@@ -27,6 +27,7 @@ When upstream memex changes scaffolded content, every installed repo is a stale,
 ## Non-Goals
 
 - **No constitution management (v1).** `AGENTS.md` is covered only through its fixed `### Spec flow` block; `constitution.md` is out of scope for the first version.
+- **No prose-embedded scaffold content (v1).** The spec/note templates, `rules.md`, the `_index/*` MOCs, and the constitution are *generated from reference prose* (`vault-files.md`, `constitution-template.md`) at install, not copied from a discrete scaffold file. With no single upstream file to hash, they need a different reconcile mechanism — deferred to a later version. v1 manages only file-backed scaffold items.
 - **No touching of living vault content.** `_index/*`, `learnings/`, `conventions/`, `specs/`, and the per-repo `AGENTS.md` intro are never read-for-overwrite.
 - **No auto-commit / no PR.** `/memex:update` edits the working tree and reports; the user reviews `git diff` and commits. It is a maintenance command, not the spec-flow delivery (`/memex:new-pr` stays the only PR path).
 - **No offline mode.** The user chose self-fetch; with no network the command stops and reports rather than guessing.

@@ -14,6 +14,7 @@ Template: `[[../specs/_template/spec|_template/spec]]`
 
 ## Active
 
+- [[../specs/2026-06-16-memex-update-command/spec|memex-update-command]] — a `/memex:update` companion skill + a `.memex/scripts/memex-update.sh` reconcile engine that self-fetches upstream memex, classifies each managed scaffolded file 3-way against a tracked sha256 manifest (current/stale-clean/local-only/conflict), auto-applies upstream changes to untouched files, surfaces conflicts for agent merge, manages only the AGENTS.md `### Spec flow` block, never touches living vault content, and degrades to 2-way with no manifest. Closes the friction the `compact→handoff` rename exposed (manual re-apply across 8 files per install). Draft 2026-06-16.
 - [[../specs/2026-05-05-memex-canonical-commands/spec|memex-canonical-commands]] — bring bundled slash commands under the same `.agents/<cmd>` canonical + `.claude/<cmd>` symlink layout that already governs bundled skills, and stop shipping `memex-open-pr`. Draft 2026-05-05.
 
 ## Shipped
