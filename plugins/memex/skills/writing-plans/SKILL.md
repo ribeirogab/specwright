@@ -145,8 +145,8 @@ Fix issues inline.
 
 After the spec self-review passes, follow the `AGENTS.md` `### Spec flow` tail:
 
-- **compact = yes (either mode)** → print a ```` ```txt ```` **handoff prompt** (a one-paragraph summary + the paths to `design`/`spec`/`tasks` + the mode) and stop. The user runs `/compact` (or opens a new chat) and pastes it to resume. **Never compact before the artifacts exist.**
-- **compact = no** → implement. **Decide the execution approach yourself** based on task count and complexity — do not ask the user to choose:
+- **handoff = yes (either mode)** → print a ```` ```txt ```` **handoff prompt** (a one-paragraph summary + the paths to `design`/`spec`/`tasks` + the mode) and stop. The user runs `/compact` (or opens a new chat) and pastes it to resume. **Never hand off before the artifacts exist.**
+- **handoff = no** → implement. **Decide the execution approach yourself** based on task count and complexity — do not ask the user to choose:
   - **Subagent-Driven** (large, 5+ tasks, many files, complex migrations): dispatch a fresh subagent per task, review between tasks. **REQUIRED SUB-SKILL:** superpowers:subagent-driven-development
   - **Inline Execution** (small, < 5 tasks, focused changes): execute tasks in this session with checkpoints. **REQUIRED SUB-SKILL:** superpowers:executing-plans
   - Announce which approach you chose and start immediately.

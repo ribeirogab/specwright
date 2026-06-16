@@ -52,10 +52,10 @@ The authoritative step list is `AGENTS.md` → `### Spec flow`. In brief:
 
 | # | Step | Owned by |
 |---|---|---|
-| 1 | Brainstorm → write `design.md`; post-design batch (branch + mode + compact) | `memex-brainstorming` |
+| 1 | Brainstorm → write `design.md`; post-design batch (branch + mode + handoff) | `memex-brainstorming` |
 | 2 | Create the branch — **one branch + one PR per spec** | — |
 | 3 | Write the fused `spec.md` + `tasks.md`; self-review the spec | `memex-writing-plans` |
-| 4 | Compact handoff (if chosen) — print a `txt` prompt and stop | — |
+| 4 | Handoff (if chosen) — print a `txt` prompt and stop | — |
 | 5 | Implement | (you / subagents) |
 | 6 | Quality gate (test/lint/typecheck/build + **test integrity**) | — |
 | 7 | Reflect → write learnings to `.memex/learnings/` | — |
@@ -108,7 +108,7 @@ Recorded in `spec.md` frontmatter as `mode:`, chosen in the post-design batch. T
 | `autonomous` | Runs all the way to delivery alone: implement → quality gate → reflect → open the PR → `memex:code-review` to `lgtm`, no further prompts. |
 | `reviewed` | Identical up to reflect; then **asks** "open the PR and run code-review?" before delivering. |
 
-Both modes self-review the spec and may use the **compact handoff** — once `design`/`spec`/`tasks` exist, the agent can print a `txt` summary and stop so you `/compact` (or open a new chat) and resume implementing with a clean context.
+Both modes self-review the spec and may use the **handoff** — once `design`/`spec`/`tasks` exist, the agent can print a `txt` summary and stop so you `/compact` (or open a new chat) and resume implementing with a clean context.
 
 ## Acceptance-criteria traceability
 

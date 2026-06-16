@@ -14,6 +14,7 @@ Template: `[[../specs/_template/spec|_template/spec]]`
 
 ## Active
 
+- [[../specs/2026-06-16-rename-compact-to-handoff/spec|rename-compact-to-handoff]] — renamed the post-design third question (the optional context break between planning and implementation) from `compact` to `handoff` across all live docs and skills (AGENTS.md + template, README, both `spec-driven-development.md` copies, the `/memex:spec` command, and the three brainstorming + three writing-plans skill copies). Label/noun `handoff`, verb `hand off`. Preserves the `/compact` literal command, the unrelated "compact list" recall wording, and frozen `.memex/specs/**` + `.memex/learnings/**` history. Draft 2026-06-16.
 - [[../specs/2026-05-05-memex-canonical-commands/spec|memex-canonical-commands]] — bring bundled slash commands under the same `.agents/<cmd>` canonical + `.claude/<cmd>` symlink layout that already governs bundled skills, and stop shipping `memex-open-pr`. Draft 2026-05-05.
 
 ## Shipped
