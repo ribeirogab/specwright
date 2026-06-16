@@ -1,9 +1,9 @@
 ---
-status: draft
+status: shipped
 feature: rename-compact-to-handoff
 scope: medium
 created: 2026-06-16
-shipped: null
+shipped: 2026-06-16
 branch: feat/rename-compact-to-handoff
 mode: reviewed
 related:
@@ -12,7 +12,7 @@ related:
 ---
 # Rename `compact` → `handoff` — Spec
 
-**Status:** Draft
+**Status:** Shipped
 **Design:** [[2026-06-16-rename-compact-to-handoff/design|design]]
 **Scope:** Rename the post-design "compact" concept to "handoff" across all live memex docs and skills, preserving the `/compact` literal command, unrelated `compact` wording, and frozen spec/learning history.
 
