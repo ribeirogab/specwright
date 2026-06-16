@@ -7,7 +7,7 @@ Report results as a table. Any `FAIL` triggers an automatic fix attempt using th
 ## Contents
 
 - [Output format](#output-format)
-- [Checks](#checks) — 17 numbered checks (CLAUDE.md symlink, placeholder sweeps, AGENTS.md headers, frontmatter, Obsidian JSON, .gitignore, spec folder naming, canonical skills installed, Claude plugin settings, executable scripts, MOC placeholders, spec template Acceptance Criteria, AGENTS.md size cap, spec-file bare naming, spec validator scaffolded, spec-driven-development guide scaffolded)
+- [Checks](#checks) — 19 numbered checks (CLAUDE.md symlink, placeholder sweeps, AGENTS.md headers, frontmatter, Obsidian JSON, .gitignore, spec folder naming, canonical skills installed, Claude plugin settings, executable scripts, MOC placeholders, spec template Acceptance Criteria, AGENTS.md size cap, spec-file bare naming, spec validator scaffolded, spec-driven-development guide scaffolded, update engine scaffolded, update manifest valid)
 - [When everything passes](#when-everything-passes)
 - [When something fails](#when-something-fails)
 
@@ -22,7 +22,7 @@ Report results as a table. Any `FAIL` triggers an automatic fix attempt using th
 | 2 | constitution.md has no surviving placeholders | FAIL — line 14: "{{Project Name}}" |
 | ... | ... | ... |
 
-### Result: 16/17 PASS — 1 FAIL needs attention
+### Result: 18/19 PASS — 1 FAIL needs attention
 ```
 
 ## Checks
@@ -115,7 +115,7 @@ FAIL lists the offending folder names. Fix: rename per the migration prompt in `
 Skills are canonically under `.agents/skills/<name>/`. Per-agent symlinks (`.claude/skills/<name>`, etc.) are bonus exposure, not the source of truth.
 
 ```bash
-for s in memex-recall memex-brainstorming memex-writing-plans memex-link memex-new-pr memex-code-review; do
+for s in memex-recall memex-brainstorming memex-writing-plans memex-link memex-new-pr memex-code-review memex-update; do
   [ -f ".agents/skills/$s/SKILL.md" ] && echo "PASS: $s" || echo "FAIL: $s"
 done
 ```
@@ -221,12 +221,32 @@ The workflow guide must be installed at `.memex/spec-driven-development.md` so e
 
 FAIL means the guide was not scaffolded. Fix: re-run the guide copy step in `SKILL.md` (Scaffolding section), which copies `scaffold/vault-docs/spec-driven-development.md` to `.memex/spec-driven-development.md`.
 
+### 18. Update engine scaffolded and executable
+
+The `/memex:update` reconcile engine must be installed at `.memex/scripts/memex-update.sh` and be executable, so the update command can run it.
+
+```bash
+[ -x .memex/scripts/memex-update.sh ] && echo PASS || echo FAIL
+```
+
+FAIL means the engine was not scaffolded (or lost its executable bit). Fix: re-run the update-script copy step in `SKILL.md` (Scaffolding section), which copies `scaffold/vault-scripts/memex-update.sh` to `.memex/scripts/memex-update.sh` and `chmod +x`'s it.
+
+### 19. Update baseline manifest present and valid
+
+The update baseline manifest must exist at `.memex/.update-manifest.json` and parse as JSON, so `/memex:update` runs precise 3-way (stock-vs-edited) instead of degrading to 2-way.
+
+```bash
+jq . .memex/.update-manifest.json >/dev/null 2>&1 && echo PASS || echo FAIL
+```
+
+FAIL means the manifest is missing or malformed. Fix: run `bash .memex/scripts/memex-update.sh --init-manifest` to regenerate the baseline (records a sha256 per managed file). A legacy install without one self-heals on the first `/memex:update` (2-way first run writes the manifest).
+
 ## When everything passes
 
 Report:
 
 ```
-## Phase 5 — Validation: 17/17 PASS
+## Phase 5 — Validation: 19/19 PASS
 
 Memex is structurally sound.
 ```

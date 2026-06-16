@@ -37,6 +37,8 @@ For each item, check existence and content correctness. Report status as:
   .memex/specs/_template/design.md
   .memex/specs/_template/tasks.md
   .memex/scripts/validate-spec.sh   (executable — mechanical spec validator)
+  .memex/scripts/memex-update.sh    (executable — upstream-reconcile engine for /memex:update)
+  .memex/.update-manifest.json      (sha256 baseline per managed file — valid JSON)
   .memex/templates/learning.md
   .memex/templates/convention.md
   .memex/learnings/           (directory exists)
@@ -51,6 +53,7 @@ CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
 .agents/skills/memex-link/                      (full directory — vault cross-link analyzer)
 .agents/skills/memex-new-pr/                    (full directory — opens the spec's PR)
 .agents/skills/memex-code-review/               (full directory — branch review to lgtm)
+.agents/skills/memex-update/                    (full directory — reconciles the install against upstream)
 
 .gitignore                     (contains obsidian workspace exclusions)
 ```
@@ -59,7 +62,7 @@ CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
 
 For every **non-Claude** agent-specific discovery directory present in the repo (`.codex/`, `.cursor/`, `.opencode/`, `.aider/`, `.augment/`, etc.), each scaffold skill above should also be symlinked into that agent's `skills/` subdirectory so the agent can discover it. Example: when `.codex/` exists, `.codex/skills/memex-recall` is a symlink to `../../.agents/skills/memex-recall`.
 
-**Claude Code is excluded from this loop.** Claude users get the companion skills through the `memex` plugin (marketplace `memex`), invoked as `/memex:recall`, `/memex:brainstorming`, `/memex:writing-plans`, `/memex:link`, `/memex:new-pr`, `/memex:code-review`. Creating `.claude/skills/memex-<name>` symlinks here would surface the same skill twice in `/help` — once as `/memex-recall` (hyphen-form symlink) and once as `/memex:recall` (plugin namespace). Legacy `.claude/skills/memex-{recall,brainstorming,writing-plans,link}` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks).
+**Claude Code is excluded from this loop.** Claude users get the companion skills through the `memex` plugin (marketplace `memex`), invoked as `/memex:recall`, `/memex:brainstorming`, `/memex:writing-plans`, `/memex:link`, `/memex:new-pr`, `/memex:code-review`, `/memex:update`. Creating `.claude/skills/memex-<name>` symlinks here would surface the same skill twice in `/help` — once as `/memex-recall` (hyphen-form symlink) and once as `/memex:recall` (plugin namespace). Legacy `.claude/skills/memex-{recall,brainstorming,writing-plans,link}` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks).
 
 A missing per-agent symlink is **not `DRIFT`** — only the canonical files under `.agents/skills/` are required. If a per-agent dir exists but lacks the expected symlinks, the memex installer re-creates them on the next run (no prompt needed; symlinks are non-destructive). If a per-agent dir does not exist at all, no symlinks are created (the absence signals the user does not run that agent in this repo).
 
