@@ -1,9 +1,9 @@
 ---
-status: draft
+status: shipped
 feature: memex-worktrees
 scope: medium
 created: 2026-06-18
-shipped: null
+shipped: 2026-06-18
 branch: feat/memex-worktrees
 mode: autonomous
 worktree: null
@@ -14,7 +14,7 @@ related:
 ---
 # memex worktrees — Spec
 
-**Status:** Draft
+**Status:** Shipped
 **Design:** [[2026-06-18-memex-worktrees/design|design]]
 **Scope:** Add an optional, memex-native git worktree per spec — a fourth post-design-batch question, a guard that detects an existing linked worktree, the `.memex/worktrees/<slug>` creation mechanic, a git-ignore entry, and an optional `worktree:` frontmatter field — propagated across every mirrored copy of the affected docs.
 
