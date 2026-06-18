@@ -81,6 +81,9 @@ Append these lines to the repo's `.gitignore` (skip if already present):
 ```
 # Obsidian vault config (machine-local — Obsidian rewrites these on every open)
 .memex/.obsidian/
+
+# memex per-spec worktrees (machine-local checkouts)
+.memex/worktrees/
 ```
 
 Rationale: Obsidian rewrites `app.json`, `appearance.json`, `core-plugins.json`, and the workspace files every time the vault is opened, which creates constant `git status` noise. The memex installer still **creates** the three config JSONs locally during scaffolding (so `useMarkdownLinks: false` / `newLinkFormat: "relative"` are set the first time Obsidian opens — wikilinks in the MOCs depend on this), but they are not tracked. Obsidian preserves existing user settings when it rewrites these files, so the defaults persist locally on subsequent opens.
