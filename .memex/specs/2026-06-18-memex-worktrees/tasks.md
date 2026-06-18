@@ -385,7 +385,7 @@ grep -n '^worktree:' .memex/specs/2026-06-18-memex-worktrees/spec.md   # expect:
 
 ```bash
 git diff --name-only main...HEAD | grep -E 'validate-spec\.sh|\.memex/learnings/' && echo "VIOLATION" || echo "non-goals OK"
-git diff --name-only main...HEAD | grep '^\.memex/specs/' | grep -v '2026-06-18-memex-worktrees/' && echo "STRAY SPEC EDIT" || echo "specs scope OK"
+git diff --name-only main...HEAD | grep '^\.memex/specs/' | grep -v '2026-06-18-memex-worktrees/' | grep -v '_template/' && echo "STRAY SPEC EDIT" || echo "specs scope OK"
 ```
 Expected: `non-goals OK` and `specs scope OK`.
 

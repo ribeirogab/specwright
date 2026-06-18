@@ -14,6 +14,7 @@ Template: `[[../specs/_template/spec|_template/spec]]`
 
 ## Active
 
+- [[../specs/2026-06-18-memex-worktrees/spec|memex-worktrees]] — add an optional, memex-native git worktree per spec: the post-design batch grows to four questions (the new one being worktree, default yes), a guard detects an already-linked worktree (`git-common-dir` ≠ `git-dir`) and recommends working in place, the branch-creation step gains a `git worktree add .memex/worktrees/<slug>` path (create-only, never removed), `.memex/worktrees/` is git-ignored, and an optional recorded-only `worktree:` frontmatter field is added (validator unchanged). Propagated across all mirrored docs. Draft 2026-06-18.
 - [[../specs/2026-05-05-memex-canonical-commands/spec|memex-canonical-commands]] — bring bundled slash commands under the same `.agents/<cmd>` canonical + `.claude/<cmd>` symlink layout that already governs bundled skills, and stop shipping `memex-open-pr`. Draft 2026-05-05.
 
 ## Shipped
