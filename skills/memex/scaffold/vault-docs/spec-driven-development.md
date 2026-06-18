@@ -52,8 +52,8 @@ The authoritative step list is `AGENTS.md` → `### Spec flow`. In brief:
 
 | # | Step | Owned by |
 |---|---|---|
-| 1 | Brainstorm → write `design.md`; post-design batch (branch + mode + handoff) | `memex-brainstorming` |
-| 2 | Create the branch — **one branch + one PR per spec** | — |
+| 1 | Brainstorm → write `design.md`; post-design batch (branch + mode + worktree + handoff) | `memex-brainstorming` |
+| 2 | Create the branch (or a worktree under `.memex/worktrees/<slug>`, default yes unless already inside a linked worktree) — **one branch + one PR per spec** | — |
 | 3 | Write the fused `spec.md` + `tasks.md`; self-review the spec | `memex-writing-plans` |
 | 4 | Handoff (if chosen) — print a `txt` prompt and stop | — |
 | 5 | Implement | (you / subagents) |

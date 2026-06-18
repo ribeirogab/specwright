@@ -24,7 +24,7 @@ The skill is audit-first, autonomous-fix, and safe to re-run. After the first ru
 
 After install, the repo has an `AGENTS.md` describing a **spec-driven workflow** and a set of `/memex:*` commands and companion skills:
 
-- **The flow** — for any non-trivial change: `brainstorming` → design → (branch) → spec + tasks → implement → quality gate → PR → review-to-`lgtm`. **Design approval is the only human review** — the agent reviews its own spec (the spec-document-reviewer + `/memex:review-spec` + the `validate-spec.sh` mechanical gate) in both modes. Right after design approval, one batch asks exactly three things: the **branch name**, the execution **mode** (`autonomous` or `reviewed`), and whether to **hand off** before implementing. The mode is recorded in the spec and counts as consent for committing/pushing that feature branch. It decides only the **delivery**: `autonomous` opens the PR and runs code-review to `lgtm` on its own; `reviewed` does everything the same but asks first ("open the PR and run code-review?"). **Handoff works in either mode** — once design/spec/tasks are written the agent prints a handoff prompt so you can `/compact` (or open a new chat) and implement with a clean context.
+- **The flow** — for any non-trivial change: `brainstorming` → design → (branch) → spec + tasks → implement → quality gate → PR → review-to-`lgtm`. **Design approval is the only human review** — the agent reviews its own spec (the spec-document-reviewer + `/memex:review-spec` + the `validate-spec.sh` mechanical gate) in both modes. Right after design approval, one batch asks exactly four things: the **branch name**, the execution **mode** (`autonomous` or `reviewed`), whether to use a **worktree** (a memex-native checkout under `.memex/worktrees/`, default yes unless already inside a linked worktree), and whether to **hand off** before implementing. The mode is recorded in the spec and counts as consent for committing/pushing that feature branch. It decides only the **delivery**: `autonomous` opens the PR and runs code-review to `lgtm` on its own; `reviewed` does everything the same but asks first ("open the PR and run code-review?"). **Handoff works in either mode** — once design/spec/tasks are written the agent prints a handoff prompt so you can `/compact` (or open a new chat) and implement with a clean context.
 - **Commands** — `/memex:spec`, `/memex:review-spec`, `/memex:sweep`, `/memex:learn`.
 - **Companion skills** — `/memex:brainstorming`, `/memex:writing-plans`, `/memex:recall`, `/memex:link`, `/memex:new-pr` (opens the spec's PR), `/memex:code-review` (reviews the branch to `lgtm`), `/memex:update` (syncs the install with upstream).
 - **Full guide** — `.memex/spec-driven-development.md`, scaffolded into every install, explains the whole flow: the artifact model, the 9 steps, the scope and subagent-delegation tables, and the reviews and gates.
@@ -35,7 +35,7 @@ The spec flow, end to end (design approval is the only human review):
 flowchart TD
     A([memex-brainstorming: explore + design → design.md]) --> B{Design approved?}
     B -- "no, revise" --> A
-    B -- yes --> C["Post-design batch:<br/>branch + mode + handoff?"]
+    B -- yes --> C["Post-design batch:<br/>branch + mode + worktree + handoff?"]
     C --> D[Create branch]
     D --> E["memex-writing-plans: spec + tasks<br/>then self-reviews the spec<br/>spec-document-reviewer + memex:review-spec + validate-spec.sh<br/>both modes — no human spec review"]
     E --> G{handoff?}

@@ -13,7 +13,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Announce at start:** "I'm using the writing-plans skill to write the technical spec and tasks."
 
-**Context:** This runs after brainstorming wrote `design.md` and the branch/mode were recorded. Work in the spec's branch.
+**Context:** This runs after brainstorming wrote `design.md` and the branch/mode/worktree were recorded. Work in the spec's branch — or its worktree under `.memex/worktrees/<slug>`, if one was created.
 
 **Save to:** `.memex/specs/YYYY-MM-DD-<slug>/spec.md` (the technical spec) and `tasks.md`, alongside the `design.md` brainstorming wrote.
 - (User preferences for location override this default)
@@ -27,7 +27,7 @@ If the design covers multiple independent subsystems, it should have been broken
 
 Copy `.memex/specs/_template/spec.md` into the spec folder and fill it from the approved `design.md`:
 
-- **Frontmatter** — set `status: draft`, `feature`, `created`, the recorded `branch:`/`mode:`, and `scope:` — your honest sizing of the work, one of `low | medium | high | complex`. `scope` is **recorded only**; nothing branches on it yet (reserved for a future quick-mode).
+- **Frontmatter** — set `status: draft`, `feature`, `created`, the recorded `branch:`/`mode:`/`worktree:`, and `scope:` — your honest sizing of the work, one of `low | medium | high | complex`. `scope` and `worktree` are **recorded only**; nothing branches on them yet (`scope` is reserved for a future quick-mode; `worktree` records the worktree path or `null`).
 - **Architecture / File Structure / Phase Ordering** — the technical *how*. Before defining tasks, map out which files will be created or modified and what each is responsible for. This is where decomposition decisions get locked in.
   - Design units with clear boundaries and well-defined interfaces. Each file has one clear responsibility.
   - You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.

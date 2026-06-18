@@ -51,9 +51,9 @@ If the user is asking, investigating, or exploring — just answer.
 
 ### Spec flow
 
-1. `memex-brainstorming` → design exploration. After the design is approved, the **post-design batch** confirms the **branch name**, the **mode** (`autonomous` / `reviewed`), and whether to **hand off**. Brainstorming writes `design.md` (non-technical: purpose, motivation, definitions, non-goals) — the durable write-up of the approved design, not a second review gate.
-2. Create the branch. **One branch + one PR per spec** — design, spec, tasks, implementation, and learnings all live in it.
-3. `memex-writing-plans` → the fused technical `spec.md` (architecture, file structure, phases, `AC-N` acceptance criteria; records `scope:`/`branch:`/`mode:`) + `tasks.md` (each task names its `AC:` + `Delegable:`). The agent **reviews its own spec** — the spec-document-reviewer subagent (clarity) **and** `/memex:review-spec` (constitution + the `validate-spec.sh` mechanical gate); both run in **both** modes. **No human spec review** — design approval is the only human review.
+1. `memex-brainstorming` → design exploration. After the design is approved, the **post-design batch** confirms the **branch name**, the **mode** (`autonomous` / `reviewed`), whether to use a **worktree**, and whether to **hand off**. Brainstorming writes `design.md` (non-technical: purpose, motivation, definitions, non-goals) — the durable write-up of the approved design, not a second review gate.
+2. Create the branch — or, if a worktree was chosen, `git worktree add .memex/worktrees/<slug>` for it (the guard recommends against a worktree when already inside a linked one; detect with `git rev-parse --git-common-dir` ≠ `--git-dir`). memex only creates the worktree, never removes it. **One branch + one PR per spec** — design, spec, tasks, implementation, and learnings all live in it.
+3. `memex-writing-plans` → the fused technical `spec.md` (architecture, file structure, phases, `AC-N` acceptance criteria; records `scope:`/`branch:`/`mode:`/`worktree:`) + `tasks.md` (each task names its `AC:` + `Delegable:`). The agent **reviews its own spec** — the spec-document-reviewer subagent (clarity) **and** `/memex:review-spec` (constitution + the `validate-spec.sh` mechanical gate); both run in **both** modes. **No human spec review** — design approval is the only human review.
 4. **Handoff (either mode)** — if handoff was chosen, once design/spec/tasks are written print a `txt` handoff prompt (summary + the three paths + mode) and stop; you `/compact` or open a new chat and paste it to resume. Never hand off before the artifacts exist.
 5. **Implement.**
 6. **Quality gate.** Detect the touched modules' code-quality processes (test, lint, typecheck, build — Makefile, `package.json` scripts, the area's CI) and run them all; nothing you did may break them. Logic added or changed in a tested area without a test → write the missing tests first. **Test integrity:** in a tested area the test count must not silently drop and assertions must not be weakened, skipped, or deleted to pass the gate without an in-spec justification.
@@ -65,7 +65,7 @@ If the user is asking, investigating, or exploring — just answer.
 flowchart TD
     A(["brainstorm → design.md"]) --> B{"design approved?"}
     B -- "no, revise" --> A
-    B -- yes --> C["branch + mode + handoff"]
+    B -- yes --> C["branch + mode + worktree + handoff"]
     C --> D["writing-plans → spec.md + tasks.md + self-review"]
     D --> E{"handoff?"}
     E -- yes --> F["print txt handoff, stop; resume later"]
