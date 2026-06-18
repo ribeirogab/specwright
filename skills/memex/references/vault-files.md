@@ -162,6 +162,7 @@ created: {{YYYY-MM-DD}}
 shipped: null
 branch: {{feat/kebab-slug-of-feature}}
 mode: {{autonomous | reviewed}}
+worktree: {{.memex/worktrees/<slug> | null}}
 related: []
 ---
 # {{Feature Name}} — Spec
@@ -171,6 +172,8 @@ related: []
 **Scope:** {{one-sentence scope statement}}
 
 > **Note on `scope:` frontmatter** — `scope` is one of `low | medium | high | complex`. It is **recorded only**: reserved for a future quick-mode and does **not** yet gate which artifacts are written. Set it honestly; nothing branches on it today.
+>
+> **Note on `worktree:` frontmatter** — the path of this spec's git worktree under `.memex/worktrees/`, or `null` when the work runs in place. **Recorded only**: like `scope:`, nothing branches on it and `validate-spec.sh` does not require it.
 >
 > **Note on `related:` frontmatter** — populate with wikilinks to learnings, conventions, or rules this spec touches, reads, or modifies. Empty `related:` is allowed only if the spec genuinely has no vault dependencies; `/memex:sweep` will flag isolated specs.
 
