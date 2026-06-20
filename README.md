@@ -10,6 +10,11 @@
 npx skills add ribeirogab/memex --skill memex
 ```
 
+### Two ways in
+
+- **`npx skills add` (recommended)** — installs the scaffolder skill. Point an agent at a repo and it creates the `.memex/` vault, `AGENTS.md`, the companion skills, and the `/memex:*` commands as files in that repo.
+- **Plugin marketplace** — `/plugin marketplace add ribeirogab/memex` then `/plugin install memex@memex`. Registers the `/memex:*` commands and companion skills in Claude Code only — it **creates no files in your repo** and does not scaffold the `.memex/` vault. Use it when you only want the commands available; use the scaffolder when you want the project memory.
+
 ## Use
 
 Point an agent at any repo where you want the memex installed:
