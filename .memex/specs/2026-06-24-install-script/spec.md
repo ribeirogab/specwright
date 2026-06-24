@@ -84,18 +84,18 @@ This mirrors the repo's existing tested-shell pattern (`memex-link/tests/run.sh`
 
 ## Acceptance Criteria
 
-- [ ] **AC-1** With no `.claude-plugin/marketplace.json` declaring `"name":"memex"`, `marketplace_source` prints exactly `{"source":"github","repo":"ribeirogab/memex"}`.
-- [ ] **AC-2** In a dir whose `.claude-plugin/marketplace.json` contains a top-level `"name": "memex"`, `marketplace_source` prints exactly `{"source":"directory","path":"."}`.
-- [ ] **AC-3** After `configure_plugin` runs in a tmpdir with no prior `.claude/settings.json`, `jq '.enabledPlugins["memex@memex"]' .claude/settings.json` is `true` and `jq -c '.extraKnownMarketplaces.memex.source' .claude/settings.json` equals the `marketplace_source` output.
-- [ ] **AC-4** Given a pre-existing `.claude/settings.json` of `{"theme":"dark"}`, after `configure_plugin` the file still has `.theme == "dark"` plus both new keys.
-- [ ] **AC-5** Running the merge twice yields a `.claude/settings.json` byte-identical to running it once (idempotent).
-- [ ] **AC-6** For the same `SETTINGS` input and `SRC`, `merge_with_python` produces a JSON object deep-equal to `merge_with_jq` (verified with `jq -S` normalization).
-- [ ] **AC-7** With `plugin_merge_engine` forced to `none`, `configure_plugin` creates **no** `.claude/settings.json`, returns 0, and prints a snippet whose text contains both `memex@memex` and `extraKnownMarketplaces`.
-- [ ] **AC-8** Given `.claude/commands/memex-spec.md` present, after `remove_legacy_commands` that file does not exist.
-- [ ] **AC-9** `print_next_steps` output contains the literal `/memex` and a trust-time instruction (matches `trust` or `reopen`, case-insensitive).
-- [ ] **AC-10** `shellcheck -s sh install.sh` exits 0 and `bash tests/install/run.sh` prints `PASS` for every case and exits 0.
-- [ ] **AC-11** A real `sh install.sh` in a clean tmpdir (network) produces `.agents/skills/memex/SKILL.md`, a `.claude/skills/memex` symlink that resolves to `SKILL.md`, `skills-lock.json`, and a `.claude/settings.json` where `jq '.enabledPlugins["memex@memex"]'` is `true`.
-- [ ] **AC-12** README contains exactly one fenced `install.sh` invocation and describes `install.sh` as enabling the plugin and `/memex` as scaffolding the vault.
+- [x] **AC-1** With no `.claude-plugin/marketplace.json` declaring `"name":"memex"`, `marketplace_source` prints exactly `{"source":"github","repo":"ribeirogab/memex"}`.
+- [x] **AC-2** In a dir whose `.claude-plugin/marketplace.json` contains a top-level `"name": "memex"`, `marketplace_source` prints exactly `{"source":"directory","path":"."}`.
+- [x] **AC-3** After `configure_plugin` runs in a tmpdir with no prior `.claude/settings.json`, `jq '.enabledPlugins["memex@memex"]' .claude/settings.json` is `true` and `jq -c '.extraKnownMarketplaces.memex.source' .claude/settings.json` equals the `marketplace_source` output.
+- [x] **AC-4** Given a pre-existing `.claude/settings.json` of `{"theme":"dark"}`, after `configure_plugin` the file still has `.theme == "dark"` plus both new keys.
+- [x] **AC-5** Running the merge twice yields a `.claude/settings.json` byte-identical to running it once (idempotent).
+- [x] **AC-6** For the same `SETTINGS` input and `SRC`, `merge_with_python` produces a JSON object deep-equal to `merge_with_jq` (verified with `jq -S` normalization).
+- [x] **AC-7** With `plugin_merge_engine` forced to `none`, `configure_plugin` creates **no** `.claude/settings.json`, returns 0, and prints a snippet whose text contains both `memex@memex` and `extraKnownMarketplaces`.
+- [x] **AC-8** Given `.claude/commands/memex-spec.md` present, after `remove_legacy_commands` that file does not exist.
+- [x] **AC-9** `print_next_steps` output contains the literal `/memex` and a trust-time instruction (matches `trust` or `reopen`, case-insensitive).
+- [x] **AC-10** `shellcheck -s sh install.sh` exits 0 and `bash tests/install/run.sh` prints `PASS` for every case and exits 0.
+- [x] **AC-11** A real `sh install.sh` in a clean tmpdir (network) produces `.agents/skills/memex/SKILL.md`, a `.claude/skills/memex` symlink that resolves to `SKILL.md`, `skills-lock.json`, and a `.claude/settings.json` where `jq '.enabledPlugins["memex@memex"]'` is `true`.
+- [x] **AC-12** README contains exactly one fenced `install.sh` invocation and describes `install.sh` as enabling the plugin and `/memex` as scaffolding the vault.
 
 ## Risks and Mitigations
 
