@@ -1,16 +1,16 @@
 #!/bin/sh
-# specward per-project installer.
+# specwright per-project installer.
 #
-# Installs the specward scaffolder skill into the current project, enables the
+# Installs the specwright scaffolder skill into the current project, enables the
 # Claude Code plugin, and guarantees this layout:
 #
 #   .agents/skills/sw/               <- real skill files (open agent-skills standard)
 #   .claude/skills/sw                -> ../../.agents/skills/sw  (symlink)
 #   skills-lock.json                 <- skills CLI lockfile
-#   .claude/settings.json            <- specward marketplace + plugin enabled
+#   .claude/settings.json            <- specwright marketplace + plugin enabled
 #
 # Usage (from your project root):
-#   curl -fsSL https://raw.githubusercontent.com/ribeirogab/specward/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/ribeirogab/specwright/main/install.sh | sh
 #   # or, from a clone:  sh install.sh
 #
 # Safe to re-run: the skills CLI is idempotent and the symlink + settings merge
@@ -19,7 +19,7 @@
 
 set -eu
 
-REPO="ribeirogab/specward"
+REPO="ribeirogab/specwright"
 SKILL="sw"
 # The skills CLI installs the canonical copy under .agents/skills/ when targeting
 # the agent-agnostic "universal" agent; we add the .claude symlink ourselves.
@@ -31,12 +31,12 @@ fail() { printf 'error: %s\n' "$*" >&2; exit 1; }
 
 # --- plugin configuration helpers --------------------------------------------
 
-# Marketplace source JSON. Dogfood: inside ribeirogab/specward itself
-# (.claude-plugin/marketplace.json declares name = specward) use the local path,
+# Marketplace source JSON. Dogfood: inside ribeirogab/specwright itself
+# (.claude-plugin/marketplace.json declares name = specwright) use the local path,
 # else the github source. grep keeps this dependency-free (no jq just to pick).
 marketplace_source() {
   if [ -f .claude-plugin/marketplace.json ] && \
-     grep -Eq '"name"[[:space:]]*:[[:space:]]*"specward"' .claude-plugin/marketplace.json; then
+     grep -Eq '"name"[[:space:]]*:[[:space:]]*"specwright"' .claude-plugin/marketplace.json; then
     printf '{"source":"directory","path":"."}'
   else
     printf '{"source":"github","repo":"%s"}' "$REPO"
@@ -54,8 +54,8 @@ plugin_merge_engine() {
 plugin_snippet() {
   src="$1"
   printf '%s\n' '{'
-  printf '  "extraKnownMarketplaces": { "specward": { "source": %s } },\n' "$src"
-  printf '%s\n' '  "enabledPlugins": { "sw@specward": true }'
+  printf '  "extraKnownMarketplaces": { "specwright": { "source": %s } },\n' "$src"
+  printf '%s\n' '  "enabledPlugins": { "sw@specwright": true }'
   printf '%s\n' '}'
 }
 
@@ -67,8 +67,8 @@ merge_with_jq() {
   settings="$1"; src="$2"; tmp="$(mktemp)"; out="$(mktemp)"
   if [ -s "$settings" ]; then cp "$settings" "$tmp"; else printf '{}' > "$tmp"; fi
   if jq --argjson src "$src" '
-    .extraKnownMarketplaces["specward"] = { "source": $src }
-    | .enabledPlugins["sw@specward"] = true
+    .extraKnownMarketplaces["specwright"] = { "source": $src }
+    | .enabledPlugins["sw@specwright"] = true
   ' "$tmp" > "$out"; then
     mv "$out" "$settings"
   else
@@ -85,8 +85,8 @@ p = pathlib.Path(os.environ["SW_SETTINGS"])
 src = json.loads(os.environ["SW_SRC"])
 txt = p.read_text() if p.exists() else ""
 data = json.loads(txt) if txt.strip() else {}
-data.setdefault("extraKnownMarketplaces", {})["specward"] = {"source": src}
-data.setdefault("enabledPlugins", {})["sw@specward"] = True
+data.setdefault("extraKnownMarketplaces", {})["specwright"] = {"source": src}
+data.setdefault("enabledPlugins", {})["sw@specwright"] = True
 p.write_text(json.dumps(data, indent=2) + "\n")
 PY
 }
@@ -107,7 +107,7 @@ configure_plugin() {
       return 0
       ;;
   esac
-  say "Enabled specward plugin in ${settings}"
+  say "Enabled specwright plugin in ${settings}"
 }
 
 # Remove pre-plugin leftover command files (missing files are not an error).
@@ -119,16 +119,16 @@ remove_legacy_commands() {
 
 print_next_steps() {
   say ""
-  say "specward installed:"
+  say "specwright installed:"
   say "  ${CANONICAL}/"
   say "  ${LINK} -> ../../.agents/skills/${SKILL}"
   say "  skills-lock.json"
-  say "  .claude/settings.json (specward marketplace + plugin enabled)"
+  say "  .claude/settings.json (specwright marketplace + plugin enabled)"
   say ""
   say "Next: open this repo in your coding agent and run  /sw"
-  say "  (audits the specward setup and scaffolds whatever is missing)"
+  say "  (audits the specwright setup and scaffolds whatever is missing)"
   say ""
-  say "The specward plugin (/sw:spec, /sw:new-pr, ...) installs when Claude Code"
+  say "The specwright plugin (/sw:spec, /sw:new-pr, ...) installs when Claude Code"
   say "trusts this workspace — reopen the repo or accept the trust prompt."
 }
 

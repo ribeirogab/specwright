@@ -18,9 +18,9 @@ set +eu
 # --- marketplace_source (AC-1, AC-2) ----------------------------------------
 (
   d="$(mktemp -d)"; cd "$d" || exit 1
-  assert_eq "source: github default" '{"source":"github","repo":"ribeirogab/specward"}' "$(marketplace_source)"
+  assert_eq "source: github default" '{"source":"github","repo":"ribeirogab/specwright"}' "$(marketplace_source)"
   mkdir -p .claude-plugin
-  printf '{ "name": "specward", "owner": "ribeirogab" }\n' > .claude-plugin/marketplace.json
+  printf '{ "name": "specwright", "owner": "ribeirogab" }\n' > .claude-plugin/marketplace.json
   assert_eq "source: dogfood directory" '{"source":"directory","path":"."}' "$(marketplace_source)"
   cd /; rm -rf "$d"
 )
@@ -28,26 +28,26 @@ set +eu
 # --- merge engine + jq/python parity + snippet (AC-3 base, AC-6) -------------
 (
   d="$(mktemp -d)"; cd "$d" || exit 1
-  src='{"source":"github","repo":"ribeirogab/specward"}'
+  src='{"source":"github","repo":"ribeirogab/specwright"}'
 
   printf '{}' > a.json
   merge_with_jq a.json "$src"
-  assert_eq "jq: plugin enabled" 'true' "$(jq -c '.enabledPlugins["sw@specward"]' a.json)"
-  assert_eq "jq: marketplace source" "$src" "$(jq -c '.extraKnownMarketplaces.specward.source' a.json)"
+  assert_eq "jq: plugin enabled" 'true' "$(jq -c '.enabledPlugins["sw@specwright"]' a.json)"
+  assert_eq "jq: marketplace source" "$src" "$(jq -c '.extraKnownMarketplaces.specwright.source' a.json)"
 
   printf '{}' > b.json
   merge_with_python b.json "$src"
   assert_eq "jq vs python parity" "$(jq -S . a.json)" "$(jq -S . b.json)"
 
   assert_eq "snippet mentions plugin" 'yes' \
-    "$(plugin_snippet "$src" | grep -q 'sw@specward' && echo yes || echo no)"
+    "$(plugin_snippet "$src" | grep -q 'sw@specwright' && echo yes || echo no)"
   cd /; rm -rf "$d"
 )
 
 # --- both engines preserve a malformed pre-existing settings.json -----------
 (
   d="$(mktemp -d)"; cd "$d" || exit 1
-  src='{"source":"github","repo":"ribeirogab/specward"}'
+  src='{"source":"github","repo":"ribeirogab/specwright"}'
   printf 'not json{' > sj.json
   merge_with_jq sj.json "$src" 2>/dev/null; rcj=$?
   assert_eq "jq malformed: returns non-zero" '1' "$rcj"
@@ -64,7 +64,7 @@ set +eu
   d="$(mktemp -d)"; cd "$d" || exit 1
   mkdir -p .claude; printf '{"theme":"dark"}' > .claude/settings.json
   configure_plugin >/dev/null
-  assert_eq "configure: enabled"   'true'   "$(jq -c '.enabledPlugins["sw@specward"]' .claude/settings.json)"
+  assert_eq "configure: enabled"   'true'   "$(jq -c '.enabledPlugins["sw@specwright"]' .claude/settings.json)"
   assert_eq "configure: preserves" '"dark"' "$(jq -c '.theme' .claude/settings.json)"
   one="$(cat .claude/settings.json)"
   configure_plugin >/dev/null
@@ -83,7 +83,7 @@ set +eu
   assert_eq "softfail: snippet has marketplace" 'yes' \
     "$(printf '%s' "$out" | grep -q 'extraKnownMarketplaces' && echo yes || echo no)"
   assert_eq "softfail: snippet has plugin" 'yes' \
-    "$(printf '%s' "$out" | grep -q 'sw@specward' && echo yes || echo no)"
+    "$(printf '%s' "$out" | grep -q 'sw@specwright' && echo yes || echo no)"
   cd /; rm -rf "$d"
 )
 

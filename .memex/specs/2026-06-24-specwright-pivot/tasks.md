@@ -1,4 +1,4 @@
-# specward Pivot — Tasks
+# specwright Pivot — Tasks
 
 > **For agentic workers:** implement task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. Each task names the `AC:` it satisfies and a `Delegable:` note. This is a markdown+shell repo with no test runner — the verification analog to a unit test is the grep/script that proves the change. Run each task's verification before committing.
 
@@ -48,7 +48,7 @@ git add -A && git commit -m "refactor: rename skill/plugin/companion trees to sw
 ### Task 2: Update plugin, marketplace, and settings manifests
 
 **AC:** AC-5, AC-13
-**Delegable:** yes — "set plugin name sw, marketplace name specward, plugin source ./plugins/sw, settings enabledPlugins sw@specward; no other content."
+**Delegable:** yes — "set plugin name sw, marketplace name specwright, plugin source ./plugins/sw, settings enabledPlugins sw@specwright; no other content."
 **Files:**
 - Modify: `plugins/sw/.claude-plugin/plugin.json`
 - Modify: `.claude-plugin/marketplace.json`
@@ -56,38 +56,38 @@ git add -A && git commit -m "refactor: rename skill/plugin/companion trees to sw
 
 - [ ] **Step 1: plugin.json**
 
-Set `"name": "sw"` and rewrite the description to specward branding (commands `/sw:spec`, `/sw:review-spec`; companion skills brainstorming, writing-plans, new-pr, code-review, update). No `learn`, `sweep`, `recall`, `link`.
+Set `"name": "sw"` and rewrite the description to specwright branding (commands `/sw:spec`, `/sw:review-spec`; companion skills brainstorming, writing-plans, new-pr, code-review, update). No `learn`, `sweep`, `recall`, `link`.
 
 - [ ] **Step 2: marketplace.json**
 
-Set top-level `"name": "specward"`; the single plugin entry `"name": "sw"`, `"source": "./plugins/sw"`, description in specward branding.
+Set top-level `"name": "specwright"`; the single plugin entry `"name": "sw"`, `"source": "./plugins/sw"`, description in specwright branding.
 
 - [ ] **Step 3: settings.json**
 
-Replace `"memex@memex": true` with `"sw@specward": true`; rename the `extraKnownMarketplaces` key `memex` → `specward`.
+Replace `"memex@memex": true` with `"sw@specwright": true`; rename the `extraKnownMarketplaces` key `memex` → `specwright`.
 
 - [ ] **Step 4: Verify**
 
 Run: `grep -RIl 'memex' plugins/sw/.claude-plugin/plugin.json .claude-plugin/marketplace.json .claude/settings.json`
-Expected: no output. Then confirm `jq -r .name .claude-plugin/marketplace.json` prints `specward`.
+Expected: no output. Then confirm `jq -r .name .claude-plugin/marketplace.json` prints `specwright`.
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add plugins/sw/.claude-plugin/plugin.json .claude-plugin/marketplace.json .claude/settings.json
-git commit -m "refactor: point manifests and settings at sw/specward"
+git commit -m "refactor: point manifests and settings at sw/specwright"
 ```
 
 ### Task 3: Update install.sh
 
 **AC:** AC-1, AC-13
-**Delegable:** yes — "rewrite install.sh: REPO=ribeirogab/specward, SKILL=sw, symlink/paths .agents/skills/sw and .claude/skills/sw, marketplace key specward, enabledPlugins sw@specward, command list spec review-spec only."
+**Delegable:** yes — "rewrite install.sh: REPO=ribeirogab/specwright, SKILL=sw, symlink/paths .agents/skills/sw and .claude/skills/sw, marketplace key specwright, enabledPlugins sw@specwright, command list spec review-spec only."
 **Files:**
 - Modify: `install.sh`
 
 - [ ] **Step 1: Rewrite identifiers**
 
-Set `REPO="ribeirogab/specward"`, `SKILL="sw"`, the install paths (`.agents/skills/sw/`, `.claude/skills/sw`), the marketplace key (`specward`), `enabledPlugins` (`sw@specward`), and the verified command loop to `sw-spec sw-review-spec` (drop `learn`/`sweep`). Update header comments and the curl URL to the specward repo.
+Set `REPO="ribeirogab/specwright"`, `SKILL="sw"`, the install paths (`.agents/skills/sw/`, `.claude/skills/sw`), the marketplace key (`specwright`), `enabledPlugins` (`sw@specwright`), and the verified command loop to `sw-spec sw-review-spec` (drop `learn`/`sweep`). Update header comments and the curl URL to the specwright repo.
 
 - [ ] **Step 2: Verify**
 
@@ -102,7 +102,7 @@ Expected: no output (parses clean).
 - [ ] **Step 4: Commit**
 
 ```bash
-git add install.sh && git commit -m "refactor: rebrand installer to specward/sw"
+git add install.sh && git commit -m "refactor: rebrand installer to specwright/sw"
 ```
 
 ---
@@ -284,11 +284,11 @@ git rm -r skills/sw/scaffold/vault-scripts 2>/dev/null || true
 
 - [ ] **Step 2: Re-wire callers**
 
-In the writing-plans gate, replace `.memex/scripts/validate-spec.sh` with `skills/sw/scripts/validate-spec.sh` (and the scaffold copy's reference accordingly — in a scaffolded repo the skill path resolves under the plugin/agent skills dir). In `update`, point at `skills/sw/scripts/sw-update.sh`. Remove any instruction that copies scripts into `.specward/scripts`.
+In the writing-plans gate, replace `.memex/scripts/validate-spec.sh` with `skills/sw/scripts/validate-spec.sh` (and the scaffold copy's reference accordingly — in a scaffolded repo the skill path resolves under the plugin/agent skills dir). In `update`, point at `skills/sw/scripts/sw-update.sh`. Remove any instruction that copies scripts into `.specwright/scripts`.
 
 - [ ] **Step 3: Verify**
 
-Run: `test -x skills/sw/scripts/validate-spec.sh && test -x skills/sw/scripts/sw-update.sh && echo OK`; then `grep -rIl '\.specward/scripts\|\.memex/scripts' skills/sw plugins/sw .agents/skills`
+Run: `test -x skills/sw/scripts/validate-spec.sh && test -x skills/sw/scripts/sw-update.sh && echo OK`; then `grep -rIl '\.specwright/scripts\|\.memex/scripts' skills/sw plugins/sw .agents/skills`
 Expected: `OK`, then no output.
 
 - [ ] **Step 4: Commit**
@@ -316,7 +316,7 @@ git mv .memex/specs/_template/tasks.md skills/sw/scaffold/spec-templates/tasks.m
 
 - [ ] **Step 2: Re-point generators**
 
-In `writing-plans`, replace `cp .memex/specs/_template/spec.md` with the `skills/sw/scaffold/spec-templates/spec.md` path. Same for `brainstorming`'s design template. Strip the `worktree:` example path of the old vault dir → `.specward/worktrees/<slug>`.
+In `writing-plans`, replace `cp .memex/specs/_template/spec.md` with the `skills/sw/scaffold/spec-templates/spec.md` path. Same for `brainstorming`'s design template. Strip the `worktree:` example path of the old vault dir → `.specwright/worktrees/<slug>`.
 
 - [ ] **Step 3: Verify**
 
@@ -376,7 +376,7 @@ Step 9 ("Ship the spec") sets `status: shipped` + `shipped:` in the spec's own f
 
 - [ ] **Step 3: Re-brand**
 
-Replace command references (`/memex:*` → `/sw:*`), vault path (`.memex` → `.specward`), and prose name (→ specward). Keep the template and the live `AGENTS.md` in step with each other.
+Replace command references (`/memex:*` → `/sw:*`), vault path (`.memex` → `.specwright`), and prose name (→ specwright). Keep the template and the live `AGENTS.md` in step with each other.
 
 - [ ] **Step 4: Verify**
 
@@ -397,13 +397,13 @@ git commit -m "docs(agents): self-contained spec flow, no removed references"
 ### Task 13: Rebrand README and remaining root docs
 
 **AC:** AC-1
-**Delegable:** yes — "rewrite README.md, NOTICE.md, CONTRIBUTING.md to specward/sw branding; remove memex name and memory/learnings/Obsidian descriptions; update repository-layout tree and command list."
+**Delegable:** yes — "rewrite README.md, NOTICE.md, CONTRIBUTING.md to specwright/sw branding; remove memex name and memory/learnings/Obsidian descriptions; update repository-layout tree and command list."
 **Files:**
 - Modify: `README.md`, `NOTICE.md`, `CONTRIBUTING.md`
 
 - [ ] **Step 1: README**
 
-Rewrite the intro, install block (specward repo + `/sw`), "What you get" (drop learnings/recall/link/sweep/learn and Obsidian; keep brainstorming/writing-plans/new-pr/code-review/review-spec/update), the layout tree (`skills/sw/`, `plugins/sw/`, `.specward/`), and the customizing section (three copies under sw paths).
+Rewrite the intro, install block (specwright repo + `/sw`), "What you get" (drop learnings/recall/link/sweep/learn and Obsidian; keep brainstorming/writing-plans/new-pr/code-review/review-spec/update), the layout tree (`skills/sw/`, `plugins/sw/`, `.specwright/`), and the customizing section (three copies under sw paths).
 
 - [ ] **Step 2: NOTICE + CONTRIBUTING**
 
@@ -417,33 +417,33 @@ Expected: no output.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add README.md NOTICE.md CONTRIBUTING.md && git commit -m "docs: rebrand root docs to specward"
+git add README.md NOTICE.md CONTRIBUTING.md && git commit -m "docs: rebrand root docs to specwright"
 ```
 
 ---
 
 ## Phase 7 — Dogfood re-host
 
-### Task 14: Born-fresh `.specward/` and delete `.memex/`
+### Task 14: Born-fresh `.specwright/` and delete `.memex/`
 
 **AC:** AC-11, AC-13
 **Delegable:** no (repo-state surgery)
 **Files:**
-- Create: `.specward/conventions/`, `.specward/specs/2026-06-24-specward-pivot/`
-- Move: this spec's `design.md`/`spec.md`/`tasks.md` into `.specward/specs/2026-06-24-specward-pivot/`
+- Create: `.specwright/conventions/`, `.specwright/specs/2026-06-24-specwright-pivot/`
+- Move: this spec's `design.md`/`spec.md`/`tasks.md` into `.specwright/specs/2026-06-24-specwright-pivot/`
 - Delete: `.memex/`
 - Modify: `.gitignore`
 
 - [ ] **Step 1: Carry the pivot spec out and re-author conventions**
 
 ```bash
-mkdir -p .specward/specs/2026-06-24-specward-pivot .specward/conventions
-git mv .memex/specs/2026-06-24-specward-pivot/design.md .specward/specs/2026-06-24-specward-pivot/design.md
-git mv .memex/specs/2026-06-24-specward-pivot/spec.md  .specward/specs/2026-06-24-specward-pivot/spec.md
-git mv .memex/specs/2026-06-24-specward-pivot/tasks.md .specward/specs/2026-06-24-specward-pivot/tasks.md
+mkdir -p .specwright/specs/2026-06-24-specwright-pivot .specwright/conventions
+git mv .memex/specs/2026-06-24-specwright-pivot/design.md .specwright/specs/2026-06-24-specwright-pivot/design.md
+git mv .memex/specs/2026-06-24-specwright-pivot/spec.md  .specwright/specs/2026-06-24-specwright-pivot/spec.md
+git mv .memex/specs/2026-06-24-specwright-pivot/tasks.md .specwright/specs/2026-06-24-specwright-pivot/tasks.md
 ```
 
-Re-author each still-true file under `.memex/conventions/` into `.specward/conventions/` with no old-name references (read them first, copy forward the genuinely-general ones).
+Re-author each still-true file under `.memex/conventions/` into `.specwright/conventions/` with no old-name references (read them first, copy forward the genuinely-general ones).
 
 - [ ] **Step 2: Delete the old vault**
 
@@ -453,17 +453,17 @@ git rm -r .memex
 
 - [ ] **Step 3: Fix `.gitignore`**
 
-Remove the `.memex/.obsidian/` line and any `.memex` entries; add `.specward/worktrees/` (git-ignored worktree location).
+Remove the `.memex/.obsidian/` line and any `.memex` entries; add `.specwright/worktrees/` (git-ignored worktree location).
 
 - [ ] **Step 4: Verify**
 
-Run: `test ! -e .memex && ls .specward && grep -n 'memex\|obsidian' .gitignore`
-Expected: `.memex` gone, `.specward` lists `conventions specs`, no gitignore matches.
+Run: `test ! -e .memex && ls .specwright && grep -n 'memex\|obsidian' .gitignore`
+Expected: `.memex` gone, `.specwright` lists `conventions specs`, no gitignore matches.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add -A && git commit -m "chore: re-host repo on .specward, drop .memex"
+git add -A && git commit -m "chore: re-host repo on .specwright, drop .memex"
 ```
 
 ---
@@ -479,7 +479,7 @@ git add -A && git commit -m "chore: re-host repo on .specward, drop .memex"
 
 - [ ] **Step 1: Spec validator**
 
-Run: `skills/sw/scripts/validate-spec.sh .specward/specs/2026-06-24-specward-pivot`
+Run: `skills/sw/scripts/validate-spec.sh .specwright/specs/2026-06-24-specwright-pivot`
 Expected: `PASS`.
 
 - [ ] **Step 2: Scaffolder validation**

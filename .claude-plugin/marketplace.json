@@ -1,5 +1,5 @@
 {
-  "name": "specward",
+  "name": "specwright",
   "owner": {
     "name": "ribeirogab"
   },
@@ -7,7 +7,7 @@
     {
       "name": "sw",
       "source": "./plugins/sw",
-      "description": "specward for Claude Code — commands (/sw:spec, /sw:review-spec) plus companion skills (/sw:brainstorming, /sw:writing-plans, /sw:new-pr, /sw:code-review)."
+      "description": "specwright for Claude Code — commands (/sw:spec, /sw:review-spec) plus companion skills (/sw:brainstorming, /sw:writing-plans, /sw:new-pr, /sw:code-review)."
     }
   ]
 }

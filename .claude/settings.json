@@ -1,9 +1,9 @@
 {
   "enabledPlugins": {
-    "sw@specward": true
+    "sw@specwright": true
   },
   "extraKnownMarketplaces": {
-    "specward": {
+    "specwright": {
       "source": {
         "source": "directory",
         "path": "."

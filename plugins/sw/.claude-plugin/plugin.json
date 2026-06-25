@@ -1,4 +1,4 @@
 {
   "name": "sw",
-  "description": "specward slash commands (/sw:spec, /sw:review-spec) and companion skills (brainstorming, writing-plans, new-pr, code-review, update) — the specward spec-driven workflow as a Claude Code plugin."
+  "description": "specwright slash commands (/sw:spec, /sw:review-spec) and companion skills (brainstorming, writing-plans, new-pr, code-review, update) — the specwright spec-driven workflow as a Claude Code plugin."
 }

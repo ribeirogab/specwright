@@ -1,15 +1,15 @@
 ---
 status: approved
 created: 2026-06-24
-slug: specward-pivot
+slug: specwright-pivot
 ---
-# specward — Design
+# specwright — Design
 
 ## Purpose
 
-Turn the skill into a **spec-driven-only** workflow installer and rename it to **specward**. The product gives any repository one disciplined pipeline for every non-trivial change — `brainstorm → design → spec + tasks → implement → quality gate → PR → review-to-lgtm` — and nothing else. The entire knowledge-memory half (learnings and the vault that served it) is removed.
+Turn the skill into a **spec-driven-only** workflow installer and rename it to **specwright**. The product gives any repository one disciplined pipeline for every non-trivial change — `brainstorm → design → spec + tasks → implement → quality gate → PR → review-to-lgtm` — and nothing else. The entire knowledge-memory half (learnings and the vault that served it) is removed.
 
-The name carries the product: **specward** = the guardian of the spec — the thing that watches over every change so it honors its spec (quality gate, spec-conformance, review-to-`lgtm`). The short technical handle is **sw** (you type `sw`, you say `specward`).
+The name carries the product: **specwright** = the guardian of the spec — the thing that watches over every change so it honors its spec (quality gate, spec-conformance, review-to-`lgtm`). The short technical handle is **sw** (you type `sw`, you say `specwright`).
 
 ## Motivation
 
@@ -21,9 +21,9 @@ This is treated as a brand-new skill. There is no migration path, no compatibili
 
 ## Definitions
 
-- **specward** — the product/brand name. Appears in the vault directory (`.specward/`), the marketplace, the README, and prose.
+- **specwright** — the product/brand name. Appears in the vault directory (`.specwright/`), the marketplace, the README, and prose.
 - **sw** — the technical handle. The plugin is named `sw` (Claude derives the command namespace from the plugin name), so commands are `/sw:spec`, `/sw:new-pr`, etc.; the scaffolder skill is invoked as `/sw`; companion skills live under `sw-<name>`.
-- **vault** — the per-repo `.specward/` directory. After the pivot it holds exactly two living things: `conventions/` (project-specific style) and `specs/` (specs and their history). Spec status lives in each spec's own frontmatter; there is no separate tracker.
+- **vault** — the per-repo `.specwright/` directory. After the pivot it holds exactly two living things: `conventions/` (project-specific style) and `specs/` (specs and their history). Spec status lives in each spec's own frontmatter; there is no separate tracker.
 - **machinery** — everything that is not living project state: validation/update scripts, spec templates, the universal coding standard. It ships inside the skill, not into the target repo.
 - **the three copies** — every companion skill is kept in sync across `.agents/skills/sw-<name>/` (canonical), `plugins/sw/skills/<name>/` (Claude plugin), and `skills/sw/scaffold/skills/sw-<name>/` (what new installs receive).
 
@@ -49,4 +49,4 @@ Companion skills `brainstorming`, `writing-plans`, `new-pr`, `code-review`, `rev
 
 ## Dogfood
 
-This repository hosts the skill on itself. As a clean slate, the existing `.memex/` is deleted and a fresh `.specward/` is born with this pivot's spec as its first record; still-true conventions are re-authored without any reference to the old name. Git history retains everything prior.
+This repository hosts the skill on itself. As a clean slate, the existing `.memex/` is deleted and a fresh `.specwright/` is born with this pivot's spec as its first record; still-true conventions are re-authored without any reference to the old name. Git history retains everything prior.
