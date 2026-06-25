@@ -2,7 +2,7 @@
 
 Use this template when dispatching a spec document reviewer subagent, after writing-plans has produced the fused technical `spec.md` + `tasks.md`.
 
-**Purpose:** Verify the technical spec and its task breakdown are complete, consistent, and ready for implementation. This is the judgment layer; the mechanical layer (`skills/sw/scripts/validate-spec.sh`) runs separately and catches frontmatter/placeholder/vague-verb/AC-coverage defects deterministically.
+**Purpose:** Verify the technical spec and its task breakdown are complete, consistent, and ready for implementation. This is the judgment layer; the mechanical layer (`.agents/skills/sw/scripts/validate-spec.sh`) runs separately and catches frontmatter/placeholder/vague-verb/AC-coverage defects deterministically.
 
 **Dispatch after:** the fused technical `spec.md` and `tasks.md` are written to `.specwright/specs/YYYY-MM-DD-<slug>/`.
 
