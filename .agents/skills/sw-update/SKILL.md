@@ -11,7 +11,7 @@ Pull upstream changes into an installed specwright's **scaffolded** content with
 
 ## What is managed
 
-Only **file-backed scaffold content**, each compared by sha256 against a tracked baseline (the update manifest, kept under the skill at `skills/sw/.update-manifest.json`):
+Only **file-backed scaffold content**, each compared by sha256 against a tracked baseline (the update manifest, kept under the skill at `.agents/skills/sw/.update-manifest.json`):
 
 | Local path | Upstream source (in the clone) |
 |---|---|
@@ -23,7 +23,7 @@ Only **file-backed scaffold content**, each compared by sha256 against a tracked
 ## Run the engine
 
 ```bash
-bash skills/sw/scripts/sw-update.sh --run
+bash .agents/skills/sw/scripts/sw-update.sh --run
 ```
 
 It fetches the current upstream specwright (`git clone --depth 1` — needs network), classifies every managed path, **auto-applies** the safe updates, and prints a report. No network → it stops with a clear message; re-run when online.
@@ -51,14 +51,14 @@ For every `conflict` line, keep the clone path from the report's first line and:
 4. Record the new baseline so the next run is precise (records the upstream hash you reconciled against):
 
 ```bash
-bash skills/sw/scripts/sw-update.sh --record <local-path> <clone>
+bash .agents/skills/sw/scripts/sw-update.sh --record <local-path> <clone>
 ```
 
 You are the only non-deterministic actor, and only on conflicts. If a "conflict" turns out to be a file you don't recognize (e.g. a skill that was never installed locally), treat upstream as the source of truth and write it in.
 
 ## First run with no manifest (2-way)
 
-A legacy install (scaffolded before this command existed) has no manifest at `skills/sw/.update-manifest.json`. The first run degrades to **2-way**: files equal to upstream report `current`; everything else reports `conflict` (the engine cannot tell "you edited it" from "upstream changed it" without a baseline). Merge those conflicts as above; the run writes a manifest, so the **next** update is fully 3-way and precise. Say this explicitly when you see an all-`conflict` first run.
+A legacy install (scaffolded before this command existed) has no manifest at `.agents/skills/sw/.update-manifest.json`. The first run degrades to **2-way**: files equal to upstream report `current`; everything else reports `conflict` (the engine cannot tell "you edited it" from "upstream changed it" without a baseline). Merge those conflicts as above; the run writes a manifest, so the **next** update is fully 3-way and precise. Say this explicitly when you see an all-`conflict` first run.
 
 ## Report the summary
 

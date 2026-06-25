@@ -4,6 +4,8 @@ Run this checklist after **any** scaffold or fix run, and at the end of an audit
 
 Report results as a table. Any `FAIL` triggers an automatic fix attempt using the recipe under each check, then re-runs the validator. The orchestrator does not prompt the user before fixing — it loops until the table is clean or it determines a check cannot be auto-repaired.
 
+> The bundled Python helpers (`scripts/quick_validate.py`, `scripts/package_skill.py`) need **PyYAML**; on a clean machine run them via `uv run --with pyyaml python …` or after `pip install pyyaml`. The bash checks below have no such dependency.
+
 ## Contents
 
 - [Output format](#output-format)

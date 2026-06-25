@@ -136,7 +136,7 @@ Fix issues inline.
 
 **Gates (run in order):**
 
-1. **Mechanical** — run `skills/sw/scripts/validate-spec.sh <spec-folder>`; a non-zero exit names a structural defect (missing frontmatter key, surviving `{{placeholder}}`, vague-verb AC, or an `AC-N` no task references). Fix and re-run until it exits 0.
+1. **Mechanical** — run the validator bundled with the `sw` skill: `.agents/skills/sw/scripts/validate-spec.sh <spec-folder>` (in the specwright dev repo it is at `skills/sw/scripts/validate-spec.sh`); a non-zero exit names a structural defect (missing frontmatter key, surviving `{{placeholder}}`, vague-verb AC, or an `AC-N` no task references). Fix and re-run until it exits 0.
 2. **Spec-document-reviewer subagent** — dispatch it (see `spec-document-reviewer-prompt.md`) over `spec.md` + `tasks.md`. If Issues Found: fix, re-dispatch, repeat until Approved (max 3 iterations, then surface to human).
 3. **`/sw:review-spec`** — the external evaluator (conventions + design compliance, vague ACs, duplication). Fix any `FAIL`.
 

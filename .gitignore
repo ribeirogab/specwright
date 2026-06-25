@@ -4,7 +4,6 @@
 # E2E scaffold test sandbox (throwaway projects for testing the specwright skill)
 tmp/
 
-
 # Python build artifacts (created when running skill-creator/scripts/*.py)
 __pycache__/
 *.pyc
