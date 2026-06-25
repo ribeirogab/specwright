@@ -1,9 +1,9 @@
 {
   "enabledPlugins": {
-    "memex@memex": true
+    "sw@specward": true
   },
   "extraKnownMarketplaces": {
-    "memex": {
+    "specward": {
       "source": {
         "source": "directory",
         "path": "."

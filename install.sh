@@ -1,26 +1,26 @@
 #!/bin/sh
-# memex per-project installer.
+# specward per-project installer.
 #
-# Installs the memex scaffolder skill into the current project, enables the
+# Installs the specward scaffolder skill into the current project, enables the
 # Claude Code plugin, and guarantees this layout:
 #
-#   .agents/skills/memex/            <- real skill files (open agent-skills standard)
-#   .claude/skills/memex             -> ../../.agents/skills/memex  (symlink)
+#   .agents/skills/sw/               <- real skill files (open agent-skills standard)
+#   .claude/skills/sw                -> ../../.agents/skills/sw  (symlink)
 #   skills-lock.json                 <- skills CLI lockfile
-#   .claude/settings.json            <- memex marketplace + plugin enabled
+#   .claude/settings.json            <- specward marketplace + plugin enabled
 #
 # Usage (from your project root):
-#   curl -fsSL https://raw.githubusercontent.com/ribeirogab/memex/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/ribeirogab/specward/main/install.sh | sh
 #   # or, from a clone:  sh install.sh
 #
 # Safe to re-run: the skills CLI is idempotent and the symlink + settings merge
-# reconcile in place. Tests source this file with MEMEX_INSTALL_LIB=1 to call the
+# reconcile in place. Tests source this file with SW_INSTALL_LIB=1 to call the
 # functions below without running the network install.
 
 set -eu
 
-REPO="ribeirogab/memex"
-SKILL="memex"
+REPO="ribeirogab/specward"
+SKILL="sw"
 # The skills CLI installs the canonical copy under .agents/skills/ when targeting
 # the agent-agnostic "universal" agent; we add the .claude symlink ourselves.
 CANONICAL=".agents/skills/${SKILL}"
@@ -31,12 +31,12 @@ fail() { printf 'error: %s\n' "$*" >&2; exit 1; }
 
 # --- plugin configuration helpers --------------------------------------------
 
-# Marketplace source JSON. Dogfood: inside ribeirogab/memex itself
-# (.claude-plugin/marketplace.json declares name = memex) use the local path,
+# Marketplace source JSON. Dogfood: inside ribeirogab/specward itself
+# (.claude-plugin/marketplace.json declares name = specward) use the local path,
 # else the github source. grep keeps this dependency-free (no jq just to pick).
 marketplace_source() {
   if [ -f .claude-plugin/marketplace.json ] && \
-     grep -Eq '"name"[[:space:]]*:[[:space:]]*"memex"' .claude-plugin/marketplace.json; then
+     grep -Eq '"name"[[:space:]]*:[[:space:]]*"specward"' .claude-plugin/marketplace.json; then
     printf '{"source":"directory","path":"."}'
   else
     printf '{"source":"github","repo":"%s"}' "$REPO"
@@ -54,8 +54,8 @@ plugin_merge_engine() {
 plugin_snippet() {
   src="$1"
   printf '%s\n' '{'
-  printf '  "extraKnownMarketplaces": { "memex": { "source": %s } },\n' "$src"
-  printf '%s\n' '  "enabledPlugins": { "memex@memex": true }'
+  printf '  "extraKnownMarketplaces": { "specward": { "source": %s } },\n' "$src"
+  printf '%s\n' '  "enabledPlugins": { "sw@specward": true }'
   printf '%s\n' '}'
 }
 
@@ -67,8 +67,8 @@ merge_with_jq() {
   settings="$1"; src="$2"; tmp="$(mktemp)"; out="$(mktemp)"
   if [ -s "$settings" ]; then cp "$settings" "$tmp"; else printf '{}' > "$tmp"; fi
   if jq --argjson src "$src" '
-    .extraKnownMarketplaces["memex"] = { "source": $src }
-    | .enabledPlugins["memex@memex"] = true
+    .extraKnownMarketplaces["specward"] = { "source": $src }
+    | .enabledPlugins["sw@specward"] = true
   ' "$tmp" > "$out"; then
     mv "$out" "$settings"
   else
@@ -79,14 +79,14 @@ merge_with_jq() {
 }
 
 merge_with_python() {
-  MEMEX_SETTINGS="$1" MEMEX_SRC="$2" python3 - <<'PY'
+  SW_SETTINGS="$1" SW_SRC="$2" python3 - <<'PY'
 import json, os, pathlib
-p = pathlib.Path(os.environ["MEMEX_SETTINGS"])
-src = json.loads(os.environ["MEMEX_SRC"])
+p = pathlib.Path(os.environ["SW_SETTINGS"])
+src = json.loads(os.environ["SW_SRC"])
 txt = p.read_text() if p.exists() else ""
 data = json.loads(txt) if txt.strip() else {}
-data.setdefault("extraKnownMarketplaces", {})["memex"] = {"source": src}
-data.setdefault("enabledPlugins", {})["memex@memex"] = True
+data.setdefault("extraKnownMarketplaces", {})["specward"] = {"source": src}
+data.setdefault("enabledPlugins", {})["sw@specward"] = True
 p.write_text(json.dumps(data, indent=2) + "\n")
 PY
 }
@@ -107,28 +107,28 @@ configure_plugin() {
       return 0
       ;;
   esac
-  say "Enabled memex plugin in ${settings}"
+  say "Enabled specward plugin in ${settings}"
 }
 
 # Remove pre-plugin leftover command files (missing files are not an error).
 remove_legacy_commands() {
-  for cmd in memex-spec memex-learn memex-sweep memex-review-spec; do
+  for cmd in sw-spec sw-review-spec; do
     rm -f ".claude/commands/${cmd}.md"
   done
 }
 
 print_next_steps() {
   say ""
-  say "memex installed:"
+  say "specward installed:"
   say "  ${CANONICAL}/"
   say "  ${LINK} -> ../../.agents/skills/${SKILL}"
   say "  skills-lock.json"
-  say "  .claude/settings.json (memex marketplace + plugin enabled)"
+  say "  .claude/settings.json (specward marketplace + plugin enabled)"
   say ""
-  say "Next: open this repo in your coding agent and run  /memex"
-  say "  (audits the memex and scaffolds whatever is missing)"
+  say "Next: open this repo in your coding agent and run  /sw"
+  say "  (audits the specward setup and scaffolds whatever is missing)"
   say ""
-  say "The memex plugin (/memex:spec, /memex:new-pr, ...) installs when Claude Code"
+  say "The specward plugin (/sw:spec, /sw:new-pr, ...) installs when Claude Code"
   say "trusts this workspace — reopen the repo or accept the trust prompt."
 }
 
@@ -161,5 +161,5 @@ run_install() {
   print_next_steps
 }
 
-# Run only when executed, not when sourced (tests source with MEMEX_INSTALL_LIB=1).
-[ "${MEMEX_INSTALL_LIB:-0}" = "1" ] || run_install
+# Run only when executed, not when sourced (tests source with SW_INSTALL_LIB=1).
+[ "${SW_INSTALL_LIB:-0}" = "1" ] || run_install
