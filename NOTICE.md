@@ -1,16 +1,16 @@
 # NOTICE — Vendored content attribution
 
-memex is licensed under the MIT License, the same as the repository as a whole — see [`LICENSE`](LICENSE).
+specwright is licensed under the MIT License, the same as the repository as a whole — see [`LICENSE`](LICENSE).
 
 It includes a small amount of third-party content vendored from a public open-source repository, preserved with its original license and copyright notice; modifications are documented below.
 
-## Vendored under `skills/memex/scripts/`
+## Vendored under `skills/sw/scripts/`
 
-memex bundles two scripts vendored from `anthropics/skills` so the skill is self-contained and does not depend on the upstream project being installed alongside it:
+specwright bundles two scripts vendored from `anthropics/skills` so the skill is self-contained and does not depend on the upstream project being installed alongside it:
 
 | Field | Value |
 |---|---|
-| Files | `skills/memex/scripts/quick_validate.py`, `skills/memex/scripts/package_skill.py` |
+| Files | `skills/sw/scripts/quick_validate.py`, `skills/sw/scripts/package_skill.py` |
 | Original source | [https://github.com/anthropics/skills/tree/main/skill-creator/scripts](https://github.com/anthropics/skills/tree/main/skill-creator/scripts) |
 | Original license | Apache-2.0 |
 | Copyright holder | Anthropic |
@@ -18,7 +18,7 @@ memex bundles two scripts vendored from `anthropics/skills` so the skill is self
 
 ## License compatibility
 
-The repository as a whole is licensed under MIT (see [`LICENSE`](LICENSE)). MIT is compatible with the Apache-2.0 vendored scripts: Apache-2.0 content is permitted inside an MIT-licensed project as long as the original license and notices are retained, which they are above. The repository's `LICENSE` covers the original work — the `memex` skill, its bundled companions, the project documentation, and the scaffold payloads — and does not retroactively re-license the vendored scripts.
+The repository as a whole is licensed under MIT (see [`LICENSE`](LICENSE)). MIT is compatible with the Apache-2.0 vendored scripts: Apache-2.0 content is permitted inside an MIT-licensed project as long as the original license and notices are retained, which they are above. The repository's `LICENSE` covers the original work — the `sw` skill, its bundled companions, the project documentation, and the scaffold payloads — and does not retroactively re-license the vendored scripts.
 
 ## How to update this file
 

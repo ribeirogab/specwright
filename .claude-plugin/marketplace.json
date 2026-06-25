@@ -1,13 +1,13 @@
 {
-  "name": "memex",
+  "name": "specwright",
   "owner": {
     "name": "ribeirogab"
   },
   "plugins": [
     {
-      "name": "memex",
-      "source": "./plugins/memex",
-      "description": "Memex for Claude Code — commands (/memex:spec, /memex:learn, /memex:sweep, /memex:review-spec) plus companion skills (/memex:brainstorming, /memex:writing-plans, /memex:recall, /memex:link, /memex:new-pr, /memex:code-review)."
+      "name": "sw",
+      "source": "./plugins/sw",
+      "description": "specwright for Claude Code — commands (/sw:spec, /sw:review-spec) plus companion skills (/sw:brainstorming, /sw:writing-plans, /sw:new-pr, /sw:code-review)."
     }
   ]
 }

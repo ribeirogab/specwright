@@ -1,15 +1,15 @@
 ---
 name: Feature request
-about: Suggest an improvement to memex or a new bundled companion skill
+about: Suggest an improvement to specwright or a new bundled companion skill
 title: "[feature] "
 labels: ["enhancement"]
 ---
 
-## What should memex do?
+## What should specwright do?
 
-Describe the improvement to the `memex` skill, a bundled companion (`memex-brainstorming`, `memex-recall`, `memex-writing-plans`, `memex-link`), or a `/memex:*` command. Two or three concrete example prompts beat one abstract description.
+Describe the improvement to the `sw` skill, a bundled companion (`sw-brainstorming`, `sw-writing-plans`, `sw-new-pr`, `sw-code-review`, `sw-update`), or a `/sw:*` command. Two or three concrete example prompts beat one abstract description.
 
-## Why does it belong in memex?
+## Why does it belong in specwright?
 
 Explain how it serves the externalized-project-memory goal. Unrelated skills should be published from their own repo — the [skills CLI](https://github.com/vercel-labs/skills) makes any public GitHub repo installable.
 

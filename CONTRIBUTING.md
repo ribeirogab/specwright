@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for considering a contribution to `memex`. The repository accepts pull requests for the `memex` skill (and its bundled companions) and the documentation that supports them, with a small quality bar that this document explains.
+Thanks for considering a contribution to `specwright`. The repository accepts pull requests for the `sw` skill (and its bundled companions) and the documentation that supports them, with a small quality bar that this document explains.
 
 The maintenance model is **solo, best-effort, no SLA**. Pull requests are reviewed when the maintainer is available; complex changes may take time to land. Please do not interpret silence as rejection — a polite ping after a couple of weeks is welcome.
 
@@ -8,14 +8,14 @@ The maintenance model is **solo, best-effort, no SLA**. Pull requests are review
 
 ### What is in scope
 
-- **Bug fixes and improvements to `memex`** — including bundled payloads (the scaffold content it copies into target repos, the bundled companion skills under `.agents/skills/memex-*/`, and the vendored validator scripts under `skills/memex/scripts/`).
+- **Bug fixes and improvements to `sw`** — including bundled payloads (the scaffold content it copies into target repos, the bundled companion skills under `.agents/skills/sw-*/`, and the vendored validator scripts under `skills/sw/scripts/`).
 - **Documentation fixes** to `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `NOTICE.md`.
 - **Vendored-content updates** when a skill bundles upstream code that was refreshed; update `NOTICE.md` accordingly.
 
 ### What is out of scope
 
-- **Skills unrelated to memex.** This repository is dedicated to memex. The [skills CLI](https://github.com/vercel-labs/skills) makes any public GitHub repo installable, so publish unrelated skills from your own repo.
-- **`.memex/`, `.agents/`, `.claude/`, `evals/`** — these are the maintainer's local-only dirs (personal knowledge vault, dogfooded memex output, eval workspaces). They are not part of the published skill surface and PRs touching them will be closed without merge.
+- **Skills unrelated to specwright.** This repository is dedicated to specwright. The [skills CLI](https://github.com/vercel-labs/skills) makes any public GitHub repo installable, so publish unrelated skills from your own repo.
+- **`.specwright/`, `.agents/`, `.claude/`, `evals/`** — these are the maintainer's local-only dirs (dogfooded specwright output, eval workspaces). They are not part of the published skill surface and PRs touching them will be closed without merge.
 - **Governance proposals**, maintainer hierarchies, decision-making frameworks, funding models, sponsorship, and similar process documents. The project is intentionally solo and lightweight.
 
 ## How to fix a bug or improve a skill
@@ -27,13 +27,13 @@ The maintenance model is **solo, best-effort, no SLA**. Pull requests are review
 
 ## Quality bar
 
-Mechanical checks must pass on the modified skill before the PR is opened. Both scripts are vendored copies of the canonical authoring validators (Apache-2.0, see [`NOTICE.md`](NOTICE.md)) and ship under `skills/memex/scripts/`:
+Mechanical checks must pass on the modified skill before the PR is opened. Both scripts are vendored copies of the canonical authoring validators (Apache-2.0, see [`NOTICE.md`](NOTICE.md)) and ship under `skills/sw/scripts/`:
 
 ```bash
-python skills/memex/scripts/quick_validate.py skills/<the-skill-you-changed>
+python skills/sw/scripts/quick_validate.py skills/<the-skill-you-changed>
 # expected output: "Skill is valid!"
 
-python skills/memex/scripts/package_skill.py skills/<the-skill-you-changed> /tmp
+python skills/sw/scripts/package_skill.py skills/<the-skill-you-changed> /tmp
 # expected output: ends with "Successfully packaged skill to: /tmp/<skill-name>.skill"
 ```
 
@@ -46,7 +46,7 @@ The PR template carries this checklist; the items below explain each entry.
 - [ ] **Branch name** is descriptive and not `main`. Suggested prefixes: `feat/`, `fix/`, `docs/`.
 - [ ] **`quick_validate.py` and `package_skill.py` pass** on every modified skill (or N/A — your PR doesn't touch a skill).
 - [ ] **`NOTICE.md` updated** when vendored content is refreshed or modified.
-- [ ] **No edits under `.memex/`, `.agents/`, `.claude/`, or `evals/`** (maintainer-local dirs, out of scope).
+- [ ] **No edits under `.specwright/`, `.agents/`, `.claude/`, or `evals/`** (maintainer-local dirs, out of scope).
 - [ ] **Commit messages** follow Conventional Commits style (`feat(<scope>): ...`, `fix(<scope>): ...`, `docs: ...`, `chore: ...`).
 - [ ] **No AI-attribution footers** in commits or PR description (e.g. `Co-Authored-By: Claude`, `Generated with Cursor`, `Co-authored-by: Codex`, etc.).
 

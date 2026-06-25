@@ -1,13 +1,13 @@
 ---
 name: Bug report
-about: Report a problem with memex or a bundled companion
+about: Report a problem with specwright or a bundled companion
 title: "[bug] "
 labels: ["bug"]
 ---
 
 ## Component affected
 
-The `memex` skill, a bundled companion (`memex-brainstorming`, `memex-recall`, `memex-writing-plans`, `memex-link`), or a `/memex:*` command.
+The `sw` skill, a bundled companion (`sw-brainstorming`, `sw-writing-plans`, `sw-new-pr`, `sw-code-review`, `sw-update`), or a `/sw:*` command.
 
 ## Agent and version
 

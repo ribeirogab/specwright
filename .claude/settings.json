@@ -1,9 +1,9 @@
 {
   "enabledPlugins": {
-    "memex@memex": true
+    "sw@specwright": true
   },
   "extraKnownMarketplaces": {
-    "memex": {
+    "specwright": {
       "source": {
         "source": "directory",
         "path": "."
