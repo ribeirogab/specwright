@@ -12,7 +12,12 @@ From your project root:
 curl -fsSL https://raw.githubusercontent.com/ribeirogab/specwright/main/install.sh | sh
 ```
 
-It installs the scaffolder skill (`.agents/skills/sw/` plus the `.claude/skills/sw` symlink) and enables the `sw` plugin in `.claude/settings.json`. Then open the repo in your agent and run `/sw` to audit and scaffold the `.specwright/` vault. The plugin (`/sw:spec`, `/sw:new-pr`, …) installs when Claude Code trusts the workspace.
+This:
+
+- installs the scaffolder skill — `.agents/skills/sw/`, plus the `.claude/skills/sw` symlink, and
+- enables the `sw` plugin in `.claude/settings.json`.
+
+Then open the repo in your agent and run `/sw` to audit and scaffold the `.specwright/` vault. The plugin commands (`/sw:spec`, `/sw:new-pr`, …) load once Claude Code trusts the workspace.
 
 ## Use
 
@@ -26,13 +31,26 @@ The skill is audit-first, autonomous-fix, and safe to re-run. After the first ru
 
 ## What you get
 
-After install, the repo has an `AGENTS.md` describing a **spec-driven workflow** and a `.specwright/` vault that holds only `conventions/` (project-specific conventions) and `specs/` (dated spec folders) — plus a set of `/sw:*` commands and companion skills:
+After install the repo has:
 
-- **The flow** — for any non-trivial change: `brainstorming` → design → (branch) → spec + tasks → implement → quality gate → PR → review-to-`lgtm`. **Design approval is the only human review** — the agent reviews its own spec (the spec-document-reviewer + `/sw:review-spec` + the `validate-spec.sh` mechanical gate) in both modes. Right after design approval, one batch asks exactly four things: the **branch name**, the execution **mode** (`autonomous` or `reviewed`), whether to use a **worktree** (a specwright-native checkout under `.specwright/worktrees/`, default yes unless already inside a linked worktree), and whether to **hand off** before implementing. The mode is recorded in the spec and counts as consent for committing/pushing that feature branch. It decides only the **delivery**: `autonomous` opens the PR and runs code-review to `lgtm` on its own; `reviewed` does everything the same but asks first ("open the PR and run code-review?"). **Handoff works in either mode** — once design/spec/tasks are written the agent prints a handoff prompt so you can `/compact` (or open a new chat) and implement with a clean context.
-- **Commands** — `/sw:spec`, `/sw:review-spec`.
-- **Companion skills** — `/sw:brainstorming`, `/sw:writing-plans`, `/sw:new-pr` (opens the spec's PR), `/sw:code-review` (reviews the branch to `lgtm`), `/sw:update` (syncs the install with upstream).
+- an **`AGENTS.md`** describing the spec-driven workflow,
+- a **`.specwright/` vault** holding just `conventions/` (project-specific conventions) and `specs/` (dated spec folders), and
+- a set of **`/sw:*` commands** and companion skills:
 
-The spec flow, end to end (design approval is the only human review):
+| Command | What it does |
+|---|---|
+| `/sw` | Scaffold or audit specwright in the current repo — set up, verify, or fix. Idempotent. |
+| `/sw:brainstorming` | Explore intent and design before any non-trivial change → `design.md`. |
+| `/sw:spec` | Turn the current conversation into a spec and enter the flow. |
+| `/sw:writing-plans` | Turn an approved design into the technical `spec.md` + `tasks.md`. |
+| `/sw:review-spec` | External-evaluator pass over a spec — flags vagueness, scope creep, design drift. |
+| `/sw:new-pr` | Open the spec's PR — branch/base, push, PR template, Conventional-Commit title. |
+| `/sw:code-review` | Review the branch diff with find-only subagents until `lgtm`. |
+| `/sw:update` | Sync the installed specwright with upstream without clobbering local edits. |
+
+## How the flow works
+
+Every non-trivial change runs through one pipeline. **Design approval is the only human review** — everything after it can run on its own.
 
 ```mermaid
 flowchart TD
@@ -52,9 +70,25 @@ flowchart TD
     P -- yes --> O
 ```
 
+A few things worth knowing:
+
+- **One human gate.** You approve the design — nothing else. The agent reviews its *own* spec (the spec-document-reviewer subagent + `/sw:review-spec` + the `validate-spec.sh` mechanical gate), in both modes.
+- **The post-design batch.** Right after design approval, one batch asks four things: the **branch name**, the **mode**, whether to use a **worktree**, and whether to **hand off**.
+- **Two modes.** The mode decides only the **delivery**: `autonomous` opens the PR and runs code-review to `lgtm` on its own; `reviewed` does the same but asks first (*"open the PR and run code-review?"*). It is recorded in the spec and counts as consent to commit/push that feature branch.
+- **Worktree.** A specwright-native checkout under `.specwright/worktrees/` — default yes, unless you're already inside a linked worktree.
+- **Handoff (either mode).** Once design/spec/tasks are written, the agent prints a handoff prompt so you can `/compact` (or open a new chat) and implement with a clean context.
+
 ## Customizing
 
-The workflow ships with opinionated defaults. They are plain markdown — change them to fit your team. Companion skills exist in three kept-in-sync copies: `.agents/skills/sw-<name>/` (canonical, what non-Claude agents read), `plugins/sw/skills/<name>/` (the Claude Code plugin copy), and `skills/sw/scaffold/skills/sw-<name>/` (what new installs receive). Edit the copy your agent loads; to change what **future** installs get, edit the `scaffold/` copy too, and keep the three in sync.
+The workflow ships with opinionated defaults — all plain markdown, so change them to fit your team.
+
+Companion skills live in **three kept-in-sync copies**:
+
+- `.agents/skills/sw-<name>/` — canonical, what non-Claude agents read,
+- `plugins/sw/skills/<name>/` — the Claude Code plugin copy,
+- `skills/sw/scaffold/skills/sw-<name>/` — what new installs receive.
+
+Edit the copy your agent loads. To change what **future** installs get, edit the `scaffold/` copy too — and keep the three in sync.
 
 - **PR conventions (`/sw:new-pr`)** — title/body format, the draft-vs-ready choice, labels, the PR-template fill, push behavior all live in the `sw-new-pr` `SKILL.md`. Edit it to change how PRs are opened (e.g. write the body in another language, change the default base branch, or add labels).
 - **Code-review rules (`/sw:code-review`)** — there are two levers. (1) **Project conventions** the reviewer reads: your installed repo's `.specwright/conventions/` — edit those to change the project-specific standard. (2) **The universal rubric** — the embedded rubric and severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the blocker calibration, and the output format — live in the `sw-code-review` `SKILL.md` (Unix philosophy + meaningful comments + security are baked into code-review now).
