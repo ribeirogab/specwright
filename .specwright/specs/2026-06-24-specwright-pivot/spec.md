@@ -10,7 +10,6 @@ worktree: null
 ---
 # specwright Pivot — Spec
 
-**Status:** Draft
 **Design:** design.md
 **Scope:** Rename the skill to specwright/sw and strip it to a spec-driven-only workflow, removing the entire memory half and relocating all machinery into the skill.
 

@@ -146,7 +146,7 @@ After the spec self-review passes, follow the `AGENTS.md` `### Spec flow` tail:
 
 - **handoff = yes (either mode)** → print a ```` ```txt ```` **handoff prompt** (a one-paragraph summary + the paths to `design`/`spec`/`tasks` + the mode) and stop. The user runs `/compact` (or opens a new chat) and pastes it to resume. **Never hand off before the artifacts exist.**
 - **handoff = no** → implement. **Decide the execution approach yourself** based on task count and complexity — do not ask the user to choose:
-  - **Subagent-Driven** (large, 5+ tasks, many files, complex migrations): dispatch a fresh subagent per task, review between tasks. **REQUIRED SUB-SKILL:** superpowers:subagent-driven-development
-  - **Inline Execution** (small, < 5 tasks, focused changes): execute tasks in this session with checkpoints. **REQUIRED SUB-SKILL:** superpowers:executing-plans
+  - **Subagent-Driven** (large, 5+ tasks, many files, complex migrations): dispatch a fresh subagent per task, reviewing between tasks before starting the next.
+  - **Inline Execution** (small, < 5 tasks, focused changes): execute the tasks in this session, checkpointing after each.
   - Announce which approach you chose and start immediately.
 - **Delivery** (after implement → quality gate): `autonomous` opens the PR (`/sw:new-pr`) and runs the `sw:code-review` cycle to `lgtm` on its own; `reviewed` first asks "open the PR and run code-review?", then does the same.

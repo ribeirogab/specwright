@@ -26,3 +26,6 @@ skills/*-workspace/
 
 # specwright per-spec worktrees (machine-local checkouts; mirror of .claude/worktrees/)
 .specwright/worktrees/
+
+# specwright brainstorm session artifacts (ephemeral mockups from the visual companion)
+.specwright/brainstorm/
