@@ -23,7 +23,7 @@ When creating or modifying any skill in this repo, the following must be true. I
 ### Folder
 
 - The skill folder name must be **kebab-case**: lowercase letters, numbers, hyphens. No spaces, no underscores, no capitals.
-  - ✓ `processing-pdfs`, `memex-recall`
+  - ✓ `processing-pdfs`, `sw-new-pr`
   - ✗ `Processing PDFs`, `processing_pdfs`, `ProcessingPDFs`
 - The folder name **should match the `name` field** in `SKILL.md` exactly.
 - The folder must **not** contain a `README.md` — all documentation goes in `SKILL.md` or `references/`. (A repo-level `README.md` outside the skill folder is fine for human visitors on GitHub.)

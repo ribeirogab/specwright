@@ -1,11 +1,9 @@
 # macOS Finder metadata
 .DS_Store
 
-# E2E scaffold test sandbox (throwaway projects for testing the memex skill)
+# E2E scaffold test sandbox (throwaway projects for testing the specwright skill)
 tmp/
 
-# Obsidian vault config (machine-local — Obsidian rewrites these on every open)
-.memex/.obsidian/
 
 # Python build artifacts (created when running skill-creator/scripts/*.py)
 __pycache__/
@@ -27,5 +25,5 @@ skills/*-workspace/
 .claude/skills/skill-creator/*.skill
 .claude/worktrees/
 
-# memex per-spec worktrees (machine-local checkouts; mirror of .claude/worktrees/)
-.memex/worktrees/
+# specwright per-spec worktrees (machine-local checkouts; mirror of .claude/worktrees/)
+.specwright/worktrees/
