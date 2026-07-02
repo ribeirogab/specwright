@@ -1,8 +1,8 @@
 ---
 feature: blocked-recovery
 created: 2026-07-02
-status: pending
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Blocked Recovery (T7) — Issue
 
@@ -27,10 +27,10 @@ Blocked issues are the designed pause point of unattended conduction; if recover
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** Verdict recorded on the halt report's recovery instructions: it names editing the trap's `issue.md` and setting `status: pending` as the way back (evidence quote); an omission is logged as a finding.
-- [ ] **AC-2** The human edit is minimal and recorded: the contradictory criterion removed/replaced in the trap's `issue.md`, `status: pending`, everything else untouched (diff evidence).
-- [ ] **AC-3** A fresh `/sw:run` treats the trap as ready and dispatches it without special-casing (Dispatch Log shows a `resumed`/`dispatched` event after the flip).
-- [ ] **AC-4** The trap issue completes the pipeline: suite green with the justified test update, runtime verification of newest-first output, `status: shipped` + date in its `issue.md`, learnings curated if any.
-- [ ] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+- [x] **AC-1** Verdict recorded on the halt report's recovery instructions: it names editing the trap's `issue.md` and setting `status: pending` as the way back (evidence quote); an omission is logged as a finding.
+- [x] **AC-2** The human edit is minimal and recorded: the contradictory criterion removed/replaced in the trap's `issue.md`, `status: pending`, everything else untouched (diff evidence).
+- [x] **AC-3** A fresh `/sw:run` treats the trap as ready and dispatches it without special-casing (Dispatch Log shows a `resumed`/`dispatched` event after the flip).
+- [x] **AC-4** The trap issue completes the pipeline: suite green with the justified test update, runtime verification of newest-first output, `status: shipped` + date in its `issue.md`, learnings curated if any.
+- [x] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.

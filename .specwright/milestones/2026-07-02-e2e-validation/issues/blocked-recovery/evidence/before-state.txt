@@ -1,0 +1,63 @@
+# Sandbox before-state — captured 2026-07-02T14:39:33Z by the T7 owner, BEFORE the recovery edit
+
+## main
+d26c321 chore(vault): log round 3 on the grow-taskr board — list-newest-first dispatched and blocked
+
+## branches (local -v)
++ feat/export-json-csv   0b1f75e chore(vault): ship export-json-csv — learnings curated, ACs verified
++ feat/list-filters      dff030d chore(vault): ship list-filters — learnings curated, ACs verified
++ feat/list-newest-first c74e996 chore(vault): block list-newest-first — AC-1 contradicts the frozen ordering test, evidence attached
++ feat/task-priority     b9d7c80 chore(vault): ship task-priority — learnings curated, ACs verified
++ feat/web-page          8958663 chore(vault): ship web-page — learnings curated, ACs verified
+* main                   d26c321 chore(vault): log round 3 on the grow-taskr board — list-newest-first dispatched and blocked
+
+## remote branches
+  origin/HEAD                   -> origin/main
+  origin/feat/export-json-csv   0b1f75e chore(vault): ship export-json-csv — learnings curated, ACs verified
+  origin/feat/list-filters      dff030d chore(vault): ship list-filters — learnings curated, ACs verified
+  origin/feat/list-newest-first c74e996 chore(vault): block list-newest-first — AC-1 contradicts the frozen ordering test, evidence attached
+  origin/feat/task-priority     b9d7c80 chore(vault): ship task-priority — learnings curated, ACs verified
+  origin/feat/web-page          8958663 chore(vault): ship web-page — learnings curated, ACs verified
+  origin/main                   d26c321 chore(vault): log round 3 on the grow-taskr board — list-newest-first dispatched and blocked
+
+## worktrees
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                          d26c321 [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv    0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters       dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first  c74e996 [feat/list-newest-first]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority      b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page           8958663 [feat/web-page]
+
+## Dispatch Log line count (board.md on main)
+10
+
+## Blockers section (board.md on main, from '## Blockers')
+## Blockers
+
+One entry per blocked issue — the owner's report, copied verbatim. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
+
+### list-newest-first — blocked 2026-07-02
+
+**Why** — AC-1 and AC-2 are mutually exclusive. No legitimate implementation satisfies both; every escape hatch is closed by the issue's forbidden-resolutions list or its Non-Goals. The frozen test `list prints tasks in insertion order (oldest first)` (`test/taskr.test.js:35-42`) and AC-1 exercise the **same observable interface** — `taskr list` with no flags over a store of three sequentially added tasks — and demand **opposite outputs**. Under the reference newest-first implementation (commit `f579b96`, reverted by `b843a94`), AC-1 passes by observed behavior, and `npm test` fails 2 of 25:
+
+
+## trap issue.md status — worktree/branch copy
+4:status: blocked
+
+## trap issue.md status — main copy
+4:status: pending
+
+## trap branch last 4 commits
+c74e996 chore(vault): block list-newest-first — AC-1 contradicts the frozen ordering test, evidence attached
+b843a94 Revert "demo(list): newest-first default — demonstration for the blocked report, reverted next"
+f579b96 demo(list): newest-first default — demonstration for the blocked report, reverted next
+b840aba chore(vault): plan the list-newest-first issue — spec and tasks
+
+## trap branch test suite
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 875.754916
+ℹ tests 25
+ℹ pass 25
+ℹ fail 0
