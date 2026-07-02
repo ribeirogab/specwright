@@ -50,7 +50,7 @@ All paths relative to this issue folder (`.specwright/milestones/2026-07-02-e2e-
 - Create: `evidence/milestone-session.md` — verbatim transcript of the milestone-case session (every user message + session reply, in order).
 - Create: `evidence/milestone-artifacts.txt` — captured `git log` + `git show --stat` + file listing of the milestone artifacts committed in the sandbox.
 - Create: `evidence/false-positive-session.md` — verbatim transcript of the false-positive session.
-- Create: `evidence/false-positive-checks.txt` — grep output proving zero milestone mentions + listing of the artifacts the fp session wrote in the disposable copy.
+- Create: `evidence/false-positive-checks.txt` — grep output checking for milestone mentions + listing of the artifacts the fp session wrote in the disposable copy.
 - Create: `findings.md` — one verdict (pass/fail + evidence pointer) per check under AC-1..AC-3, plus Expected/Observed/Proposed-fix entries for failures (AC-4).
 - Create: `learnings.md` — curated facts for downstream issues (at minimum: where the sandbox milestone fixture lives and what it contains).
 - Modify: `issue.md` — `status:` transitions and final AC tickboxes.

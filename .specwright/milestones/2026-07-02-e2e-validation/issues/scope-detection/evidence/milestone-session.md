@@ -2,7 +2,7 @@
 
 - Date: 2026-07-02
 - Sandbox: /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
-- Recording convention: every exchange appended verbatim, in order, as **User:** / **Session:** blocks. The session runs as a sub-agent; only its user-visible replies are capturable (tool activity inside the session is not).
+- Recording convention: every exchange appended in order as **User:** / **Session:** blocks. User messages are verbatim; Session turns marked *(relayed)* are faithful summaries relayed by the harness (the session ran as a sub-agent; tool activity inside it is not capturable).
 
 ---
 

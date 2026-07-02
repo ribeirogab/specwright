@@ -9,7 +9,7 @@ Verdicts for every underlying check of AC-1..AC-3, plus one Expected / Observed 
 | # | AC | Check | Verdict | Evidence |
 |---|----|-------|---------|----------|
 | 1 | AC-1 | Session *suggested* a milestone (not forced, not user-prompted) | PASS | `evidence/milestone-session.md` turn 5 — suggestion originated with the session; no user message contains "milestone" before it |
-| 2 | AC-1 | Suggestion included an issue preview: slugs + one-liners + dependencies | PASS | `evidence/milestone-session.md` turn 5 — 5-issue preview table (task-priority, list-filters, export-json-csv, web-page, list-newest-first) with dependency edges |
+| 2 | AC-1 | Suggestion included an issue preview: slugs + one-liners + dependencies | PASS | `evidence/milestone-session.md` turn 5 — 5-issue preview table (task-priority, list-filters, export-json-csv, web-page, list-newest-first) with dependency edges; caveat: the turn is harness-relayed, so slugs and dependencies are directly evidenced while the one-liners rest on the relay's description of a preview table |
 | 3 | AC-1 | Decision explicitly left to the user | PASS | `evidence/milestone-session.md` turn 5 — session waited; user accepted in the following user turn |
 | 4 | AC-1 | No artifact written before the user's choice | PASS | `evidence/milestone-artifacts.txt` — single commit `aaa117b` (7 files) created only after the acceptance turn; nothing uncommitted |
 | 5 | AC-2 | Milestone artifacts committed in the sandbox under `.specwright/milestones/*/` | PASS | `evidence/milestone-artifacts.txt` — `git show --stat aaa117b`, `.specwright/milestones/2026-07-02-grow-taskr/` with goal.md + board.md + 5 issues |
@@ -37,7 +37,14 @@ Verdicts for every underlying check of AC-1..AC-3, plus one Expected / Observed 
 
 - **Expected:** the session under test perceives only "the user" on the other side of the chat.
 - **Observed:** the false-positive session's turns referenced receiving replies from "a sessão paralela (`owner-scope-detection`)" — the messaging layer exposes the sender agent's name, which contains the scenario slug. No behavioral contamination was observed (the single-issue read predates any message from the owner), but a session that reasoned about the counterpart's name could infer it is being tested.
-- **Proposed fix:** harness hygiene for later scenario issues: give driver agents neutral names (e.g. `maintainer`) when spawning sessions-under-test, since the transport surfaces sender identity.
+- **Observed (additional):** the same session replied in Portuguese although the sandbox repo, its AGENTS.md, and every user message are English — consistent with the sub-agent inheriting the operator's global user configuration (which mandates pt-BR chat), a second contamination channel besides the sender name.
+- **Proposed fix:** harness hygiene for later scenario issues: give driver agents neutral names (e.g. `maintainer`) when spawning sessions-under-test, since the transport surfaces sender identity; treat reply language as a contamination indicator when auditing transcripts.
+
+### Finding 4 — issue-folder artifact enumeration in live docs predates findings/evidence
+
+- **Expected:** live docs describing an issue folder's contents accommodate the artifacts this milestone's issues ship (`findings.md`, `evidence/`).
+- **Observed:** the live enumerations (project `CLAUDE.md`/`AGENTS.md`: "one folder (`issue.md` ... `spec.md`, `tasks.md`, optional `learnings.md`)") do not mention `findings.md` or `evidence/`, which every e2e-validation issue adds; a reader could misread them as drift.
+- **Proposed fix:** one-line addition to the issue-folder enumeration in the live docs ("plus any issue-specific artifacts, e.g. `findings.md`/`evidence/` for validation issues") — owned by docs-coherence (T12) or the follow-up fixes delivery, not this issue.
 
 ## Verdict summary
 

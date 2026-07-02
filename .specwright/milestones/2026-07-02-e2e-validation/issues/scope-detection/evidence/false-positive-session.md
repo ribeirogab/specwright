@@ -2,7 +2,7 @@
 
 - Date: 2026-07-02
 - Repo: disposable copy of the sandbox (scratchpad `taskr-fp`; origin repointed to a scratch bare clone; post-copy baseline snapshotted — the copy already contains the grow-taskr milestone fixture from Phase 1)
-- Recording convention: every exchange appended verbatim, in order, as **User:** / **Session:** blocks. The session runs as a sub-agent; only its user-visible replies are capturable.
+- Recording convention: every exchange appended in order as **User:** / **Session:** blocks. User messages are verbatim; Session turns are verbatim where quoted (`>`) and faithful harness-relayed summaries where marked *(relayed)*.
 
 ---
 
@@ -62,7 +62,7 @@ Design approved; concluded the scope as a **single issue** and asked exactly the
 
 Branch name is fine, no worktree, and yes — hand off, I'll pick it up later.
 
-**Session:** *(turn 4 — verbatim; final)*
+**Session:** *(turn 4 — final; short notification message quoted below verbatim; the full final turn is in the Addendum)*
 
 > Done. Branch `feat/version-flag` created in place (no worktree, per your call), issue committed at `.specwright/issues/2026-07-02-version-flag/issue.md` (status: pending, AC-1..4). Handoff printed in the session — resume in a fresh context with `/sw:plan` on that issue path. Nothing implemented yet, as agreed.
 
