@@ -53,6 +53,7 @@ The home for every standalone issue (work that is not part of a milestone). Each
     spec.md         # the technical plan (written just-in-time by the plan skill)
     tasks.md        # the task breakdown, each task naming its AC: and Delegable:
     learnings.md    # optional: curated non-obvious facts (written by the issue owner)
+    ...             # plus any issue-specific artifacts (e.g. findings.md, evidence/ for validation issues)
 ```
 
 **Issues are self-contained.** No cross-references between issues and none out of an issue. Issue **status** lives in each issue's own `issue.md` frontmatter (`status:` and `shipped:`) — there is no separate tracker file that lists or aggregates issues.
@@ -74,6 +75,7 @@ The home for every milestone (a large delivery decomposed into issues, conducted
         spec.md
         tasks.md
         learnings.md
+        ...           # plus any issue-specific artifacts (e.g. findings.md, evidence/ for validation issues)
 ```
 
 Milestone issue folders have exactly the same shape as standalone issues — only their location differs. `board.md` never duplicates issue status; it holds only what has no other home (order, dependencies, dispatch log, blocker reports).
