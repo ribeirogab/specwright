@@ -96,7 +96,7 @@ When worktree = no, create the branch in place: `git checkout -b <branch>`.
 
 **Artifacts:** write `.specwright/milestones/YYYY-MM-DD-<slug>/` from the bundled templates (`scaffold/templates/`):
 
-- `goal.md` — the milestone's Purpose, Motivation, Success Criteria, Non-Goals. Stable; editing it later is a scope change no agent does alone.
+- `goal.md` — the milestone's Purpose, Motivation, Success Criteria, Non-Goals. Phrase it in **behavior terms** — no file paths, function names, or storage formats; path-level constraints live in the issue tickets. Worked example: the technical hard constraint "`test/taskr.test.js` must pass byte-for-byte unmodified" becomes, at goal level, "the existing test suite passes without any test being edited" — the ticket that owns the constraint keeps the path. Stable; editing it later is a scope change no agent does alone.
 - `board.md` — the Issues table (order, slug, depends-on), empty Dispatch Log and Blockers. Order and dependencies live ONLY here.
 - `issues/<slug>/issue.md` — one per issue, plain kebab slugs (no number prefixes — order is board data), each with Purpose, Non-Goals, `AC-N`, `status: pending`. The approved decomposition IS the design approval for every issue: `/sw:run` goes straight to planning, with no brainstorm per issue.
 
