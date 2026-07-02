@@ -60,7 +60,14 @@ specwright's per-repo vault is `.specwright/` and holds exactly three living thi
 - `.specwright/issues/` — one dated folder per standalone issue (`YYYY-MM-DD-<slug>/` with `issue.md` + `spec.md` + `tasks.md` + optional `learnings.md`).
 - `.specwright/milestones/` — one dated folder per milestone (`YYYY-MM-DD-<slug>/` with `goal.md` + `board.md` + `issues/<slug>/` folders of the same issue shape).
 
-Ensure all three directories exist (empty is fine on first install). The artifact **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/templates/` and the brainstorm / plan skills generate issues from there. The issue **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
+Ensure all three directories exist (empty is fine on first install), each with a `.gitkeep` — git tracks no empty directories, so without the keep files a compliant fresh install loses its vault on the first re-clone:
+
+```bash
+mkdir -p .specwright/conventions .specwright/issues .specwright/milestones
+touch .specwright/conventions/.gitkeep .specwright/issues/.gitkeep .specwright/milestones/.gitkeep
+```
+
+Both commands are idempotent — re-running over a populated vault changes nothing. The artifact **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/templates/` and the brainstorm / plan skills generate issues from there. The issue **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
 
 ### AGENTS.md
 
