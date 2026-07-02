@@ -1,6 +1,6 @@
 ---
 name: sw-run
-description: "Conduct a specwright milestone: read the board, dispatch every ready issue to an issue-owner sub-agent (parallel, one worktree each), track progress, apply circuit breakers, and close out with a final report and learnings promotion. Resumable from any fresh session. Trigger on '/sw:run', 'run the milestone', 'continue the milestone', or when the user asks to resume conducting a milestone."
+description: "Conduct a specwright milestone: read the board, dispatch every ready issue to an issue-owner sub-agent (parallel, one worktree each), track progress, apply circuit breakers, and close out with goal reconciliation, learnings promotion, and a final report. Resumable from any fresh session. Trigger on '/sw:run', 'run the milestone', 'continue the milestone', or when the user asks to resume conducting a milestone."
 ---
 
 # run — the milestone orchestrator
@@ -27,7 +27,7 @@ Repeat until no issue is ready and none is running:
      git worktree add .specwright/worktrees/<slug> -b <branch>
      ```
    - The owner's prompt: the issue folder path, the milestone path, the worktree path, and the instruction to run the **plan skill pipeline** end to end (plan → self-review → implement → quality gate → runtime verification → PR → review to `lgtm` → curate `learnings.md` → flip `issue.md` status), returning either `shipped` (+ PR URL + one line per learning) or `blocked` (+ a paste-ready Blockers block — **Why / Tried / Needs** — written by the owner for the board).
-   - Append `dispatched` to the board's Dispatch Log.
+   - Append `dispatched` to the board's Dispatch Log and commit — the per-append commit rule (Track, below) starts with this first append.
    - Keep the **agentId** from the spawn result — name aliases expire; address every resume or relay by that ID, never by name. Treat relays as one-way: read the owner's answers from repository artifacts, not from message replies.
 3. **Track** — as each owner returns, append the event to the Dispatch Log, and **commit the board after every Dispatch Log append** — not only at round close; an uncommitted line is lost to a crash. On `shipped`: note the learnings one-liners and PR URL. On `blocked`: paste the owner's paste-ready Blockers block (Why / Tried / Needs) into the board's Blockers section **unmodified** — the conductor never composes or restructures it. Owners flip their own `issue.md` status; the orchestrator never edits an `issue.md`.
    - Completion notifications reach only the top-level session — never wait on them. Poll each dispatched owner's **observable state** (repository files, branches, commit and output timestamps) on a cadence of a few minutes; treat silence as still-running only until a state check says otherwise.

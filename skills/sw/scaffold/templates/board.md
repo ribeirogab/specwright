@@ -8,7 +8,7 @@ created: {{YYYY-MM-DD}}
 
 ## Issues
 
-An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md`.
+An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md` — read from the dependency's own branch while its PR is unmerged (the `main` copy stays `pending` until merge).
 
 | Order | Issue | Depends on |
 |---|---|---|

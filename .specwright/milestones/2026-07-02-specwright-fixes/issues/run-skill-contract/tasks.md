@@ -65,7 +65,7 @@ Becomes:
    - **Watchdog:** 10 minutes without observable progress from an owner → flag it and verify its state directly; a confirmed stall is resumed by its agentId or re-dispatched.
 ```
 
-- [ ] Step 6: Verify — `grep -c "new loop turn\|commit the board after every\|dependency's own branch\|paste-ready Blockers block\|agentId\|Watchdog" .agents/skills/sw-run/SKILL.md` returns non-zero and the section reads coherently top to bottom.
+- [ ] Step 6: Verify each hunk landed — one grep per phrase, every count non-zero (a combined alternation would pass with five hunks missing): `for p in "new loop turn" "commit the board after every" "dependency's own branch" "paste-ready Blockers block" "agentId" "Watchdog"; do grep -c "$p" .agents/skills/sw-run/SKILL.md; done` — then read the section top to bottom for coherence.
 - [ ] Step 7: Commit (`fix: make round approvals, readiness source, log durability, blocker fidelity, polling and addressing explicit in run skill loop`).
 
 ### Task 2: Circuit-breaker and closeout contract additions
