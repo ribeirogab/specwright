@@ -1,0 +1,99 @@
+# T8 pre-closeout sandbox snapshot — captured 2026-07-02T15:16:47Z
+
+## git log --oneline -5
+5a9b369 chore(vault): log round 4 on the grow-taskr board — list-newest-first resumed, dispatched and shipped; blocker cleared
+d26c321 chore(vault): log round 3 on the grow-taskr board — list-newest-first dispatched and blocked
+2da129b chore(vault): log round 2 on the grow-taskr board — list-filters, export-json-csv, web-page dispatched and shipped
+7c7f1bc chore(vault): log round 1 on the grow-taskr board — task-priority dispatched and shipped
+aaa117b chore(vault): plan the grow-taskr milestone — 5 issues from the approved brainstorm
+
+## git status --short (empty = clean)
+
+## git branch -v
++ feat/export-json-csv   0b1f75e chore(vault): ship export-json-csv — learnings curated, ACs verified
++ feat/list-filters      dff030d chore(vault): ship list-filters — learnings curated, ACs verified
++ feat/list-newest-first a15025c chore(vault): ship list-newest-first — PR record, review lgtm, learnings curated, ACs verified
++ feat/task-priority     b9d7c80 chore(vault): ship task-priority — learnings curated, ACs verified
++ feat/web-page          8958663 chore(vault): ship web-page — learnings curated, ACs verified
+* main                   5a9b369 chore(vault): log round 4 on the grow-taskr board — list-newest-first resumed, dispatched and shipped; blocker cleared
+
+## git worktree list
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                          5a9b369 [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv    0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters       dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first  a15025c [feat/list-newest-first]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority      b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page           8958663 [feat/web-page]
+
+## Dispatch Log line count
+13
+
+## Blockers section
+## Blockers
+
+One entry per blocked issue — the owner's report, copied verbatim. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
+
+_None._
+
+## sha256 AGENTS.md
+f336a9a3c5f4b5793e94d6d18770c2d97c6bdc30340e4bc3289e395aa559db27  AGENTS.md
+
+## conventions dir
+total 0
+drwxr-xr-x@ 3 gabriel  staff   96 Jul  2 01:33 .
+drwxr-xr-x@ 6 gabriel  staff  192 Jul  2 03:25 ..
+-rw-r--r--@ 1 gabriel  staff    0 Jul  2 01:33 .gitkeep
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  .specwright/conventions/.gitkeep
+
+## sha256 board.md
+9e748a057ed0bf8a2921b176776da7241062f3d5fcd6c2290ac5f725eec2ec67  .specwright/milestones/2026-07-02-grow-taskr/board.md
+
+## sha256 goal.md
+c0c97a5620628c30986084465ed414fe8edd645352282c6007bbc2bf40456ba9  .specwright/milestones/2026-07-02-grow-taskr/goal.md
+
+## board.md byte copy follows (between BEGIN/END markers)
+----BEGIN board.md----
+---
+milestone: grow-taskr
+created: 2026-07-02
+---
+# Grow taskr — Board
+
+> The milestone's live state: issue order, dependencies, dispatch log, and blocker reports. The orchestrator (`/sw:run`) reads and writes this file on every loop turn. Issue `status:` lives in each issue's own `issue.md` frontmatter — it is **never duplicated here**; the board holds only what has no other home.
+
+## Issues
+
+An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md`.
+
+| Order | Issue | Depends on |
+|---|---|---|
+| 1 | task-priority | — |
+| 2 | list-filters | task-priority |
+| 3 | export-json-csv | task-priority |
+| 4 | web-page | task-priority |
+| 5 | list-newest-first | list-filters |
+
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — web-page — shipped — `handleRequest` lives in `lib/server.js` (method checked before path: `POST` → 405 `Allow: GET`; routing on `URL.pathname`), imports only `loadTasks`/`taskPriority` so the server is read-only by construction, all task HTML goes through `escapeHtml`, handler testable in-process via `createServer(handleRequest)` + `fetch` (teardown needs `closeAllConnections()`), no fixed ports in `npm test`; frozen test byte-identical, review lgtm. PR: branch `feat/web-page` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-newest-first — dispatched — round 3; dependency list-filters shipped (PR unmerged → stacked on `feat/list-filters`); worktree `.specwright/worktrees/list-newest-first`, branch `feat/list-newest-first`.
+- 2026-07-02 — list-newest-first — blocked — AC-1 (newest-first default) and AC-2 (frozen oldest-first test) proven mutually exclusive; evidence with failing assertions and closed escape hatches in the issue's `blocked-evidence.md` (branch `feat/list-newest-first` pushed, commit `c74e996`); maintainer decision needed — full report in Blockers below.
+- 2026-07-02 — list-newest-first — resumed — maintainer unblocked (option 2 of the blocked report: adopt the newest-first default, lift the ordering-test freeze for the two pinned assertions only; decision recorded in the issue's `issue.md`, commit `1be3afa`); status back to `pending`, Blockers entry cleared.
+- 2026-07-02 — list-newest-first — dispatched — round 4; dependency list-filters shipped (PR unmerged → stacked on `feat/list-filters`); reusing worktree `.specwright/worktrees/list-newest-first`, branch `feat/list-newest-first`.
+- 2026-07-02 — list-newest-first — shipped — flag-less `taskr list` default is now newest-first (`createdAt` desc, id-desc tie-break, sorted in `bin/taskr.js` after the filters so `--priority`/`--status` views inherit it; `lib/tasks.js` still returns store order, so exports/web are unaffected), exactly the two sanctioned ordering tests amended (order flipped, assertion form kept — the diff proves nothing weakened), README documents the default; 25 tests green, review lgtm; note for closeout: `goal.md`'s "byte-for-byte untouched" wording is superseded for the two ordering assertions by the recorded option-2 decision — reconcile with maintainer approval. PR: branch `feat/list-newest-first` pushed to origin (stacked on `feat/list-filters`) — full record in the issue's `pr.md`.
+
+## Blockers
+
+One entry per blocked issue — the owner's report, copied verbatim. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
+
+_None._
+----END board.md----

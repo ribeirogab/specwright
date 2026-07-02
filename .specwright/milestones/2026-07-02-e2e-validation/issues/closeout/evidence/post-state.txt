@@ -1,0 +1,101 @@
+# T8 post-closeout sandbox snapshot — captured 2026-07-02T15:26:48Z
+
+## git log --oneline -4
+ab65ca0 chore(vault): apply the grow-taskr closeout decisions — promote approved learnings, reconcile goal.md ordering exception
+d9c8114 chore(vault): close out the grow-taskr board — all 5 issues shipped, final summary appended
+5a9b369 chore(vault): log round 4 on the grow-taskr board — list-newest-first resumed, dispatched and shipped; blocker cleared
+d26c321 chore(vault): log round 3 on the grow-taskr board — list-newest-first dispatched and blocked
+
+## git status --short (empty = clean)
+
+## main vs origin/main (identical = pushed)
+ab65ca0bc865a9b955329a598c33c67da78607fb
+ab65ca0bc865a9b955329a598c33c67da78607fb
+
+## git branch -v
++ feat/export-json-csv   0b1f75e chore(vault): ship export-json-csv — learnings curated, ACs verified
++ feat/list-filters      dff030d chore(vault): ship list-filters — learnings curated, ACs verified
++ feat/list-newest-first a15025c chore(vault): ship list-newest-first — PR record, review lgtm, learnings curated, ACs verified
++ feat/task-priority     b9d7c80 chore(vault): ship task-priority — learnings curated, ACs verified
++ feat/web-page          8958663 chore(vault): ship web-page — learnings curated, ACs verified
+* main                   ab65ca0 chore(vault): apply the grow-taskr closeout decisions — promote approved learnings, reconcile goal.md ordering exception
+
+## git worktree list
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                          ab65ca0 [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv    0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters       dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first  a15025c [feat/list-newest-first]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority      b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page           8958663 [feat/web-page]
+
+## code untouched since 5a9b369 (empty = untouched)
+
+## npm test tail
+ℹ tests 5
+ℹ pass 5
+ℹ fail 0
+
+## conventions dir
+.
+..
+.gitkeep
+store-and-constants.md
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  .specwright/conventions/.gitkeep
+c5c2eec5c25ee253b3800ce8b21ea9f87cdc4c8cc0904fb069033e6599fc78bf  .specwright/conventions/store-and-constants.md
+
+## sha256 AGENTS.md (pre was f336a9a3c5f4...db27 — must match)
+f336a9a3c5f4b5793e94d6d18770c2d97c6bdc30340e4bc3289e395aa559db27  AGENTS.md
+
+## Dispatch Log line count (pre was 13 — must match)
+13
+
+## Blockers section
+## Blockers
+
+One entry per blocked issue — the owner's report, copied verbatim. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
+
+_None._
+
+## diff pre-closeout board.md -> post (expect ONLY additions: 43a44,63)
+43a44,63
+> 
+> ## Final Summary — 2026-07-02
+> 
+> All 5 issues shipped. `origin` is a local bare repository (no GitHub), so each "PR" is a pushed branch plus a full PR record in the issue's `pr.md`.
+> 
+> | Issue | Branch (pushed to origin) | Base | PR record |
+> |---|---|---|---|
+> | task-priority | `feat/task-priority` | `main` | `issues/task-priority/pr.md` |
+> | list-filters | `feat/list-filters` | `feat/task-priority` (stacked) | `issues/list-filters/pr.md` |
+> | export-json-csv | `feat/export-json-csv` | `feat/task-priority` (stacked) | `issues/export-json-csv/pr.md` |
+> | web-page | `feat/web-page` | `feat/task-priority` (stacked) | `issues/web-page/pr.md` |
+> | list-newest-first | `feat/list-newest-first` | `feat/list-filters` (stacked) | `issues/list-newest-first/pr.md` |
+> 
+> **Blockers survived:** 1 — list-newest-first (round 3): AC-1 newest-first default vs. the frozen oldest-first ordering tests, proven mutually exclusive with a demonstration commit; resolved by the maintainer's option-2 decision (adopt newest-first, lift the freeze for the two pinned ordering assertions only) and shipped in round 4.
+> 
+> **Merge order (stacked PRs):** `feat/task-priority` → then `feat/list-filters`, `feat/export-json-csv`, `feat/web-page` (re-target to `main`) → then `feat/list-newest-first` (re-target after list-filters). Merging is the maintainer's.
+> 
+> **Closeout items — resolved 2026-07-02 by maintainer decision:**
+> 1. `goal.md` wording reconciled (maintainer-approved): explicit exception for the two pinned ordering assertions, citing the recorded option-2 decision in `issues/list-newest-first/issue.md`.
+> 2. Durable-learnings promotion (maintainer-approved subset): store-format invariants and vocabulary-constants learnings promoted to `.specwright/conventions/store-and-constants.md`; the remaining proposed items (read-time views in bin, export format, web server, CLI flags convention, sandbox delivery shape) were rejected for promotion and stay in the issue folders as history.
+
+## goal.md diff pre -> post (the two approved reconciliation hunks only)
+20c20
+< - `npm test` is green on every issue's PR with the pre-existing `test/taskr.test.js` byte-for-byte untouched.
+---
+> - `npm test` is green on every issue's PR with the pre-existing `test/taskr.test.js` byte-for-byte untouched — with one recorded exception: the two pinned ordering assertions amended under the maintainer's option-2 decision of 2026-07-02 (see `issues/list-newest-first/issue.md`).
+25c25
+< - Touching `test/taskr.test.js` in any way (the hard constraint; new behavior gets new test files).
+---
+> - Touching `test/taskr.test.js` in any way (the hard constraint; new behavior gets new test files) — exception: the two pinned ordering assertions, unfrozen by the maintainer's recorded option-2 decision in `issues/list-newest-first/issue.md` (2026-07-02).
+
+## rejected items absent from applied surfaces (expect 0 0 0 0 0)
+0
+0
+0
+0
+0
+
+## commits after the final report (expect none after ab65ca0)
+ab65ca0 2026-07-02T12:23:55-03:00 chore(vault): apply the grow-taskr closeout decisions — promote approved learnings, reconcile goal.md ordering exception
+d9c8114 2026-07-02T12:20:37-03:00 chore(vault): close out the grow-taskr board — all 5 issues shipped, final summary appended

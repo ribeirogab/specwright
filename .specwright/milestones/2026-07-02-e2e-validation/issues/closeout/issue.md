@@ -1,8 +1,8 @@
 ---
 feature: closeout
 created: 2026-07-02
-status: pending
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Closeout (T8) — Issue
 
@@ -27,10 +27,10 @@ Closeout is where a milestone's paid-for knowledge either becomes durable (promo
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** The sandbox board ends with a final summary section listing every shipped issue with its delivery record and the blocker history; no Issues-table or Dispatch-Log rewriting (diff against pre-closeout copy shows appends only).
-- [ ] **AC-2** The session proposed promoting at least the epoch-seconds learning, waited for approval, applied exactly the approved subset to `AGENTS.md`/`.specwright/conventions/`, and left rejected proposals unapplied (transcript + file diff evidence).
-- [ ] **AC-3** After closeout the sandbox milestone folder receives no further writes from the session (transcript tail shows the report and stop; merging explicitly left to the human).
-- [ ] **AC-4** This issue's folder contains `dossier.md`: every finding from all T-issues' `findings.md`, deduplicated, each with Expected / Observed / Proposed fix and the owning issue — ready to seed the follow-up fixes delivery.
-- [ ] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+- [x] **AC-1** The sandbox board ends with a final summary section listing every shipped issue with its delivery record and the blocker history; no Issues-table or Dispatch-Log rewriting (diff against pre-closeout copy shows appends only).
+- [x] **AC-2** The session proposed promoting at least the epoch-seconds learning, waited for approval, applied exactly the approved subset to `AGENTS.md`/`.specwright/conventions/`, and left rejected proposals unapplied (transcript + file diff evidence).
+- [x] **AC-3** After closeout the sandbox milestone folder receives no further writes from the session (transcript tail shows the report and stop; merging explicitly left to the human).
+- [x] **AC-4** This issue's folder contains `dossier.md`: every finding from all T-issues' `findings.md`, deduplicated, each with Expected / Observed / Proposed fix and the owning issue — ready to seed the follow-up fixes delivery.
+- [x] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
