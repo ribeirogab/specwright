@@ -31,11 +31,11 @@ The test plan requires a project "small enough that each issue takes minutes; re
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references (each task names the criteria it satisfies) and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check that someone other than the implementer can verify in under a minute.
 
-- [ ] **AC-1** `npm test` in `~/www/ribeirogab/specwright-sandbox/taskr` exits 0 with at least 4 passing tests, one of which asserts `list` prints tasks oldest-first.
-- [ ] **AC-2** `taskr add`, `taskr list`, and `taskr done` behave as documented in the sandbox README when run against a temp `TASKR_FILE`, and stored tasks carry `createdAt` as an integer epoch-seconds value (verified by inspecting the JSON file — no ISO strings).
-- [ ] **AC-3** `git -C <sandbox> log --oneline` shows a single bootstrap commit on `main`, and `git remote -v` shows `origin` pointing at a local bare repo path (no `github.com`).
-- [ ] **AC-4** The specwright audit passes in the sandbox: `AGENTS.md` (≤ 80 lines, all required sections), `CLAUDE.md` → `AGENTS.md` symlink, `.specwright/{conventions,issues,milestones}/` exist, `.agents/skills/sw/` plus the six `sw-*` skills exist, `.gitignore` contains `.specwright/worktrees/`, and `.claude/settings.json` declares the `specwright` marketplace and enables `sw@specwright`.
-- [ ] **AC-5** `.agents/skills/sw/scripts/validate-spec.sh` is executable in the sandbox and exits non-zero with a usage/structural error when pointed at a nonexistent issue folder (proves the validator ships and runs on the new paths).
-- [ ] **AC-6** This issue's `learnings.md` records the sandbox absolute path, the local-origin convention, and the two scenario seeds (epoch timestamps, oldest-first list test) so downstream issue specs inherit them.
+- [x] **AC-1** `npm test` in `~/www/ribeirogab/specwright-sandbox/taskr` exits 0 with at least 4 passing tests, one of which asserts `list` prints tasks oldest-first.
+- [x] **AC-2** `taskr add`, `taskr list`, and `taskr done` behave as documented in the sandbox README when run against a temp `TASKR_FILE`, and stored tasks carry `createdAt` as an integer epoch-seconds value (verified by inspecting the JSON file — no ISO strings).
+- [x] **AC-3** `git -C <sandbox> log --oneline` shows a single bootstrap commit on `main`, and `git remote -v` shows `origin` pointing at a local bare repo path (no `github.com`).
+- [x] **AC-4** The specwright audit passes in the sandbox: `AGENTS.md` (≤ 80 lines, all required sections), `CLAUDE.md` → `AGENTS.md` symlink, `.specwright/{conventions,issues,milestones}/` exist, `.agents/skills/sw/` plus the six `sw-*` skills exist, `.gitignore` contains `.specwright/worktrees/`, and `.claude/settings.json` declares the `specwright` marketplace and enables `sw@specwright`.
+- [x] **AC-5** `.agents/skills/sw/scripts/validate-spec.sh` is executable in the sandbox and exits non-zero with a usage/structural error when pointed at a nonexistent issue folder (proves the validator ships and runs on the new paths).
+- [x] **AC-6** This issue's `learnings.md` records the sandbox absolute path, the local-origin convention, and the two scenario seeds (epoch timestamps, oldest-first list test) so downstream issue specs inherit them.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
