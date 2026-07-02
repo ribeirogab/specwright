@@ -1,7 +1,7 @@
 ---
 feature: standalone-regression
 created: 2026-07-02
-status: pending
+status: in-progress
 shipped: null
 ---
 # Standalone Issue Regression (T9) — Issue
