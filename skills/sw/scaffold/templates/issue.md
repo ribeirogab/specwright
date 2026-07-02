@@ -22,7 +22,7 @@ shipped: null
 
 ## Acceptance Criteria
 
-Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references (each task names the criteria it satisfies) and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check that someone other than the implementer can verify in under a minute. **No vague verbs** ("works well", "is fast", "is robust", "handles errors gracefully") — replace them with specific, measurable conditions. If a criterion cannot be verified without reading the implementation, it is not an acceptance criterion; rewrite it.
+Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references (each task names the criteria it satisfies) and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check that someone other than the implementer can verify in under a minute. **No vague verbs** ("works well", "is fast", "is robust", "handles errors gracefully") — replace them with specific, measurable conditions. If a criterion cannot be verified without reading the implementation, it is not an acceptance criterion; rewrite it. State a hard constraint once — in the criterion (or Non-Goal) that owns it — and reference it elsewhere; every restatement is an amendment hazard.
 
 Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime (e.g. UI without browser capability) is marked `needs-human-verification` with the reason — never silently ticked.
 
