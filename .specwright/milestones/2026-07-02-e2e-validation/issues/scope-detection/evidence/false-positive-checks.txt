@@ -1,0 +1,19 @@
+# False-positive mechanical checks — captured 2026-07-02
+
+## grep -in "milestone" evidence/false-positive-session.md
+4:- Repo: disposable copy of the sandbox (scratchpad `taskr-fp`; origin repointed to a scratch bare clone; post-copy baseline snapshotted — the copy already contains the grow-taskr milestone fixture from Phase 1)
+16:Explored the copy (taskr CLI, version 0.1.0 in package.json; noted the pending grow-taskr milestone folder as concurrent-touch information only [pre-existing fixture in the copy — see attribution note in findings]; inherited the frozen-test convention). Read the feature as simple: `--version` prints the package.json version and exits 0, implemented as a `case '--version'` in the existing switch. Weighed three version-read options; recommends `readFileSync(new URL('../package.json', import.meta.url))` + `JSON.parse` (cwd-independent, zero deps) over import attributes (Node >=20.10 floor) and hardcoding (rejected). Open questions: (1) also `-v` alias, or long flag only (leans YAGNI = long only)? (2) mention the flag in README.md and the usage message, or leave undocumented?
+47:> Isso é um **single issue** claro: um flag, um arquivo de código, um teste novo, um PR. Nem de longe justifica milestone (e não conflita com o `grow-taskr` pendente além de tocar o mesmo switch — merge trivial).
+51:*(Note for the record: this verbatim turn contains the word "milestone" twice — in the scope conclusion dismissing it and referencing the pre-existing grow-taskr fixture — and reveals the session saw the harness sender name `owner-scope-detection`. Both attributed in findings.md.)*
+grep exit: 0
+
+## new .specwright files vs post-copy baseline (comm -13 baseline current)
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-fp/.specwright/issues/2026-07-02-version-flag/issue.md
+
+## git log --oneline -3 (disposable copy)
+d94fc7a chore(vault): open the version-flag issue from the approved brainstorm
+aaa117b chore(vault): plan the grow-taskr milestone — 5 issues from the approved brainstorm
+e57a024 chore: bootstrap taskr sandbox with specwright
+
+## current branch in the copy
+feat/version-flag
