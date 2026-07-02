@@ -1,7 +1,7 @@
 ---
 feature: docs-coherence
 created: 2026-07-02
-status: pending
+status: in-progress
 shipped: null
 ---
 # Docs Coherence (T11) — Issue
@@ -27,9 +27,9 @@ Docs that lag the delivery teach every future session the wrong contract — in 
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** A claim-by-claim verdict table for README.md and AGENTS.md: every count, command name, path, and flow-step claim mapped to its source of truth with `match`/`mismatch` (mismatches quoted verbatim).
-- [ ] **AC-2** The `sw` skill references (`audit-checklist.md`, `vault-files.md`, `validation.md`, `agents-md-template.md`, `claude-plugin-settings.md`) describe the current layout — zero mentions of retired artifacts (`design.md`, `specs/` as a live directory, old skill names) outside explicitly historical/legacy-cleanup notes.
-- [ ] **AC-3** `validate-spec.sh` exits 0 on the two valid fixtures (standalone-shaped and milestone-shaped issue folders) and non-zero with a defect-naming message on each defective fixture; fixtures and outputs saved under `evidence/`.
-- [ ] **AC-4** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+- [x] **AC-1** A claim-by-claim verdict table for README.md and AGENTS.md: every count, command name, path, and flow-step claim mapped to its source of truth with `match`/`mismatch` (mismatches quoted verbatim).
+- [x] **AC-2** The `sw` skill references (`audit-checklist.md`, `vault-files.md`, `validation.md`, `agents-md-template.md`, `claude-plugin-settings.md`) describe the current layout — zero mentions of retired artifacts (`design.md`, `specs/` as a live directory, old skill names) outside explicitly historical/legacy-cleanup notes.
+- [x] **AC-3** `validate-spec.sh` exits 0 on the two valid fixtures (standalone-shaped and milestone-shaped issue folders) and non-zero with a defect-naming message on each defective fixture; fixtures and outputs saved under `evidence/`.
+- [x] **AC-4** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.

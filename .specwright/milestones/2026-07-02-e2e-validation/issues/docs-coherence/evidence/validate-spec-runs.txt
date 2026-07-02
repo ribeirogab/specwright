@@ -1,0 +1,36 @@
+# validate-spec.sh fixture runs — docs-coherence (T11)
+# date: 2026-07-02 01:32:50 -03
+# cwd: /Users/gabriel/www/ribeirogab/specwright/.claude/worktrees/pensive-bose-7ba1c1/.specwright/worktrees/docs-coherence
+# validator: skills/sw/scripts/validate-spec.sh @ c291025
+# bash: GNU bash, version 5.3.9(1)-release (aarch64-apple-darwin25.1.0)
+
+## fixture: valid-standalone
+$ bash skills/sw/scripts/validate-spec.sh <fixtures>/valid-standalone
+PASS: /private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/fixtures/valid-standalone
+exit=0
+
+## fixture: valid-milestone
+$ bash skills/sw/scripts/validate-spec.sh <fixtures>/valid-milestone
+PASS: /private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/fixtures/valid-milestone
+exit=0
+
+## fixture: bad-frontmatter
+$ bash skills/sw/scripts/validate-spec.sh <fixtures>/bad-frontmatter
+FAIL (check 1): issue.md frontmatter missing required key: status
+FAIL (check 1): issue.md status must be one of pending|in-progress|shipped|blocked (got: '')
+FAIL (check 2): spec.md frontmatter missing required key: scope
+FAILED: 3 check(s) in /private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/fixtures/bad-frontmatter
+exit=3
+
+## fixture: bad-placeholder
+$ bash skills/sw/scripts/validate-spec.sh <fixtures>/bad-placeholder
+FAIL (check 3): surviving {{placeholder}} in spec.md: 29:{{fill-me-in}}
+FAILED: 1 check(s) in /private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/fixtures/bad-placeholder
+exit=1
+
+## fixture: bad-uncovered-ac
+$ bash skills/sw/scripts/validate-spec.sh <fixtures>/bad-uncovered-ac
+FAIL (check 5): AC defined in issue.md but referenced by no task: AC-3
+FAILED: 1 check(s) in /private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/fixtures/bad-uncovered-ac
+exit=1
+
