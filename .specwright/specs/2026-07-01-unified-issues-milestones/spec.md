@@ -1,16 +1,16 @@
 ---
-status: draft
+status: shipped
 feature: unified-issues-milestones
 scope: complex
 created: 2026-07-01
-shipped: null
+shipped: 2026-07-01
 branch: feat/unified-issues-milestones
 mode: autonomous
 worktree: null
 ---
 # Unified Issues + Milestones — Spec
 
-**Status:** Draft
+**Status:** Shipped
 **Design:** see the sibling `design.md`
 **Scope:** Replace the spec-folder flow with issues as the single unit of work, rename the command surface to eight imperative verbs, and add the milestone layer (goal/board/issues) with a `/sw:run` orchestrator loop.
 
