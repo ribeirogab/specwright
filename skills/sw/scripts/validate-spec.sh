@@ -30,8 +30,18 @@ spec="$dir/spec.md"
 tasks="$dir/tasks.md"
 learnings="$dir/learnings.md"
 
+# fail() prints every diagnostic line (Rule of Transparency) but counts each
+# check at most once, so the exit code is the number of distinct failed checks
+# — not the number of FAIL lines. failed_checks tracks which have already fired.
 fails=0
-fail() { echo "FAIL (check $1): $2"; fails=$((fails + 1)); }
+failed_checks=" "
+fail() {
+  echo "FAIL (check $1): $2"
+  case "$failed_checks" in
+    *" $1 "*) : ;;
+    *) failed_checks="${failed_checks}$1 "; fails=$((fails + 1)) ;;
+  esac
+}
 
 frontmatter() { awk 'NR==1 && $0=="---"{f=1; next} f && $0=="---"{exit} f{print}' "$1"; }
 
@@ -40,19 +50,28 @@ if [ ! -f "$issue" ]; then
   fail 1 "issue.md not found in $dir"
 else
   fm=$(frontmatter "$issue")
+  status_present=1
   for key in feature created status; do
     if ! printf '%s\n' "$fm" | grep -Eq "^${key}:"; then
       fail 1 "issue.md frontmatter missing required key: ${key}"
+      [ "$key" = status ] && status_present=0
     fi
   done
-  status_val=$(printf '%s\n' "$fm" \
-    | { grep -E '^status:' || true; } \
-    | head -n1 \
-    | sed -E 's/^status:[[:space:]]*//; s/[[:space:]]*$//')
-  case "$status_val" in
-    pending|in-progress|shipped|blocked) : ;;
-    *) fail 1 "issue.md status must be one of pending|in-progress|shipped|blocked (got: '${status_val}')" ;;
-  esac
+  # status: is load-bearing (the pipeline/audit read it) — an empty or invalid
+  # value is a real defect and must fail, unlike recorded-only scope: (check 2)
+  # which is allowed to be blank. Only run the enum check when the key is
+  # present; a missing key already reported the same root defect above, so we do
+  # not double-count it against check 1.
+  if [ "$status_present" -eq 1 ]; then
+    status_val=$(printf '%s\n' "$fm" \
+      | { grep -E '^status:' || true; } \
+      | head -n1 \
+      | sed -E 's/^status:[[:space:]]*//; s/[[:space:]]*$//')
+    case "$status_val" in
+      pending|in-progress|shipped|blocked) : ;;
+      *) fail 1 "issue.md status must be one of pending|in-progress|shipped|blocked (got: '${status_val}')" ;;
+    esac
+  fi
 fi
 
 # --- Check 2: spec.md frontmatter keys + scope enum ------------------------
