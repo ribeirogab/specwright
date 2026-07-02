@@ -89,7 +89,7 @@ After `spec.md` + `tasks.md` are written, review them before implementation. The
 
 **Gates (run in order):**
 
-1. **Mechanical** — `.agents/skills/sw/scripts/validate-spec.sh <issue-folder>` (in the specwright dev repo: `skills/sw/scripts/validate-spec.sh`); non-zero exit names the structural defect. Fix and re-run until it exits 0.
+1. **Mechanical** — `.agents/skills/sw/scripts/validate-spec.sh <issue-folder>` (in the specwright dev repo: `skills/sw/scripts/validate-spec.sh`); non-zero exit names the structural defect. Fix and re-run until it exits 0 — with one exception: a failure caused by the approved ticket itself (`issue.md`) means **stop and report it with the exact validator `FAIL` line** — to the user (standalone) or in a blocked report to the orchestrator (milestone) — and proceed only after an acknowledged resolution. The owner never rewords an approved criterion; any sanctioned ticket edit is its own commit naming the changed criterion.
 2. **Spec-document-reviewer subagent** — dispatch it (see the sibling `spec-document-reviewer-prompt.md`) over `issue.md` + `spec.md` + `tasks.md`. Fix, re-dispatch until Approved (max 3 iterations, then surface to the human).
 3. **`/sw:review-spec`** — the external evaluator (conventions + issue compliance, vague ACs, scope creep). Fix any `FAIL`.
 
