@@ -1,0 +1,39 @@
+== PRE-ROUND2 2026-07-02T13:01:16Z ==
+7c7f1bc chore(vault): log round 1 on the grow-taskr board — task-priority dispatched and shipped
+b9d7c80 chore(vault): ship task-priority — learnings curated, ACs verified
+2ae507a docs(readme): document the add --priority/-p flag
+
++ feat/task-priority
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                      7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority  b9d7c80 [feat/task-priority]
+
+(clean if empty above)
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+-- board Dispatch Log --
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+
+## Blockers
+-- task-priority ticket on its own branch --
+status: shipped
+shipped: 2026-07-02
+== main test baseline ==
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 313.182083

@@ -1,0 +1,96 @@
+== POST-ROUND2 2026-07-02T13:33:09Z ==
+2da129b chore(vault): log round 2 on the grow-taskr board — list-filters, export-json-csv, web-page dispatched and shipped
+8958663 chore(vault): ship web-page — learnings curated, ACs verified
+0b1f75e chore(vault): ship export-json-csv — learnings curated, ACs verified
+dff030d chore(vault): ship list-filters — learnings curated, ACs verified
+a05d82b chore(vault): record the web-page PR body (local remote, no GitHub)
+190b781 chore(vault): record the export-json-csv PR body (local remote, no GitHub)
+7aa887f chore(vault): record the list-filters PR body (local remote, no GitHub)
+4006836 docs(readme): document taskr serve --port
+667192b chore(vault): plan the list-filters issue — spec and tasks
+eefa256 feat(cli): taskr serve --port with a read-only web page
+f8b3352 docs(readme): document the export command
+2c2c73d test(export): pin store immutability and legacy priority default
+ef3b9f5 docs(readme): document the list --priority/--status filters
+575ab20 feat(cli): add export --format json|csv command
+1c34663 feat(server): read-only HTTP handler for GET /
+
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        2da129b [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
+
+(clean if empty)
+-- statuses on main --
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+-- statuses per branch (own ticket) --
+feat/task-priority: status: shipped shipped: 2026-07-02 
+feat/list-filters: status: shipped shipped: 2026-07-02 
+feat/export-json-csv: status: shipped shipped: 2026-07-02 
+feat/web-page: status: shipped shipped: 2026-07-02 
+-- branch tips + bases --
+feat/task-priority tip b9d7c80 base aaa117b / vs-dep b9d7c80
+feat/list-filters tip dff030d base aaa117b / vs-dep b9d7c80
+feat/export-json-csv tip 0b1f75e base aaa117b / vs-dep b9d7c80
+feat/web-page tip 8958663 base aaa117b / vs-dep b9d7c80
+-- origin sync --
+2da129bda521cd27e7d531631275f7a7279daa17 HEAD
+0b1f75ec4d11d02badfb4003f567a489b1c0100a refs/heads/feat/export-json-csv
+dff030dda33fb45ea4dd6e6e5c701d5ce4d354bc refs/heads/feat/list-filters
+b9d7c80eff02dfcd4421b801158b62908bf4ead7 refs/heads/feat/task-priority
+89586631c98bd8a9e85e65e39dc1ab0356e806b0 refs/heads/feat/web-page
+2da129bda521cd27e7d531631275f7a7279daa17 refs/heads/main
+-- board Dispatch Log (main) --
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — web-page — shipped — `handleRequest` lives in `lib/server.js` (method checked before path: `POST` → 405 `Allow: GET`; routing on `URL.pathname`), imports only `loadTasks`/`taskPriority` so the server is read-only by construction, all task HTML goes through `escapeHtml`, handler testable in-process via `createServer(handleRequest)` + `fetch` (teardown needs `closeAllConnections()`), no fixed ports in `npm test`; frozen test byte-identical, review lgtm. PR: branch `feat/web-page` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+-- Blockers section --
+(empty)
+-- per round-2 branch commits (--not dep) --
+== feat/list-filters ==
+dff030d 2026-07-02T10:18:53-03:00 chore(vault): ship list-filters — learnings curated, ACs verified
+7aa887f 2026-07-02T10:17:08-03:00 chore(vault): record the list-filters PR body (local remote, no GitHub)
+667192b 2026-07-02T10:16:40-03:00 chore(vault): plan the list-filters issue — spec and tasks
+ef3b9f5 2026-07-02T10:15:33-03:00 docs(readme): document the list --priority/--status filters
+cbe8256 2026-07-02T10:15:08-03:00 feat(cli): add --priority and --status filters to taskr list
+1854f08 2026-07-02T10:14:20-03:00 test(list): pin list filter behavior (red)
+== feat/export-json-csv ==
+0b1f75e 2026-07-02T10:19:12-03:00 chore(vault): ship export-json-csv — learnings curated, ACs verified
+190b781 2026-07-02T10:17:51-03:00 chore(vault): record the export-json-csv PR body (local remote, no GitHub)
+f8b3352 2026-07-02T10:16:11-03:00 docs(readme): document the export command
+2c2c73d 2026-07-02T10:15:44-03:00 test(export): pin store immutability and legacy priority default
+575ab20 2026-07-02T10:15:26-03:00 feat(cli): add export --format json|csv command
+463e1b1 2026-07-02T10:14:25-03:00 feat(export): pure JSON/CSV formatter with ISO-8601 UTC dates
+f3cecfa 2026-07-02T10:13:43-03:00 chore(vault): fold spec-review advisories into the export plan
+afb28b6 2026-07-02T10:09:03-03:00 chore(vault): plan export-json-csv — spec and tasks, issue in-progress
+== feat/web-page ==
+8958663 2026-07-02T10:20:27-03:00 chore(vault): ship web-page — learnings curated, ACs verified
+a05d82b 2026-07-02T10:18:43-03:00 chore(vault): record the web-page PR body (local remote, no GitHub)
+4006836 2026-07-02T10:17:03-03:00 docs(readme): document taskr serve --port
+eefa256 2026-07-02T10:16:29-03:00 feat(cli): taskr serve --port with a read-only web page
+1c34663 2026-07-02T10:15:15-03:00 feat(server): read-only HTTP handler for GET /
+837eb8c 2026-07-02T10:14:27-03:00 feat(server): render tasks as an escaped HTML table
+759641d 2026-07-02T10:13:46-03:00 chore(vault): apply spec-reviewer advisories to the web-page plan
+5ae05e2 2026-07-02T10:09:35-03:00 chore(vault): plan the web-page issue — spec and tasks

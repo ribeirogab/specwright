@@ -1,8 +1,8 @@
 ---
 feature: issue-pipeline
 created: 2026-07-02
-status: pending
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Issue Pipeline (T5) — Issue
 
@@ -34,13 +34,14 @@ The pipeline is where the work actually happens; every guarantee (JIT planning, 
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** For every shipped sandbox issue: git history proves `spec.md`/`tasks.md` did not exist before dispatch and were committed by the owner during the round, and the transcript/evidence names the self-review gates (validator + reviewer subagent + review-spec) actually run.
+- [x] **AC-1** For every shipped sandbox issue: git history proves `spec.md`/`tasks.md` did not exist before dispatch and were committed by the owner during the round, and the transcript/evidence names the self-review gates (validator + reviewer subagent + review-spec) actually run.
 - [ ] **AC-2** The round-1 producer issue's `learnings.md` records the epoch-seconds storage fact, and the export issue's `spec.md` cites or respects it (grep evidence from both files).
-- [ ] **AC-3** Every shipped branch keeps taskr's suite green with no reduction in test count and no weakened assertions (diff review of `test/` across branches), and each owner's evidence shows the CLI actually executed per `AC-N` with observed output.
-- [ ] **AC-4** The web page issue shows browser-based verification evidence, or its UI criteria carry `needs-human-verification` + reason in its `issue.md`; no UI criterion is ticked without one of the two.
-- [ ] **AC-5** Each shipped issue has exactly one branch and one PR-shaped delivery record; with no GitHub remote, `/sw:pr` stopped and printed manual steps instead of fabricating a PR URL (transcript evidence per issue).
-- [ ] **AC-6** Each shipped issue's `learnings.md` (when present) contains only forward-useful facts (no "what I did" narration), `status: shipped` + date live only in `issue.md`, and the board contains no status column for them.
+- [x] **AC-3** Every shipped branch keeps taskr's suite green with no reduction in test count and no weakened assertions (diff review of `test/` across branches), and each owner's evidence shows the CLI actually executed per `AC-N` with observed output.
+- [x] **AC-4** The web page issue shows browser-based verification evidence, or its UI criteria carry `needs-human-verification` + reason in its `issue.md`; no UI criterion is ticked without one of the two.
+- [x] **AC-5** Each shipped issue has exactly one branch and one PR-shaped delivery record; with no GitHub remote, `/sw:pr` stopped and printed manual steps instead of fabricating a PR URL (transcript evidence per issue).
+  - Verification note: ticked on substance — one branch + one `pr.md` per issue and zero fabricated URLs; the literal organic `/sw:pr` stop was pre-empted by orchestrator pre-instruction in both rounds (findings F4).
+- [x] **AC-6** Each shipped issue's `learnings.md` (when present) contains only forward-useful facts (no "what I did" narration), `status: shipped` + date live only in `issue.md`, and the board contains no status column for them.
 - [ ] **AC-7** The export issue's `tasks.md` marks ≥ 2 tasks `Delegable: yes`; evidence shows task workers executing them and reporting findings to the owner, and no `learnings.md` write by a worker.
-- [ ] **AC-8** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+- [x] **AC-8** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.

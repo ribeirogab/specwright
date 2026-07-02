@@ -1,0 +1,1125 @@
+===== PROBE 2026-07-02T13:01:58Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                      7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority  b9d7c80 [feat/task-priority]
++ feat/task-priority
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+task-priority 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:02:43Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                      7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority  b9d7c80 [feat/task-priority]
++ feat/task-priority
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+task-priority 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:03:28Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                      7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority  b9d7c80 [feat/task-priority]
++ feat/task-priority
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+task-priority 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:04:13Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  b9d7c80 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         b9d7c80 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:04:59Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  b9d7c80 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         b9d7c80 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:05:44Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  b9d7c80 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         b9d7c80 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:06:29Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  b9d7c80 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         b9d7c80 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:07:14Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  b9d7c80 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         b9d7c80 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:07:59Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  b9d7c80 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         b9d7c80 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:08:44Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  b9d7c80 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         b9d7c80 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:09:29Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  afb28b6 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         b9d7c80 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:10:14Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  afb28b6 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         5ae05e2 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:10:59Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  afb28b6 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         5ae05e2 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:11:44Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  afb28b6 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         5ae05e2 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:12:29Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  afb28b6 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         5ae05e2 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:13:14Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  afb28b6 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         5ae05e2 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:14:00Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  f3cecfa [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     b9d7c80 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         759641d [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:14:45Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  463e1b1 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     1854f08 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         837eb8c [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:15:30Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  575ab20 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     cbe8256 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         1c34663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:16:15Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  f8b3352 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     ef3b9f5 [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         1c34663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:17:00Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  f8b3352 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     667192b [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         eefa256 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:17:45Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  f8b3352 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     7aa887f [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         4006836 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:18:30Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  190b781 [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     7aa887f [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         4006836 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:19:15Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         a05d82b [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:20:00Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         a05d82b [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:20:45Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:21:30Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:22:15Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:23:01Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:23:46Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:24:31Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:25:16Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:26:01Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:26:46Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:27:31Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:28:16Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:29:01Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:29:46Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:30:31Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:31:16Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        7c7f1bc [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — web-page — shipped — `handleRequest` lives in `lib/server.js` (method checked before path: `POST` → 405 `Allow: GET`; routing on `URL.pathname`), imports only `loadTasks`/`taskPriority` so the server is read-only by construction, all task HTML goes through `escapeHtml`, handler testable in-process via `createServer(handleRequest)` + `fetch` (teardown needs `closeAllConnections()`), no fixed ports in `npm test`; frozen test byte-identical, review lgtm. PR: branch `feat/web-page` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:32:01Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        2da129b [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — web-page — shipped — `handleRequest` lives in `lib/server.js` (method checked before path: `POST` → 405 `Allow: GET`; routing on `URL.pathname`), imports only `loadTasks`/`taskPriority` so the server is read-only by construction, all task HTML goes through `escapeHtml`, handler testable in-process via `createServer(handleRequest)` + `fetch` (teardown needs `closeAllConnections()`), no fixed ports in `npm test`; frozen test byte-identical, review lgtm. PR: branch `feat/web-page` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+===== PROBE 2026-07-02T13:32:47Z =====
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        2da129b [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
++ feat/export-json-csv
++ feat/list-filters
++ feat/task-priority
++ feat/web-page
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/export-json-csv
+  remotes/origin/feat/list-filters
+  remotes/origin/feat/task-priority
+  remotes/origin/feat/web-page
+  remotes/origin/main
+export-json-csv list-filters task-priority web-page 
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — web-page — shipped — `handleRequest` lives in `lib/server.js` (method checked before path: `POST` → 405 `Allow: GET`; routing on `URL.pathname`), imports only `loadTasks`/`taskPriority` so the server is read-only by construction, all task HTML goes through `escapeHtml`, handler testable in-process via `createServer(handleRequest)` + `fetch` (teardown needs `closeAllConnections()`), no fixed ports in `npm test`; frozen test byte-identical, review lgtm. PR: branch `feat/web-page` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
