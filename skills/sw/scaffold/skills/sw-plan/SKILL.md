@@ -89,16 +89,18 @@ After `spec.md` + `tasks.md` are written, review them before implementation. The
 
 **Gates (run in order):**
 
-1. **Mechanical** — `.agents/skills/sw/scripts/validate-spec.sh <issue-folder>` (in the specwright dev repo: `skills/sw/scripts/validate-spec.sh`); non-zero exit names the structural defect. Fix and re-run until it exits 0.
+1. **Mechanical** — `.agents/skills/sw/scripts/validate-spec.sh <issue-folder>` (in the specwright dev repo: `skills/sw/scripts/validate-spec.sh`); non-zero exit names the structural defect. Fix and re-run until it exits 0 — with one exception: a failure caused by the approved ticket itself (`issue.md`) means **stop and report it with the exact validator `FAIL` line** — to the user (standalone) or in a blocked report to the orchestrator (milestone) — and proceed only after an acknowledged resolution. The owner never rewords an approved criterion; any ticket edit is its own commit naming the changed criterion.
 2. **Spec-document-reviewer subagent** — dispatch it (see the sibling `spec-document-reviewer-prompt.md`) over `issue.md` + `spec.md` + `tasks.md`. Fix, re-dispatch until Approved (max 3 iterations, then surface to the human).
 3. **`/sw:review-spec`** — the external evaluator (conventions + issue compliance, vague ACs, scope creep). Fix any `FAIL`.
+
+**Commit the plan** — when the three gates pass, commit `spec.md` + `tasks.md` (including any gate fixes) before the first implementation commit. The PR body's quality-gate section must name these three gates and their outcomes — a repo-only auditor must be able to verify the gates ran.
 
 ## Implement
 
 Decide the execution approach yourself — do not ask:
 
-- **Fan-out** (large issue, 5+ tasks, many independent files): dispatch a fresh **task worker** per `Delegable: yes` task. Workers implement and **report findings back** (raw discoveries, surprises, constraints); they never write `learnings.md` — curation is the owner's. Review each worker's diff before starting the next wave.
-- **Inline** (small issue, < 5 tasks, focused changes): execute the tasks in this session, checkpointing after each.
+- **Fan-out** (two or more `Delegable: yes` tasks): dispatch a fresh **task worker** per `Delegable: yes` task. Workers implement and **report findings back** (raw discoveries, surprises, constraints); they never write `learnings.md` — curation is the owner's. Review each worker's diff before starting the next wave.
+- **Inline** (fewer than two delegable tasks): execute the tasks in this session, checkpointing after each.
 
 ## Quality gate
 
@@ -106,7 +108,7 @@ Detect the touched modules' code-quality processes (test, lint, typecheck, build
 
 ## Runtime verification
 
-After the quality gate and **before the PR**, execute what you built and check every `AC-N` by **observed behavior** — run the CLI, start the server and hit the endpoint, run the script against a fixture. For UI criteria: verify through a browser when the agent has that capability. When a criterion cannot be runtime-verified (no browser, no reachable environment), mark it `needs-human-verification` in `issue.md` with one line of reason — **never silently tick it, never fake a verification**. Record what was verified and how; it goes in the PR body.
+After the quality gate and **before the PR**, execute what you built and check every `AC-N` by **observed behavior** — run the CLI, start the server and hit the endpoint, run the script against a fixture. Stream-sensitive checks must use per-stream file redirection (e.g. `>out 2>err`) — piping merged streams cannot attribute output to stdout vs stderr. For UI criteria — a **UI criterion** is one about rendered appearance or interaction, not HTTP responses or text output — verify through a browser when the agent has that capability; an unattended session that degrades browser verification to curl must record the capability gap alongside the result. When a criterion cannot be runtime-verified (no browser, no reachable environment), mark it `needs-human-verification` in `issue.md` with one line of reason — **never silently tick it, never fake a verification**. Record what was verified and how; it goes in the PR body.
 
 **Circuit breaker:** the same gate or criterion failing **three times identically** means stop — do not thrash. Standalone issue: report to the user (why / what you tried / what you need). Milestone issue: write that report, set `status: blocked` in `issue.md`, and return it to the orchestrator.
 
