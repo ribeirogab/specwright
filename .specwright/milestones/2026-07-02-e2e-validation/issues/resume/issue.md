@@ -1,7 +1,7 @@
 ---
 feature: resume
 created: 2026-07-02
-status: pending
+status: in-progress
 shipped: null
 ---
 # Resume (T3) — Issue

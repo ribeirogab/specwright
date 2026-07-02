@@ -1,0 +1,31 @@
+# Resume (T3) — Sandbox state evidence
+
+Sandbox: /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+Captured: 2026-07-02T05:53:39Z
+
+## Before
+
+$ git status --porcelain --branch
+## main...origin/main [ahead 1]
+
+$ git log --oneline -3
+aaa117b chore(vault): plan the grow-taskr milestone — 5 issues from the approved brainstorm
+e57a024 chore: bootstrap taskr sandbox with specwright
+
+$ git worktree list
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr  aaa117b [main]
+
+$ shasum -a 256 board.md issues/*/issue.md
+1dedb0854c49ed0d4427fbaedb51d5a59ea213937ead1aba423a9b2ae2ae6e3f  /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/board.md
+1f9da734b42302b260a16b04fe86124f1c12e4a32f5045764824140b7562af84  /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md
+63a1a36bfcd0ebde7ba7cb5a13379b88cc8d481e4cbc1ee6cb7cba327c6d5002  /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md
+99783fab50a86789d9e4119da893803a0449b526acbdfa29836d09ee31fa5a8e  /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md
+3b384db7c773aa3a41c1254a3cd5e7d076589a5b5fbe4eac36801ae396623282  /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md
+2e8c7ca2a37a8b0d1821cc5ab7604d708889d20895e2dab517f2dd1f7c052f8b  /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md
+
+$ grep -H "^status:" issues/*/issue.md
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
