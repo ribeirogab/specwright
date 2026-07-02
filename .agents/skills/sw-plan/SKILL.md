@@ -99,8 +99,8 @@ After `spec.md` + `tasks.md` are written, review them before implementation. The
 
 Decide the execution approach yourself — do not ask:
 
-- **Fan-out** (large issue, 5+ tasks, many independent files): dispatch a fresh **task worker** per `Delegable: yes` task. Workers implement and **report findings back** (raw discoveries, surprises, constraints); they never write `learnings.md` — curation is the owner's. Review each worker's diff before starting the next wave.
-- **Inline** (small issue, < 5 tasks, focused changes): execute the tasks in this session, checkpointing after each.
+- **Fan-out** (two or more `Delegable: yes` tasks): dispatch a fresh **task worker** per `Delegable: yes` task. Workers implement and **report findings back** (raw discoveries, surprises, constraints); they never write `learnings.md` — curation is the owner's. Review each worker's diff before starting the next wave.
+- **Inline** (fewer than two delegable tasks): execute the tasks in this session, checkpointing after each.
 
 ## Quality gate
 
