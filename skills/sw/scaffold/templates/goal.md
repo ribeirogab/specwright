@@ -16,7 +16,7 @@ created: {{YYYY-MM-DD}}
 
 ## Success Criteria
 
-{{milestone-level: how to know the WHOLE delivery is done — not per-issue acceptance criteria. e.g. "a customer can create, apply, and receive a coupon end to end"}}
+{{milestone-level: how to know the WHOLE delivery is done — not per-issue acceptance criteria. In behavior terms only: no file paths, function names, or storage formats — path-level constraints belong in the issue tickets. e.g. "a customer can create, apply, and receive a coupon end to end"}}
 
 ## Non-Goals
 

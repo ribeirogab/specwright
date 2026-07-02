@@ -1,0 +1,6 @@
+# Brainstorm and Templates — Learnings
+
+- The self-containment claim "a folder rename needs no cross-reference rewriting" survives in two live docs this issue could not touch — `skills/sw/SKILL.md` (audit/rename step) and `skills/sw/references/audit-checklist.md` — and is now contradicted by the evidence-consuming carve-out in `skills/sw/references/vault-files.md`; the review-spec command's AC-quality rubric (`plugins/sw/commands/review-spec.md`, category 2) also does not check the new state-a-hard-constraint-once rule. Follow-up candidates for closeout or the docs-owning issue.
+- `validate-spec.sh` check 3 flags a literal double-brace anywhere in `issue.md`/`spec.md`/`tasks.md`/`learnings.md` — including inside prose or inline code that merely *talks about* placeholders. Write "double-brace placeholder" instead of typing the delimiter.
+- Keeping the three brainstorm copies in sync is mechanical: author every edit in `.agents/skills/sw-brainstorm/SKILL.md`, `cp` to `plugins/sw/skills/brainstorm/SKILL.md` and `skills/sw/scaffold/skills/sw-brainstorm/SKILL.md`, then restore the plugin copy's line-2 `name: brainstorm`; verify with two `diff`s (scaffold identical, plugin exactly one `name:` hunk).
+- `skills/sw/scripts/quick_validate.py` and `package_skill.py` need a Python with `pyyaml`; on this machine the default `python3` lacks it — use `/usr/bin/python3`.
