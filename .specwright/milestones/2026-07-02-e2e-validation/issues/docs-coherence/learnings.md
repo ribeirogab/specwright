@@ -1,0 +1,6 @@
+# Docs Coherence (T11) — Learnings
+
+- `validate-spec.sh` exits with the number of `fail()` invocations (FAIL lines), not distinct failed checks: an issue.md missing `status:` alone already exits 2 (check 1 fires twice — missing key, then empty value failing the enum), and the header comment's "number of failed checks" overstates the contract (finding F-1). Any issue asserting on validator exit codes must count FAIL lines.
+- `/sw:spec` and `/sw:review-spec` are Claude-plugin-only surfaces: they exist as `plugins/sw/commands/*.md` with no canonical copy under `.agents/skills/` (the scaffold ships exactly six `sw-*` skills), so `$sw-spec` / `@sw-review-spec` resolve to nothing for non-Claude agents (finding F-2).
+- Fixtures with intentional defects can be committed inside an issue folder without tripping any gate: `validate-spec.sh` check 3 scans only the folder's top-level `issue.md`/`spec.md`/`tasks.md`/`learnings.md`, and the run skill's milestone scan globs `milestones/*/issues/*/issue.md` non-recursively — files nested under `evidence/fixtures/*/` are invisible to both.
+- The three kept-in-sync companion-skill copies (`.agents/skills/sw-<name>/`, `plugins/sw/skills/<name>/`, `skills/sw/scaffold/skills/sw-<name>/`) legitimately differ only in the SKILL.md frontmatter `name:` line (`sw-<name>` vs `<name>`); any other byte difference is drift.
