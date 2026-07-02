@@ -39,14 +39,15 @@ Repeat until no issue is ready and none is running:
 - **Owner-level (enforced by the plan skill, restated in the dispatch prompt):** the same gate or criterion failing **three times identically** → stop, write the report, set `status: blocked`, return. No thrashing, no "one more try".
 - **Orchestrator-level:** a blocked issue never blocks the loop — skip to the next ready issue. The loop **halts** only when nothing is ready and nothing is running:
   - **All issues shipped** → closeout (below).
-  - **Only blocked issues left** → print a consolidated blockers report (every Blockers entry + what each needs from the human) and stop. When the human resolves a blocker, they set the issue back to `status: pending` (or edit its `issue.md`) and re-run this skill.
-- **Scope guard:** the orchestrator never creates or removes issues, never reorders the board's dependencies, and never edits `goal.md`. Concluding the decomposition was wrong IS a blocker — report it and stop.
+  - **Only blocked issues left** → print a consolidated blockers report (every Blockers entry + what each needs from the human) and stop. Each entry's recovery line must be executable by a maintainer ignorant of the branch mechanics: name the exact `issue.md` path **inside the issue's own checkout** (its worktree or branch — the `main` copy is read by nobody in the loop), instruct editing it per the chosen option and setting `status:` back to `pending`, **committing the edit on the issue's branch**, and sweeping the rest of the ticket for restatements of the dropped constraint (a constraint rarely lives in a single hunk). Then re-run this skill.
+- **Scope guard (conduction loop):** while the loop runs, the orchestrator never creates or removes issues, never reorders the board's dependencies, and never edits `goal.md` — the one exception is closeout's goal reconciliation, applied only with the maintainer's approval. Concluding the decomposition was wrong IS a blocker — report it and stop.
 
 ## Closeout (all shipped)
 
-1. Append a final summary to the board: issues shipped, PR URLs, blockers survived.
+1. **Reconcile `goal.md`** — flag any goal statement superseded by decisions recorded during conduction (board notes, blocker resolutions); propose the reconciling edit; **apply only with the maintainer's approval**. Nothing superseded → say so and move on.
 2. **Promote durable learnings** — read every issue's `learnings.md`; propose the facts that outlive the milestone (data formats, invariants, conventions) for promotion into the area `AGENTS.md` or `.specwright/conventions/`. **Apply only what the user approves.** Ephemeral learnings stay in the issue folders as history.
-3. Report to the user: the milestone is done; merging the PRs is theirs.
+3. Append a final summary to the board: issues shipped, PR URLs, blockers survived. Written **after** the reconciliation and promotion approvals above; if a draft went in earlier, amend only within the appended summary section — the rest of the board stays frozen.
+4. Report to the user: the milestone is done; merging the PRs is theirs.
 
 ## Degradation — no sub-agent support
 
