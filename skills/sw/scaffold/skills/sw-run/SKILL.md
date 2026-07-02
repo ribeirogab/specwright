@@ -34,6 +34,34 @@ Repeat until no issue is ready and none is running:
    - **Watchdog:** 10 minutes without observable progress from an owner → flag it and verify its state directly; a confirmed stall is resumed by its agentId or re-dispatched.
 4. **Re-evaluate** — newly shipped issues may make others ready (and their learnings now feed those issues' plans). Go to 1.
 
+## Progress reporting
+
+A long conduction that only speaks in prose leaves the maintainer in the dark. Surface state as a **visual progress panel**, and end every text status update with a **compact progress line**. Render the panel with whatever visual capability the session has — the reference rendering is the visualize `show_widget`, flat claude.ai style — but the contract below is the *structure and the content*, never a specific renderer: a session with a visual widget draws the panel, a session without one emits the same content as a text table (see Degradation, below). Describe what to render, not which tool to call.
+
+**When to render the panel** — two triggers:
+
+- On **any progress question** from the maintainer ("how's it going?", "status?", "onde estamos?") — render on demand, mid-round, without waiting for a boundary.
+- At **round transitions** — at the loop's re-evaluate step, when a round has just closed and the next is about to open.
+
+**Panel structure**, top to bottom:
+
+1. **KPI row** — four metric cards: **overall weighted %** (shipped issues plus the in-flight fraction, not just the shipped count); **shipped count** `N / total` with the PR range; **in-progress count** with which issue(s) are running; **findings-in-dossier count**.
+2. **Overall stacked progress bar** — three segments in one bar: shipped (green, reference `#1D9E75`), in-flight (amber, reference `#EF9F27`), queued (the surface/track color); caption `X shipped · Y rodando · Z na fila`.
+3. **Per-issue row list, in board order** — one row per issue: an **88px status-chip pill** (`shipped` / `rodando` / `na fila`), then the issue name (weight up when active or done), then a **muted one-liner** (its test id, key result, or PR number).
+4. **Sub-milestone section(s)** below a hairline — the same stacked-bar shape plus a one-line status, when the milestone has sub-milestones.
+
+The reference hex palette records the approved look so a future renderer reproduces it; the **structure** — which elements, in which order, carrying which metrics — is the contract, not any hex value.
+
+**Compact progress line** — every text status update during conduction **ends with a one-line summary**, so the maintainer reads progress at a glance even without the full panel. It carries, in order: overall **%**, shipped **X of N**, the **currently running issue(s)**, and the **queued count**. Reference format:
+
+```
+Progresso: ~NN% — X/N shipped · <current> rodando (~NN%) · Y na fila
+```
+
+The line's **language follows the conversation** — the reference above is pt-BR because that conduction was pt-BR; an English conduction writes the English equivalent with the same fields in the same order. Fill the fields from live state; never omit the line from a status update.
+
+**Degradation — no visual rendering capability.** A session that cannot draw the panel does **not** skip the update: it emits the panel content as a **text table** — the four KPI numbers, then one table row per issue (chip label, name, one-liner) — followed by the compact line. The update is never silently dropped; only its rendering degrades.
+
 ## Circuit breakers
 
 - **Owner-level (enforced by the plan skill, restated in the dispatch prompt):** the same gate or criterion failing **three times identically** → stop, write the report, set `status: blocked`, return. No thrashing, no "one more try".

@@ -1,8 +1,8 @@
 ---
 feature: run-skill-progress-panel
 created: 2026-07-02
-status: pending
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Run Skill Progress Panel — Issue
 
@@ -27,10 +27,10 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 
 Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.
 
-- [ ] **AC-1** The run skill contains a "Progress reporting" section specifying the panel structure top to bottom: a KPI row (overall weighted %, shipped count out of total, in-flight count with issue names, findings count), an overall stacked progress bar (shipped / running / queued with caption), a per-issue row list in board order with a status chip and a muted one-liner, and a sub-milestone section with the same bar shape.
-- [ ] **AC-2** The section states the two triggers: render the panel on any progress question from the maintainer and at round transitions.
-- [ ] **AC-3** The section mandates that every text status update during conduction ends with a compact one-line summary carrying overall %, shipped X of N, the currently running issue(s), and the queued count — with the line's field format spelled out in the skill and its language following the conversation.
-- [ ] **AC-4** The section states the degradation rule: sessions without a visual rendering capability emit the panel content as a text table plus the compact line, never skipping the update.
-- [ ] **AC-5** The run skill's three shipped copies (`plugins/sw/skills/run/SKILL.md`, `.agents/skills/sw-run/SKILL.md`, `skills/sw/scaffold/skills/sw-run/SKILL.md`) differ only in the frontmatter `name:` line.
+- [x] **AC-1** The run skill contains a "Progress reporting" section specifying the panel structure top to bottom: a KPI row (overall weighted %, shipped count out of total, in-flight count with issue names, findings count), an overall stacked progress bar (shipped / running / queued with caption), a per-issue row list in board order with a status chip and a muted one-liner, and a sub-milestone section with the same bar shape.
+- [x] **AC-2** The section states the two triggers: render the panel on any progress question from the maintainer and at round transitions.
+- [x] **AC-3** The section mandates that every text status update during conduction ends with a compact one-line summary carrying overall %, shipped X of N, the currently running issue(s), and the queued count — with the line's field format spelled out in the skill and its language following the conversation.
+- [x] **AC-4** The section states the degradation rule: sessions without a visual rendering capability emit the panel content as a text table plus the compact line, never skipping the update.
+- [x] **AC-5** The run skill's three shipped copies (`plugins/sw/skills/run/SKILL.md`, `.agents/skills/sw-run/SKILL.md`, `skills/sw/scaffold/skills/sw-run/SKILL.md`) differ only in the frontmatter `name:` line.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
