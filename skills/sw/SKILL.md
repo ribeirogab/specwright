@@ -129,7 +129,7 @@ All bundled skills live in `scaffold/skills/` alongside this `SKILL.md`.
 
 ```bash
 SW_DIR="<directory where this SKILL.md lives>"
-SKILL_NAMES=(sw-brainstorm sw-plan sw-pr sw-review sw-run sw-update)
+SKILL_NAMES=(sw-brainstorm sw-plan sw-pr sw-review sw-review-spec sw-run sw-spec sw-update)
 
 # 1. Canonical install — single source of truth on disk
 mkdir -p .agents/skills
@@ -226,6 +226,8 @@ fi
 If `jq` is not installed, fall back to the Python recipe documented in `references/claude-plugin-settings.md`. The skill must never overwrite `.claude/settings.json` wholesale — unrelated top-level keys must survive intact.
 
 Rules:
+- The `sw` skill self-installs to `.agents/skills/sw` — including `scaffold/` and `scripts/` — with `scripts/*.sh` kept executable; a fresh scaffold must leave `.agents/skills/sw/scripts/validate-spec.sh` runnable at that path.
+- `.claude/skills/sw` (symlink to `../../.agents/skills/sw`) is the only entry the scaffolder creates under `.claude/skills/` — companion skills reach Claude Code through the plugin, never through that directory.
 - Skills always go to `.agents/skills/<name>` first (canonical), then symlinked into existing agent dirs.
 - Slash commands ship as a Claude Code plugin from the upstream marketplace `specwright`. The skill writes `.claude/settings.json` (extraKnownMarketplaces + enabledPlugins) so Claude Code installs the plugin at workspace-trust time. No command files are copied into the target repo.
 - Existing canonical skill files are never overwritten — re-runs are no-ops on already-installed items.
