@@ -8,7 +8,7 @@ created: {{YYYY-MM-DD}}
 
 ## Issues
 
-An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md`.
+An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md` — read from the dependency's own branch while its PR is unmerged (the `main` copy stays `pending` until merge).
 
 | Order | Issue | Depends on |
 |---|---|---|
@@ -23,7 +23,7 @@ Append-only — one line per orchestrator event: date, issue, event (`dispatched
 
 ## Blockers
 
-One entry per blocked issue — the owner's report, copied verbatim. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
+One entry per blocked issue — the owner's paste-ready Blockers block (Why / Tried / Needs), pasted unmodified. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
 
 ### {{slug}}
 
