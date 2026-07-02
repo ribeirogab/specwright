@@ -19,16 +19,19 @@ Conduct a milestone from its board to done. The orchestrator is a **pure conduct
 
 Repeat until no issue is ready and none is running:
 
-1. **Find ready issues** — every issue whose `issue.md` says `status: pending` and whose board dependencies all say `status: shipped`.
-2. **Dispatch one issue owner per ready issue** — all of them, in parallel, no concurrency cap. For each:
-   - Branch from `main` — or from the dependency's branch when the board says this issue depends on a not-yet-merged one (a stacked PR; the owner notes it in the PR body).
+1. **Find ready issues** — every issue whose `issue.md` says `status: pending` and whose board dependencies all say `status: shipped`. Readiness reads each dependency's `issue.md` **from the dependency's own branch** (its worktree or branch checkout): while the dependency's PR is unmerged, the `main` copy still says `pending` — the on-branch copy is the truth.
+2. **Dispatch one issue owner per ready issue** — all of them, in parallel, no concurrency cap. Interactive approval asks are scoped to **this round's writes** (its worktrees, branches, commits, pushes, PRs) — never the whole milestone; a later round is a new loop turn and requires a new ask. For each:
+   - Branch from `main` — or, when a dependency's PR is not yet merged, stack on the dependency's branch: the owner branches from it, notes the stacked base in the PR body, and re-targets the PR onto `main` after the dependency merges.
    - **Worktree is mandatory for parallel dispatch** — two owners in one working tree trample each other:
      ```bash
      git worktree add .specwright/worktrees/<slug> -b <branch>
      ```
-   - The owner's prompt: the issue folder path, the milestone path, the worktree path, and the instruction to run the **plan skill pipeline** end to end (plan → self-review → implement → quality gate → runtime verification → PR → review to `lgtm` → curate `learnings.md` → flip `issue.md` status), returning either `shipped` (+ PR URL + one line per learning) or `blocked` (+ the report: why / tried / needs).
+   - The owner's prompt: the issue folder path, the milestone path, the worktree path, and the instruction to run the **plan skill pipeline** end to end (plan → self-review → implement → quality gate → runtime verification → PR → review to `lgtm` → curate `learnings.md` → flip `issue.md` status), returning either `shipped` (+ PR URL + one line per learning) or `blocked` (+ a paste-ready Blockers block — **Why / Tried / Needs** — written by the owner for the board).
    - Append `dispatched` to the board's Dispatch Log.
-3. **Track** — as each owner returns, append the event to the Dispatch Log. On `shipped`: note the learnings one-liners and PR URL. On `blocked`: copy the owner's report verbatim into the board's Blockers section. Owners flip their own `issue.md` status; the orchestrator never edits an `issue.md`.
+   - Keep the **agentId** from the spawn result — name aliases expire; address every resume or relay by that ID, never by name. Treat relays as one-way: read the owner's answers from repository artifacts, not from message replies.
+3. **Track** — as each owner returns, append the event to the Dispatch Log, and **commit the board after every Dispatch Log append** — not only at round close; an uncommitted line is lost to a crash. On `shipped`: note the learnings one-liners and PR URL. On `blocked`: paste the owner's paste-ready Blockers block (Why / Tried / Needs) into the board's Blockers section **unmodified** — the conductor never composes or restructures it. Owners flip their own `issue.md` status; the orchestrator never edits an `issue.md`.
+   - Completion notifications reach only the top-level session — never wait on them. Poll each dispatched owner's **observable state** (repository files, branches, commit and output timestamps) on a cadence of a few minutes; treat silence as still-running only until a state check says otherwise.
+   - **Watchdog:** 10 minutes without observable progress from an owner → flag it and verify its state directly; a confirmed stall is resumed by its agentId or re-dispatched.
 4. **Re-evaluate** — newly shipped issues may make others ready (and their learnings now feed those issues' plans). Go to 1.
 
 ## Circuit breakers

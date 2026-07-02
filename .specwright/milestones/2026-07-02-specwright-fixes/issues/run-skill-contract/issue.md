@@ -1,7 +1,7 @@
 ---
 feature: run-skill-contract
 created: 2026-07-02
-status: pending
+status: in-progress
 shipped: null
 ---
 # Run Skill Contract — Issue
