@@ -37,7 +37,7 @@ The session verified each AC by executing the CLI, and re-checked stream separat
 
 ## The /sw:pr station — first organic exercise of the no-GitHub degradation (dossier 6.4)
 
-No pre-instruction about PR mechanics was ever given to this session (checked: spawn prompt + all five relay messages). Its `/sw:pr` sequence, from the transcript's tool calls:
+No pre-instruction about PR mechanics was ever given to this session (checked: spawn prompt + all four relay messages). Its `/sw:pr` sequence, from the transcript's tool calls:
 
 1. `git branch --show-current && git ls-remote --heads origin feat/help-flag; cat .github/PULL_REQUEST_TEMPLATE.md ... || echo "NO_TEMPLATE"; git remote -v | head -2; gh auth status >/dev/null 2>&1 && echo "gh ok"`
 2. `git push -u origin feat/help-flag 2>&1 | tail -2 && gh pr create --base main --title "test" --body "test" --assignee @me 2>&1 | head -3; true`
@@ -57,4 +57,4 @@ Ship: ACs ticked, `status: shipped` + `shipped: 2026-07-02`, `learnings.md` cura
 
 ## Driver contamination check
 
-Zero direct driver messages: opening ask in the spawn prompt; five replies via fresh neutral relays (`maintainer`, `maintainer2`, `maintainer3`, `maintainer4`); first turn referenced no caller identity; no expected-outcome terms in any driver text (pre-send checks recorded). The session's only unusual inbound was the verdict relay — which it declined to trust, independently.
+Zero direct driver messages: opening ask in the spawn prompt; four replies via fresh neutral relays (`maintainer`, `maintainer2`, `maintainer3`, `maintainer4`); first turn referenced no caller identity; no expected-outcome terms in any driver text (pre-send checks recorded). The session's only unusual inbound was the verdict relay — which it declined to trust, independently.

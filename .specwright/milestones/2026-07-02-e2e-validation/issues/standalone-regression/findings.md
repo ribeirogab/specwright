@@ -22,6 +22,8 @@ One verdict per audit station; every non-PASS gets an Expected / Observed / Prop
 
 **Standalone-path regression verdict: none.** Every station of the single-issue flow behaved per the unified layout; the old format never appeared.
 
+**AC-3 tick vs the spec's contingency, reconciled explicitly:** spec.md's contingency leaves AC-3 unticked only if the observed behavior diverges from the documented degradation **outcome** — "stop and explain; do not fabricate a PR". The outcome matched in full (stop, explanation, manual steps, zero fabricated URLs); Divergences 1–2 concern the *detection order* inside the station and the *durability of the record*, neither of which the skill's documented degradation prescribes. Hence AC-3 is ticked and the two divergences are filed as skill-text improvements, not as a degradation mismatch.
+
 ## Divergences (Expected / Observed / Proposed fix)
 
 ### Divergence 1 — /sw:pr probes with a live `gh pr create` instead of inspecting the remote first

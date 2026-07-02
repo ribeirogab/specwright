@@ -77,7 +77,7 @@ $ jq -r '<assistant text turns>' agent-aa69801af5e6dff67.jsonl | grep -c 'design
 0
 ```
 
-No `design.md` file anywhere at any point (before leg: evidence 01); no assistant-authored transcript mention.
+No `design.md` file anywhere at any point (before leg: evidence 01); no assistant-authored transcript mention. Joined with the driver side — the spawn prompt and all four relay messages were pre-send-checked against the forbidden-terms list, which includes `design.md` (evidence 02 header, evidence 03 contamination check) — the **full** transcript (both directions) contains no `design.md` mention, satisfying AC-4's wording.
 
 ## 7. Shipped state (AC-3)
 
@@ -91,4 +91,12 @@ shipped: 2026-07-02
 ---
 ```
 
-All 5 sandbox ACs ticked `[x]` (the final ticket elaborated the design preview's 4 ACs into 5 — AC-5 covers the README line; a normal brainstorm→ticket elaboration, not drift).
+All 5 sandbox ACs numbered and ticked `[x]` (the final ticket elaborated the design preview's 4 ACs into 5 — AC-5 covers the README line; a normal brainstorm→ticket elaboration, not drift). Verbatim from the shipped ticket:
+
+```
+- [x] **AC-1** `node bin/taskr.js --help` prints the help text (usage line, the three commands `add`/`list`/`done` each with a one-line description, and a `TASKR_FILE` note) to **stdout** and exits with code **0**.
+- [x] **AC-2** `node bin/taskr.js -h` produces byte-identical output and the same exit code as `--help`.
+- [x] **AC-3** An unknown command (e.g. `node bin/taskr.js bogus`) prints the usage line and `try 'taskr --help'` to **stderr** and exits with code **1**; bare `node bin/taskr.js` behaves the same.
+- [x] **AC-4** `npm test` passes with all pre-existing tests intact (no removed or weakened assertions) plus new tests covering AC-1, AC-2, and AC-3.
+- [x] **AC-5** `README.md` documents the `--help`/`-h` flag.
+```
