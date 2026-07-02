@@ -20,11 +20,11 @@ Everything the scaffolder writes into a target repo's `.specwright/` vault. spec
 
 | Path | What it is | Scaffolder action |
 |---|---|---|
-| `.specwright/conventions/` | project-specific code/style conventions | ensure the directory exists (empty is fine) + `.gitkeep` |
+| `.specwright/conventions/` | whatever standards the repo wants kept consistent | ensure the directory exists + seed a `README.md` signpost (empty conventions dir only) |
 | `.specwright/issues/` | one dated folder per standalone issue | ensure the directory exists + `.gitkeep` |
 | `.specwright/milestones/` | one dated folder per milestone | ensure the directory exists + `.gitkeep` |
 
-The scaffolder's whole job for the vault is **make sure the three directories exist and survive a clone** — each gets a `.gitkeep`, because git tracks no empty directories. Beyond those keep-files it writes nothing into the vault: no seed files, index, tracker, config, or template.
+The scaffolder's whole job for the vault is **make sure the three directories exist and survive a clone** — git tracks no empty directories, so each keeps a tracked file: `issues/` and `milestones/` get a bare `.gitkeep`; `conventions/` gets a short `README.md` signpost that serves the same keep-the-directory purpose and also tells the adopter what the folder is for. Beyond that keep-file the scaffolder writes **no convention rule or standard** into the vault — the signpost declares itself inert (states no rule, applies to no file), and there is no index, tracker, config, or template.
 
 What does **not** live in the vault (do not create any of these):
 
@@ -36,9 +36,9 @@ What does **not** live in the vault (do not create any of these):
 
 ## `.specwright/conventions/` — the conventions directory
 
-A directory for project-specific code and style conventions. The user fills it over time — one file per convention, in whatever shape the project prefers. specwright imposes no template and no required frontmatter on these files.
+A directory for whatever standards the repo wants kept consistent — code style, architecture, naming, testing, any project preference. The user fills it over time — one file per convention, in whatever shape the project prefers. specwright imposes no template and no required frontmatter on these files.
 
-On first install it is **empty** (apart from the `.gitkeep`), and that is correct. The scaffolder never writes a convention seed or placeholder content into it.
+On first install it holds only the seeded `README.md` signpost — a self-declaring, inert file that keeps the directory tracked and explains what the folder is for. That signpost is the one thing the scaffolder writes here, and only when the directory is empty; it never writes a convention rule, standard, or placeholder content, and never overwrites a conventions dir the user has already populated.
 
 ---
 
@@ -53,6 +53,7 @@ The home for every standalone issue (work that is not part of a milestone). Each
     spec.md         # the technical plan (written just-in-time by the plan skill)
     tasks.md        # the task breakdown, each task naming its AC: and Delegable:
     learnings.md    # optional: curated non-obvious facts (written by the issue owner)
+    ...             # plus any issue-specific artifacts (e.g. findings.md, evidence/ for validation issues)
 ```
 
 **Issues are self-contained.** No cross-references between issues and none out of an issue. One carve-out: **evidence-consuming issues** — work whose job is to audit, validate, or consolidate sibling issues — may cite sibling-issue paths as **plain text** (e.g. "the sibling `../2026-06-01-api-audit/learnings.md`"), because their verifiability depends on naming the evidence; link syntax remains banned for them too. Issue **status** lives in each issue's own `issue.md` frontmatter (`status:` and `shipped:`) — there is no separate tracker file that lists or aggregates issues.
@@ -74,6 +75,7 @@ The home for every milestone (a large delivery decomposed into issues, conducted
         spec.md
         tasks.md
         learnings.md
+        ...           # plus any issue-specific artifacts (e.g. findings.md, evidence/ for validation issues)
 ```
 
 Milestone issue folders have exactly the same shape as standalone issues — only their location differs. `board.md` never duplicates issue status; it holds only what has no other home (order, dependencies, dispatch log, blocker reports).

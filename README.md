@@ -34,7 +34,7 @@ The skill is audit-first, autonomous-fix, and safe to re-run. After the first ru
 After install the repo has:
 
 - an **`AGENTS.md`** describing the issue-driven workflow,
-- a **`.specwright/` vault** holding `conventions/` (project-specific conventions), `issues/` (dated standalone-issue folders), and `milestones/` (dated milestone folders), and
+- a **`.specwright/` vault** holding `conventions/` (whatever standards the repo wants kept consistent — you fill it, `/sw:review` enforces it), `issues/` (dated standalone-issue folders), and `milestones/` (dated milestone folders), and
 - a set of **`/sw:*` commands** and companion skills:
 
 | Command | What it does |
@@ -70,7 +70,7 @@ flowchart TD
 A few things worth knowing:
 
 - **One human gate.** You approve the design — nothing else. The agent reviews its *own* plan (the spec-document-reviewer subagent + `/sw:review-spec` + the `validate-spec.sh` mechanical gate). Design approval is the standing consent to commit, push, open the PR, and review to `lgtm`.
-- **Issues everywhere.** The unit of work is one folder — `issue.md` (ticket + `AC-N` + `status:`), `spec.md`, `tasks.md`, optional `learnings.md` — identical standalone and inside milestones.
+- **Issues everywhere.** The unit of work is one folder — `issue.md` (ticket + `AC-N` + `status:`), `spec.md`, `tasks.md`, optional `learnings.md`, plus any issue-specific artifacts (e.g. `findings.md`, `evidence/`) — identical standalone and inside milestones.
 - **Milestones run as a loop.** The orchestrator (`/sw:run`) never touches code: it dispatches issue owners, tracks the live `board.md`, carries curated learnings from shipped issues into later plans, and stops on circuit breakers (three identical failures → `blocked` + a report) instead of thrashing.
 - **Runtime verification.** Before any PR, the agent executes what it built and checks each `AC-N` by observed behavior — UI through a browser when the agent has one, otherwise the criterion is marked `needs-human-verification`, never faked.
 - **Worktree.** A specwright-native checkout under `.specwright/worktrees/` — default yes; mandatory for parallel milestone dispatch.
@@ -97,22 +97,24 @@ Edit the copy your agent loads. To change what **future** installs get, edit the
 
 ```
 specwright/
+├── install.sh               # the one-line installer (curl-piped from main)
 ├── skills/sw/               # the scaffolder skill: SKILL.md, references/, scaffold/, scripts/
 ├── plugins/sw/              # Claude Code plugin — /sw:* commands (commands/) + companion skills (skills/)
 ├── .claude-plugin/          # marketplace manifest
+├── tests/                   # install smoke tests
 ├── LICENSE                  # MIT
-├── NOTICE.md                # attribution for vendored validator scripts
+├── NOTICE.md                # attribution for the two vendored Apache-2.0 scripts
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
 ├── SECURITY.md
 └── README.md
 ```
 
-The repository also contains `.agents/`, `.claude/`, and `.specwright/` — local dirs used to dogfood specwright on its own development (the bundled companion skills, the per-agent symlinks, and the maintainer's spec vault). They are not what the installer puts in your repo.
+The repository also contains `AGENTS.md` (with its `CLAUDE.md` symlink), `.agents/`, `.claude/`, and `.specwright/` — files and dirs used to dogfood specwright on its own development (the entry-point contract, the bundled companion skills, the per-agent symlinks, and the maintainer's spec vault). They are not what the installer puts in your repo.
 
 ## License
 
-This repository's original work is licensed under the [MIT License](LICENSE). The vendored validator scripts under `skills/sw/scripts/` are Apache-2.0; see [`NOTICE.md`](NOTICE.md) for attribution.
+This repository's original work is licensed under the [MIT License](LICENSE). The two vendored scripts under `skills/sw/scripts/` (`quick_validate.py`, `package_skill.py`) are Apache-2.0; see [`NOTICE.md`](NOTICE.md) for attribution.
 
 ## Contributing
 

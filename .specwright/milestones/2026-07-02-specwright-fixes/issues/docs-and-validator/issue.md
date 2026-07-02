@@ -1,8 +1,8 @@
 ---
 feature: docs-and-validator
 created: 2026-07-02
-status: pending
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Docs and Validator — Issue
 
@@ -27,10 +27,10 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 
 Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.
 
-- [ ] **AC-1** `validate-spec.sh`'s header and trailer match its actual exit semantics — either the wording becomes "failures reported (one per FAIL line)" or the counter dedupes per check — the check-1 vs check-2 empty-value asymmetry is resolved by a deliberate documented choice, and the collision with the reserved usage exit 2 is noted in the header (dossier 5.1).
-- [ ] **AC-2** `references/agents-md-template.md`'s Issue flow section matches the current AGENTS.md minus the dogfood-only clause, and the audit's DRIFT check over the pair reports clean (dossier 5.2).
-- [ ] **AC-3** The README license sentence names the two vendored scripts under `skills/sw/scripts/` (`quick_validate.py`, `package_skill.py`) as the Apache-2.0 portion and points to `NOTICE.md` (dossier 5.3).
-- [ ] **AC-4** The README repository-layout section includes `install.sh` and `tests/` entries, with `AGENTS.md`/`CLAUDE.md` either listed or covered by the dogfood paragraph with the section retitled accordingly (dossier 5.4).
-- [ ] **AC-5** Every issue-folder enumeration in live docs mentions that issue-specific artifacts may also be present (e.g. `findings.md`, `evidence/`) (dossier 5.5).
+- [x] **AC-1** `validate-spec.sh`'s header and trailer match its actual exit semantics — either the wording becomes "failures reported (one per FAIL line)" or the counter dedupes per check — the check-1 vs check-2 empty-value asymmetry is resolved by a deliberate documented choice, and the collision with the reserved usage exit 2 is noted in the header (dossier 5.1).
+- [x] **AC-2** `references/agents-md-template.md`'s Issue flow section matches the current AGENTS.md minus the dogfood-only clause, and the audit's DRIFT check over the pair reports clean (dossier 5.2).
+- [x] **AC-3** The README license sentence names the two vendored scripts under `skills/sw/scripts/` (`quick_validate.py`, `package_skill.py`) as the Apache-2.0 portion and points to `NOTICE.md` (dossier 5.3).
+- [x] **AC-4** The README repository-layout section includes `install.sh` and `tests/` entries, with `AGENTS.md`/`CLAUDE.md` either listed or covered by the dogfood paragraph with the section retitled accordingly (dossier 5.4).
+- [x] **AC-5** Every issue-folder enumeration in live docs mentions that issue-specific artifacts may also be present (e.g. `findings.md`, `evidence/`) (dossier 5.5).
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.

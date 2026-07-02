@@ -17,7 +17,7 @@ If the user is asking, investigating, or exploring — just answer.
 
 ### Issue flow
 
-The **issue** is the unit of work: one folder (`issue.md` ticket with `AC-N` + `status:`, technical `spec.md`, `tasks.md`, optional `learnings.md`), one branch, one PR. A large delivery is a **milestone**: `goal.md` + live `board.md` + `issues/<slug>/`, conducted in a loop by `/sw:run`.
+The **issue** is the unit of work: one folder (`issue.md` ticket with `AC-N` + `status:`, technical `spec.md`, `tasks.md`, optional `learnings.md` + any issue-specific artifacts), one branch, one PR. A large delivery is a **milestone**: `goal.md` + live `board.md` + `issues/<slug>/`, conducted in a loop by `/sw:run`.
 
 1. `/sw:brainstorm` → open design conversation (converse first, decide at the end); design approval is the **only** human review. The agent then concludes the **scope** — single issue or milestone (it suggests, you decide) — and asks one batch: single issue = branch + worktree + handoff; milestone = worktree only.
 2. **Single issue** → write `issues/YYYY-MM-DD-<slug>/issue.md`, then `/sw:plan`: just-in-time `spec.md` + `tasks.md`, self-reviewed (spec-document-reviewer subagent + `/sw:review-spec` + `validate-spec.sh` — no human gate) → implement → **quality gate** (run every test/lint/typecheck/build the touched area has; test integrity: no silent count drop, no weakened assertions) → **runtime verification** (execute it; check each `AC-N` by observed behavior; UI via browser or mark `needs-human-verification`) → `/sw:pr` → `/sw:review` to `lgtm` → set `issue.md` `status: shipped` + date. Three identical failures of one gate → stop and report; never thrash.
@@ -37,7 +37,7 @@ flowchart TD
 
 ## Coding standard
 
-`/sw:review` enforces the coding standard (Unix philosophy, meaningful comments, security). Project conventions live in `.specwright/conventions/`; standalone issues in `.specwright/issues/`; milestones in `.specwright/milestones/`.
+`/sw:review` enforces the coding standard (Unix philosophy, meaningful comments, security). `.specwright/conventions/` holds whatever standards this repo wants kept consistent — code style, architecture, naming, testing, any project preference — which you fill over time and `/sw:review` enforces alongside its universal rubric. Standalone issues live in `.specwright/issues/`; milestones in `.specwright/milestones/`.
 
 ## Skills and slash commands
 
@@ -52,3 +52,7 @@ Commands + companion skills ship through the `sw` plugin (marketplace `specwrigh
 - **`/sw:review-spec`** — external evaluator pass over an issue's plan (agent self-review).
 - **`/sw:pr`** — open the issue's PR.
 - **`/sw:update`** — sync the installed specwright with upstream (reconcile scaffolded files).
+
+### Editing the bundled skills
+
+Companion skills ship in **three copies that must stay in sync**: the canonical `.agents/skills/sw-<name>/SKILL.md`, a byte-identical scaffold copy under `skills/sw/scaffold/skills/sw-<name>/`, and the plugin copy under `plugins/sw/skills/<name>/` (identical except its line-2 `name:`). `sw-spec` and `sw-review-spec` ship in **two** (canonical + scaffold; Claude Code serves those as plugin *commands*, not skills). The `sw` scaffolder skill (`skills/sw/`) and `validate-spec.sh` are **single-copy**. Edit the canonical copy, propagate, then verify with `diff`: the scaffold copy must differ in nothing, the plugin copy in exactly the `name:` line.
