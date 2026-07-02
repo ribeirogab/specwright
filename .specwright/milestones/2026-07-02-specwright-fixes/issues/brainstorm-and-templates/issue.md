@@ -1,7 +1,7 @@
 ---
 feature: brainstorm-and-templates
 created: 2026-07-02
-status: pending
+status: in-progress
 shipped: null
 ---
 # Brainstorm and Templates — Issue
