@@ -1,10 +1,10 @@
 # Spec Document Reviewer Prompt Template
 
-Use this template when dispatching a spec document reviewer subagent, after writing-plans has produced the fused technical `spec.md` + `tasks.md`.
+Use this template when dispatching a spec document reviewer subagent, after the plan skill has produced the fused technical `spec.md` + `tasks.md`.
 
 **Purpose:** Verify the technical spec and its task breakdown are complete, consistent, and ready for implementation. This is the judgment layer; the mechanical layer (`.agents/skills/sw/scripts/validate-spec.sh`) runs separately and catches frontmatter/placeholder/vague-verb/AC-coverage defects deterministically.
 
-**Dispatch after:** the fused technical `spec.md` and `tasks.md` are written to `.specwright/specs/YYYY-MM-DD-<slug>/`.
+**Dispatch after:** the fused technical `spec.md` and `tasks.md` are written into the issue folder (`.specwright/issues/YYYY-MM-DD-<slug>/` or `.specwright/milestones/YYYY-MM-DD-<slug>/issues/<slug>/`).
 
 ```
 Task tool (general-purpose):
@@ -15,18 +15,19 @@ Task tool (general-purpose):
 
     **Spec to review:** [SPEC_FILE_PATH]
     **Tasks to review:** [TASKS_FILE_PATH]
-    **Design for reference (the approved why):** [DESIGN_FILE_PATH]
+    **Issue for reference (the approved why + acceptance criteria):** [ISSUE_FILE_PATH]
 
     ## What to Check
 
     | Category | What to Look For |
     |----------|------------------|
     | Completeness | TODOs, placeholders, "TBD", incomplete sections in spec or tasks |
-    | Consistency | Internal contradictions; spec contradicting the design's intent |
+    | Consistency | Internal contradictions; spec contradicting the issue's intent |
     | Clarity | Requirements ambiguous enough to cause someone to build the wrong thing |
     | Technical content | Architecture, File Structure, and Phase Ordering are present and concrete (not hand-wavy) |
-    | Acceptance Criteria | Each is numbered `AC-N`, binary, observable, and free of vague verbs ("works", "fast"/"robust" without a number, "gracefully") |
-    | AC coverage | Every `AC-N` in the spec is referenced by at least one task's `AC:` field; no task references an AC-N that does not exist |
+    | Acceptance Criteria | Each in issue.md is numbered `AC-N`, binary, observable, and free of vague verbs ("works", "fast"/"robust" without a number, "gracefully") |
+    | AC coverage | Every `AC-N` in issue.md is referenced by at least one task's `AC:` field; no task references an AC-N that does not exist |
+    | Learnings | If sibling shipped issues carry learnings.md files, the spec does not contradict any recorded learning |
     | Task decomposition | Tasks have clear boundaries; steps are actionable; an engineer could follow them without getting stuck |
     | Scope / YAGNI | Focused on one coherent unit; no unrequested features or over-engineering |
 
