@@ -28,7 +28,7 @@ You MUST create a task for each of these items and complete them in order:
 3. **Clarify through conversation** — understand purpose, constraints, success criteria; decisions come at the end
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval
-6. **Conclude the scope** — after approval, state whether this is a **single issue** or a **milestone**, with your reasoning (and, for a milestone, a preview of the decomposition: issue slugs, one-liners, dependencies). The user decides. The shape of the work is a conclusion of the design, not a command choice.
+6. **Conclude the scope** — after approval: work that fits one issue concludes as a **single issue**, stated plainly, without presenting the milestone alternative. Suggest a **milestone** — with a preview of the decomposition: issue slugs, one-liners, dependencies — only when the scope signals point to one (see Judging the scope). The user decides. The shape of the work is a conclusion of the design, not a command choice.
 7. **Post-design batch** — one batch, per shape (see below).
 8. **Write the artifacts** — per shape (see below). Commit them.
 9. **Next step** — single issue: invoke the plan skill (`/sw:plan`). Milestone: print the mandatory handoff and stop.

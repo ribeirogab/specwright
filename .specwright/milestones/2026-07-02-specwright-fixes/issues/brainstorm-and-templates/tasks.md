@@ -103,8 +103,8 @@ created: 2026-07-02
 **AC:** AC-1, AC-2, AC-3, AC-4, AC-5, AC-6
 **Delegable:** no — the owner runs the gates.
 **Files:**
-- Test: `tests/` (repo suite, run as-is)
+- Test: `tests/install/run.sh` (repo suite, run as-is)
 
-- [ ] Step 1: Run the repo's test suite (`tests/`) and any lint the repo defines; nothing may break.
+- [ ] Step 1: Run the repo's test suite — `bash tests/install/run.sh` — expecting all PASS lines and exit 0; nothing may break.
 - [ ] Step 2: Runtime-verify each AC against the shipped files: AC-1/AC-2/AC-3/AC-4 by reading the exact contract text in all three brainstorm copies; AC-5 by reading `vault-files.md`; AC-6 by the two `diff` commands (only the `name:` hunk differs). For AC-2, additionally run `skills/sw/scripts/validate-spec.sh` against a scratch ticket folder written per the template to observe the check-2-only baseline the new rule describes.
 - [ ] Step 3: Tick the verified `AC-N` boxes in `issue.md`; commit `chore(issue): verification results for brainstorm-and-templates`.
