@@ -1,8 +1,8 @@
 ---
 feature: command-surface
 created: 2026-07-02
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Command Surface (T10) — Issue
 

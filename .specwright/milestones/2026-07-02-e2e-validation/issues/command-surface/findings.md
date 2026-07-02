@@ -47,7 +47,7 @@ Retired: `sw-brainstorming`, `sw-writing-plans`, `sw-new-pr`, `sw-code-review`, 
 | Dangling symlinks anywhere under REPO + SANDBOX | `find -L … -type l` | **zero hits** (repo `.claude/skills/sw` and sandbox `CLAUDE.md -> AGENTS.md` both resolve) |
 | Content mentions (context only, not an AC-3 failure) | `grep -rn` excluding `.git` and this milestone's vault | `skills/sw/SKILL.md:139` + sandbox copy — the migration instruction telling `/sw` to flag pre-rename dirs as DRIFT; `.specwright/issues/2026-06-24-specwright-pivot/tasks.md:337,349` — historical vault record. All legitimate; none resolvable as a command/skill. |
 
-Out-of-scope observation (recorded for context, not an AC-3 failure — neither audited surface is affected): the global plugin cache still holds pre-rename revision `~/.claude/plugins/cache/specwright/sw/2245ec42a933/` whose `skills/` are the retired names (`brainstorming`, `code-review`, `new-pr`, `writing-plans`); `installed_plugins.json` pins it to four unrelated projects (`oms-monorepo`, `flavianasser-monorepo`, `legacy`, `daylingo`). Those projects get the retired surface until they update. Nothing in the sandbox or the repo resolves to it.
+Out-of-scope observation (recorded for context, not an AC-3 failure — neither audited surface is affected): the global plugin cache still holds pre-rename revision `~/.claude/plugins/cache/specwright/sw/2245ec42a933/` whose `skills/` are the retired names (`brainstorming`, `code-review`, `new-pr`, `writing-plans`); `installed_plugins.json` pins it to four unrelated local projects. Those projects get the retired surface until they update. Nothing in the sandbox or the repo resolves to it.
 
 **AC-3 verdict: PASS on both audited surfaces.**
 
@@ -60,7 +60,7 @@ Documented invocations extracted with `grep -rnoE '(/sw:[a-z-]+|\$sw-[a-z-]+|@sw
 | `/sw:brainstorm` `/sw:plan` `/sw:run` `/sw:review` `/sw:pr` `/sw:update` | REPO README.md:43–50, AGENTS.md:47–54, SANDBOX AGENTS.md:45–52 (+ inline uses) | plugin skills `plugins/sw/skills/<verb>/` | **resolved** |
 | `/sw:spec` `/sw:review-spec` | REPO README.md:20,44,48,72; AGENTS.md:23,48,52; SANDBOX AGENTS.md:21,46,50 | plugin commands `plugins/sw/commands/{spec,review-spec}.md` | **resolved** |
 | `$sw-<verb>` / `@sw-<verb>` for **"All entries"** (8 verbs) | REPO AGENTS.md:44 = CLAUDE.md:44 (symlink), SANDBOX AGENTS.md:42 | `.agents/skills/sw-<verb>/` — exists for 6 verbs only; `sw-spec` and `sw-review-spec` exist **nowhere** (repo canonical, scaffold source, sandbox) | **unresolved for 2×2 forms → F1** |
-| `/sw` (scaffolder) + `.claude/skills/sw` symlink | REPO README.md:17,72 | repo: symlink present and resolves; sandbox: `.agents/skills/sw/` present, symlink **absent** | **partially unresolved → F2** |
+| `/sw` (scaffolder) + `.claude/skills/sw` symlink | REPO README.md:17,20,42 | repo: symlink present and resolves; sandbox: `.agents/skills/sw/` present, symlink **absent** | **partially unresolved → F2** |
 
 No artifact exists without a documented invocation (every skill/command in the inventories maps to a doc row above).
 
@@ -74,7 +74,7 @@ No artifact exists without a documented invocation (every skill/command in the i
 
 ### F2 — README promises a `.claude/skills/sw` symlink the sandbox install does not have
 
-- **Expected:** REPO `README.md:17` — install "installs the scaffolder skill — `.agents/skills/sw/`, plus the `.claude/skills/sw` symlink"; `install.sh:8,147–153` creates `.claude/skills/sw -> ../../.agents/skills/sw`. That symlink is what makes `/sw` (README.md:72) discoverable by Claude Code in an installed repo.
+- **Expected:** REPO `README.md:17` — install "installs the scaffolder skill — `.agents/skills/sw/`, plus the `.claude/skills/sw` symlink"; `install.sh:8,147–153` creates `.claude/skills/sw -> ../../.agents/skills/sw`. That symlink is what makes `/sw` (README.md:20,42) discoverable by Claude Code in an installed repo.
 - **Observed:** `SANDBOX/.claude/` contains only `settings.json` — no `skills/` dir, no symlink (evidence E7). `SANDBOX/.agents/skills/sw/` exists, so the skill body is there but Claude Code has no documented discovery path to it in the sandbox. (The specwright repo itself has the symlink — `.claude/skills/sw -> ../../skills/sw` — so this is sandbox-install drift, not repo drift.)
 - **Proposed fix:** determine how the sandbox was installed (sandbox-setup used the `sw` scaffolder rather than `install.sh`, per its learnings); if the scaffolder path is meant to be equivalent to `install.sh`, add the `.claude/skills/sw` symlink step to the `sw` skill's scaffold procedure; otherwise document that only `install.sh` wires Claude Code discovery for `/sw`. Then create the missing symlink in the sandbox.
 
