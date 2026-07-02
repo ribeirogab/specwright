@@ -55,7 +55,7 @@ The home for every standalone issue (work that is not part of a milestone). Each
     learnings.md    # optional: curated non-obvious facts (written by the issue owner)
 ```
 
-**Issues are self-contained.** No cross-references between issues and none out of an issue. Issue **status** lives in each issue's own `issue.md` frontmatter (`status:` and `shipped:`) — there is no separate tracker file that lists or aggregates issues.
+**Issues are self-contained.** No cross-references between issues and none out of an issue. One carve-out: **evidence-consuming issues** — work whose job is to audit, validate, or consolidate sibling issues — may cite sibling-issue paths as **plain text** (e.g. "dossier entry 3.2 in `../closeout/dossier.md`"), because their verifiability depends on naming the evidence; link syntax remains banned for them too. Issue **status** lives in each issue's own `issue.md` frontmatter (`status:` and `shipped:`) — there is no separate tracker file that lists or aggregates issues.
 
 ---
 
@@ -93,7 +93,7 @@ The dated folder is the only discriminator between siblings; two same-day creati
 
 The files inside an issue folder keep **bare** names — `issue.md`, `spec.md`, `tasks.md`, `learnings.md` — for every issue. They are never suffixed with the slug (no `spec-<slug>.md`). The folder already makes each path unique.
 
-Because issues are self-contained, the files never reference each other by link. When prose needs to point at a sibling, it refers to it by bare name in plain text (e.g. "the sibling `issue.md`"), not by link syntax.
+Because issues are self-contained, the files never reference each other by link. When prose needs to point at a sibling, it refers to it by bare name in plain text (e.g. "the sibling `issue.md`"), not by link syntax. Evidence-consuming issues may additionally name sibling-issue paths in plain text — see the carve-out in the standalone-issues section.
 
 ---
 
