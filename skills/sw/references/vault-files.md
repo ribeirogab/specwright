@@ -20,11 +20,11 @@ Everything the scaffolder writes into a target repo's `.specwright/` vault. spec
 
 | Path | What it is | Scaffolder action |
 |---|---|---|
-| `.specwright/conventions/` | project-specific code/style conventions | ensure the directory exists (empty is fine) |
-| `.specwright/issues/` | one dated folder per standalone issue | ensure the directory exists |
-| `.specwright/milestones/` | one dated folder per milestone | ensure the directory exists |
+| `.specwright/conventions/` | project-specific code/style conventions | ensure the directory exists (empty is fine) + `.gitkeep` |
+| `.specwright/issues/` | one dated folder per standalone issue | ensure the directory exists + `.gitkeep` |
+| `.specwright/milestones/` | one dated folder per milestone | ensure the directory exists + `.gitkeep` |
 
-The scaffolder's whole job for the vault is **make sure the three directories exist**. It does not write any seed files, index, tracker, config, or template into the vault.
+The scaffolder's whole job for the vault is **make sure the three directories exist and survive a clone** — each gets a `.gitkeep`, because git tracks no empty directories. Beyond those keep-files it writes nothing into the vault: no seed files, index, tracker, config, or template.
 
 What does **not** live in the vault (do not create any of these):
 
@@ -38,7 +38,7 @@ What does **not** live in the vault (do not create any of these):
 
 A directory for project-specific code and style conventions. The user fills it over time — one file per convention, in whatever shape the project prefers. specwright imposes no template and no required frontmatter on these files.
 
-On first install it is **empty**, and that is correct. The scaffolder only ensures the directory exists; it never writes a placeholder or seed file into it.
+On first install it is **empty** (apart from the `.gitkeep`), and that is correct. The scaffolder never writes a convention seed or placeholder content into it.
 
 ---
 

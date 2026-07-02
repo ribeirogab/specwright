@@ -60,7 +60,14 @@ specwright's per-repo vault is `.specwright/` and holds exactly three living thi
 - `.specwright/issues/` — one dated folder per standalone issue (`YYYY-MM-DD-<slug>/` with `issue.md` + `spec.md` + `tasks.md` + optional `learnings.md`).
 - `.specwright/milestones/` — one dated folder per milestone (`YYYY-MM-DD-<slug>/` with `goal.md` + `board.md` + `issues/<slug>/` folders of the same issue shape).
 
-Ensure all three directories exist (empty is fine on first install). The artifact **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/templates/` and the brainstorm / plan skills generate issues from there. The issue **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
+Ensure all three directories exist (empty is fine on first install), each with a `.gitkeep` — git tracks no empty directories, so without the keep files a compliant fresh install loses its vault on the first re-clone:
+
+```bash
+mkdir -p .specwright/conventions .specwright/issues .specwright/milestones
+touch .specwright/conventions/.gitkeep .specwright/issues/.gitkeep .specwright/milestones/.gitkeep
+```
+
+Both commands are idempotent — re-running over a populated vault changes nothing. The artifact **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/templates/` and the brainstorm / plan skills generate issues from there. The issue **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
 
 ### AGENTS.md
 
@@ -85,6 +92,35 @@ Append this line to the repo's `.gitignore` (skip if already present):
 .specwright/worktrees/
 ```
 
+### The sw skill itself (self-copy + Claude Code symlink)
+
+The scaffolder installs **itself** — the issue pipeline invokes the mechanical validator at `.agents/skills/sw/scripts/validate-spec.sh`, so that path must exist after a fresh scaffold, and the README promises the `.claude/skills/sw` symlink that makes `/sw` discoverable in Claude Code. This mirrors exactly the layout `install.sh` produces.
+
+```bash
+SW_DIR="<directory where this SKILL.md lives>"
+
+# 1. Self-copy — the canonical sw install, including scaffold/ and scripts/.
+#    No-op when already installed there (e.g. by install.sh, when SW_DIR
+#    IS .agents/skills/sw).
+mkdir -p .agents/skills
+if [ ! -e .agents/skills/sw ]; then
+  cp -r "$SW_DIR" .agents/skills/sw
+fi
+[ -d .agents/skills/sw/scripts ] && chmod +x .agents/skills/sw/scripts/*.sh
+
+# 2. Claude Code discovery symlink — what makes /sw resolvable, exactly as
+#    install.sh creates it. Not gated on a pre-existing .claude/.
+mkdir -p .claude/skills
+if [ -L .claude/skills/sw ]; then
+  rm -f .claude/skills/sw
+elif [ -e .claude/skills/sw ]; then
+  echo "warning: .claude/skills/sw exists and is not a symlink — resolve manually" >&2
+fi
+[ -e .claude/skills/sw ] || ln -s ../../.agents/skills/sw .claude/skills/sw
+```
+
+The `.claude/skills/sw` symlink is the **one sanctioned** entry under `.claude/skills/` — the companion skills below stay out of that directory (they reach Claude Code through the plugin), and the legacy cleanup at the end of the companion copy loop only removes companion names, so it can never remove this symlink (and its presence keeps the guarded `rmdir` a no-op).
+
 ### Skills and commands (copy from scaffold/)
 
 All bundled skills live in `scaffold/skills/` alongside this `SKILL.md`.
@@ -93,7 +129,7 @@ All bundled skills live in `scaffold/skills/` alongside this `SKILL.md`.
 
 ```bash
 SW_DIR="<directory where this SKILL.md lives>"
-SKILL_NAMES=(sw-brainstorm sw-plan sw-pr sw-review sw-run sw-update)
+SKILL_NAMES=(sw-brainstorm sw-plan sw-pr sw-review sw-review-spec sw-run sw-spec sw-update)
 
 # 1. Canonical install — single source of truth on disk
 mkdir -p .agents/skills
@@ -190,6 +226,8 @@ fi
 If `jq` is not installed, fall back to the Python recipe documented in `references/claude-plugin-settings.md`. The skill must never overwrite `.claude/settings.json` wholesale — unrelated top-level keys must survive intact.
 
 Rules:
+- The `sw` skill self-installs to `.agents/skills/sw` — including `scaffold/` and `scripts/` — with `scripts/*.sh` kept executable; a fresh scaffold must leave `.agents/skills/sw/scripts/validate-spec.sh` runnable at that path.
+- `.claude/skills/sw` (symlink to `../../.agents/skills/sw`) is the only entry the scaffolder creates under `.claude/skills/` — companion skills reach Claude Code through the plugin, never through that directory.
 - Skills always go to `.agents/skills/<name>` first (canonical), then symlinked into existing agent dirs.
 - Slash commands ship as a Claude Code plugin from the upstream marketplace `specwright`. The skill writes `.claude/settings.json` (extraKnownMarketplaces + enabledPlugins) so Claude Code installs the plugin at workspace-trust time. No command files are copied into the target repo.
 - Existing canonical skill files are never overwritten — re-runs are no-ops on already-installed items.

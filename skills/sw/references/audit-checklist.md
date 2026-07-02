@@ -22,30 +22,35 @@ For each item, check existence and content correctness. Report status as:
 
 ```
 .specwright/
-  .specwright/conventions/    (directory exists)
-  .specwright/issues/         (directory exists — holds dated YYYY-MM-DD-<slug>/ issue folders)
-  .specwright/milestones/     (directory exists — holds dated YYYY-MM-DD-<slug>/ milestone folders)
+  .specwright/conventions/    (directory exists, contains .gitkeep — clone survival)
+  .specwright/issues/         (directory exists, contains .gitkeep — holds dated YYYY-MM-DD-<slug>/ issue folders)
+  .specwright/milestones/     (directory exists, contains .gitkeep — holds dated YYYY-MM-DD-<slug>/ milestone folders)
 
 AGENTS.md                      (repo root — self-contained issue flow, ≤ 80 lines)
 CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
+
+.agents/skills/sw/             (full directory — the scaffolder itself, incl. scaffold/ + scripts/; scripts/validate-spec.sh exists and is executable)
+.claude/skills/sw              (symlink → ../../.agents/skills/sw — Claude Code discovery for /sw)
 
 .agents/skills/sw-brainstorm/  (full directory — design exploration → issue/milestone artifacts)
 .agents/skills/sw-plan/        (full directory — the issue pipeline: spec + tasks to delivery)
 .agents/skills/sw-pr/          (full directory — opens the issue's PR)
 .agents/skills/sw-review/      (full directory — branch review to lgtm)
+.agents/skills/sw-review-spec/ (full directory — external evaluator pass over an issue's plan)
 .agents/skills/sw-run/         (full directory — the milestone orchestrator)
+.agents/skills/sw-spec/        (full directory — enter the issue flow from the conversation)
 .agents/skills/sw-update/      (full directory — reconciles the install against upstream)
 
 .gitignore                     (contains .specwright/worktrees/)
 ```
 
-The artifact **templates** (`issue.md` / `spec.md` / `tasks.md` / `goal.md` / `board.md` blueprints) and the mechanical issue **validator** are **not** scaffolded into the vault — they ship with this skill (under `scaffold/templates/` and `scripts/validate-spec.sh`) and are checked by Phase 5 validation, not by this inventory.
+The artifact **templates** (`issue.md` / `spec.md` / `tasks.md` / `goal.md` / `board.md` blueprints) and the mechanical issue **validator** are **not** scaffolded into the vault — they ship with this skill (under `scaffold/templates/` and `scripts/validate-spec.sh`) and land in the repo through the `.agents/skills/sw/` self-install checked above; their internal integrity is Phase 5 validation's job, not this inventory's.
 
 ### Per-agent skill symlinks (optional, not required) — non-Claude only
 
 For every **non-Claude** agent-specific discovery directory present in the repo (`.codex/`, `.cursor/`, `.opencode/`, `.aider/`, `.augment/`, etc.), each scaffold skill above should also be symlinked into that agent's `skills/` subdirectory so the agent can discover it. Example: when `.codex/` exists, `.codex/skills/sw-brainstorm` is a symlink to `../../.agents/skills/sw-brainstorm`.
 
-**Claude Code is excluded from this loop.** Claude users get the companion skills through the `specwright` plugin (marketplace `specwright`), invoked as `/sw:brainstorm`, `/sw:plan`, `/sw:pr`, `/sw:review`, `/sw:run`, `/sw:update`. Creating `.claude/skills/sw-<name>` symlinks here would surface the same skill twice in `/help` — once as `/sw-brainstorm` (hyphen-form symlink) and once as `/sw:brainstorm` (plugin namespace). Legacy `.claude/skills/sw-<name>` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks).
+**Claude Code is excluded from this loop.** Claude users get the companion skills through the `specwright` plugin (marketplace `specwright`), invoked as `/sw:brainstorm`, `/sw:plan`, `/sw:pr`, `/sw:review`, `/sw:review-spec`, `/sw:run`, `/sw:spec`, `/sw:update`. Creating `.claude/skills/sw-<name>` symlinks here would surface the same skill twice in `/help` — once as `/sw-brainstorm` (hyphen-form symlink) and once as `/sw:brainstorm` (plugin namespace). Legacy `.claude/skills/sw-<name>` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks). The one exception is `.claude/skills/sw` itself (see the inventory above): the scaffolder `sw` skill is not part of the plugin, so that symlink is required — missing means `MISSING`, and it is never removed as legacy.
 
 A missing per-agent symlink is **not `DRIFT`** — only the canonical files under `.agents/skills/` are required. If a per-agent dir exists but lacks the expected symlinks, the specwright installer re-creates them on the next run (no prompt needed; symlinks are non-destructive). If a per-agent dir does not exist at all, no symlinks are created (the absence signals the user does not run that agent in this repo).
 
@@ -64,7 +69,7 @@ If `.agents/commands/` becomes empty after the removals, the directory itself is
 
 ### Legacy skill directories to remove (pre-rename installs)
 
-Installs scaffolded before the issue-driven rename carry old-name skill directories: `.agents/skills/sw-{brainstorming,writing-plans,new-pr,code-review}/` (and matching symlinks in per-agent dirs). Each is `DRIFT` — the current set is `sw-{brainstorm,plan,pr,review,run,update}`. Fix in Phase 4: after the current skills are installed, remove each old-name directory and any per-agent symlink pointing at it. Deleting a directory is a **destructive** op per the SKILL.md "Mode of Operation" — surface the list and confirm once before removing (the user may have local edits worth merging into the renamed skill first; `/sw:update` handles that merge).
+Installs scaffolded before the issue-driven rename carry old-name skill directories: `.agents/skills/sw-{brainstorming,writing-plans,new-pr,code-review}/` (and matching symlinks in per-agent dirs). Each is `DRIFT` — the current set is `sw-{brainstorm,plan,pr,review,review-spec,run,spec,update}`. Fix in Phase 4: after the current skills are installed, remove each old-name directory and any per-agent symlink pointing at it. Deleting a directory is a **destructive** op per the SKILL.md "Mode of Operation" — surface the list and confirm once before removing (the user may have local edits worth merging into the renamed skill first; `/sw:update` handles that merge).
 
 ### Claude plugin settings present (when `.claude/` exists)
 
