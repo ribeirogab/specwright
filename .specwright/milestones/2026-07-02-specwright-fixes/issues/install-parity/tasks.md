@@ -92,7 +92,7 @@ mkdir -p .agents/skills
 if [ ! -e .agents/skills/sw ]; then
   cp -r "$SW_DIR" .agents/skills/sw
 fi
-chmod +x .agents/skills/sw/scripts/*.sh
+[ -d .agents/skills/sw/scripts ] && chmod +x .agents/skills/sw/scripts/*.sh
 
 # 2. Claude Code discovery symlink — what makes /sw resolvable, exactly as
 #    install.sh creates it. Not gated on a pre-existing .claude/.
