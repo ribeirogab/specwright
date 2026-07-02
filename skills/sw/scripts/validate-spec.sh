@@ -3,16 +3,29 @@
 #
 # Usage: validate-spec.sh <issue-folder>
 #
-# Exits 0 when every check passes; otherwise exits with the number of failed
-# checks and prints one "FAIL (check N): <reason>" line per failure. It is a
-# feedforward gate for /sw:review-spec — a structurally invalid issue should
-# fail noisily here before any prose review (Rule of Repair).
+# Exit codes:
+#   0     every check passed (prints "PASS: <dir>").
+#   1-5   the number of DISTINCT checks that failed (prints one
+#         "FAIL (check N): <reason>" line per failing condition — a single
+#         check may emit several lines but counts once). This is a feedforward
+#         gate for /sw:review-spec — a structurally invalid issue fails noisily
+#         here before any prose review (Rule of Repair).
+#   2     ALSO used for operational errors (bad invocation, path not a
+#         directory). These print a "usage:" or "FAIL: not a directory" line to
+#         stderr and carry no "(check N)" — so an exit 2 from a usage error is
+#         distinguishable from "two checks failed" by the message, not the code.
+#         Callers should treat any non-zero exit as "not clean" (all in-repo
+#         callers loop until exit 0), which sidesteps the overlap entirely.
 #
-# Checks:
+# Checks (fixed set — never counted more than once each):
 #   1. issue.md frontmatter has feature/created/status; status is one of
-#      pending|in-progress|shipped|blocked.
+#      pending|in-progress|shipped|blocked. status: is load-bearing (the
+#      pipeline and audit read it), so an empty or missing value FAILS by
+#      deliberate choice — unlike scope: (check 2), which is recorded-only and
+#      is allowed to be blank. A missing status: key fails check 1 exactly once
+#      (the enum test is skipped when the key is absent).
 #   2. spec.md frontmatter has feature/created/scope; scope is one of
-#      low|medium|high|complex.
+#      low|medium|high|complex, or empty (recorded-only; blank is tolerated).
 #   3. no surviving {{placeholder}} in issue.md / spec.md / tasks.md /
 #      learnings.md.
 #   4. no banned vague verb in an acceptance-criteria bullet of issue.md.
