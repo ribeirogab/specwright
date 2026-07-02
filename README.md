@@ -97,22 +97,24 @@ Edit the copy your agent loads. To change what **future** installs get, edit the
 
 ```
 specwright/
+├── install.sh               # the one-line installer (curl-piped from main)
 ├── skills/sw/               # the scaffolder skill: SKILL.md, references/, scaffold/, scripts/
 ├── plugins/sw/              # Claude Code plugin — /sw:* commands (commands/) + companion skills (skills/)
 ├── .claude-plugin/          # marketplace manifest
+├── tests/                   # install smoke tests
 ├── LICENSE                  # MIT
-├── NOTICE.md                # attribution for vendored validator scripts
+├── NOTICE.md                # attribution for the two vendored Apache-2.0 scripts
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
 ├── SECURITY.md
 └── README.md
 ```
 
-The repository also contains `.agents/`, `.claude/`, and `.specwright/` — local dirs used to dogfood specwright on its own development (the bundled companion skills, the per-agent symlinks, and the maintainer's spec vault). They are not what the installer puts in your repo.
+The repository also contains `AGENTS.md` (with its `CLAUDE.md` symlink), `.agents/`, `.claude/`, and `.specwright/` — files and dirs used to dogfood specwright on its own development (the entry-point contract, the bundled companion skills, the per-agent symlinks, and the maintainer's spec vault). They are not what the installer puts in your repo.
 
 ## License
 
-This repository's original work is licensed under the [MIT License](LICENSE). The vendored validator scripts under `skills/sw/scripts/` are Apache-2.0; see [`NOTICE.md`](NOTICE.md) for attribution.
+This repository's original work is licensed under the [MIT License](LICENSE). The two vendored scripts under `skills/sw/scripts/` (`quick_validate.py`, `package_skill.py`) are Apache-2.0; see [`NOTICE.md`](NOTICE.md) for attribution.
 
 ## Contributing
 
