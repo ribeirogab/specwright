@@ -1,7 +1,7 @@
 ---
 feature: milestone-planning
 created: 2026-07-02
-status: pending
+status: in-progress
 shipped: null
 ---
 # Milestone Planning (T2) — Issue
