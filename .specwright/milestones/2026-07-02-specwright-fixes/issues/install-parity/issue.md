@@ -1,8 +1,8 @@
 ---
 feature: install-parity
 created: 2026-07-02
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Install Parity — Issue
 
