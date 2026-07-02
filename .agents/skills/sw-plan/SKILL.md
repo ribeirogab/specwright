@@ -93,6 +93,8 @@ After `spec.md` + `tasks.md` are written, review them before implementation. The
 2. **Spec-document-reviewer subagent** — dispatch it (see the sibling `spec-document-reviewer-prompt.md`) over `issue.md` + `spec.md` + `tasks.md`. Fix, re-dispatch until Approved (max 3 iterations, then surface to the human).
 3. **`/sw:review-spec`** — the external evaluator (conventions + issue compliance, vague ACs, scope creep). Fix any `FAIL`.
 
+**Commit the plan** — when the three gates pass, commit `spec.md` + `tasks.md` (including any gate fixes) before the first implementation commit. The PR body's quality-gate section must name these three gates and their outcomes — a repo-only auditor must be able to verify the gates ran.
+
 ## Implement
 
 Decide the execution approach yourself — do not ask:
