@@ -1,7 +1,7 @@
 ---
 feature: command-surface
 created: 2026-07-02
-status: pending
+status: in-progress
 shipped: null
 ---
 # Command Surface (T10) — Issue
@@ -27,10 +27,10 @@ The rename and plugin migration left multiple layers (plugin, canonical skills, 
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** A verdict table covers all 8 verbs × the layers the docs claim (plugin command/skill, canonical `.agents/skills/sw-*`, sandbox install), each cell `present`/`absent` with the checked path.
-- [ ] **AC-2** Every verb documented as a skill has a `SKILL.md` whose frontmatter `name:` matches its invocation name at that layer (plugin: bare verb; canonical: `sw-<verb>`).
-- [ ] **AC-3** Zero hits for retired names in the sandbox and repo surfaces: no `sw-brainstorming`/`sw-writing-plans`/`sw-new-pr`/`sw-code-review` directories or symlinks, no `.claude/commands/sw-spec.md`/`sw-review-spec.md`, no dangling symlinks under any agent discovery dir.
-- [ ] **AC-4** Any verb reachable in docs but unreachable in an installed layer (or vice versa) is logged as a finding with the exact doc line and missing path.
-- [ ] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+- [x] **AC-1** A verdict table covers all 8 verbs × the layers the docs claim (plugin command/skill, canonical `.agents/skills/sw-*`, sandbox install), each cell `present`/`absent` with the checked path.
+- [x] **AC-2** Every verb documented as a skill has a `SKILL.md` whose frontmatter `name:` matches its invocation name at that layer (plugin: bare verb; canonical: `sw-<verb>`).
+- [x] **AC-3** Zero hits for retired names in the sandbox and repo surfaces: no `sw-brainstorming`/`sw-writing-plans`/`sw-new-pr`/`sw-code-review` directories or symlinks, no `.claude/commands/sw-spec.md`/`sw-review-spec.md`, no dangling symlinks under any agent discovery dir.
+- [x] **AC-4** Any verb reachable in docs but unreachable in an installed layer (or vice versa) is logged as a finding with the exact doc line and missing path.
+- [x] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
