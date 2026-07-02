@@ -87,18 +87,18 @@ Phases 2–3 depend on 1; 4–5 depend on 2–3.
 
 Verification commands assume the repo root; "live files" excludes `.specwright/specs/`, `tmp/`, and `.git/`.
 
-- [ ] **AC-1** `grep -rn 'specwright/specs' --include='*.md' --include='*.sh' . | grep -v '^\./\.specwright/specs/' | grep -v '^\./tmp/'` returns zero hits.
-- [ ] **AC-2** `ls skills/sw/scaffold/templates/` prints exactly `board.md goal.md issue.md spec.md tasks.md`; `find . -path ./.git -prune -o -name 'design.md' -print` finds files only under `.specwright/specs/`.
-- [ ] **AC-3** `skills/sw/scripts/validate-spec.sh skills/sw/scripts/fixtures/good` exits 0, and each of the four `fixtures/bad-*` folders makes it exit non-zero; `fixtures/good/issue.md` exists with `status:` in frontmatter.
-- [ ] **AC-4** `ls plugins/sw/skills/` prints exactly `brainstorm plan pr review run update` (alphabetical); `ls .agents/skills/` and `ls skills/sw/scaffold/skills/` print the same six names with the `sw-` prefix; no directory named `brainstorming`, `writing-plans`, `code-review`, or `new-pr` exists in the repo.
-- [ ] **AC-5** `grep -rEln 'mode:|\`autonomous\`|\`reviewed\`' plugins/sw/ .agents/skills/ skills/sw/` returns zero files (the mode knob and its backticked value tokens are gone; the plain English word "reviewed" in prose is allowed), and `plugins/sw/skills/brainstorm/SKILL.md` contains both batch definitions: the single-issue batch (branch + worktree + handoff) and the milestone batch (worktree only, mandatory handoff).
-- [ ] **AC-6** `grep -rn 'design\.md' plugins/sw/ .agents/skills/ skills/sw/ AGENTS.md README.md` returns zero hits, and `plugins/sw/skills/plan/SKILL.md` names `issue.md` as input and instructs reading shipped issues' `learnings.md` when the issue belongs to a milestone.
-- [ ] **AC-7** `grep -rln 'needs-human-verification' plugins/sw/skills/` lists at least `plan/SKILL.md` and `review/SKILL.md`, and `plan/SKILL.md` places runtime verification between the quality gate and the PR step.
-- [ ] **AC-8** `plugins/sw/skills/run/SKILL.md` exists and contains, verbatim as section topics: the ready rule (`pending` + all dependencies `shipped`), parallel dispatch with one worktree per issue, serial inline degradation, the three-identical-failures circuit breaker writing a blocker report to `board.md`, and closeout with learnings promotion requiring user approval.
-- [ ] **AC-9** For each of the six skills, `diff` between the three copies (after stripping the `name:` frontmatter line) reports no differences.
-- [ ] **AC-10** The README commands table lists exactly `brainstorm, spec, plan, run, review, review-spec, pr, update`, and `wc -l < AGENTS.md` ≤ 80 with the flow section naming issues, milestones, `board.md`, and `/sw:run`.
-- [ ] **AC-11** `tests/install/run.sh` exits 0.
-- [ ] **AC-12** `skills/sw/SKILL.md` scaffolds `.specwright/issues/`, `.specwright/milestones/`, and `.specwright/conventions/` (no `.specwright/specs/`), and its `SKILL_NAMES` array is exactly the six new `sw-*` names.
+- [x] **AC-1** `grep -rn 'specwright/specs' --include='*.md' --include='*.sh' . | grep -v '^\./\.specwright/specs/' | grep -v '^\./tmp/'` returns zero hits.
+- [x] **AC-2** `ls skills/sw/scaffold/templates/` prints exactly `board.md goal.md issue.md spec.md tasks.md`; `find . -path ./.git -prune -o -name 'design.md' -print` finds files only under `.specwright/specs/`.
+- [x] **AC-3** `skills/sw/scripts/validate-spec.sh skills/sw/scripts/fixtures/good` exits 0, and each of the four `fixtures/bad-*` folders makes it exit non-zero; `fixtures/good/issue.md` exists with `status:` in frontmatter.
+- [x] **AC-4** `ls plugins/sw/skills/` prints exactly `brainstorm plan pr review run update` (alphabetical); `ls .agents/skills/` and `ls skills/sw/scaffold/skills/` print the same six names with the `sw-` prefix; no directory named `brainstorming`, `writing-plans`, `code-review`, or `new-pr` exists in the repo.
+- [x] **AC-5** `grep -rEln 'mode:|\`autonomous\`|\`reviewed\`' plugins/sw/ .agents/skills/ skills/sw/` returns zero files (the mode knob and its backticked value tokens are gone; the plain English word "reviewed" in prose is allowed), and `plugins/sw/skills/brainstorm/SKILL.md` contains both batch definitions: the single-issue batch (branch + worktree + handoff) and the milestone batch (worktree only, mandatory handoff).
+- [x] **AC-6** `grep -rn 'design\.md' plugins/sw/ .agents/skills/ skills/sw/ AGENTS.md README.md` returns zero hits, and `plugins/sw/skills/plan/SKILL.md` names `issue.md` as input and instructs reading shipped issues' `learnings.md` when the issue belongs to a milestone.
+- [x] **AC-7** `grep -rln 'needs-human-verification' plugins/sw/skills/` lists at least `plan/SKILL.md` and `review/SKILL.md`, and `plan/SKILL.md` places runtime verification between the quality gate and the PR step.
+- [x] **AC-8** `plugins/sw/skills/run/SKILL.md` exists and contains, verbatim as section topics: the ready rule (`pending` + all dependencies `shipped`), parallel dispatch with one worktree per issue, serial inline degradation, the three-identical-failures circuit breaker writing a blocker report to `board.md`, and closeout with learnings promotion requiring user approval.
+- [x] **AC-9** For each of the six skills, `diff` between the three copies (after stripping the `name:` frontmatter line) reports no differences.
+- [x] **AC-10** The README commands table lists exactly `brainstorm, spec, plan, run, review, review-spec, pr, update`, and `wc -l < AGENTS.md` ≤ 80 with the flow section naming issues, milestones, `board.md`, and `/sw:run`.
+- [x] **AC-11** `tests/install/run.sh` exits 0.
+- [x] **AC-12** `skills/sw/SKILL.md` scaffolds `.specwright/issues/`, `.specwright/milestones/`, and `.specwright/conventions/` (no `.specwright/specs/`), and its `SKILL_NAMES` array is exactly the six new `sw-*` names.
 
 ## Risks and Mitigations
 
