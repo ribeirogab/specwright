@@ -92,6 +92,35 @@ Append this line to the repo's `.gitignore` (skip if already present):
 .specwright/worktrees/
 ```
 
+### The sw skill itself (self-copy + Claude Code symlink)
+
+The scaffolder installs **itself** — the issue pipeline invokes the mechanical validator at `.agents/skills/sw/scripts/validate-spec.sh`, so that path must exist after a fresh scaffold, and the README promises the `.claude/skills/sw` symlink that makes `/sw` discoverable in Claude Code. This mirrors exactly the layout `install.sh` produces.
+
+```bash
+SW_DIR="<directory where this SKILL.md lives>"
+
+# 1. Self-copy — the canonical sw install, including scaffold/ and scripts/.
+#    No-op when already installed there (e.g. by install.sh, when SW_DIR
+#    IS .agents/skills/sw).
+mkdir -p .agents/skills
+if [ ! -e .agents/skills/sw ]; then
+  cp -r "$SW_DIR" .agents/skills/sw
+fi
+[ -d .agents/skills/sw/scripts ] && chmod +x .agents/skills/sw/scripts/*.sh
+
+# 2. Claude Code discovery symlink — what makes /sw resolvable, exactly as
+#    install.sh creates it. Not gated on a pre-existing .claude/.
+mkdir -p .claude/skills
+if [ -L .claude/skills/sw ]; then
+  rm -f .claude/skills/sw
+elif [ -e .claude/skills/sw ]; then
+  echo "warning: .claude/skills/sw exists and is not a symlink — resolve manually" >&2
+fi
+[ -e .claude/skills/sw ] || ln -s ../../.agents/skills/sw .claude/skills/sw
+```
+
+The `.claude/skills/sw` symlink is the **one sanctioned** entry under `.claude/skills/` — the companion skills below stay out of that directory (they reach Claude Code through the plugin), and the legacy cleanup at the end of the companion copy loop only removes companion names, so it can never remove this symlink (and its presence keeps the guarded `rmdir` a no-op).
+
 ### Skills and commands (copy from scaffold/)
 
 All bundled skills live in `scaffold/skills/` alongside this `SKILL.md`.
