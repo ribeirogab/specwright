@@ -1,0 +1,72 @@
+# goal.md / board.md contract sweeps — captured 2026-07-02, fixture at aaa117b
+
+== goal.md sections
+5:# Grow taskr — Goal
+9:## Purpose
+13:## Motivation
+17:## Success Criteria
+23:## Non-Goals
+
+== goal.md technical-content sweep (file paths, identifiers, storage formats, CLI surfaces)
+1:---
+4:---
+7:> The stable *why* of the whole delivery — written once during the milestone brainstorm, after the decomposition is approved. Editing this file afterwards is a **scope change**: the orchestrator never does it on its own; a human decides. The live state (order, dependencies, blockers) lives in the sibling `board.md`; each issue's why lives in its own `issue.md`.
+11:Grow taskr beyond `add`/`list`/`done`: tasks gain a priority (high/medium/low), the list becomes filterable by priority and by status, tasks can be exported to JSON and CSV with ISO-8601 dates, a minimal read-only web page shows the tasks and their status, and `taskr list` shows the newest task first by default.
+15:taskr covers only the bare add/list/done loop. The maintainer needs to triage by priority, slice the list by state, feed the data to other tools (JSON/CSV with standard dates), and glance at the tasks in a browser — all without giving up taskr's zero-dependency simplicity.
+19:- A task can be created with a priority, listed filtered by priority and/or status, seen on a local web page with its status, and exported to both JSON and CSV with ISO-8601 dates — end to end, using only Node and the taskr CLI.
+20:- `npm test` is green on every issue's PR with the pre-existing `test/taskr.test.js` byte-for-byte untouched.
+21:- `package.json` still declares zero runtime dependencies.
+25:- Touching `test/taskr.test.js` in any way (the hard constraint; new behavior gets new test files).
+26:- Migrating or rewriting the store file format (`createdAt` stays epoch seconds; tasks without `priority` stay valid and are read as `medium`).
+
+== board.md full text (numbered)
+     1	---
+     2	milestone: grow-taskr
+     3	created: 2026-07-02
+     4	---
+     5	# Grow taskr — Board
+     6	
+     7	> The milestone's live state: issue order, dependencies, dispatch log, and blocker reports. The orchestrator (`/sw:run`) reads and writes this file on every loop turn. Issue `status:` lives in each issue's own `issue.md` frontmatter — it is **never duplicated here**; the board holds only what has no other home.
+     8	
+     9	## Issues
+    10	
+    11	An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md`.
+    12	
+    13	| Order | Issue | Depends on |
+    14	|---|---|---|
+    15	| 1 | task-priority | — |
+    16	| 2 | list-filters | task-priority |
+    17	| 3 | export-json-csv | task-priority |
+    18	| 4 | web-page | task-priority |
+    19	| 5 | list-newest-first | list-filters |
+    20	
+    21	## Dispatch Log
+    22	
+    23	Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+    24	
+    25	## Blockers
+    26	
+    27	One entry per blocked issue — the owner's report, copied verbatim. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
+
+== board.md status sweep
+7:> The milestone's live state: issue order, dependencies, dispatch log, and blocker reports. The orchestrator (`/sw:run`) reads and writes this file on every loop turn. Issue `status:` lives in each issue's own `issue.md` frontmatter — it is **never duplicated here**; the board holds only what has no other home.
+11:An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md`.
+23:Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+27:One entry per blocked issue — the owner's report, copied verbatim. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
+
+== board.md content under Dispatch Log / Blockers (non-heading, non-blank, non-blockquote lines after each heading)
+Dispatch Log: no entries
+Blockers: no entries
+
+== commands used (exact, for reproducibility; FIXTURE=/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr)
+# goal.md sections:
+#   grep -n '^#' "$FIXTURE/goal.md"
+# goal.md technical-content sweep (this regex produced the hits listed above; hits then judged one by one in findings.md §1):
+#   grep -nEi '([a-z0-9_-]+\.(js|json|md|csv)|/[a-z0-9_.-]+/|--[a-z-]+|createdAt|epoch|npm|node\b|ISO-8601|JSON|CSV)' "$FIXTURE/goal.md"
+# board.md full text:
+#   cat -n "$FIXTURE/board.md"
+# board.md status sweep:
+#   grep -nEi 'status|pending|in-progress|shipped|blocked' "$FIXTURE/board.md"
+# Dispatch Log / Blockers entry extraction (non-heading, non-blank, non-blockquote lines, minus the template's own descriptive sentence):
+#   awk '/^## Dispatch Log/{s=1;next} /^## /{s=0} s&&NF&&!/^>/' "$FIXTURE/board.md" | grep -v '^Append-only'
+#   awk '/^## Blockers/{s=1;next} /^## /{s=0} s&&NF&&!/^>/' "$FIXTURE/board.md" | grep -v '^One entry per'
