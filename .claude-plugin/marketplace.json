@@ -7,7 +7,7 @@
     {
       "name": "sw",
       "source": "./plugins/sw",
-      "description": "specwright for Claude Code — commands (/sw:spec, /sw:review-spec) plus companion skills (/sw:brainstorming, /sw:writing-plans, /sw:new-pr, /sw:code-review)."
+      "description": "specwright for Claude Code — commands (/sw:spec, /sw:review-spec) plus companion skills (/sw:brainstorm, /sw:plan, /sw:run, /sw:review, /sw:pr, /sw:update)."
     }
   ]
 }

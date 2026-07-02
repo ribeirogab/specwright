@@ -1,34 +1,36 @@
 # Vault Files — File Specifications
 
-Everything the scaffolder writes into a target repo's `.specwright/` vault. specwright is spec-driven-only: the vault holds **exactly two directories** and nothing else. Load this reference only when you are creating or repairing the vault.
+Everything the scaffolder writes into a target repo's `.specwright/` vault. specwright is issue-driven-only: the vault holds **exactly three directories** and nothing else. Load this reference only when you are creating or repairing the vault.
 
 ## Contents
 
 - [What the vault is — read first](#what-the-vault-is--read-first)
 - [`.specwright/conventions/` — the conventions directory](#specwrightconventions--the-conventions-directory)
-- [`.specwright/specs/` — the specs directory](#specwrightspecs--the-specs-directory)
-- [Spec-folder naming convention](#spec-folder-naming-convention)
+- [`.specwright/issues/` — standalone issues](#specwrightissues--standalone-issues)
+- [`.specwright/milestones/` — milestones](#specwrightmilestones--milestones)
+- [Folder naming conventions](#folder-naming-conventions)
 - [Bare-filename rule](#bare-filename-rule)
-- [Spec frontmatter shape](#spec-frontmatter-shape)
+- [Frontmatter shapes](#frontmatter-shapes)
 
 ---
 
 ## What the vault is — read first
 
-`.specwright/` is the per-repo vault. It contains two living directories and nothing else:
+`.specwright/` is the per-repo vault. It contains three living directories and nothing else:
 
 | Path | What it is | Scaffolder action |
 |---|---|---|
 | `.specwright/conventions/` | project-specific code/style conventions | ensure the directory exists (empty is fine) |
-| `.specwright/specs/` | one dated folder per spec | ensure the directory exists |
+| `.specwright/issues/` | one dated folder per standalone issue | ensure the directory exists |
+| `.specwright/milestones/` | one dated folder per milestone | ensure the directory exists |
 
-The scaffolder's whole job for the vault is **make sure both directories exist**. It does not write any seed files, index, tracker, config, or template into the vault.
+The scaffolder's whole job for the vault is **make sure the three directories exist**. It does not write any seed files, index, tracker, config, or template into the vault.
 
 What does **not** live in the vault (do not create any of these):
 
-- Spec **templates** — they ship with this skill at `scaffold/spec-templates/{design,spec,tasks}.md`. The brainstorming and writing-plans skills generate each spec's `design.md` / `spec.md` / `tasks.md` from those templates. There is no `_template/` directory in the vault.
-- The spec **validator** `validate-spec.sh` — it ships with this skill under `scripts/validate-spec.sh`. It is not copied into the vault.
-- No editor config, no index or map files, no per-note templates, no workflow guide, no separate spec tracker, and no scripts directory inside `.specwright/`.
+- Artifact **templates** — they ship with this skill at `scaffold/templates/{issue,spec,tasks,goal,board}.md`. The brainstorm and plan skills generate each artifact from those templates. There is no `_template/` directory in the vault.
+- The issue **validator** `validate-spec.sh` — it ships with this skill under `scripts/validate-spec.sh`. It is not copied into the vault.
+- No editor config, no index or map files, no per-note templates, no workflow guide, no separate issue tracker, and no scripts directory inside `.specwright/`.
 
 ---
 
@@ -40,76 +42,88 @@ On first install it is **empty**, and that is correct. The scaffolder only ensur
 
 ---
 
-## `.specwright/specs/` — the specs directory
+## `.specwright/issues/` — standalone issues
 
-The home for every spec. Each spec is a **dated folder** holding three files:
+The home for every standalone issue (work that is not part of a milestone). Each issue is a **dated folder**:
 
 ```
-.specwright/specs/
+.specwright/issues/
   YYYY-MM-DD-<slug>/
-    design.md
-    spec.md
-    tasks.md
+    issue.md        # the ticket: purpose, motivation, non-goals, AC-N, status
+    spec.md         # the technical plan (written just-in-time by the plan skill)
+    tasks.md        # the task breakdown, each task naming its AC: and Delegable:
+    learnings.md    # optional: curated non-obvious facts (written by the issue owner)
 ```
 
-- `design.md` — the non-technical write-up of the already-approved design: purpose, motivation, definitions, non-goals.
-- `spec.md` — the technical spec: architecture, file structure, phases, and `AC-N` acceptance criteria.
-- `tasks.md` — the task breakdown, each task naming its `AC:` and `Delegable:`.
-
-The scaffolder only ensures `.specwright/specs/` exists. The three files inside a spec folder are generated later by the brainstorming and writing-plans skills from `scaffold/spec-templates/`, not written at scaffold time.
-
-**Specs are self-contained.** There are no cross-references between specs and no cross-references out of a spec: no cross-reference frontmatter, no cross-spec links of any kind. Each spec stands alone in its dated folder. Spec **status** lives in each spec's own `spec.md` frontmatter (`status:` and `shipped:`) — there is no separate tracker file that lists or aggregates specs.
+**Issues are self-contained.** No cross-references between issues and none out of an issue. Issue **status** lives in each issue's own `issue.md` frontmatter (`status:` and `shipped:`) — there is no separate tracker file that lists or aggregates issues.
 
 ---
 
-## Spec-folder naming convention
+## `.specwright/milestones/` — milestones
 
-A spec folder is named `YYYY-MM-DD-<slug>/`, where:
+The home for every milestone (a large delivery decomposed into issues, conducted by the run skill). Each milestone is a **dated folder**:
 
-- `YYYY-MM-DD` is the date the spec was created (use today's date when creating a new spec).
-- `<slug>` is a short kebab-case slug of the feature.
+```
+.specwright/milestones/
+  YYYY-MM-DD-<slug>/
+    goal.md         # the stable why: purpose, motivation, success criteria, non-goals
+    board.md        # the live state: issue order, dependencies, dispatch log, blockers
+    issues/
+      <slug>/       # plain slug — no date, no number prefix (order lives on the board)
+        issue.md
+        spec.md
+        tasks.md
+        learnings.md
+```
 
-Examples: `2026-04-15-user-auth`, `2026-04-16-mobile-responsiveness`, `2026-04-17-api-refactoring`.
+Milestone issue folders have exactly the same shape as standalone issues — only their location differs. `board.md` never duplicates issue status; it holds only what has no other home (order, dependencies, dispatch log, blocker reports).
 
-The dated folder is the **only** discriminator between specs. If two specs are created on the same day, the `<slug>` keeps them distinct. There is no excluded or reserved folder inside `.specwright/specs/` — every folder there is a real spec.
+---
+
+## Folder naming conventions
+
+- Standalone issues and milestones: `YYYY-MM-DD-<kebab-slug>/` — the date the folder was created plus a short slug. Examples: `2026-04-15-user-auth`, `2026-04-16-coupon-system`.
+- Issue folders **inside** a milestone's `issues/`: plain `<kebab-slug>/` — order and dependencies are board data, and encoding order into folder names (e.g. `01-`) invites drift the moment an issue is inserted.
+
+The dated folder is the only discriminator between siblings; two same-day creations stay distinct by slug.
 
 ---
 
 ## Bare-filename rule
 
-The three files inside a spec folder keep **bare** names — `design.md`, `spec.md`, `tasks.md` — for every spec. They are never suffixed with the slug (no `spec-<slug>.md`, no `design-<slug>.md`, no `tasks-<slug>.md`). The dated folder already makes each path unique, so the filenames stay clean and identical across all specs.
+The files inside an issue folder keep **bare** names — `issue.md`, `spec.md`, `tasks.md`, `learnings.md` — for every issue. They are never suffixed with the slug (no `spec-<slug>.md`). The folder already makes each path unique.
 
-Because specs are self-contained, the files never reference each other by link. When a spec's prose needs to point at a sibling, it refers to it by its bare name in plain text (e.g. "the sibling `spec.md`", "see `design.md`"), not by any link syntax.
+Because issues are self-contained, the files never reference each other by link. When prose needs to point at a sibling, it refers to it by bare name in plain text (e.g. "the sibling `issue.md`"), not by link syntax.
 
 ---
 
-## Spec frontmatter shape
+## Frontmatter shapes
 
-The generating skills write the frontmatter; the scaffolder does not. This is the shape each file carries, documented here so a repair can recognize a correct spec.
+The generating skills write the frontmatter; the scaffolder does not. Documented here so a repair can recognize a correct artifact.
 
-**`spec.md` frontmatter** — carries the spec's status and recorded workflow choices:
+**`issue.md` frontmatter** — the only home of the issue's status:
 
 ```yaml
 ---
-status: draft        # draft | shipped
-feature: <kebab-slug-of-feature>
-scope: low           # low | medium | high | complex  (recorded only)
+feature: <kebab-slug-of-issue>
 created: YYYY-MM-DD
+status: pending      # pending | in-progress | shipped | blocked
 shipped: null        # the ship date once status is shipped, else null
-branch: feat/<kebab-slug-of-feature>
-mode: autonomous     # autonomous | reviewed
-worktree: null       # .specwright/worktrees/<slug> | null  (recorded only)
 ---
 ```
 
-`status:` and `shipped:` are the source of truth for whether a spec is shipped — flip `status:` to `shipped` and set `shipped:` to the ship date when it lands. No external tracker mirrors this.
+`status:` and `shipped:` here are the source of truth for whether an issue is shipped — no other file mirrors them.
 
-**`design.md` frontmatter:**
+**`spec.md` frontmatter:**
 
 ```yaml
 ---
-feature: <kebab-slug-of-feature>
+feature: <kebab-slug-of-issue>
 created: YYYY-MM-DD
+scope: low           # low | medium | high | complex  (recorded only)
+branch: feat/<kebab-slug-of-issue>
+worktree: null       # .specwright/worktrees/<slug> | null  (recorded only)
+milestone: null      # .specwright/milestones/YYYY-MM-DD-<slug> | null
 ---
 ```
 
@@ -117,9 +131,18 @@ created: YYYY-MM-DD
 
 ```yaml
 ---
-feature: <kebab-slug-of-feature>
+feature: <kebab-slug-of-issue>
 created: YYYY-MM-DD
 ---
 ```
 
-None of the three carries any cross-reference frontmatter — specs do not link to each other or to anything else in the repo.
+**`goal.md` / `board.md` frontmatter:**
+
+```yaml
+---
+milestone: <kebab-slug-of-milestone>
+created: YYYY-MM-DD
+---
+```
+
+None carries any cross-reference frontmatter — issues do not link to each other or to anything else in the repo.

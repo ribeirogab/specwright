@@ -6,7 +6,7 @@
 
 - The intro is exactly two lines: `Instructions for AI coding assistants and developers working on the {{project}} codebase.` followed by a blank line and `**Never give up on the right solution.**`. No repo-structure paragraph.
 - Fill `{{Project Name}}` and `{{project}}` from the project info gathered in Prerequisites.
-- The `### Spec flow` is fixed — the same 8 steps for every project (it encodes the specwright delivery pipeline, not project specifics).
+- The `### Issue flow` is fixed — the same steps for every project (it encodes the specwright delivery pipeline, not project specifics).
 
 Do **not** leave `{{placeholders}}` in the final file. Phase 5 validation will catch them.
 
@@ -41,51 +41,46 @@ Instructions for AI coding assistants and developers working on the {{project}} 
 
 Implementing, modifying, or creating something? Ask: "Can I describe the complete solution in one sentence?"
 - **Yes** → implement directly.
-- **Almost** (1-2 open decisions) → ask the user: spec or go direct?
-- **No** → enter the Spec flow.
+- **Almost** (1-2 open decisions) → ask the user: issue or go direct?
+- **No** → enter the Issue flow.
 
 If the user is asking, investigating, or exploring — just answer.
 
-### Spec flow
+### Issue flow
 
-1. `/sw:brainstorming` → design exploration. After the design is approved, the **post-design batch** confirms the **branch name**, the **mode** (`autonomous` / `reviewed`), whether to use a **worktree**, and whether to **hand off**. Brainstorming writes `design.md` (non-technical: purpose, motivation, definitions, non-goals) — the durable write-up of the approved design, not a second review gate.
-2. Create the branch — or, if a worktree was chosen, `git worktree add .specwright/worktrees/<slug>` for it (the guard recommends against a worktree when already inside a linked one; detect with `git rev-parse --git-common-dir` ≠ `--git-dir`). specwright only creates the worktree, never removes it. **One branch + one PR per spec** — design, spec, tasks, and implementation all live in it.
-3. `/sw:writing-plans` → the fused technical `spec.md` (architecture, file structure, phases, `AC-N` acceptance criteria; records `scope:`/`branch:`/`mode:`/`worktree:`) + `tasks.md` (each task names its `AC:` + `Delegable:`). The agent **reviews its own spec** — the spec-document-reviewer subagent (clarity) **and** `/sw:review-spec` (the `validate-spec.sh` mechanical gate); both run in **both** modes. **No human spec review** — design approval is the only human review.
-4. **Handoff (either mode)** — if handoff was chosen, once design/spec/tasks are written print a `txt` handoff prompt (summary + the three paths + mode) and stop; you `/compact` or open a new chat and paste it to resume. Never hand off before the artifacts exist.
-5. **Implement.**
-6. **Quality gate.** Detect the touched modules' code-quality processes (test, lint, typecheck, build — Makefile, `package.json` scripts, the area's CI) and run them all; nothing you did may break them. Logic added or changed in a tested area without a test → write the missing tests first. **Test integrity:** in a tested area the test count must not silently drop and assertions must not be weakened, skipped, or deleted to pass the gate without an in-spec justification.
-7. **Deliver.** `autonomous` → open the PR (`/sw:new-pr`) and run the `/sw:code-review` cycle — several specialized review subagents that must **all** reach `lgtm` (their roles live in the skill) — hands-off, the recorded mode tells the agent to finish alone. `reviewed` → ask "open the PR and run code-review?", then the same on your go-ahead.
-8. **Ship the spec.** **PR opened + code-review `lgtm` = shipped.** On `lgtm`, set the spec's own frontmatter `status: shipped` + `shipped:` date. Do this on the spec's own branch (part of its PR) — not after merge; the later merge to `main` is the maintainer's.
+The **issue** is the unit of work: one folder (`issue.md` ticket + `AC-N` + `status:`, technical `spec.md`, `tasks.md`, optional `learnings.md`), one branch, one PR. A large delivery is a **milestone**: `goal.md` + live `board.md` + `issues/<slug>/`, conducted in a loop by `/sw:run`.
+
+1. `/sw:brainstorm` → open design conversation; approval is the **only** human review. The agent then concludes the **scope** — single issue or milestone (it suggests, you decide) — and asks one batch: single issue = branch + worktree + handoff; milestone = worktree only.
+2. **Single issue** → write `issues/YYYY-MM-DD-<slug>/issue.md`, then `/sw:plan`: just-in-time `spec.md` + `tasks.md`, self-reviewed (spec-document-reviewer subagent + `/sw:review-spec` + `validate-spec.sh` — no human gate) → implement → **quality gate** (run every test/lint/typecheck/build the touched area has; test integrity: no silent count drop, no weakened assertions) → **runtime verification** (execute it; check each `AC-N` by observed behavior; UI via browser or mark `needs-human-verification`) → `/sw:pr` → `/sw:review` to `lgtm` → set `issue.md` `status: shipped` + date. Three identical failures of one gate → stop and report; never thrash.
+3. **Milestone** → write `goal.md` + `board.md` + N `issue.md`, print the mandatory handoff and stop (the planning session never conducts). `/sw:run` in a fresh session conducts: dispatch every **ready** issue (pending + deps shipped) to an issue-owner sub-agent in parallel, one worktree each (`.specwright/worktrees/<slug>`); each owner runs step 2's pipeline and writes the issue's `learnings.md` (curated facts future issues inherit via their specs); blocked issues get a report on the board and the loop moves on; closeout promotes durable learnings to `AGENTS.md`/conventions with your approval. Merging PRs stays yours.
 
 ```mermaid
 flowchart TD
-    A(["brainstorm → design.md"]) --> B{"design approved?"}
+    A(["/sw:brainstorm"]) --> B{"design approved?"}
     B -- "no, revise" --> A
-    B -- yes --> C["branch + mode + worktree + handoff"]
-    C --> D["writing-plans → spec.md + tasks.md + self-review"]
-    D --> E{"handoff?"}
-    E -- yes --> F["print txt handoff, stop; resume later"]
-    E -- no --> G["implement"]
+    B -- yes --> C{"scope?"}
+    C -- "single issue" --> D["issue.md → /sw:plan → implement<br/>→ gates → /sw:pr → /sw:review lgtm"]
+    C -- milestone --> E["goal + board + issues → handoff"]
+    E --> F["/sw:run: dispatch ready issues<br/>→ owners run the pipeline<br/>→ learnings → loop"]
+    D --> G(["shipped"])
     F --> G
-    G --> H["quality gate + test-integrity"]
-    H --> I["new-pr → code-review: all subagents lgtm"]
-    I --> J(["lgtm = shipped"])
 ```
 
 ## Coding standard
 
-`/sw:code-review` enforces the coding standard (Unix philosophy, meaningful comments, security). Project conventions live in `.specwright/conventions/`; specs live in `.specwright/specs/`.
+`/sw:review` enforces the coding standard (Unix philosophy, meaningful comments, security). Project conventions live in `.specwright/conventions/`; issues live in `.specwright/issues/`; milestones in `.specwright/milestones/`.
 
 ## Skills and slash commands
 
 > All entries shown in Claude Code syntax (plugin namespace `sw:`). Codex users invoke as `$sw-<verb>`; Cursor users as `@sw-<verb>`.
 
-Commands + companion skills ship through the `sw` plugin (marketplace `specwright`, in this repo's `.claude/settings.json`). Non-Claude agents read canonical copies under `.agents/skills/sw-<name>/`.
-- **`/sw:brainstorming`** — design exploration; asks autonomous/reviewed after design approval.
-- **`/sw:writing-plans`** — turn an approved design into the technical spec + tasks.
-- **`/sw:spec`** — enter the spec flow from the conversation.
-- **`/sw:review-spec`** — external evaluator spec pass (agent self-review, both modes).
-- **`/sw:new-pr`** — open the PR per the spec's mode.
-- **`/sw:code-review`** — bespoke, portable review cycle to `lgtm`.
+Commands + companion skills ship through the `sw` plugin (marketplace `specwright`). Non-Claude agents read canonical copies under `.agents/skills/sw-<name>/`.
+- **`/sw:brainstorm`** — design exploration; concludes single issue vs milestone and writes the artifacts.
+- **`/sw:spec`** — enter the issue flow from the conversation.
+- **`/sw:plan`** — the issue pipeline: just-in-time spec + tasks, gates, delivery.
+- **`/sw:run`** — conduct a milestone: dispatch ready issues, track the board, close out.
+- **`/sw:review`** — bespoke, portable review cycle to `lgtm`.
+- **`/sw:review-spec`** — external evaluator pass over an issue's plan (agent self-review).
+- **`/sw:pr`** — open the issue's PR.
 - **`/sw:update`** — sync the installed specwright with upstream (reconcile scaffolded files).
 ````

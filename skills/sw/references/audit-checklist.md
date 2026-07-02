@@ -23,27 +23,29 @@ For each item, check existence and content correctness. Report status as:
 ```
 .specwright/
   .specwright/conventions/    (directory exists)
-  .specwright/specs/          (directory exists — holds dated YYYY-MM-DD-<slug>/ folders)
+  .specwright/issues/         (directory exists — holds dated YYYY-MM-DD-<slug>/ issue folders)
+  .specwright/milestones/     (directory exists — holds dated YYYY-MM-DD-<slug>/ milestone folders)
 
-AGENTS.md                      (repo root — self-contained spec flow, ≤ 80 lines)
+AGENTS.md                      (repo root — self-contained issue flow, ≤ 80 lines)
 CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)
 
-.agents/skills/sw-brainstorming/    (full directory — design exploration)
-.agents/skills/sw-writing-plans/    (full directory — fused technical spec + tasks)
-.agents/skills/sw-new-pr/           (full directory — opens the spec's PR)
-.agents/skills/sw-code-review/      (full directory — branch review to lgtm)
-.agents/skills/sw-update/           (full directory — reconciles the install against upstream)
+.agents/skills/sw-brainstorm/  (full directory — design exploration → issue/milestone artifacts)
+.agents/skills/sw-plan/        (full directory — the issue pipeline: spec + tasks to delivery)
+.agents/skills/sw-pr/          (full directory — opens the issue's PR)
+.agents/skills/sw-review/      (full directory — branch review to lgtm)
+.agents/skills/sw-run/         (full directory — the milestone orchestrator)
+.agents/skills/sw-update/      (full directory — reconciles the install against upstream)
 
 .gitignore                     (contains .specwright/worktrees/)
 ```
 
-The spec **templates** (`design.md` / `spec.md` / `tasks.md` blueprints) and the mechanical spec **validator** are **not** scaffolded into the vault — they ship with this skill (under `scaffold/spec-templates/` and `scripts/validate-spec.sh`) and are checked by Phase 5 validation, not by this inventory.
+The artifact **templates** (`issue.md` / `spec.md` / `tasks.md` / `goal.md` / `board.md` blueprints) and the mechanical issue **validator** are **not** scaffolded into the vault — they ship with this skill (under `scaffold/templates/` and `scripts/validate-spec.sh`) and are checked by Phase 5 validation, not by this inventory.
 
 ### Per-agent skill symlinks (optional, not required) — non-Claude only
 
-For every **non-Claude** agent-specific discovery directory present in the repo (`.codex/`, `.cursor/`, `.opencode/`, `.aider/`, `.augment/`, etc.), each scaffold skill above should also be symlinked into that agent's `skills/` subdirectory so the agent can discover it. Example: when `.codex/` exists, `.codex/skills/sw-brainstorming` is a symlink to `../../.agents/skills/sw-brainstorming`.
+For every **non-Claude** agent-specific discovery directory present in the repo (`.codex/`, `.cursor/`, `.opencode/`, `.aider/`, `.augment/`, etc.), each scaffold skill above should also be symlinked into that agent's `skills/` subdirectory so the agent can discover it. Example: when `.codex/` exists, `.codex/skills/sw-brainstorm` is a symlink to `../../.agents/skills/sw-brainstorm`.
 
-**Claude Code is excluded from this loop.** Claude users get the companion skills through the `specwright` plugin (marketplace `specwright`), invoked as `/sw:brainstorming`, `/sw:writing-plans`, `/sw:new-pr`, `/sw:code-review`, `/sw:update`. Creating `.claude/skills/sw-<name>` symlinks here would surface the same skill twice in `/help` — once as `/sw-brainstorming` (hyphen-form symlink) and once as `/sw:brainstorming` (plugin namespace). Legacy `.claude/skills/sw-<name>` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks).
+**Claude Code is excluded from this loop.** Claude users get the companion skills through the `specwright` plugin (marketplace `specwright`), invoked as `/sw:brainstorm`, `/sw:plan`, `/sw:pr`, `/sw:review`, `/sw:run`, `/sw:update`. Creating `.claude/skills/sw-<name>` symlinks here would surface the same skill twice in `/help` — once as `/sw-brainstorm` (hyphen-form symlink) and once as `/sw:brainstorm` (plugin namespace). Legacy `.claude/skills/sw-<name>` symlinks from pre-plugin installs are detected as `DRIFT` and removed by Phase 4 (`rm` works for symlinks).
 
 A missing per-agent symlink is **not `DRIFT`** — only the canonical files under `.agents/skills/` are required. If a per-agent dir exists but lacks the expected symlinks, the specwright installer re-creates them on the next run (no prompt needed; symlinks are non-destructive). If a per-agent dir does not exist at all, no symlinks are created (the absence signals the user does not run that agent in this repo).
 
@@ -91,31 +93,32 @@ If `.claude/` is absent, this check does not run (no signal to gate on). Fix in 
 
 `CLAUDE.md` must be a symlink pointing to `AGENTS.md` — not a copy, not a separate file. Verify with `readlink CLAUDE.md` returning `AGENTS.md`. If it is a regular file or points elsewhere, status is `DRIFT`.
 
-### Spec folder naming follows `YYYY-MM-DD-<kebab-slug>/`
+### Top-level folder naming follows `YYYY-MM-DD-<kebab-slug>/`
 
-Actively scan `.specwright/specs/` — any folder whose name does **not** start with `YYYY-MM-DD-` is `DRIFT`. Report each non-conforming folder and ask the user, per folder:
+Actively scan `.specwright/issues/` and `.specwright/milestones/` — any top-level folder whose name does **not** start with `YYYY-MM-DD-` is `DRIFT`. Report each non-conforming folder and ask the user, per folder:
 
-> "`<old-name>/` is not date-prefixed. Date prefixes prevent the naming conflicts that numeric prefixes (`01-`, `02-`) cause when multiple specs land in parallel. Rename to `<YYYY-MM-DD>-<slug>/`?"
+> "`<old-name>/` is not date-prefixed. Date prefixes prevent the naming conflicts that numeric prefixes (`01-`, `02-`) cause when multiple issues land in parallel. Rename to `<YYYY-MM-DD>-<slug>/`?"
 
-Pull the date from the folder's `spec.md` frontmatter `created:` field when present; if absent, ask the user. Specs are self-contained — a folder rename needs no cross-reference rewriting. **Never rename without confirmation.**
+Pull the date from the folder's `issue.md` (or `goal.md`) frontmatter `created:` field when present; if absent, ask the user. Issues are self-contained — a folder rename needs no cross-reference rewriting. **Never rename without confirmation.**
 
-### Spec file naming follows bare `spec.md` / `design.md` / `tasks.md`
+Issue folders **inside** a milestone's `issues/` are exempt: they use plain slugs by design (order lives on the board). A date or number prefix there is the `DRIFT`, not the absence of one.
 
-Inside any date-prefixed spec folder, the files use **bare** names — `spec.md`, `design.md`, `tasks.md`. The dated folder is the discriminator. A slug-named file — `spec-<slug>.md`, `design-<slug>.md`, `tasks-<slug>.md` — inside a real spec folder is `DRIFT` from before the bare-filename convention.
+### Issue file naming follows bare `issue.md` / `spec.md` / `tasks.md` / `learnings.md`
+
+Inside any issue folder, the files use **bare** names. The folder is the discriminator. A slug-named file — `spec-<slug>.md`, `issue-<slug>.md`, `tasks-<slug>.md` — inside a real issue folder is `DRIFT` from before the bare-filename convention.
 
 **Detection** (run during the audit pass, alongside the date-prefix check):
 
 ```bash
-find .specwright/specs -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-*' 2>/dev/null | while read -r spec_dir; do
-  for f in "$spec_dir"/spec-*.md "$spec_dir"/design-*.md "$spec_dir"/tasks-*.md; do
-    [ -e "$f" ] || continue
-    type="${f##*/}"; type="${type%%-*}"
-    echo "DRIFT: $f → should be $type.md"
-  done
-done
+find .specwright/issues .specwright/milestones -type f \
+  \( -name 'issue-*.md' -o -name 'spec-*.md' -o -name 'tasks-*.md' -o -name 'learnings-*.md' \) 2>/dev/null \
+  | while read -r f; do
+      type="${f##*/}"; type="${type%%-*}"
+      echo "DRIFT: $f → should be $type.md"
+    done
 ```
 
-Report each drift with the source path and the target name. Specs are self-contained, so the fix is a plain rename — `git mv "$f" "$spec_dir/$type.md"` — with no link rewriting. Renaming a tracked file is a destructive operation per the SKILL.md "Mode of Operation" — confirm with the user once per spec folder before applying.
+Report each drift with the source path and the target name. Issues are self-contained, so the fix is a plain rename — `git mv "$f" "$(dirname "$f")/$type.md"` — with no link rewriting. Renaming a tracked file is a destructive operation per the SKILL.md "Mode of Operation" — confirm with the user once per issue folder before applying.
 
 ## AGENTS.md drift detection (required headers + size cap)
 
@@ -131,7 +134,7 @@ When reporting drift, name the missing section(s) explicitly so the fix step kno
 
 ## Frontmatter sanity
 
-Each spec's `spec.md` must begin with valid YAML frontmatter (between `---` fences) with the expected `feature:` or `status:` field. Missing or malformed frontmatter is `DRIFT`.
+Each issue's `issue.md` must begin with valid YAML frontmatter (between `---` fences) with the expected `feature:` and `status:` fields (`status:` one of `pending|in-progress|shipped|blocked`). Missing or malformed frontmatter is `DRIFT`.
 
 ## Report format
 
@@ -142,7 +145,7 @@ Each spec's `spec.md` must begin with valid YAML frontmatter (between `---` fenc
 |--------|------|
 | OK     | AGENTS.md |
 | MISSING| .specwright/conventions/ |
-| DRIFT  | .specwright/specs/old-feature/ (not date-prefixed) |
+| DRIFT  | .specwright/issues/old-feature/ (not date-prefixed) |
 | DRIFT  | AGENTS.md (missing section: "## Coding standard") |
 | ...    | ... |
 

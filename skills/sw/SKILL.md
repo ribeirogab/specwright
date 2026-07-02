@@ -54,12 +54,13 @@ Create or repair only the items the audit flagged. Never touch files that are al
 
 ### Vault directories
 
-specwright's per-repo vault is `.specwright/` and holds exactly two living things:
+specwright's per-repo vault is `.specwright/` and holds exactly three living things:
 
 - `.specwright/conventions/` — project-specific code/style conventions (populated by you over time).
-- `.specwright/specs/` — one dated folder per spec (`YYYY-MM-DD-<slug>/` with `design.md` + `spec.md` + `tasks.md`).
+- `.specwright/issues/` — one dated folder per standalone issue (`YYYY-MM-DD-<slug>/` with `issue.md` + `spec.md` + `tasks.md` + optional `learnings.md`).
+- `.specwright/milestones/` — one dated folder per milestone (`YYYY-MM-DD-<slug>/` with `goal.md` + `board.md` + `issues/<slug>/` folders of the same issue shape).
 
-Ensure both directories exist (an empty `conventions/` is fine on first install). The spec **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/spec-templates/` and the brainstorming / writing-plans skills generate specs from there. The spec **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
+Ensure all three directories exist (empty is fine on first install). The artifact **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/templates/` and the brainstorm / plan skills generate issues from there. The issue **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
 
 ### AGENTS.md
 
@@ -92,7 +93,7 @@ All bundled skills live in `scaffold/skills/` alongside this `SKILL.md`.
 
 ```bash
 SW_DIR="<directory where this SKILL.md lives>"
-SKILL_NAMES=(sw-brainstorming sw-writing-plans sw-new-pr sw-code-review sw-update)
+SKILL_NAMES=(sw-brainstorm sw-plan sw-pr sw-review sw-run sw-update)
 
 # 1. Canonical install — single source of truth on disk
 mkdir -p .agents/skills
@@ -102,17 +103,17 @@ for name in "${SKILL_NAMES[@]}"; do
 done
 
 # Ensure bundled skill scripts are executable
-[ -d .agents/skills/sw-brainstorming/scripts ] && \
-  chmod +x .agents/skills/sw-brainstorming/scripts/*.sh
+[ -d .agents/skills/sw-brainstorm/scripts ] && \
+  chmod +x .agents/skills/sw-brainstorm/scripts/*.sh
 
 # 2. Per-agent symlinks — only into discovery dirs that already exist
 #    (do NOT auto-create agent dirs; their absence means the user does
 #    not run that agent in this repo).
 #
 #    Skip .claude/ — Claude Code gets companion skills through the plugin
-#    (sw → specwright), invoked as /sw:brainstorming etc.
-#    Creating .claude/skills/sw-brainstorming symlinks here would duplicate
-#    the skill under both `/sw-brainstorming` (symlink) and `/sw:brainstorming`
+#    (sw → specwright), invoked as /sw:brainstorm etc.
+#    Creating .claude/skills/sw-brainstorm symlinks here would duplicate
+#    the skill under both `/sw-brainstorm` (symlink) and `/sw:brainstorm`
 #    (plugin) in Claude Code's slash menu.
 for agent_dir in .codex .cursor .opencode .aider .augment; do
   [ -d "$agent_dir" ] || continue
@@ -194,9 +195,9 @@ Rules:
 - Per-agent dirs that do not already exist are not auto-created by the skill copy; only an existing dir signals that agent is in use here.
 - `.claude/settings.json` is created if absent (with `{}` as the seed) or merged into if present — every unrelated top-level key survives.
 
-### Spec folder dating (if drift was reported)
+### Issue/milestone folder dating (if drift was reported)
 
-If the audit flagged a spec folder without a `YYYY-MM-DD-` prefix, rename it to add the date (pull the date from the spec file's frontmatter `created:` field; ask the user when absent). Renaming tracked files is a destructive operation — surface each detected folder and get explicit user confirmation before renaming. Specs are self-contained (no cross-references between them), so a folder rename needs no link rewriting.
+If the audit flagged a top-level folder under `.specwright/issues/` or `.specwright/milestones/` without a `YYYY-MM-DD-` prefix, rename it to add the date (pull the date from the folder's `issue.md`/`goal.md` frontmatter `created:` field; ask the user when absent). Renaming tracked files is a destructive operation — surface each detected folder and get explicit user confirmation before renaming. Issues are self-contained (no cross-references between them), so a folder rename needs no link rewriting. Issue folders **inside** a milestone's `issues/` use plain slugs — no date, no number prefix (order lives on the board).
 
 ## Phase 5 — Validate
 
@@ -217,7 +218,7 @@ Validation is non-negotiable — this is what catches `{{placeholders}}` that su
 
 {{only if first-time setup:}}
 Next steps:
-1. Review AGENTS.md — make sure the spec flow and project context fit your team
+1. Review AGENTS.md — make sure the issue flow and project context fit your team
 2. Add project-specific conventions to .specwright/conventions/ as you establish them
-3. First feature? Run /sw:spec (or /sw:brainstorming) to start a spec
+3. First feature? Run /sw:spec (or /sw:brainstorm) to start an issue
 ```

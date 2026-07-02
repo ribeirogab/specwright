@@ -53,31 +53,31 @@ classify_one() {
   else echo conflict; fi
 }
 
-# spec-flow block: lines after "### Spec flow" up to (not incl.) the next "## " header.
-_spec_flow_block() {
-  awk '/^### Spec flow[[:space:]]*$/{c=1;next} c&&/^## /{c=0} c{print}' "$1"
+# issue-flow block: lines after "### Issue flow" up to (not incl.) the next "## " header.
+_issue_flow_block() {
+  awk '/^### Issue flow[[:space:]]*$/{c=1;next} c&&/^## /{c=0} c{print}' "$1"
 }
 
 # managed_pairs <clone_root> -> <local_path>\t<kind>\t<upstream_source>
 managed_pairs() {
   local clone="$1" s
-  for s in brainstorming writing-plans new-pr code-review update; do
+  for s in brainstorm plan pr review run update; do
     printf '.agents/skills/sw-%s/SKILL.md\tfile\t%s/skills/sw/scaffold/skills/sw-%s/SKILL.md\n' "$s" "$clone" "$s"
   done
-  printf 'AGENTS.md#spec-flow\tagentsblock\t%s/skills/sw/references/agents-md-template.md\n' "$clone"
+  printf 'AGENTS.md#issue-flow\tagentsblock\t%s/skills/sw/references/agents-md-template.md\n' "$clone"
 }
 
 # --- hashes per managed entry (kind file => whole file; agentsblock => the block) ---
 _local_hash() {
   local path="$1" kind="$2"
   if [ "$kind" = agentsblock ]; then
-    [ -f AGENTS.md ] && _sha_str "$(_spec_flow_block AGENTS.md)" || echo ""
+    [ -f AGENTS.md ] && _sha_str "$(_issue_flow_block AGENTS.md)" || echo ""
   else _sha_file "$path"; fi
 }
 _upstream_hash() {
   local src="$1" kind="$2"
   if [ "$kind" = agentsblock ]; then
-    [ -f "$src" ] && _sha_str "$(_spec_flow_block "$src")" || echo ""
+    [ -f "$src" ] && _sha_str "$(_issue_flow_block "$src")" || echo ""
   else _sha_file "$src"; fi
 }
 _baseline_hash() {
@@ -114,13 +114,13 @@ _record_upstream() {
   echo "sw-update: not a managed path: $target" >&2; return 1
 }
 
-# Replace the spec-flow block in AGENTS.md with the upstream template's block.
+# Replace the issue-flow block in AGENTS.md with the upstream template's block.
 _apply_agents_block() {
   local src="$1" blk tmp
   blk=$(mktemp); tmp=$(mktemp)
-  _spec_flow_block "$src" > "$blk"
+  _issue_flow_block "$src" > "$blk"
   awk -v blockfile="$blk" '
-    /^### Spec flow[[:space:]]*$/ { print; while ((getline line < blockfile) > 0) print line; close(blockfile); skip=1; next }
+    /^### Issue flow[[:space:]]*$/ { print; while ((getline line < blockfile) > 0) print line; close(blockfile); skip=1; next }
     skip && /^## / { skip=0 }
     !skip { print }
   ' AGENTS.md > "$tmp" && mv "$tmp" AGENTS.md
@@ -166,56 +166,56 @@ _selftest_apply() {
   local d fails=0
   d=$(mktemp -d)
   # fake upstream clone shape (only the files the assertions touch)
-  mkdir -p "$d/up/skills/sw/scaffold/skills/sw-brainstorming" \
-           "$d/up/skills/sw/scaffold/skills/sw-writing-plans" \
-           "$d/up/skills/sw/scaffold/skills/sw-new-pr" \
+  mkdir -p "$d/up/skills/sw/scaffold/skills/sw-brainstorm" \
+           "$d/up/skills/sw/scaffold/skills/sw-plan" \
+           "$d/up/skills/sw/scaffold/skills/sw-pr" \
            "$d/up/skills/sw/references"
-  printf 'brainstorming NEW\n'  > "$d/up/skills/sw/scaffold/skills/sw-brainstorming/SKILL.md"
-  printf 'writing-plans NEW\n'  > "$d/up/skills/sw/scaffold/skills/sw-writing-plans/SKILL.md"
-  printf 'new-pr\n'             > "$d/up/skills/sw/scaffold/skills/sw-new-pr/SKILL.md"
-  printf '# Template\n### Spec flow\nUP-FLOW\n## Next\n' > "$d/up/skills/sw/references/agents-md-template.md"
+  printf 'brainstorm NEW\n'  > "$d/up/skills/sw/scaffold/skills/sw-brainstorm/SKILL.md"
+  printf 'plan NEW\n'  > "$d/up/skills/sw/scaffold/skills/sw-plan/SKILL.md"
+  printf 'pr\n'             > "$d/up/skills/sw/scaffold/skills/sw-pr/SKILL.md"
+  printf '# Template\n### Issue flow\nUP-FLOW\n## Next\n' > "$d/up/skills/sw/references/agents-md-template.md"
   # local install
-  mkdir -p "$d/lo/.agents/skills/sw-brainstorming" \
-           "$d/lo/.agents/skills/sw-writing-plans" \
-           "$d/lo/.agents/skills/sw-new-pr" \
+  mkdir -p "$d/lo/.agents/skills/sw-brainstorm" \
+           "$d/lo/.agents/skills/sw-plan" \
+           "$d/lo/.agents/skills/sw-pr" \
            "$d/lo/.agents/skills/sw"
-  printf 'brainstorming OLD\n'  > "$d/lo/.agents/skills/sw-brainstorming/SKILL.md"   # stale-clean
-  printf 'writing-plans OLD\n'  > "$d/lo/.agents/skills/sw-writing-plans/SKILL.md"   # conflict
-  printf 'new-pr\n'             > "$d/lo/.agents/skills/sw-new-pr/SKILL.md"          # current
-  printf '# Local intro\n### Spec flow\nOLD-FLOW\n## Next\n' > "$d/lo/AGENTS.md"  # block stale-clean
+  printf 'brainstorm OLD\n'  > "$d/lo/.agents/skills/sw-brainstorm/SKILL.md"   # stale-clean
+  printf 'plan OLD\n'  > "$d/lo/.agents/skills/sw-plan/SKILL.md"   # conflict
+  printf 'pr\n'             > "$d/lo/.agents/skills/sw-pr/SKILL.md"          # current
+  printf '# Local intro\n### Issue flow\nOLD-FLOW\n## Next\n' > "$d/lo/AGENTS.md"  # block stale-clean
   # baseline manifest — hashed with the engine's own helpers so classes land as intended
-  local base_writing h_brainstorming h_writing h_newpr h_agents
-  base_writing="$d/base_writing"; printf 'writing-plans BASE\n' > "$base_writing"
-  h_brainstorming=$(_sha_file "$d/lo/.agents/skills/sw-brainstorming/SKILL.md")
-  h_writing=$(_sha_file "$base_writing")
-  h_newpr=$(_sha_file "$d/lo/.agents/skills/sw-new-pr/SKILL.md")
-  h_agents=$( cd "$d/lo" && _sha_str "$(_spec_flow_block AGENTS.md)" )
+  local base_plan h_brainstorm h_plan h_pr h_agents
+  base_plan="$d/base_plan"; printf 'plan BASE\n' > "$base_plan"
+  h_brainstorm=$(_sha_file "$d/lo/.agents/skills/sw-brainstorm/SKILL.md")
+  h_plan=$(_sha_file "$base_plan")
+  h_pr=$(_sha_file "$d/lo/.agents/skills/sw-pr/SKILL.md")
+  h_agents=$( cd "$d/lo" && _sha_str "$(_issue_flow_block AGENTS.md)" )
   cat > "$d/lo/.agents/skills/sw/.update-manifest.json" <<JSON
 {"files":{
-  ".agents/skills/sw-brainstorming/SKILL.md":"$h_brainstorming",
-  ".agents/skills/sw-writing-plans/SKILL.md":"$h_writing",
-  ".agents/skills/sw-new-pr/SKILL.md":"$h_newpr",
-  "AGENTS.md#spec-flow":"$h_agents"
+  ".agents/skills/sw-brainstorm/SKILL.md":"$h_brainstorm",
+  ".agents/skills/sw-plan/SKILL.md":"$h_plan",
+  ".agents/skills/sw-pr/SKILL.md":"$h_pr",
+  "AGENTS.md#issue-flow":"$h_agents"
 }}
 JSON
   # run 1 — full 3-way
   ( cd "$d/lo" && SW_UPSTREAM_DIR="$d/up" SW_MANIFEST=".agents/skills/sw/.update-manifest.json" \
       bash "$SELF" --run ) > "$d/report.txt" 2>"$d/err.txt" \
       || { echo "FAIL apply: run crashed"; cat "$d/err.txt"; rm -rf "$d"; return 1; }
-  grep -q $'^updated\t\\.agents/skills/sw-brainstorming/SKILL\\.md' "$d/report.txt" || { echo "FAIL apply: brainstorming not updated"; fails=1; }
-  diff <(printf 'brainstorming NEW\n') "$d/lo/.agents/skills/sw-brainstorming/SKILL.md" >/dev/null || { echo "FAIL apply: brainstorming content"; fails=1; }
-  grep -q $'^conflict\t\\.agents/skills/sw-writing-plans/SKILL\\.md' "$d/report.txt" || { echo "FAIL apply: writing-plans not conflict"; fails=1; }
-  diff <(printf 'writing-plans OLD\n') "$d/lo/.agents/skills/sw-writing-plans/SKILL.md" >/dev/null || { echo "FAIL apply: writing-plans changed"; fails=1; }
-  grep -q $'^current\t\\.agents/skills/sw-new-pr/SKILL\\.md' "$d/report.txt" || { echo "FAIL apply: new-pr not current"; fails=1; }
+  grep -q $'^updated\t\\.agents/skills/sw-brainstorm/SKILL\\.md' "$d/report.txt" || { echo "FAIL apply: brainstorm not updated"; fails=1; }
+  diff <(printf 'brainstorm NEW\n') "$d/lo/.agents/skills/sw-brainstorm/SKILL.md" >/dev/null || { echo "FAIL apply: brainstorm content"; fails=1; }
+  grep -q $'^conflict\t\\.agents/skills/sw-plan/SKILL\\.md' "$d/report.txt" || { echo "FAIL apply: plan not conflict"; fails=1; }
+  diff <(printf 'plan OLD\n') "$d/lo/.agents/skills/sw-plan/SKILL.md" >/dev/null || { echo "FAIL apply: plan changed"; fails=1; }
+  grep -q $'^current\t\\.agents/skills/sw-pr/SKILL\\.md' "$d/report.txt" || { echo "FAIL apply: pr not current"; fails=1; }
   grep -q 'UP-FLOW' "$d/lo/AGENTS.md" || { echo "FAIL apply: AGENTS block not updated"; fails=1; }
   grep -q 'Local intro' "$d/lo/AGENTS.md" || { echo "FAIL apply: AGENTS intro clobbered"; fails=1; }
   # run 2 — no manifest (2-way degrade): differing file must conflict + manifest re-created
   rm -f "$d/lo/.agents/skills/sw/.update-manifest.json"
-  printf 'new-pr EDITED\n' > "$d/lo/.agents/skills/sw-new-pr/SKILL.md"
+  printf 'pr EDITED\n' > "$d/lo/.agents/skills/sw-pr/SKILL.md"
   ( cd "$d/lo" && SW_UPSTREAM_DIR="$d/up" SW_MANIFEST=".agents/skills/sw/.update-manifest.json" \
       bash "$SELF" --run ) > "$d/report2.txt" 2>>"$d/err.txt" \
       || { echo "FAIL 2way: run crashed"; cat "$d/err.txt"; rm -rf "$d"; return 1; }
-  grep -q $'^conflict\t\\.agents/skills/sw-new-pr/SKILL\\.md' "$d/report2.txt" || { echo "FAIL 2way: new-pr not conflict"; fails=1; }
+  grep -q $'^conflict\t\\.agents/skills/sw-pr/SKILL\\.md' "$d/report2.txt" || { echo "FAIL 2way: pr not conflict"; fails=1; }
   test -f "$d/lo/.agents/skills/sw/.update-manifest.json" || { echo "FAIL 2way: manifest not recreated"; fails=1; }
   rm -rf "$d"
   return $fails
