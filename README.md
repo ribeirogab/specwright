@@ -34,7 +34,7 @@ The skill is audit-first, autonomous-fix, and safe to re-run. After the first ru
 After install the repo has:
 
 - an **`AGENTS.md`** describing the issue-driven workflow,
-- a **`.specwright/` vault** holding `conventions/` (project-specific conventions), `issues/` (dated standalone-issue folders), and `milestones/` (dated milestone folders), and
+- a **`.specwright/` vault** holding `conventions/` (whatever standards the repo wants kept consistent — you fill it, `/sw:review` enforces it), `issues/` (dated standalone-issue folders), and `milestones/` (dated milestone folders), and
 - a set of **`/sw:*` commands** and companion skills:
 
 | Command | What it does |

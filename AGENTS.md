@@ -37,7 +37,7 @@ flowchart TD
 
 ## Coding standard
 
-`/sw:review` enforces the coding standard (Unix philosophy, meaningful comments, security). Project conventions live in `.specwright/conventions/`; standalone issues in `.specwright/issues/`; milestones in `.specwright/milestones/`.
+`/sw:review` enforces the coding standard (Unix philosophy, meaningful comments, security). `.specwright/conventions/` holds whatever standards this repo wants kept consistent — code style, architecture, naming, testing, any project preference — which you fill over time and `/sw:review` enforces alongside its universal rubric. Standalone issues live in `.specwright/issues/`; milestones in `.specwright/milestones/`.
 
 ## Skills and slash commands
 
@@ -52,3 +52,7 @@ Commands + companion skills ship through the `sw` plugin (marketplace `specwrigh
 - **`/sw:review-spec`** — external evaluator pass over an issue's plan (agent self-review).
 - **`/sw:pr`** — open the issue's PR.
 - **`/sw:update`** — sync the installed specwright with upstream (reconcile scaffolded files).
+
+### Editing the bundled skills
+
+Companion skills ship in **three copies that must stay in sync**: the canonical `.agents/skills/sw-<name>/SKILL.md`, a byte-identical scaffold copy under `skills/sw/scaffold/skills/sw-<name>/`, and the plugin copy under `plugins/sw/skills/<name>/` (identical except its line-2 `name:`). `sw-spec` and `sw-review-spec` ship in **two** (canonical + scaffold; Claude Code serves those as plugin *commands*, not skills). The `sw` scaffolder skill (`skills/sw/`) and `validate-spec.sh` are **single-copy**. Edit the canonical copy, propagate, then verify with `diff`: the scaffold copy must differ in nothing, the plugin copy in exactly the `name:` line.

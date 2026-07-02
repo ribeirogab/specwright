@@ -68,7 +68,7 @@ flowchart TD
 
 ## Coding standard
 
-`/sw:review` enforces the coding standard (Unix philosophy, meaningful comments, security). Project conventions live in `.specwright/conventions/`; standalone issues in `.specwright/issues/`; milestones in `.specwright/milestones/`.
+`/sw:review` enforces the coding standard (Unix philosophy, meaningful comments, security). `.specwright/conventions/` holds whatever standards this repo wants kept consistent — code style, architecture, naming, testing, any project preference — which you fill over time and `/sw:review` enforces alongside its universal rubric. Standalone issues live in `.specwright/issues/`; milestones in `.specwright/milestones/`.
 
 ## Skills and slash commands
 

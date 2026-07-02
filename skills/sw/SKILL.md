@@ -56,18 +56,35 @@ Create or repair only the items the audit flagged. Never touch files that are al
 
 specwright's per-repo vault is `.specwright/` and holds exactly three living things:
 
-- `.specwright/conventions/` — project-specific code/style conventions (populated by you over time).
+- `.specwright/conventions/` — whatever standards the repo wants kept consistent (code style, architecture, naming, testing, any project preference), filled by the adopter over time.
 - `.specwright/issues/` — one dated folder per standalone issue (`YYYY-MM-DD-<slug>/` with `issue.md` + `spec.md` + `tasks.md` + optional `learnings.md`).
 - `.specwright/milestones/` — one dated folder per milestone (`YYYY-MM-DD-<slug>/` with `goal.md` + `board.md` + `issues/<slug>/` folders of the same issue shape).
 
-Ensure all three directories exist (empty is fine on first install), each with a `.gitkeep` — git tracks no empty directories, so without the keep files a compliant fresh install loses its vault on the first re-clone:
+Ensure all three directories exist (empty is fine on first install). `issues/` and `milestones/` each get a `.gitkeep` — git tracks no empty directories, so without the keep files a compliant fresh install loses its vault on the first re-clone. `conventions/` instead gets a short `README.md` signpost that both keeps the directory tracked and tells the adopter what the folder is for:
 
 ```bash
 mkdir -p .specwright/conventions .specwright/issues .specwright/milestones
-touch .specwright/conventions/.gitkeep .specwright/issues/.gitkeep .specwright/milestones/.gitkeep
+touch .specwright/issues/.gitkeep .specwright/milestones/.gitkeep
+# Seed the conventions signpost only on a fresh (empty) conventions dir, so a re-run
+# never overwrites a populated one. /sw:review reads every file here as a standard to
+# enforce, so the signpost declares itself inert (states no rule, applies to no file).
+if [ -z "$(ls -A .specwright/conventions 2>/dev/null)" ]; then
+  cat > .specwright/conventions/README.md <<'EOF'
+# About this folder — signpost, not a convention
+
+`/sw:review` reads every file in `.specwright/conventions/` as a project standard it
+must enforce. This file is the exception on purpose: it states no rule and applies to
+no file, so there is nothing here to enforce. Delete it whenever you want.
+
+This folder is yours. Put whatever this repo wants kept consistent — code style,
+naming, architecture, testing, domain rules, review preferences, any project-specific
+standard. One file per convention, in whatever shape you like; specwright imposes no
+template and no required frontmatter.
+EOF
+fi
 ```
 
-Both commands are idempotent — re-running over a populated vault changes nothing. The artifact **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/templates/` and the brainstorm / plan skills generate issues from there. The issue **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
+The `mkdir`/`touch` are idempotent and the seed is guarded by the emptiness check, so re-running over a populated vault changes nothing. The artifact **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/templates/` and the brainstorm / plan skills generate issues from there. The issue **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
 
 ### AGENTS.md
 

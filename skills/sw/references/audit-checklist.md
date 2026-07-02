@@ -22,7 +22,7 @@ For each item, check existence and content correctness. Report status as:
 
 ```
 .specwright/
-  .specwright/conventions/    (directory exists, contains .gitkeep — clone survival)
+  .specwright/conventions/    (directory exists, contains README.md signpost — clone survival)
   .specwright/issues/         (directory exists, contains .gitkeep — holds dated YYYY-MM-DD-<slug>/ issue folders)
   .specwright/milestones/     (directory exists, contains .gitkeep — holds dated YYYY-MM-DD-<slug>/ milestone folders)
 
