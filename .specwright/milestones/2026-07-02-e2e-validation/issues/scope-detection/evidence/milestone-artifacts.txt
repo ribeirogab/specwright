@@ -1,0 +1,64 @@
+# Milestone artifacts committed in the sandbox — captured 2026-07-02
+
+## git log --oneline -5
+aaa117b chore(vault): plan the grow-taskr milestone — 5 issues from the approved brainstorm
+e57a024 chore: bootstrap taskr sandbox with specwright
+
+## git show --stat HEAD
+commit aaa117b0a90adf3d25f34f6cfa0a437961bda435
+Author: ribeirogab <gblosr@gmail.com>
+Date:   Thu Jul 2 02:05:21 2026 -0300
+
+    chore(vault): plan the grow-taskr milestone — 5 issues from the approved brainstorm
+
+ .../milestones/2026-07-02-grow-taskr/board.md      | 27 ++++++++++++++
+ .../milestones/2026-07-02-grow-taskr/goal.md       | 29 +++++++++++++++
+ .../issues/export-json-csv/issue.md                | 42 ++++++++++++++++++++++
+ .../issues/list-filters/issue.md                   | 42 ++++++++++++++++++++++
+ .../issues/list-newest-first/issue.md              | 41 +++++++++++++++++++++
+ .../issues/task-priority/issue.md                  | 39 ++++++++++++++++++++
+ .../2026-07-02-grow-taskr/issues/web-page/issue.md | 40 +++++++++++++++++++++
+ 7 files changed, 260 insertions(+)
+
+## find .specwright/milestones -type f
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/.gitkeep
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/goal.md
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/board.md
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md
+
+## git status -sb (nothing uncommitted expected)
+## main...origin/main [ahead 1]
+
+## board.md — Issues table (dependencies)
+| Order | Issue | Depends on |
+|---|---|---|
+| 1 | task-priority | — |
+| 2 | list-filters | task-priority |
+| 3 | export-json-csv | task-priority |
+| 4 | web-page | task-priority |
+| 5 | list-newest-first | list-filters |
+
+## list-newest-first issue.md — ACs (the seeded conflict)
+- [ ] **AC-1** Given three tasks created at distinct times, `taskr list` with no flags prints them newest-first (most recently created task on the first line).
+- [ ] **AC-2** `test/taskr.test.js` is byte-for-byte identical to its state before this issue (`git diff` empty for that file) and `npm test` passes with all of its tests executed.
+
+## capability coverage — issue slugs
+export-json-csv
+list-filters
+list-newest-first
+task-priority
+web-page
+
+## sandbox integrity — npm test after the brainstorm session
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 322.663083
