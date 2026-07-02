@@ -114,7 +114,7 @@ Run: `git add <issue-folder>/evidence/milestone-artifacts.txt && git commit -m "
 **AC:** AC-3
 **Delegable:** no — trivial setup inline.
 **Files:**
-- Create (scratchpad, disposable): `<scratchpad>/taskr-fp/`, `<scratchpad>/taskr-fp-origin.git`
+- Create (scratchpad, disposable): `<scratchpad>/taskr-fp/`, `<scratchpad>/taskr-fp-origin.git`, `<scratchpad>/taskr-fp-baseline.txt`
 
 - [ ] **Step 1: Copy the sandbox and repoint origin**
 
@@ -127,6 +127,11 @@ Run:
 
 Run: `git -C <scratchpad>/taskr-fp remote -v && cd <scratchpad>/taskr-fp && npm test`
 Expected: origin points at the scratch bare; 5 tests pass.
+
+- [ ] **Step 3: Snapshot the post-copy baseline**
+
+The copy is taken after Phase 1, so it already contains the milestone fixture — "milestones dir empty" can never be the check. Snapshot what the copy starts with:
+Run: `find <scratchpad>/taskr-fp/.specwright -type f | sort > <scratchpad>/taskr-fp-baseline.txt`
 
 ### Task 4: Drive the false-positive brainstorm session
 
@@ -161,7 +166,9 @@ Same recording convention into `evidence/false-positive-session.md`. Reply polic
 
 Run and capture into `evidence/false-positive-checks.txt`:
 `grep -in "milestone" <issue-folder>/evidence/false-positive-session.md`
-Expected: zero matches in session turns (exit 1 from grep). Also capture `find <scratchpad>/taskr-fp/.specwright/issues -type f` and `git -C <scratchpad>/taskr-fp log --oneline -3` to show the single-issue path was taken (issue.md written/committed, no milestone folder: `find <scratchpad>/taskr-fp/.specwright/milestones -type f` returns only `.gitkeep`).
+Expected: zero matches inside `**Session:**` turns — scope the verdict to session turns (any match must be attributed; a match in a `**User:**` turn would be a harness leak and its own finding; expected overall: grep exits 1). Also capture the new-file diff against the Task 3 baseline:
+`find <scratchpad>/taskr-fp/.specwright -type f | sort | comm -13 <scratchpad>/taskr-fp-baseline.txt -`
+Expected: the only new line(s) are paths ending in `.specwright/issues/<date>-<slug>/issue.md`; no new path contains `.specwright/milestones/` (both sides of the comm come from the same `find` shape, so paths compare like-for-like). Plus `git -C <scratchpad>/taskr-fp log --oneline -3` showing the single-issue commit.
 
 - [ ] **Step 4: Commit the fp evidence**
 

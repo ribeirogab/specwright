@@ -55,13 +55,13 @@ All paths relative to this issue folder (`.specwright/milestones/2026-07-02-e2e-
 - Create: `learnings.md` — curated facts for downstream issues (at minimum: where the sandbox milestone fixture lives and what it contains).
 - Modify: `issue.md` — `status:` transitions and final AC tickboxes.
 - Sandbox (written by the session-under-test, not by the owner): `/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/<date>-<slug>/` — the fixture; left exactly as the session commits it.
-- Scratchpad (disposable): `<scratchpad>/taskr-fp/` (copy of the sandbox), `<scratchpad>/taskr-fp-origin.git` (scratch bare clone as the copy's `origin`).
+- Scratchpad (disposable): `<scratchpad>/taskr-fp/` (copy of the sandbox), `<scratchpad>/taskr-fp-origin.git` (scratch bare clone as the copy's `origin`), `<scratchpad>/taskr-fp-baseline.txt` (post-copy file baseline the fp check diffs against).
 
 ## Phase Ordering
 
-1. **Phase 1 — Milestone case** (Tasks 1–3): drive the session, capture evidence, verify AC-1/AC-2. Must run first: its artifacts are the milestone fixture and the false-positive case must not run in the sandbox anyway.
-2. **Phase 2 — False-positive case** (Tasks 4–5): disposable copy, drive the session, verify AC-3. Independent of Phase 1's outcome but ordered after it to keep the sandbox untouched by fp debris.
-3. **Phase 3 — Findings and delivery** (Tasks 6–8): `findings.md` (AC-4), quality gate + runtime verification, PR/review/learnings/ship.
+1. **Phase 1 — Milestone case** (Tasks 1–2): drive the session, capture evidence, verify AC-1/AC-2. Must run first: its artifacts are the milestone fixture and the false-positive case must not run in the sandbox anyway.
+2. **Phase 2 — False-positive case** (Tasks 3–4): disposable copy, drive the session, verify AC-3. The copy is taken **after** Phase 1, so it already contains the milestone fixture — the fp artifact check is "no NEW `.specwright` files relative to a post-copy baseline except the single-issue artifacts", never "milestones dir empty".
+3. **Phase 3 — Findings and delivery** (Tasks 5–7): `findings.md` (AC-4), quality gate + runtime verification, PR/review/learnings/ship.
 
 ## Constraints
 
