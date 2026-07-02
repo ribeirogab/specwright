@@ -1,7 +1,8 @@
 ---
-status: approved
+feature: specwright-pivot
 created: 2026-06-24
-slug: specwright-pivot
+status: shipped
+shipped: 2026-06-25
 ---
 # specwright — Design
 

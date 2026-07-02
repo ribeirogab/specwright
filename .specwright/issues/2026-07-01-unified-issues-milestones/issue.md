@@ -1,6 +1,8 @@
 ---
 feature: unified-issues-milestones
 created: 2026-07-01
+status: shipped
+shipped: 2026-07-01
 ---
 # Unified Issues + Milestones — Design
 

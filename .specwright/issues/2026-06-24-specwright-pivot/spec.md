@@ -1,12 +1,10 @@
 ---
-status: shipped
 feature: specwright-pivot
-scope: complex
 created: 2026-06-24
-shipped: 2026-06-25
+scope: complex
 branch: feat/specwright
-mode: autonomous
 worktree: null
+milestone: null
 ---
 # specwright Pivot — Spec
 

@@ -1,12 +1,10 @@
 ---
-status: shipped
 feature: unified-issues-milestones
-scope: complex
 created: 2026-07-01
-shipped: 2026-07-01
+scope: complex
 branch: feat/unified-issues-milestones
-mode: autonomous
 worktree: null
+milestone: null
 ---
 # Unified Issues + Milestones — Spec
 
