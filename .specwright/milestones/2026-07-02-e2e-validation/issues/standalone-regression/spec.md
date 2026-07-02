@@ -35,7 +35,7 @@ A **driver/driven harness**, same shape as scope-detection (T1) and resume (T2):
 
 1. Opening ask: `--help` today falls into the generic-usage error path (stderr, exit 1); the user wants a real `--help` flag printing usage text. Ask to design it together, invoking the brainstorm flow.
 2. Design conversation: answer questions as an opinionated-but-flexible user (converse first, decide at the end); approve the design explicitly when the session presents it.
-3. Scope conclusion: the session suggests, the user decides — accept a single-issue suggestion. A milestone **suggestion** is an AC-1-adjacent FAIL to record (a milestone *mention* as concurrent-work context is fine — T1 precedent); do not steer either way beforehand.
+3. Scope conclusion: the session suggests, the user decides — accept a single-issue suggestion. A milestone **suggestion** is a FAIL filed under the scope-conclusion station (it violates the issue's Non-Goal, not AC-1's batch shape; a milestone *mention* as concurrent-work context is fine — T1 precedent); do not steer either way beforehand.
 4. Post-design batch: answer whatever the session asks in one reply (branch name: accept its suggestion; worktree: yes; handoff: follow what the session itself offers — continue in-session or hand off to `/sw:plan`; either is valid, record which; on a handoff, spawn a second driven session (`session-b`, same contract) whose cwd is the checkout the brainstorm session **actually created** — resolve the worktree path from observed sandbox state, never assume it).
 5. Pipeline: no steering; relay reviewer verdicts within budget; capture the `/sw:pr` station verbatim.
 
