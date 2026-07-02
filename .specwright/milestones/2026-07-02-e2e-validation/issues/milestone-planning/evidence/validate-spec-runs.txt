@@ -1,0 +1,68 @@
+# validate-spec.sh over the grow-taskr fixture issue folders — captured 2026-07-02
+# validator: skills/sw/scripts/validate-spec.sh (worktree copy of the sw skill)
+# fixture at sandbox commit aaa117b (verified: git log -1 + clean status before this run)
+== /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/
+FAIL (check 2): spec.md not found in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv
+FAILED: 1 check(s) in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv
+exit=1
+== /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/
+FAIL (check 2): spec.md not found in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters
+FAILED: 1 check(s) in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters
+exit=1
+== /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/
+FAIL (check 2): spec.md not found in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first
+FAILED: 1 check(s) in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first
+exit=1
+== /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/
+FAIL (check 2): spec.md not found in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority
+FAIL (check 4): vague verb in acceptance criterion: 2:- [ ] **AC-2** `taskr add -p low water plants` stores the task with `"priority": "low"` (short alias works).
+FAILED: 2 check(s) in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority
+exit=2
+== /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/
+FAIL (check 2): spec.md not found in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page
+FAILED: 1 check(s) in /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/web-page
+exit=1
+
+# per-ticket frontmatter + AC bullets
+== export-json-csv
+feature: export-json-csv
+created: 2026-07-02
+status: pending
+shipped: null
+AC bullet count: 8
+AC-1 AC-2 AC-3 AC-4 AC-5 AC-6 AC-7 AC-8
+== list-filters
+feature: list-filters
+created: 2026-07-02
+status: pending
+shipped: null
+AC bullet count: 8
+AC-1 AC-2 AC-3 AC-4 AC-5 AC-6 AC-7 AC-8
+== list-newest-first
+feature: list-newest-first
+created: 2026-07-02
+status: pending
+shipped: null
+AC bullet count: 2
+AC-1 AC-2
+== task-priority
+feature: task-priority
+created: 2026-07-02
+status: pending
+shipped: null
+AC bullet count: 6
+AC-1 AC-2 AC-3 AC-4 AC-5 AC-6
+== web-page
+feature: web-page
+created: 2026-07-02
+status: pending
+shipped: null
+AC bullet count: 7
+AC-1 AC-2 AC-3 AC-4 AC-5 AC-6 AC-7
+
+# slug shape
+all slugs plain kebab
+no number prefixes
+
+# double-brace placeholder sweep across tickets
+no placeholder survivors
