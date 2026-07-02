@@ -27,11 +27,11 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 
 Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.
 
-- [ ] **AC-1** The brainstorm skill's milestone-writing step instructs phrasing the goal in behavior terms — no file paths, function names, or storage formats — includes one worked example translating a technical hard constraint into goal-level language, and states that path-level constraints live in issue tickets (dossier 3.1).
-- [ ] **AC-2** The brainstorm skill's decomposition step instructs running `validate-spec.sh` on each issue folder before committing, and states the planning-stage baseline: exactly one check-2 failure for the not-yet-written `spec.md`; anything else is the planner's to fix (dossier 3.2).
-- [ ] **AC-3** Checklist item 6 is reworded so small work concludes "single issue" without presenting the milestone alternative, and the milestone option (with decomposition preview) is presented only when the scope signals point to one (dossier 3.3).
-- [ ] **AC-4** The ticket-writing guidance contains the rule: state a hard constraint once and reference it elsewhere; every restatement is an amendment hazard (dossier 3.4).
-- [ ] **AC-5** `vault-files.md` carves out evidence-consuming issues: they may cite sibling-issue paths as plain text; link syntax remains banned (dossier 3.5).
-- [ ] **AC-6** The brainstorm skill's three shipped copies (`plugins/sw/skills/brainstorm/SKILL.md`, `.agents/skills/sw-brainstorm/SKILL.md`, `skills/sw/scaffold/skills/sw-brainstorm/SKILL.md`) differ only in the frontmatter `name:` line.
+- [x] **AC-1** The brainstorm skill's milestone-writing step instructs phrasing the goal in behavior terms — no file paths, function names, or storage formats — includes one worked example translating a technical hard constraint into goal-level language, and states that path-level constraints live in issue tickets (dossier 3.1).
+- [x] **AC-2** The brainstorm skill's decomposition step instructs running `validate-spec.sh` on each issue folder before committing, and states the planning-stage baseline: exactly one check-2 failure for the not-yet-written `spec.md`; anything else is the planner's to fix (dossier 3.2).
+- [x] **AC-3** Checklist item 6 is reworded so small work concludes "single issue" without presenting the milestone alternative, and the milestone option (with decomposition preview) is presented only when the scope signals point to one (dossier 3.3).
+- [x] **AC-4** The ticket-writing guidance contains the rule: state a hard constraint once and reference it elsewhere; every restatement is an amendment hazard (dossier 3.4).
+- [x] **AC-5** `vault-files.md` carves out evidence-consuming issues: they may cite sibling-issue paths as plain text; link syntax remains banned (dossier 3.5).
+- [x] **AC-6** The brainstorm skill's three shipped copies (`plugins/sw/skills/brainstorm/SKILL.md`, `.agents/skills/sw-brainstorm/SKILL.md`, `skills/sw/scaffold/skills/sw-brainstorm/SKILL.md`) differ only in the frontmatter `name:` line.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
