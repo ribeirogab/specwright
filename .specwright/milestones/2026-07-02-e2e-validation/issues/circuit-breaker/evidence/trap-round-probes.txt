@@ -1,0 +1,944 @@
+== TRAP ROUND ==
+---- probe 2026-07-02T13:55:10Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 5
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 8
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+---- probe 2026-07-02T13:55:55Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 5
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 8
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+---- probe 2026-07-02T13:56:40Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 5
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 8
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+---- probe 2026-07-02T13:57:25Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 8
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+---- probe 2026-07-02T13:58:11Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+---- probe 2026-07-02T13:58:56Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+---- probe 2026-07-02T13:59:41Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+---- probe 2026-07-02T14:00:26Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+---- probe 2026-07-02T14:01:11Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:01:56Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:02:41Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:03:26Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:04:11Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:04:56Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:05:41Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:06:26Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:07:12Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:07:57Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:08:42Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:09:27Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:10:12Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first dff030d
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:10:57Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first b840aba
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:11:42Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first f579b96
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:12:27Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first b843a94
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: in-progress
+---- probe 2026-07-02T14:13:12Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:13:57Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:14:42Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:15:28Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:16:13Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:16:58Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:17:43Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main 2da129b
+origin 2da129b
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main 2da129b
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 9
+blockers-bytes: 165
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:18:28Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main d26c321
+origin d26c321
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main d26c321
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 10
+blockers-bytes: 2847
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:19:13Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main d26c321
+origin d26c321
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main d26c321
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 10
+blockers-bytes: 2847
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:19:58Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main d26c321
+origin d26c321
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main d26c321
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 10
+blockers-bytes: 2847
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:20:43Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main d26c321
+origin d26c321
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main d26c321
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 10
+blockers-bytes: 2847
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+== HALT RUN spawn 14:20:57Z ==
+---- probe 2026-07-02T14:21:28Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main d26c321
+origin d26c321
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main d26c321
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 10
+blockers-bytes: 2847
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:22:13Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main d26c321
+origin d26c321
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main d26c321
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 10
+blockers-bytes: 2847
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:22:58Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main d26c321
+origin d26c321
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main d26c321
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 10
+blockers-bytes: 2847
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked
+---- probe 2026-07-02T14:23:44Z ----
+feat/export-json-csv 0b1f75e
+feat/list-filters dff030d
+feat/list-newest-first c74e996
+feat/task-priority b9d7c80
+feat/web-page 8958663
+main d26c321
+origin d26c321
+origin/feat/export-json-csv 0b1f75e
+origin/feat/list-filters dff030d
+origin/feat/list-newest-first c74e996
+origin/feat/task-priority b9d7c80
+origin/feat/web-page 8958663
+origin/main d26c321
+worktrees: 6
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page
+dispatch-log-lines: 10
+blockers-bytes: 2847
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: pending
+trap-status[/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-newest-first/.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md]: status: blocked

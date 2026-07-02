@@ -1,8 +1,8 @@
 ---
 feature: circuit-breaker
 created: 2026-07-02
-status: pending
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Circuit Breaker (T6) — Issue
 
@@ -27,10 +27,12 @@ The breaker is what makes unattended conduction safe — without it a single imp
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** Transcript evidence counts the trap owner's failed gate attempts: ≤ 3, no identical retry after the third, and the stop is explicit (no further implementation attempts afterwards).
-- [ ] **AC-2** The trap's `issue.md` says `status: blocked`, and the board's Blockers section carries its report with all three parts — why (the contradicting AC/test pair), tried (distinct attempts), needs (the human decision required).
-- [ ] **AC-3** Dispatch Log evidence shows the loop continuing past the blocked trap in the same round (other owners dispatched/completed after the `blocked` event, no re-dispatch of the trap).
-- [ ] **AC-4** With only the trap unshipped, a resumed `/sw:run` halts with a consolidated blockers report (every blocker + what each needs from the human) and does not dispatch anything — transcript evidence.
-- [ ] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+- [x] **AC-1** Transcript evidence counts the trap owner's failed gate attempts: ≤ 3, no identical retry after the third, and the stop is explicit (no further implementation attempts afterwards).
+- [x] **AC-2** The trap's `issue.md` says `status: blocked`, and the board's Blockers section carries its report with all three parts — why (the contradicting AC/test pair), tried (distinct attempts), needs (the human decision required).
+  - Verified on the checkout that carries the owner's flip: the branch/worktree copy of the trap's `issue.md` (`feat/list-newest-first`); `main`'s copy stays `pending` by design — the orchestrator never edits tickets. The board report is a faithful three-part synthesis, not byte-verbatim (findings.md Divergence 1).
+- [x] **AC-3** Dispatch Log evidence shows the loop continuing past the blocked trap in the same round (other owners dispatched/completed after the `blocked` event, no re-dispatch of the trap).
+  - Verified as: no re-dispatch + clean round close. The "other owners dispatched/completed after the `blocked` event" clause is vacuous in this fixture — the trap is the last issue in the dependency graph, so no other owner could follow; recorded as findings.md Divergence 2.
+- [x] **AC-4** With only the trap unshipped, a resumed `/sw:run` halts with a consolidated blockers report (every blocker + what each needs from the human) and does not dispatch anything — transcript evidence.
+- [x] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.

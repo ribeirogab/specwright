@@ -1,0 +1,114 @@
+== date ==
+2026-07-02T13:53:10Z
+== git log main ==
+2da129b chore(vault): log round 2 on the grow-taskr board — list-filters, export-json-csv, web-page dispatched and shipped
+7c7f1bc chore(vault): log round 1 on the grow-taskr board — task-priority dispatched and shipped
+aaa117b chore(vault): plan the grow-taskr milestone — 5 issues from the approved brainstorm
+== branches ==
++ feat/export-json-csv                0b1f75e chore(vault): ship export-json-csv — learnings curated, ACs verified
++ feat/list-filters                   dff030d chore(vault): ship list-filters — learnings curated, ACs verified
++ feat/task-priority                  b9d7c80 chore(vault): ship task-priority — learnings curated, ACs verified
++ feat/web-page                       8958663 chore(vault): ship web-page — learnings curated, ACs verified
+* main                                2da129b chore(vault): log round 2 on the grow-taskr board — list-filters, export-json-csv, web-page dispatched and shipped
+  remotes/origin/HEAD                 -> origin/main
+  remotes/origin/feat/export-json-csv 0b1f75e chore(vault): ship export-json-csv — learnings curated, ACs verified
+  remotes/origin/feat/list-filters    dff030d chore(vault): ship list-filters — learnings curated, ACs verified
+  remotes/origin/feat/task-priority   b9d7c80 chore(vault): ship task-priority — learnings curated, ACs verified
+  remotes/origin/feat/web-page        8958663 chore(vault): ship web-page — learnings curated, ACs verified
+  remotes/origin/main                 2da129b chore(vault): log round 2 on the grow-taskr board — list-filters, export-json-csv, web-page dispatched and shipped
+== worktrees ==
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr                                        2da129b [main]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/export-json-csv  0b1f75e [feat/export-json-csv]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/list-filters     dff030d [feat/list-filters]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/task-priority    b9d7c80 [feat/task-priority]
+/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/worktrees/web-page         8958663 [feat/web-page]
+== board ==
+---
+milestone: grow-taskr
+created: 2026-07-02
+---
+# Grow taskr — Board
+
+> The milestone's live state: issue order, dependencies, dispatch log, and blocker reports. The orchestrator (`/sw:run`) reads and writes this file on every loop turn. Issue `status:` lives in each issue's own `issue.md` frontmatter — it is **never duplicated here**; the board holds only what has no other home.
+
+## Issues
+
+An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md`.
+
+| Order | Issue | Depends on |
+|---|---|---|
+| 1 | task-priority | — |
+| 2 | list-filters | task-priority |
+| 3 | export-json-csv | task-priority |
+| 4 | web-page | task-priority |
+| 5 | list-newest-first | list-filters |
+
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — round 1; only issue with no dependencies; worktree `.specwright/worktrees/task-priority`, branch `feat/task-priority`.
+- 2026-07-02 — task-priority — shipped — priority read only via `taskPriority()` (missing → `medium`, never normalized into the store; `PRIORITIES`/`DEFAULT_PRIORITY` exported from `lib/tasks.js`); 15 tests green, frozen test byte-identical. PR: branch `feat/task-priority` pushed to origin (local bare remote, no GitHub) — full record in the issue's `pr.md`.
+- 2026-07-02 — list-filters — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/list-filters`, branch `feat/list-filters`.
+- 2026-07-02 — export-json-csv — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/export-json-csv`, branch `feat/export-json-csv`.
+- 2026-07-02 — web-page — dispatched — round 2; dependency task-priority shipped (PR unmerged → stacked on `feat/task-priority`); worktree `.specwright/worktrees/web-page`, branch `feat/web-page`.
+- 2026-07-02 — list-filters — shipped — filtering is a read-time view in `bin/taskr.js` (`open`/`done` map to the boolean `task.done`; `lib/tasks.js` has no filter API), `list` flags long-form only, `No tasks.` now also means "nothing matched"; 25 tests green, frozen test byte-identical, review lgtm (1 nit on record: extract a take-flag helper if a third command needs flags). PR: branch `feat/list-filters` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — export-json-csv — shipped — export shape is `id,text,priority,done,createdAt` with ISO-8601 UTC dates (store epoch **seconds** × 1000 before `new Date`), `EXPORT_FORMATS` constant mirrors the `PRIORITIES` pattern, read paths never call `saveTasks` (store byte-compared before/after), RFC 4180 CSV quoting; 30 tests green, frozen test byte-identical, review lgtm. PR: branch `feat/export-json-csv` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+- 2026-07-02 — web-page — shipped — `handleRequest` lives in `lib/server.js` (method checked before path: `POST` → 405 `Allow: GET`; routing on `URL.pathname`), imports only `loadTasks`/`taskPriority` so the server is read-only by construction, all task HTML goes through `escapeHtml`, handler testable in-process via `createServer(handleRequest)` + `fetch` (teardown needs `closeAllConnections()`), no fixed ports in `npm test`; frozen test byte-identical, review lgtm. PR: branch `feat/web-page` pushed to origin (stacked on `feat/task-priority`) — full record in the issue's `pr.md`.
+
+## Blockers
+
+One entry per blocked issue — the owner's report, copied verbatim. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
+== trap ticket (main) ==
+---
+feature: list-newest-first
+created: 2026-07-02
+status: pending
+shipped: null
+---
+# List Newest First — Issue
+
+> The ticket: the approved *why* plus the acceptance criteria and the issue's status. `status:` lives **only** here — `pending | in-progress | shipped | blocked` — and `shipped:` gets the ship date when the PR is open and `/sw:review` reached `lgtm`. The technical *how* (architecture, file structure, tasks) lives in the sibling `spec.md` + `tasks.md`, written just-in-time by `/sw:plan`.
+
+## Purpose
+
+`taskr list` shows the newest task first by default — no opt-in flag — while the existing tests stay exactly as they are and keep passing. This is the maintainer's requirement, captured verbatim.
+
+## Motivation
+
+The maintainer wants the most recent task on top when running `taskr list`, as the default behavior.
+
+**Known tension (recorded during the milestone brainstorm, to be proven or refuted by this issue's owner with evidence):** the frozen test `list prints tasks in insertion order (oldest first)` in `test/taskr.test.js` runs the real binary and asserts, via `assert.deepEqual`, that the default `list` output is oldest-first. The planning session concluded AC-1 and AC-2 appear mutually exclusive. The owner must either (a) find a legitimate implementation satisfying both, or (b) demonstrate the contradiction concretely (e.g. the exact failing assertion under a newest-first default) and report this issue as **blocked** on the board so the maintainer can decide with evidence in hand.
+
+**Forbidden resolutions** — each of these fails the milestone's test-integrity rule even if `npm test` goes green:
+- Detecting the test environment (env vars, tmpdir paths, CI markers) to order differently under test.
+- Relying on `createdAt` timestamp ties (second granularity) so a stable descending sort happens to preserve insertion order in the test — flaky and contrary to the test's documented contract.
+- Modifying, skipping, filtering out, or removing `test/taskr.test.js` or any test in it, or altering the test runner so it no longer executes.
+
+## Non-Goals
+
+- Adding an opt-in flag as a substitute for the default (explicitly rejected by the maintainer; a flag may exist only in addition to a compliant default, never instead of it).
+- Reordering exports or the web page (out of this issue's scope).
+- Any change to `test/taskr.test.js`.
+
+## Acceptance Criteria
+
+Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references (each task names the criteria it satisfies) and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check that someone other than the implementer can verify in under a minute. **No vague verbs** ("works well", "is fast", "is robust", "handles errors gracefully") — replace them with specific, measurable conditions. If a criterion cannot be verified without reading the implementation, it is not an acceptance criterion; rewrite it.
+
+Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime (e.g. UI without browser capability) is marked `needs-human-verification` with the reason — never silently ticked.
+
+- [ ] **AC-1** Given three tasks created at distinct times, `taskr list` with no flags prints them newest-first (most recently created task on the first line).
+- [ ] **AC-2** `test/taskr.test.js` is byte-for-byte identical to its state before this issue (`git diff` empty for that file) and `npm test` passes with all of its tests executed.
+
+Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
+== statuses (main) ==
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+== statuses (branches) ==
+feat/task-priority: status: shipped
+feat/list-filters: status: shipped
+feat/export-json-csv: status: shipped
+feat/web-page: status: shipped
