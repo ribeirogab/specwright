@@ -1,8 +1,8 @@
 ---
 feature: dispatch-parallelism
 created: 2026-07-02
-status: pending
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Dispatch and Parallelism (T4) — Issue
 
@@ -32,9 +32,11 @@ Parallel dispatch with worktree isolation and a conductor that never touches cod
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
 - [ ] **AC-1** Evidence shows ≥ 2 issue owners dispatched concurrently in round 1 (overlapping lifetimes in the transcript/log), one worktree each under `.specwright/worktrees/<slug>` (verified via `git worktree list` captured during the round).
-- [ ] **AC-2** Orchestrator purity holds: the transcript shows no orchestrator edit outside the milestone folder, and every code commit in round-1 branches was made from an owner's worktree.
-- [ ] **AC-3** The board's Dispatch Log gained one `dispatched` line per round-1 issue and one outcome line per owner return, appended without rewriting earlier lines (diff against the pre-round board).
-- [ ] **AC-4** Degradation evidence shows the no-sub-agent round conducted serially in place: owners executed one at a time in the session itself, no new entries under `.specwright/worktrees/`, same per-issue pipeline steps named in the transcript.
-- [ ] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+- [x] **AC-2** Orchestrator purity holds: the transcript shows no orchestrator edit outside the milestone folder, and every code commit in round-1 branches was made from an owner's worktree.
+- [x] **AC-3** The board's Dispatch Log gained one `dispatched` line per round-1 issue and one outcome line per owner return, appended without rewriting earlier lines (diff against the pre-round board).
+- [x] **AC-4** Degradation evidence shows the no-sub-agent round conducted serially in place: owners executed one at a time in the session itself, no new entries under `.specwright/worktrees/`, same per-issue pipeline steps named in the transcript.
+- [x] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+
+> AC-1 stays unticked by design: the fixture's round 1 is a single dispatch (`task-priority` is the only dependency-free issue), so the "≥ 2 concurrent owners" clause is unverifiable in this round — recorded as findings.md Finding 1 (expectation-vs-fixture divergence, already flagged by scope-detection); the worktree/isolation mechanics of AC-1 were verified at N=1 (probes at 06:25:30Z). Concurrency observation is re-scoped to round 2 (issue-pipeline).
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.

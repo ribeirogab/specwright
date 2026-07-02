@@ -1,0 +1,197 @@
+== CLONE REMOTE ISOLATION ==
+recorded: 2026-07-02T06:17:39Z
+Ran: git -C $SCRATCH/taskr-degradation remote remove origin
+Reason: the clone's default origin pointed at the LIVE sandbox (git clone from the working repo); the sandbox's sw-pr skill pushes to origin, so a degradation-round push would have silently written a branch into the real sandbox after the post-round audit (spec-document-reviewer blocker).
+Verification (git remote -v prints nothing):
+(no output above = no remotes)
+Side effect: 'git status' on the clone no longer shows 'ahead 1' — main lost its upstream tracking. Expected, not pollution.
+
+== PRE-DEGRADATION (clone) ==
+captured: 2026-07-02T12:22:20Z
+--- git status --porcelain --branch ---
+## main
+--- git log --oneline -2 ---
+aaa117b chore(vault): plan the grow-taskr milestone — 5 issues from the approved brainstorm
+e57a024 chore: bootstrap taskr sandbox with specwright
+--- git worktree list ---
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-degradation  aaa117b [main]
+--- git branch -a ---
+* main
+--- .specwright/worktrees ---
+(empty / gitkeep only)
+--- dispatch log section ---
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+## Blockers
+--- issue statuses ---
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+
+== MID-DEGRADATION PROBES ==
+
+--- probe 2026-07-02T12:23:13Z ---
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-degradation  aaa117b [main]
+* main
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+## Blockers
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+
+--- probe 2026-07-02T12:24:44Z ---
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-degradation  aaa117b [feat/task-priority]
+* feat/task-priority
+  main
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — degradation mode (no sub-agent support): session acts as owner, serially, in place on branch `feat/task-priority`.
+
+## Blockers
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+
+--- probe 2026-07-02T12:25:14Z ---
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-degradation  aaa117b [feat/task-priority]
+* feat/task-priority
+  main
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — degradation mode (no sub-agent support): session acts as owner, serially, in place on branch `feat/task-priority`.
+
+## Blockers
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: in-progress
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+
+--- probe 2026-07-02T12:28:14Z ---
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-degradation  3d77eab [feat/task-priority]
+* feat/task-priority
+  main
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — degradation mode (no sub-agent support): session acts as owner, serially, in place on branch `feat/task-priority`.
+
+## Blockers
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: in-progress
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+
+--- probe 2026-07-02T12:29:14Z ---
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-degradation  47cdf3d [feat/task-priority]
+* feat/task-priority
+  main
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — degradation mode (no sub-agent support): session acts as owner, serially, in place on branch `feat/task-priority`.
+
+## Blockers
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: in-progress
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+
+--- probe 2026-07-02T12:29:44Z ---
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-degradation  dc84adf [feat/task-priority]
+* feat/task-priority
+  main
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — degradation mode (no sub-agent support): session acts as owner, serially, in place on branch `feat/task-priority`.
+
+## Blockers
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: in-progress
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+
+--- probe 2026-07-02T12:30:45Z ---
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-degradation  4cbe8af [feat/task-priority]
+* feat/task-priority
+  main
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — degradation mode (no sub-agent support): session acts as owner, serially, in place on branch `feat/task-priority`.
+
+## Blockers
+.specwright/milestones/2026-07-02-grow-taskr/issues/export-json-csv/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-filters/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/list-newest-first/issue.md:status: pending
+.specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md:status: in-progress
+.specwright/milestones/2026-07-02-grow-taskr/issues/web-page/issue.md:status: pending
+
+== POST-DEGRADATION (session externally stopped mid-pipeline) ==
+captured: 2026-07-02T12:40:53Z
+--- git log --oneline --all ---
+4cbe8af docs(readme): document the add --priority flag
+dc84adf test(priority): legacy stores stay unmigrated through list and done
+47cdf3d feat(cli): add --priority/-p flag to taskr add
+3d77eab feat(tasks): store a priority on new tasks, default medium
+aaa117b chore(vault): plan the grow-taskr milestone — 5 issues from the approved brainstorm
+e57a024 chore: bootstrap taskr sandbox with specwright
+--- git status --porcelain --branch ---
+## feat/task-priority
+ M .specwright/milestones/2026-07-02-grow-taskr/board.md
+ M .specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/issue.md
+?? .specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/spec.md
+?? .specwright/milestones/2026-07-02-grow-taskr/issues/task-priority/tasks.md
+--- git worktree list (must be single, in place) ---
+/private/tmp/claude-501/-Users-gabriel-www-ribeirogab-specwright--claude-worktrees-pensive-bose-7ba1c1/35a26153-a526-40df-b10c-9d60f5037d86/scratchpad/taskr-degradation  4cbe8af [feat/task-priority]
+--- git branch -a ---
+* feat/task-priority
+  main
+--- .specwright/worktrees (must have no new entries) ---
+--- dispatch log ---
+## Dispatch Log
+
+Append-only — one line per orchestrator event: date, issue, event (`dispatched` / `shipped` / `blocked` / `resumed`), short note (for `shipped`: the owner's one-line learnings summary and the PR URL).
+
+- 2026-07-02 — task-priority — dispatched — degradation mode (no sub-agent support): session acts as owner, serially, in place on branch `feat/task-priority`.
+
+## Blockers
+--- task-priority ticket state ---
+status: in-progress
+shipped: null
+--- AC-2 line in clone ticket (reword check) ---
+33:- [ ] **AC-2** `taskr add -p low water plants` stores the task with `"priority": "low"` (short alias).
+--- npm test summary ---
+ℹ tests 11
+ℹ pass 11
+ℹ fail 0
+--- frozen test diff vs main ---
+       0
+--- commits (hash author subject) on feat/task-priority ---
+4cbe8af ribeirogab docs(readme): document the add --priority flag
+dc84adf ribeirogab test(priority): legacy stores stay unmigrated through list and done
+47cdf3d ribeirogab feat(cli): add --priority/-p flag to taskr add
+3d77eab ribeirogab feat(tasks): store a priority on new tasks, default medium
