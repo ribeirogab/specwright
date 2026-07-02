@@ -35,7 +35,7 @@ created: 2026-07-02
 
 - [x] Step 1: In the `Runtime verification` section, expand "For UI criteria" with a definition — a UI criterion is one about rendered appearance or interaction, not HTTP responses or text output — and add that an unattended session degrading browser verification to curl must record the capability gap alongside the verification.
 - [x] Step 2: Confirm both AC-3 conditions are present (definition with the rendered-appearance/interaction vs HTTP/text contrast; capability-gap recording on curl degradation).
-- [x] Step 3: Commit — `fix(plan): define UI criterion and record browser-to-curl capability gaps`.
+- [x] Step 3: Commit — landed with Task 5 as `5772d00` `fix(plan): define UI criterion, capability-gap record, per-stream redirection` (both edits touch the same paragraph).
 
 ### Task 4: Key fan-out on delegable-task count
 
@@ -53,7 +53,7 @@ created: 2026-07-02
 
 - [x] Step 1: In the `Runtime verification` section, add one sentence: stream-sensitive checks must use per-stream file redirection (e.g. `>out 2>err`) because piping merged streams cannot attribute output to stdout vs stderr.
 - [x] Step 2: Confirm the sentence names both the mechanism (per-stream file redirection with the `>out 2>err` example) and the reason (merged-stream piping cannot attribute output).
-- [x] Step 3: Commit — `fix(plan): per-stream redirection for stream-sensitive runtime checks`.
+- [x] Step 3: Commit — landed with Task 3 as `5772d00` `fix(plan): define UI criterion, capability-gap record, per-stream redirection`.
 
 ## Phase 2: Pr-skill amendments (working copy `.agents/skills/sw-pr/SKILL.md`)
 
@@ -74,7 +74,7 @@ created: 2026-07-02
 - [x] Step 1: In the new pre-flight section, add the durable-record rule: on either stop branch, write the fully-filled PR body — template or embedded fallback, including the quality-gate results and the per-criterion runtime-verification record — to `<issue-folder>/pr.md`, and say in the stop explanation that the record was written there.
 - [x] Step 2: In `## Title and body`, extend the quality-section sentence so an issue-driven PR body also names the three plan self-review gates and their outcomes (the pr-skill half of the AC-2 recording contract).
 - [x] Step 3: Confirm AC-6's conditions (both stop branches, fully-filled body, quality-gate results + per-criterion runtime-verification record, `<issue-folder>/pr.md` path, says so in the explanation).
-- [x] Step 4: Commit — `fix(pr): degraded delivery writes the PR record to the issue folder`.
+- [x] Step 4: Commit — `2a72fca` `fix(pr): degraded delivery writes the PR record to the issue folder; PR body names the plan gates` (Step 1's paragraph landed with Task 6's section rewrite, `8215393`).
 
 ## Phase 3: Propagation and parity
 
