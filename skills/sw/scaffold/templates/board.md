@@ -23,7 +23,7 @@ Append-only — one line per orchestrator event: date, issue, event (`dispatched
 
 ## Blockers
 
-One entry per blocked issue — the owner's report, copied verbatim. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
+One entry per blocked issue — the owner's paste-ready Blockers block (Why / Tried / Needs), pasted unmodified. Delete the entry when the issue is unblocked (the Dispatch Log keeps the history).
 
 ### {{slug}}
 
