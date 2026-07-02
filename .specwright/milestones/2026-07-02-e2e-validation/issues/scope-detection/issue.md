@@ -1,7 +1,7 @@
 ---
 feature: scope-detection
 created: 2026-07-02
-status: pending
+status: in-progress
 shipped: null
 ---
 # Scope Detection (T1) — Issue
