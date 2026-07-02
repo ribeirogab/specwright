@@ -86,7 +86,7 @@ If the user describes something too large even for one milestone, help decompose
 
 When worktree = no, create the branch in place: `git checkout -b <branch>`.
 
-**Artifact:** write `.specwright/issues/YYYY-MM-DD-<slug>/issue.md` from the bundled template (`scaffold/templates/issue.md`, under the installed `sw` skill or `skills/sw/` in the specwright dev repo): Purpose, Motivation, Non-Goals, numbered `AC-N` acceptance criteria, frontmatter `status: pending`. This is the durable record of the approved design — not a second review gate. Commit it.
+**Artifact:** write `.specwright/issues/YYYY-MM-DD-<slug>/issue.md` from the bundled template (`scaffold/templates/issue.md`, under the installed `sw` skill or `skills/sw/` in the specwright dev repo): Purpose, Motivation, Non-Goals, numbered `AC-N` acceptance criteria, frontmatter `status: pending`. This is the durable record of the approved design — not a second review gate. Run the mechanical validator on the issue folder before committing — same run and baseline as milestone tickets (see the Milestone artifacts step). Commit it.
 
 **Next:** handoff = yes → print a ```txt``` handoff (one-paragraph summary + the issue path; first line `cd .specwright/worktrees/<slug>` when one was created) and stop — the user resumes in a fresh context. Handoff = no → invoke the plan skill now. Approval of the design is the standing consent to commit, push the feature branch, open the PR, and run review to `lgtm` — the pipeline runs to the end without further asks.
 
@@ -99,6 +99,8 @@ When worktree = no, create the branch in place: `git checkout -b <branch>`.
 - `goal.md` — the milestone's Purpose, Motivation, Success Criteria, Non-Goals. Phrase it in **behavior terms** — no file paths, function names, or storage formats; path-level constraints live in the issue tickets. Worked example: the technical hard constraint "`test/taskr.test.js` must pass byte-for-byte unmodified" becomes, at goal level, "the existing test suite passes without any test being edited" — the ticket that owns the constraint keeps the path. Stable; editing it later is a scope change no agent does alone.
 - `board.md` — the Issues table (order, slug, depends-on), empty Dispatch Log and Blockers. Order and dependencies live ONLY here.
 - `issues/<slug>/issue.md` — one per issue, plain kebab slugs (no number prefixes — order is board data), each with Purpose, Non-Goals, `AC-N`, `status: pending`. The approved decomposition IS the design approval for every issue: `/sw:run` goes straight to planning, with no brainstorm per issue.
+
+Before committing, run the mechanical validator on **each** `issues/<slug>/` folder (`validate-spec.sh`, under `scripts/` of the installed `sw` skill or `skills/sw/scripts/` in the specwright dev repo). The planning-stage baseline is **exactly one failure — check 2, `spec.md not found`** — the spec is written just-in-time later by the plan skill. Anything else (frontmatter defects, surviving placeholders, vague-verb criteria) is the planner's to fix before the commit: a ticket that trips the validator now detonates later in an issue owner's gate, on a file that owner must not edit.
 
 Commit the milestone folder.
 
