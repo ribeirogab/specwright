@@ -1,8 +1,8 @@
 ---
 feature: milestone-planning
 created: 2026-07-02
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Milestone Planning (T2) — Issue
 
@@ -27,10 +27,10 @@ The planning artifacts are the orchestrator's only input — a `goal.md` pollute
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** Verdict recorded for `goal.md`: has Purpose, Motivation, milestone-level Success Criteria, Non-Goals; contains no file paths, function names, storage formats, or other technical content.
-- [ ] **AC-2** Verdict recorded for `board.md`: Issues table with order + dependencies; no `status` column or per-issue status text anywhere in the file; Dispatch Log and Blockers sections present and empty.
-- [ ] **AC-3** Verdict recorded for every sandbox issue: `issue.md` exists with frontmatter `status: pending`, plain kebab slug (no number prefix), and numbered binary `AC-N` — checked mechanically where possible (`validate-spec.sh` accepts each issue folder's ticket or names the defect).
-- [ ] **AC-4** Verdict recorded from the `scope-detection` transcript: the post-design batch asked exactly one thing (worktrees), the printed handoff names the milestone path and `/sw:run` as the resume command, and no conduction happened after it (no dispatch, no code edits in the transcript tail).
-- [ ] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+- [x] **AC-1** Verdict recorded for `goal.md`: has Purpose, Motivation, milestone-level Success Criteria, Non-Goals; contains no file paths, function names, storage formats, or other technical content.
+- [x] **AC-2** Verdict recorded for `board.md`: Issues table with order + dependencies; no `status` column or per-issue status text anywhere in the file; Dispatch Log and Blockers sections present and empty.
+- [x] **AC-3** Verdict recorded for every sandbox issue: `issue.md` exists with frontmatter `status: pending`, plain kebab slug (no number prefix), and numbered binary `AC-N` — checked mechanically where possible (`validate-spec.sh` accepts each issue folder's ticket or names the defect).
+- [x] **AC-4** Verdict recorded from the `scope-detection` transcript: the post-design batch asked exactly one thing (worktrees), the printed handoff names the milestone path and `/sw:run` as the resume command, and no conduction happened after it (no dispatch, no code edits in the transcript tail).
+- [x] **AC-5** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.

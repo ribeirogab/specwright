@@ -57,3 +57,16 @@
 == board.md content under Dispatch Log / Blockers (non-heading, non-blank, non-blockquote lines after each heading)
 Dispatch Log: no entries
 Blockers: no entries
+
+== commands used (exact, for reproducibility; FIXTURE=/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/milestones/2026-07-02-grow-taskr)
+# goal.md sections:
+#   grep -n '^#' "$FIXTURE/goal.md"
+# goal.md technical-content sweep (this regex produced the hits listed above; hits then judged one by one in findings.md §1):
+#   grep -nEi '([a-z0-9_-]+\.(js|json|md|csv)|/[a-z0-9_.-]+/|--[a-z-]+|createdAt|epoch|npm|node\b|ISO-8601|JSON|CSV)' "$FIXTURE/goal.md"
+# board.md full text:
+#   cat -n "$FIXTURE/board.md"
+# board.md status sweep:
+#   grep -nEi 'status|pending|in-progress|shipped|blocked' "$FIXTURE/board.md"
+# Dispatch Log / Blockers entry extraction (non-heading, non-blank, non-blockquote lines, minus the template's own descriptive sentence):
+#   awk '/^## Dispatch Log/{s=1;next} /^## /{s=0} s&&NF&&!/^>/' "$FIXTURE/board.md" | grep -v '^Append-only'
+#   awk '/^## Blockers/{s=1;next} /^## /{s=0} s&&NF&&!/^>/' "$FIXTURE/board.md" | grep -v '^One entry per'
