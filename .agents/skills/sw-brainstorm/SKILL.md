@@ -129,6 +129,7 @@ Commit the milestone folder.
 **Writing acceptance criteria (the loop's exit condition):**
 
 - Every `AC-N` must be binary, observable, and checkable in under a minute — they are what runtime verification and `/sw:review` later prove. "Make the tests pass" is a good goal; "improve the code" never terminates.
+- State a hard constraint **once** — in the criterion (or Non-Goal) that owns it — and reference it from anywhere else that needs it. Every restatement is an amendment hazard: when scope changes, each copy is one more hunk that must be kept coherent.
 
 ## Key Principles
 
