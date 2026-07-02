@@ -28,10 +28,10 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 
 Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.
 
-- [ ] **AC-1** The `sw` skill's scaffold procedure copies the `sw` skill itself — including `scaffold/` and `scripts/` with executable bits preserved — so that after a fresh scaffold in a clean directory, `.agents/skills/sw/scripts/validate-spec.sh` exists and is executable (dossier 4.1).
-- [ ] **AC-2** `references/audit-checklist.md` lists `.agents/skills/sw/` as an audited path (dossier 4.1).
-- [ ] **AC-3** The scaffold procedure creates the `.claude/skills/sw` symlink the README promises, and a fresh scaffold in a clean directory contains it pointing at the installed skill (dossier 4.2).
-- [ ] **AC-4** Canonical `sw-spec` and `sw-review-spec` skills exist in `skills/sw/scaffold/skills/` and `.agents/skills/`, with content equivalent to the plugin commands `plugins/sw/commands/{spec,review-spec}.md`, so every documented `$sw-<verb>`/`@sw-<verb>` form resolves to a real skill — eight verbs total (dossier 4.3, parity option).
-- [ ] **AC-5** The scaffold procedure creates `.gitkeep` files in `.specwright/{conventions,issues,milestones}/` idempotently, so the vault directories survive a clone (dossier 4.4).
+- [x] **AC-1** The `sw` skill's scaffold procedure copies the `sw` skill itself — including `scaffold/` and `scripts/` with executable bits preserved — so that after a fresh scaffold in a clean directory, `.agents/skills/sw/scripts/validate-spec.sh` exists and is executable (dossier 4.1).
+- [x] **AC-2** `references/audit-checklist.md` lists `.agents/skills/sw/` as an audited path (dossier 4.1).
+- [x] **AC-3** The scaffold procedure creates the `.claude/skills/sw` symlink the README promises, and a fresh scaffold in a clean directory contains it pointing at the installed skill (dossier 4.2).
+- [x] **AC-4** Canonical `sw-spec` and `sw-review-spec` skills exist in `skills/sw/scaffold/skills/` and `.agents/skills/`, with content equivalent to the plugin commands `plugins/sw/commands/{spec,review-spec}.md`, so every documented `$sw-<verb>`/`@sw-<verb>` form resolves to a real skill — eight verbs total (dossier 4.3, parity option).
+- [x] **AC-5** The scaffold procedure creates `.gitkeep` files in `.specwright/{conventions,issues,milestones}/` idempotently, so the vault directories survive a clone (dossier 4.4).
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
