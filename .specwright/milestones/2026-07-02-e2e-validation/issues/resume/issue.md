@@ -1,8 +1,8 @@
 ---
 feature: resume
 created: 2026-07-02
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-02
 ---
 # Resume (T3) — Issue
 
@@ -30,9 +30,9 @@ Resumability from artifacts alone is the core promise of the board design — "a
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** Evidence shows the `/sw:run` session finding the milestone without a path argument, reading the board, and naming exactly the dependency-free pending issues as ready — no issue with unmet dependencies included.
-- [ ] **AC-2** Evidence shows the natural-language session ("continue the taskr milestone") reaching the same ready set through the same skill behavior.
-- [ ] **AC-3** After both sessions, every sandbox `issue.md` still says `status: pending` and the board's Issues table is byte-identical to before (verified by diff against a pre-test copy).
-- [ ] **AC-4** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
+- [x] **AC-1** Evidence shows the `/sw:run` session finding the milestone without a path argument, reading the board, and naming exactly the dependency-free pending issues as ready — no issue with unmet dependencies included.
+- [x] **AC-2** Evidence shows the natural-language session ("continue the taskr milestone") reaching the same ready set through the same skill behavior.
+- [x] **AC-3** After both sessions, every sandbox `issue.md` still says `status: pending` and the board's Issues table is byte-identical to before (verified by diff against a pre-test copy).
+- [x] **AC-4** `findings.md` has a verdict per check above and one Expected / Observed / Proposed-fix entry per failure.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
