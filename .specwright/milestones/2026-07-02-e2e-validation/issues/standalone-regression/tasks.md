@@ -31,10 +31,10 @@ created: 2026-07-02
 **AC:** AC-1, AC-2, AC-4
 **Delegable:** no — the driver persona and reply discipline are the test instrument; splitting it would leak context.
 
-- [ ] Step 1: Compose the spawn prompt for `maintainer9` (general-purpose, background, cwd `/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr`): interactive-session framing ("you are working with a user; end your turn whenever you need their input"), standing approval for sandbox-local actions, opening user ask: "`taskr --help` currently exits 1 with the generic usage error; I want a real `--help` flag that prints usage text — use your brainstorm flow so we design it before building."
+- [ ] Step 1: Compose the spawn prompt for `session-a` (general-purpose, background, cwd `/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr`): interactive-session framing ("you are working with a user; end your turn whenever you need their input"), standing approval for sandbox-local actions, opening user ask embedded in the spawn prompt (spawn prompts carry no sender attribution): "`taskr --help` currently exits 1 with the generic usage error; I want a real `--help` flag that prints usage text — use your brainstorm flow so we design it before building."
 - [ ] Step 2: Verify the prompt against the forbidden-terms list from spec.md Architecture (no `design.md`, `pr.md`, degradation/no-remote, scope steering, vault paths, batch shape). Fix and re-check until clean.
 - [ ] Step 3: Spawn; save the agentId and JSONL path from the spawn result.
-- [ ] Step 4: Converse per the scripted reply plan (spec.md): answer design questions, approve explicitly, accept the scope suggestion (record if the suggestion is not single-issue), answer the post-design batch in one reply. Poll `/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/issues/` and `git -C … status` between turns instead of waiting.
+- [ ] Step 4: Converse per the scripted reply plan (spec.md), delivering **every** reply through a fresh neutrally-named relay agent (`maintainer`, `maintainer2`, …) that SendMessages the saved agentId — the slug-named driver never messages the session directly. Answer design questions, approve explicitly, accept the scope suggestion (record if the suggestion is not single-issue), answer the post-design batch in one reply. Poll `/Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/issues/` and `git -C … status` between turns instead of waiting.
 - [ ] Step 5: Capture verbatim (jq over the JSONL: `select(.type=="assistant") | .message.content[] | select(.type=="text") | .text`): the design summary + approval turn, the scope-conclusion turn, the batch turn (byte-exact), the handoff/continue offer. Write `evidence/02-brainstorm-session.md`.
 - [ ] Step 6: Verify AC-2's first half on disk: `ls /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr/.specwright/issues/` shows exactly one `2026-07-02-<slug>/` with `issue.md` (frontmatter `status:`, numbered AC-N) and **no** `spec.md`/`tasks.md` yet (or, if the session already started planning, prove ordering from the sandbox git history instead).
 - [ ] Step 7: Commit the evidence: `git commit -m "test(e2e): capture brainstorm-session evidence"`
@@ -46,8 +46,8 @@ created: 2026-07-02
 **AC:** AC-2, AC-3, AC-4
 **Delegable:** no — same instrument continuity as Task 2.
 
-- [ ] Step 1: Follow the session's own offer from Task 2 (continue in-session, or spawn `maintainer10` with the same contract in the issue's checkout to run `/sw:plan`). Record which route ran.
-- [ ] Step 2: Poll during planning: `spec.md`/`tasks.md` appear in the issue folder; validator/reviewer gates run. Budget: one relay per reviewer dispatch + one status ping ("verify your state from repository artifacts") to the agentId if stalled.
+- [ ] Step 1: Follow the session's own offer from Task 2 (continue in-session, or spawn `session-b` with the same contract to run `/sw:plan`, its cwd resolved from the worktree/checkout the brainstorm session actually created — observed from sandbox state, never assumed). Record which route ran.
+- [ ] Step 2: Poll during planning: `spec.md`/`tasks.md` appear in the issue folder; validator/reviewer gates run. Budget: one relay per reviewer dispatch + one status ping ("verify your state from repository artifacts"), each delivered via a fresh neutral `maintainer*` relay to the agentId if stalled.
 - [ ] Step 3: Poll during implementation: feature branch exists, commits land, suite runs. Do not steer.
 - [ ] Step 4: At the PR station, capture the session's `/sw:pr` behavior **verbatim** (jq) — the no-remote/local-bare-origin handling, whatever it is. No pre-instruction was given; whatever happens is the observation.
 - [ ] Step 5: Confirm completion by artifacts: `/sw:review` verdict `lgtm` in the transcript, `issue.md` `status: shipped` + date on the feature branch, AC checkboxes ticked. Write `evidence/03-pipeline-session.md`.
@@ -65,7 +65,7 @@ created: 2026-07-02
 - [ ] Step 3: Suite green + no count drop (AC-3): in the session's checkout, `npm test 2>&1 | grep -E '^ℹ (tests|pass|fail)'` — pass == tests, tests > 5 (a `--help` test was added; 5 inherited intact).
 - [ ] Step 4: Runtime behavior (AC-3): `node bin/taskr.js --help; echo "exit: $?"` on the feature branch — usage text on stdout, exit 0.
 - [ ] Step 5: Delivery shape (AC-3): branch pushed to the local bare origin (`git ls-remote origin`), PR record per the session's degradation path, and `grep -rn "github.com" <issue-folder>` shows no fabricated URL.
-- [ ] Step 6: design.md sweep, "after" leg (AC-4): `find /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr -name design.md -not -path '*/node_modules/*'` in the main checkout **and** the session's worktree → nothing; plus a jq scan of both transcripts for the string `design.md` → no hits.
+- [ ] Step 6: design.md sweep, "after" leg (AC-4): `find /Users/gabriel/www/ribeirogab/specwright-sandbox/taskr -name design.md -not -path '*/node_modules/*'` in the main checkout **and** the session's worktree → nothing; plus a jq scan of the transcripts' **assistant-authored text turns** for the string `design.md` — attribute any hit by turn and source (session-authored vs quoted file/skill content, per the T1 attribute-by-turn precedent) before calling it a failure.
 - [ ] Step 7: Write `evidence/04-after-state.md` with all raw outputs; commit: `git commit -m "test(e2e): capture after-state audit evidence"`
 
 ## Phase 5: Findings, learnings, ship
