@@ -31,9 +31,11 @@ Scope detection is the entry gate of the unified workflow: if the brainstorm for
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion must be a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** Evidence (saved session transcript under this issue's `evidence/`) shows the milestone-case session *suggesting* a milestone with an issue preview (slugs + one-liners + dependencies) and explicitly leaving the decision to the user — no artifact written before the user's choice.
+- [x] **AC-1** Evidence (saved session transcript under this issue's `evidence/`) shows the milestone-case session *suggesting* a milestone with an issue preview (slugs + one-liners + dependencies) and explicitly leaving the decision to the user — no artifact written before the user's choice.
 - [ ] **AC-2** The milestone-case session ends with milestone artifacts committed in the sandbox under `.specwright/milestones/*/` containing issues that cover the five seeded capabilities, including at least two issues with no dependencies (parallel round 1) and a list-ordering issue whose criteria conflict with the planted oldest-first test.
 - [ ] **AC-3** Evidence shows the false-positive session following the single-issue path with zero milestone mentions in the transcript (checked by search over the saved transcript).
-- [ ] **AC-4** `findings.md` in this issue folder has a verdict (pass/fail + evidence pointer) for each of AC-1..AC-3's underlying checks, and one Expected / Observed / Proposed-fix entry per failed check (empty findings list allowed only if all checks passed).
+- [x] **AC-4** `findings.md` in this issue folder has a verdict (pass/fail + evidence pointer) for each of AC-1..AC-3's underlying checks, and one Expected / Observed / Proposed-fix entry per failed check (empty findings list allowed only if all checks passed).
+
+> Runtime-verification record (2026-07-02): AC-1 verified by observed behavior (transcript turns 5–6 + sandbox commit `aaa117b` postdating the acceptance turn) — ticked. AC-2 and AC-3 left unticked: one underlying check of each failed by observed behavior (board carries a single dependency-free issue; two "milestone" mentions in fp Session turns) — both recorded in `findings.md` (Findings 1 and 2), the deliverable this issue ships per its findings-only mandate. AC-4 verified: findings.md carries a verdict per check and one entry per failure.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
