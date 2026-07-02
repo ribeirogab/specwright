@@ -1,16 +1,14 @@
 ---
-status: draft
 feature: sample-feature
-scope: low
 created: 2026-06-14
-shipped: null
+scope: low
 branch: feat/sample-feature
-mode: autonomous
+worktree: null
+milestone: null
 ---
 # Sample Feature — Spec
 
-**Status:** Draft
-**Design:** design.md
+**Issue:** issue.md
 **Scope:** A sample spec used to exercise the validator fixtures.
 
 ## Architecture
@@ -35,8 +33,7 @@ None beyond the project defaults.
 
 ## Acceptance Criteria
 
-- [ ] **AC-1** `greet("world")` returns the exact string `Hello, world`.
-- [ ] **AC-2** The endpoint works gracefully under load.
+Defined in the sibling issue.md.
 
 ## Risks and Mitigations
 
