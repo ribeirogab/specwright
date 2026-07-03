@@ -50,7 +50,7 @@ Use the repo's template as the body skeleton:
 cat .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null || cat .github/pull_request_template.md 2>/dev/null
 ```
 
-If present, fill its sections (do not drop required checklist items — answer them honestly; for a maintainer dogfood PR that edits `.specwright/`/`.agents/`, annotate rather than silently tick). If absent, print one line — `PR template not found; using embedded fallback` — and use the **Embedded fallback** at the bottom of this file.
+If present, fill its sections (do not drop required checklist items — answer them honestly; for a maintainer dogfood PR that edits `.specwright/`, annotate rather than silently tick). If absent, print one line — `PR template not found; using embedded fallback` — and use the **Embedded fallback** at the bottom of this file.
 
 ## Title and body
 

@@ -8,7 +8,7 @@
 
 Install the plugin once, globally, from Claude Code:
 
-```
+```bash
 claude plugin marketplace add ribeirogab/specwright
 claude plugin install sw@specwright
 ```
@@ -19,7 +19,7 @@ Every `/sw:*` command is now available in any repository — nothing is copied o
 
 Open the repo you want specwright in and run:
 
-```
+```bash
 /sw:init
 ```
 
