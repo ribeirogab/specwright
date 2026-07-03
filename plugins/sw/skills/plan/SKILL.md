@@ -90,7 +90,7 @@ After `spec.md` + `tasks.md` are written, review them before implementation. The
 **Gates (run in order):**
 
 1. **Mechanical** — `plugins/sw/scripts/validate-spec.sh <issue-folder>`; non-zero exit names the structural defect. Fix and re-run until it exits 0 — with one exception: a failure caused by the approved ticket itself (`issue.md`) means **stop and report it with the exact validator `FAIL` line** — to the user (standalone) or in a blocked report to the orchestrator (milestone) — and proceed only after an acknowledged resolution. The owner never rewords an approved criterion; any ticket edit is its own commit naming the changed criterion.
-2. **Spec-document-reviewer subagent** — dispatch it (see the sibling `spec-document-reviewer-prompt.md`) over `issue.md` + `spec.md` + `tasks.md`. Fix, re-dispatch until Approved (max 3 iterations, then surface to the human).
+2. **Spec-document-reviewer subagent** — dispatch the `spec-document-reviewer` subagent over `issue.md` + `spec.md` + `tasks.md` (pass the three paths; its rubric and its model + effort live in the agent definition). Fix, re-dispatch until Approved (max 3 iterations, then surface to the human).
 3. **`/sw:review-spec`** — the external evaluator (conventions + issue compliance, vague ACs, scope creep). Fix any `FAIL`.
 
 **Commit the plan** — when the three gates pass, commit `spec.md` + `tasks.md` (including any gate fixes) before the first implementation commit. The PR body's quality-gate section must name these three gates and their outcomes — a repo-only auditor must be able to verify the gates ran.
@@ -99,7 +99,7 @@ After `spec.md` + `tasks.md` are written, review them before implementation. The
 
 Decide the execution approach yourself — do not ask:
 
-- **Fan-out** (two or more `Delegable: yes` tasks): dispatch a fresh **task worker** per `Delegable: yes` task. Workers implement and **report findings back** (raw discoveries, surprises, constraints); they never write `learnings.md` — curation is the owner's. Review each worker's diff before starting the next wave.
+- **Fan-out** (two or more `Delegable: yes` tasks): dispatch the `task-worker` subagent per `Delegable: yes` task. Workers implement and **report findings back** (raw discoveries, surprises, constraints); they never write `learnings.md` — curation is the owner's. Review each worker's diff before starting the next wave.
 - **Inline** (fewer than two delegable tasks): execute the tasks in this session, checkpointing after each.
 
 ## Quality gate

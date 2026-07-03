@@ -66,4 +66,38 @@ live_hits=$(grep -rl "install\.sh" "$ROOT" \
   | grep -v "tests/install/run\.sh$" || true)
 assert_eq "no live doc references install.sh" '' "$live_hits"
 
+# --- role subagents are bundled with model + effort (role-subagents AC-1/2/3) -
+# Labels name the agent file (not a bare AC-N) so this issue's checks are not
+# conflated with the install-surface AC numbering above in the shared output.
+agents_dir="$ROOT/plugins/sw/agents"
+agent_field() { grep -E "^$2:" "$agents_dir/$1.md" 2>/dev/null | head -n1 | sed -E "s/^$2:[[:space:]]*//; s/[[:space:]]*$//"; }
+has_skills()  { grep -Eq '^skills:' "$agents_dir/$1.md"; }
+
+for a in issue-owner task-worker spec-document-reviewer reviewer; do
+  assert_eq "agent $a.md exists" 'yes' "$([ -f "$agents_dir/$a.md" ] && echo yes || echo no)"
+  for key in name description model effort; do
+    assert_eq "agent $a.md: frontmatter has $key" 'yes' \
+      "$(grep -Eq "^$key:" "$agents_dir/$a.md" 2>/dev/null && echo yes || echo no)"
+  done
+done
+
+assert_eq "agent issue-owner model/effort" 'opus/xhigh'   "$(agent_field issue-owner model)/$(agent_field issue-owner effort)"
+assert_eq "agent task-worker model/effort" 'sonnet/medium' "$(agent_field task-worker model)/$(agent_field task-worker effort)"
+assert_eq "agent spec-document-reviewer model/effort" 'opus/high' "$(agent_field spec-document-reviewer model)/$(agent_field spec-document-reviewer effort)"
+assert_eq "agent reviewer model/effort" 'opus/xhigh'      "$(agent_field reviewer model)/$(agent_field reviewer effort)"
+
+# skills: preload only on the two roles that reuse an existing skill
+assert_eq "agent issue-owner preloads plan" 'yes' \
+  "$(has_skills issue-owner && grep -Eq '^[[:space:]]*-[[:space:]]*plan$' "$agents_dir/issue-owner.md" && echo yes || echo no)"
+assert_eq "agent reviewer preloads review" 'yes' \
+  "$(has_skills reviewer && grep -Eq '^[[:space:]]*-[[:space:]]*review$' "$agents_dir/reviewer.md" && echo yes || echo no)"
+assert_eq "agent task-worker has no skills: key" 'no' \
+  "$(has_skills task-worker && echo yes || echo no)"
+assert_eq "agent spec-document-reviewer has no skills: key" 'no' \
+  "$(has_skills spec-document-reviewer && echo yes || echo no)"
+
+# the migrated spec-reviewer prompt file is gone (role-subagents AC-4)
+assert_eq "spec-document-reviewer-prompt.md removed" 'no' \
+  "$([ -f "$ROOT/plugins/sw/skills/plan/spec-document-reviewer-prompt.md" ] && echo yes || echo no)"
+
 if [ "$fails" -eq 0 ]; then echo "ALL PASS"; exit 0; else echo "$fails FAILED"; exit 1; fi
