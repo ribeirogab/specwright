@@ -28,8 +28,8 @@ The scaffolder's whole job for the vault is **make sure the three directories ex
 
 What does **not** live in the vault (do not create any of these):
 
-- Artifact **templates** — they ship with this skill at `scaffold/templates/{issue,spec,tasks,goal,board}.md`. The brainstorm and plan skills generate each artifact from those templates. There is no `_template/` directory in the vault.
-- The issue **validator** `validate-spec.sh` — it ships with this skill under `scripts/validate-spec.sh`. It is not copied into the vault.
+- Artifact **templates** — they ship with the plugin at `plugins/sw/templates/{issue,spec,tasks,goal,board}.md`. The brainstorm and plan skills generate each artifact from those templates. There is no `_template/` directory in the vault.
+- The issue **validator** `validate-spec.sh` — it ships with the plugin under `plugins/sw/scripts/validate-spec.sh`. It is not copied into the vault.
 - No editor config, no index or map files, no per-note templates, no workflow guide, no separate issue tracker, and no scripts directory inside `.specwright/`.
 
 ---
