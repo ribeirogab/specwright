@@ -1,8 +1,8 @@
 ---
 feature: rewrite-sw-init
 created: 2026-07-03
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-03
 ---
 # Rewrite /sw as /sw:init — Issue
 
