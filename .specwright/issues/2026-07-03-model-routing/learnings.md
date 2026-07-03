@@ -8,9 +8,9 @@ When a parent spawns a sub-agent, Claude Code applies a per-spawn **`model`** (t
 
 **Consequence for `.specwright/models.md`:** the `model` column routes for real; the `effort` column is **advisory** (recorded intent). A future issue that wants effort to go live must either drive spawns through agent-definition frontmatter / the SDK, or wait for the runtime to expose per-spawn effort — at which point the existing `effort` column becomes live with **no file-format change**.
 
-## `validate-spec.sh` check 3 greps the literal `{{` — describing placeholders trips it
+## `validate-spec.sh` check 3 greps for a literal double-brace — describing placeholders trips it
 
-Check 3 of `skills/sw/scripts/validate-spec.sh` fails on any literal `{{` in `issue.md`/`spec.md`/`tasks.md`. An issue artifact that needs to *describe* placeholder behavior (e.g. "validation FAILs on a surviving double-brace placeholder") will false-FAIL the mechanical gate. Write "double-brace placeholder" in prose, and in an embedded shell recipe match the token with a char class — `grep -E '[{][{]'` — so the literal two-brace sequence never appears in the file.
+Check 3 of `skills/sw/scripts/validate-spec.sh` fails on any literal double-brace opener in `issue.md`/`spec.md`/`tasks.md`. An issue artifact that needs to *describe* placeholder behavior (e.g. "validation FAILs on a surviving double-brace placeholder") will false-FAIL the mechanical gate. Write "double-brace placeholder" in prose, and in an embedded shell recipe match the token with a char class — `grep -E '[{][{]'` — so the literal two-brace sequence never appears in the file.
 
 ## `validation.md` / scaffolder recipes run in the user's shell (often zsh) — don't rely on `sh` word-splitting
 
