@@ -26,6 +26,7 @@ Repeat until no issue is ready and none is running:
      ```bash
      git worktree add .specwright/worktrees/<slug> -b <branch>
      ```
+   - **Model routing** — resolve the owner's model via `.specwright/models.md` (role `issue-owner`): role → tier → the binding for your agent, and spawn the owner on that model. No binding for your agent, or no such file → inherit the session model. The `effort` column there is advisory today — do not depend on it.
    - The owner's prompt: the issue folder path, the milestone path, the worktree path, and the instruction to run the **plan skill pipeline** end to end (plan → self-review → implement → quality gate → runtime verification → PR → review to `lgtm` → curate `learnings.md` → flip `issue.md` status), returning either `shipped` (+ PR URL + one line per learning) or `blocked` (+ a paste-ready Blockers block — **Why / Tried / Needs** — written by the owner for the board).
    - Append `dispatched` to the board's Dispatch Log and commit — the per-append commit rule (Track, below) starts with this first append.
    - Keep the **agentId** from the spawn result — name aliases expire; address every resume or relay by that ID, never by name. Treat relays as one-way: read the owner's answers from repository artifacts, not from message replies.

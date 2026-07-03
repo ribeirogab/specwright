@@ -34,7 +34,7 @@ The skill is audit-first, autonomous-fix, and safe to re-run. After the first ru
 After install the repo has:
 
 - an **`AGENTS.md`** describing the issue-driven workflow,
-- a **`.specwright/` vault** holding `conventions/` (whatever standards the repo wants kept consistent — you fill it, `/sw:review` enforces it), `issues/` (dated standalone-issue folders), and `milestones/` (dated milestone folders), and
+- a **`.specwright/` vault** holding `conventions/` (whatever standards the repo wants kept consistent — you fill it, `/sw:review` enforces it), `issues/` (dated standalone-issue folders), `milestones/` (dated milestone folders), and `models.md` (per-role model routing — see [Model routing](#model-routing)), and
 - a set of **`/sw:*` commands** and companion skills:
 
 | Command | What it does |
@@ -75,6 +75,34 @@ A few things worth knowing:
 - **Runtime verification.** Before any PR, the agent executes what it built and checks each `AC-N` by observed behavior — UI through a browser when the agent has one, otherwise the criterion is marked `needs-human-verification`, never faked.
 - **Worktree.** A specwright-native checkout under `.specwright/worktrees/` — default yes; mandatory for parallel milestone dispatch.
 - **Handoff.** Fresh context per phase: optional for a standalone issue, mandatory after milestone planning (the planning session never conducts — `/sw:run` resumes from the board in any new session).
+
+## Roles
+
+Every non-trivial change runs through the pipeline as a handful of well-defined **roles**. Four are **spawned** as sub-agents and can each be routed to a specific model (see [Model routing](#model-routing)); the orchestrator is the top-level session you launch.
+
+| Role | Skill | What it does | Spawned by |
+|---|---|---|---|
+| **orchestrator** | `/sw:run` | Conducts a milestone — reads the board, dispatches issues, tracks, escalates; never touches code | — (it *is* the session you launch) |
+| **issue owner** | `/sw:plan` | Owns one issue end to end: plan → implement → gates → runtime verification → PR → review → learnings | the orchestrator (milestone), or it *is* the session (standalone issue) |
+| **task worker** | fan-out inside `/sw:plan` | Implements one `Delegable: yes` task and reports findings back; never writes learnings | the issue owner |
+| **spec reviewer** | self-review inside `/sw:plan` | Judges whether `spec.md` + `tasks.md` are ready to implement | the issue owner |
+| **code reviewer** | `/sw:review` | Three find-only lanes — rubric+conventions, issue-conformance, docs-consistency — merged to `lgtm` | the issue owner |
+
+**Top-level session vs spawned.** The orchestrator (and a standalone issue owner) *is* the session you launched — its model is whatever you started your agent with (`inherit`), and no config changes that. The four spawned roles can each be routed to a specific model.
+
+## Model routing
+
+`.specwright/models.md` routes each **spawned** role to a model — issue owner and reviewers on a strong model, task workers on a cheaper one, say — without editing any skill. It stays **agent-agnostic** through two layers:
+
+- **`Roles → tier`** (policy) — maps each role to a vendor-neutral **tier** (`deep` / `balanced` / `fast`). It names no model, so it is portable across agents.
+- **`Bindings`** (mechanism) — one subsection per agent (`### claude`, `### codex`, …) mapping each `tier → model + effort`. Only `claude` ships filled.
+
+A skill about to spawn a role resolves `role → tier → the binding for the agent it is running as`, and spawns on that model. Two rules keep it safe:
+
+- **`model` is live; `effort` is advisory.** The model is applied on the spawn today. The `effort` column is recorded intent — it goes live when the runtime supports per-spawn effort, with no change to the file.
+- **No binding → inherit.** A role whose tier has no binding for the current agent — or a repo with no `models.md` at all — runs on the inherited session model. Routing is opt-in and purely additive.
+
+**Extend to another agent** by adding a `### <agent>` subsection under `Bindings` that maps the same tiers to that agent's models. No skill edits are needed — the skills only ever name roles and tiers.
 
 ## Customizing
 

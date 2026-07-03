@@ -1,6 +1,6 @@
 # Vault Files — File Specifications
 
-Everything the scaffolder writes into a target repo's `.specwright/` vault. specwright is issue-driven-only: the vault holds **exactly three directories** and nothing else. Load this reference only when you are creating or repairing the vault.
+Everything the scaffolder writes into a target repo's `.specwright/` vault. specwright is issue-driven-only: the vault holds **three directories plus one config file** (`models.md`) and nothing else. Load this reference only when you are creating or repairing the vault.
 
 ## Contents
 
@@ -8,6 +8,7 @@ Everything the scaffolder writes into a target repo's `.specwright/` vault. spec
 - [`.specwright/conventions/` — the conventions directory](#specwrightconventions--the-conventions-directory)
 - [`.specwright/issues/` — standalone issues](#specwrightissues--standalone-issues)
 - [`.specwright/milestones/` — milestones](#specwrightmilestones--milestones)
+- [`.specwright/models.md` — per-role model routing](#specwrightmodelsmd--per-role-model-routing)
 - [Folder naming conventions](#folder-naming-conventions)
 - [Bare-filename rule](#bare-filename-rule)
 - [Frontmatter shapes](#frontmatter-shapes)
@@ -16,15 +17,16 @@ Everything the scaffolder writes into a target repo's `.specwright/` vault. spec
 
 ## What the vault is — read first
 
-`.specwright/` is the per-repo vault. It contains three living directories and nothing else:
+`.specwright/` is the per-repo vault. It contains three living directories plus one config file, and nothing else:
 
 | Path | What it is | Scaffolder action |
 |---|---|---|
 | `.specwright/conventions/` | whatever standards the repo wants kept consistent | ensure the directory exists + seed a `README.md` signpost (empty conventions dir only) |
 | `.specwright/issues/` | one dated folder per standalone issue | ensure the directory exists + `.gitkeep` |
 | `.specwright/milestones/` | one dated folder per milestone | ensure the directory exists + `.gitkeep` |
+| `.specwright/models.md` | per-role model routing config | seed from the bundled template (only when absent) |
 
-The scaffolder's whole job for the vault is **make sure the three directories exist and survive a clone** — git tracks no empty directories, so each keeps a tracked file: `issues/` and `milestones/` get a bare `.gitkeep`; `conventions/` gets a short `README.md` signpost that serves the same keep-the-directory purpose and also tells the adopter what the folder is for. Beyond that keep-file the scaffolder writes **no convention rule or standard** into the vault — the signpost declares itself inert (states no rule, applies to no file), and there is no index, tracker, config, or template.
+The scaffolder's whole job for the vault is **make sure the three directories exist and survive a clone, and the routing config is seeded** — git tracks no empty directories, so each directory keeps a tracked file: `issues/` and `milestones/` get a bare `.gitkeep`; `conventions/` gets a short `README.md` signpost that serves the same keep-the-directory purpose and also tells the adopter what the folder is for. `models.md` is seeded from the bundled template, only when absent. Beyond those keep-files and the routing config the scaffolder writes **no convention rule or standard** into the vault — the signpost declares itself inert (states no rule, applies to no file), and there is no index, tracker, or extra template.
 
 What does **not** live in the vault (do not create any of these):
 
@@ -79,6 +81,14 @@ The home for every milestone (a large delivery decomposed into issues, conducted
 ```
 
 Milestone issue folders have exactly the same shape as standalone issues — only their location differs. `board.md` never duplicates issue status; it holds only what has no other home (order, dependencies, dispatch log, blocker reports).
+
+---
+
+## `.specwright/models.md` — per-role model routing
+
+The one config file in the vault. It maps each **spawned** pipeline role (issue owner, task worker, spec reviewer, code reviewer) to a model, in two layers — a vendor-neutral `Roles → tier` policy table and per-agent `Bindings` (`### claude`, …) that resolve each tier to a concrete `model + effort`. The dispatching skills read it at spawn time; an absent file or an unbound role inherits the session model. The top-level session (orchestrator / standalone owner) is never routed here.
+
+**Scaffolder action:** seed it from `scaffold/templates/models.md` **only when absent** — a re-run never overwrites an adopter's edits. Phase 5 validation checks it for surviving placeholders and dangling tiers (a tier the `### claude` binding does not define).
 
 ---
 

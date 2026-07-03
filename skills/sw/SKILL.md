@@ -54,11 +54,12 @@ Create or repair only the items the audit flagged. Never touch files that are al
 
 ### Vault directories
 
-specwright's per-repo vault is `.specwright/` and holds exactly three living things:
+specwright's per-repo vault is `.specwright/` and holds four living things — three directories and one config file:
 
 - `.specwright/conventions/` — whatever standards the repo wants kept consistent (code style, architecture, naming, testing, any project preference), filled by the adopter over time.
 - `.specwright/issues/` — one dated folder per standalone issue (`YYYY-MM-DD-<slug>/` with `issue.md` + `spec.md` + `tasks.md` + optional `learnings.md`).
 - `.specwright/milestones/` — one dated folder per milestone (`YYYY-MM-DD-<slug>/` with `goal.md` + `board.md` + `issues/<slug>/` folders of the same issue shape).
+- `.specwright/models.md` — per-role model routing: which model (and, advisory, which effort) each **spawned** pipeline role runs on, seeded from the bundled template and edited by the adopter. An absent file or an unbound role inherits the session model. See the template header for the format.
 
 Ensure all three directories exist (empty is fine on first install). `issues/` and `milestones/` each get a `.gitkeep` — git tracks no empty directories, so without the keep files a compliant fresh install loses its vault on the first re-clone. `conventions/` instead gets a short `README.md` signpost that both keeps the directory tracked and tells the adopter what the folder is for:
 
@@ -82,9 +83,14 @@ standard. One file per convention, in whatever shape you like; specwright impose
 template and no required frontmatter.
 EOF
 fi
+
+# Seed the model-routing config from the bundled template, only when absent, so a
+# re-run never clobbers an adopter's edits — the template is the single source of truth.
+SW_DIR="<directory where this SKILL.md lives>"
+[ -e .specwright/models.md ] || cp "$SW_DIR/scaffold/templates/models.md" .specwright/models.md
 ```
 
-The `mkdir`/`touch` are idempotent and the seed is guarded by the emptiness check, so re-running over a populated vault changes nothing. The artifact **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/templates/` and the brainstorm / plan skills generate issues from there. The issue **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
+The `mkdir`/`touch` are idempotent, the conventions seed is guarded by the emptiness check, and the `models.md` seed is guarded by the single-file `-e` test, so re-running over a populated vault changes nothing. The artifact **templates** are not scaffolded into the vault — they ship with this skill under `scaffold/templates/` and the brainstorm / plan skills generate issues from there. The issue **validator** ships with this skill under `scripts/validate-spec.sh`; it is not copied into the vault either.
 
 ### AGENTS.md
 

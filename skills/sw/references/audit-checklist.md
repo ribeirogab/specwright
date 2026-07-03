@@ -25,6 +25,7 @@ For each item, check existence and content correctness. Report status as:
   .specwright/conventions/    (directory exists, contains README.md signpost — clone survival)
   .specwright/issues/         (directory exists, contains .gitkeep — holds dated YYYY-MM-DD-<slug>/ issue folders)
   .specwright/milestones/     (directory exists, contains .gitkeep — holds dated YYYY-MM-DD-<slug>/ milestone folders)
+  .specwright/models.md       (file exists — per-role model routing config, seeded from scaffold/templates/models.md; MISSING → auto-created in Phase 4)
 
 AGENTS.md                      (repo root — self-contained issue flow, ≤ 80 lines)
 CLAUDE.md                      (symlink → AGENTS.md, Claude Code back-compat)

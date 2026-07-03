@@ -9,7 +9,7 @@ Report results as a table. Any `FAIL` triggers an automatic fix attempt using th
 ## Contents
 
 - [Output format](#output-format)
-- [Checks](#checks) — 11 numbered checks (CLAUDE.md symlink, AGENTS.md placeholder sweep, AGENTS.md headers, AGENTS.md size cap, issue frontmatter, folder naming, bare filenames, canonical skills installed, bundled scripts executable, Claude plugin settings, templates + validator bundled in the skill)
+- [Checks](#checks) — 12 numbered checks (CLAUDE.md symlink, AGENTS.md placeholder sweep, AGENTS.md headers, AGENTS.md size cap, issue frontmatter, folder naming, bare filenames, canonical skills installed, bundled scripts executable, Claude plugin settings, templates + validator bundled in the skill, models.md routing config)
 - [When everything passes](#when-everything-passes)
 - [When something fails](#when-something-fails)
 
@@ -24,7 +24,7 @@ Report results as a table. Any `FAIL` triggers an automatic fix attempt using th
 | 2 | AGENTS.md has no surviving placeholders | FAIL — line 14: "{{Project Name}}" |
 | ... | ... | ... |
 
-### Result: 10/11 PASS — 1 FAIL needs attention
+### Result: 11/12 PASS — 1 FAIL needs attention
 ```
 
 ## Checks
@@ -174,12 +174,40 @@ done
 
 FAIL means the skill bundle is incomplete. Fix: restore the missing files from upstream (`/sw:update`) — the templates live at `scaffold/templates/{issue,spec,tasks,goal,board}.md` and the validator at `scripts/validate-spec.sh` (`chmod +x` it).
 
+### 12. `.specwright/models.md` routing config is well-formed
+
+The model-routing config is seeded into the vault from `scaffold/templates/models.md` (Phase 4). Confirm it carries no surviving placeholder and no **dangling tier** — every tier named in the `## Roles → tier` table must have a binding row under `### claude`, or the resolution would fall through to inherit for that role silently.
+
+```bash
+f=.specwright/models.md
+if [ ! -f "$f" ]; then
+  echo "FAIL — $f missing (Phase 4 seeds it from the template)"
+elif grep -Eq '[{][{]' "$f"; then
+  echo "FAIL — surviving placeholder in $f"
+else
+  # Every tier used in the Roles → tier table must have a row under ### claude.
+  tiers=$(awk -F'|' '
+    /^## Roles/{inrow=1; next}
+    /^## /{inrow=0}
+    inrow && NF>=3 {t=$3; gsub(/[[:space:]]/,"",t); if (t ~ /^[a-z][a-z-]*$/ && t!="tier") print t}
+  ' "$f" | sort -u)
+  claude=$(awk '/^### claude/{c=1; next} /^### /{c=0} c' "$f")
+  missing=""
+  for t in $tiers; do
+    printf '%s\n' "$claude" | grep -Eq "^\|[[:space:]]*${t}[[:space:]]" || missing="${missing:+$missing, }$t"
+  done
+  [ -z "$missing" ] && echo PASS || echo "FAIL — tier(s) with no ### claude binding: $missing"
+fi
+```
+
+FAIL means the seeded config drifted (a placeholder survived, the file was deleted, or the Roles table names a tier the `### claude` binding does not define). Fix: restore from `scaffold/templates/models.md` (or add the missing binding row), then re-run.
+
 ## When everything passes
 
 Report:
 
 ```
-## Phase 5 — Validation: 11/11 PASS
+## Phase 5 — Validation: 12/12 PASS
 
 specwright is structurally sound.
 ```

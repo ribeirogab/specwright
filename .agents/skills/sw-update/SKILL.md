@@ -18,7 +18,7 @@ Only **file-backed scaffold content**, each compared by sha256 against a tracked
 | `.agents/skills/sw-<name>/SKILL.md` (brainstorm, plan, pr, review, run, update) | `<clone>/skills/sw/scaffold/skills/sw-<name>/SKILL.md` |
 | the `### Issue flow` block of `AGENTS.md` | the `### Issue flow` block of `<clone>/skills/sw/references/agents-md-template.md` |
 
-**Never touched:** `.specwright/conventions/*`, `.specwright/issues/*`, `.specwright/milestones/*`, and the per-repo intro and non-flow sections of `AGENTS.md`. This is living content — it has no single upstream file to hash.
+**Never touched:** `.specwright/conventions/*`, `.specwright/issues/*`, `.specwright/milestones/*`, `.specwright/models.md`, and the per-repo intro and non-flow sections of `AGENTS.md`. This is living, adopter-owned content the update never reconciles against upstream — `models.md` is seeded once (only when absent), then yours to edit, so a sync never clobbers your routing.
 
 ## Run the engine
 

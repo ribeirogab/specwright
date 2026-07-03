@@ -152,6 +152,8 @@ Scan your draft for: any emoji; the strings `## Review` / `### Blocker` / `### S
 
 In the issue pipeline's delivery step, review runs as **three** find-only sub-agents over the open branch (none edits code). Each owns **one lane** and must stay in it — do not duplicate another lane's findings or wander into its scope. The lanes are deliberately non-overlapping so the merge is clean.
 
+**Model routing:** all three lanes run at one tier — resolve their model via `.specwright/models.md` (role `code-review`): role → tier → the binding for your agent, and spawn each lane on that model. No binding for your agent, or no such file → inherit the session model. The `effort` column there is advisory today.
+
 - **Subagent A — rubric + conventions.** *Question it answers:* does the diff obey the universal coding standard and the project's conventions? Reviews against the universal standard above, the area `AGENTS.md`, and `.specwright/conventions/` — correctness/bugs, security, tests, rubric/conventions compliance, readability, DRY/SOLID (the calibration above). **Not A's job:** whether the issue's acceptance criteria were delivered (that's B); whether docs went stale (that's C).
 - **Subagent B — issue-conformance.** *Question it answers:* does the diff deliver **this issue**? Walks the issue's Acceptance Criteria (the `AC-N` in `issue.md`) against the diff and reports three dimensions, citing each `AC-N` by ID:
   - **Completeness** — every `AC-N` is satisfied by a concrete change; an `AC-N` with no satisfying change is a **blocker**.
