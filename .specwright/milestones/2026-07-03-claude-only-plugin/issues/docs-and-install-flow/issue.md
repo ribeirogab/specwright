@@ -1,7 +1,7 @@
 ---
 feature: docs-and-install-flow
 created: 2026-07-03
-status: pending
+status: in-progress
 shipped: null
 ---
 # Docs and Install Flow — Issue
