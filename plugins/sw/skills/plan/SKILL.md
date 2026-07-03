@@ -30,7 +30,7 @@ If the issue covers multiple independent subsystems, it should have been decompo
 
 ## Writing the technical spec (`spec.md`)
 
-Copy the bundled template (`scaffold/templates/spec.md`, under the installed `sw` skill or `skills/sw/` in the specwright dev repo) into the issue folder and fill it:
+Copy the bundled template (`plugins/sw/templates/spec.md`) into the issue folder and fill it:
 
 - **Frontmatter** — `feature`, `created`, `scope:` (your honest sizing: one of `low | medium | high | complex`; recorded only), the issue's `branch:`, `worktree:` (path or `null`), and `milestone:` (the milestone folder or `null`).
 - **Architecture / File Structure / Phase Ordering** — the technical *how*. Map which files will be created or modified and what each is responsible for. Units with clear boundaries and one responsibility; smaller focused files over large ones; files that change together live together; follow the existing patterns of the codebase.
@@ -40,7 +40,7 @@ Copy the bundled template (`scaffold/templates/spec.md`, under the installed `sw
 
 **Each step is one action (2-5 minutes):** "Write the failing test" — step. "Run it to make sure it fails" — step. "Implement the minimal code to make the test pass" — step. "Run the tests" — step. "Commit" — step.
 
-**Start `tasks.md` from the bundled template** (`scaffold/templates/tasks.md`) — keep its frontmatter and header note verbatim; the template is the single source of truth for the artifact's shape.
+**Start `tasks.md` from the bundled template** (`plugins/sw/templates/tasks.md`) — keep its frontmatter and header note verbatim; the template is the single source of truth for the artifact's shape.
 
 **Task structure:**
 
@@ -89,7 +89,7 @@ After `spec.md` + `tasks.md` are written, review them before implementation. The
 
 **Gates (run in order):**
 
-1. **Mechanical** — `.agents/skills/sw/scripts/validate-spec.sh <issue-folder>` (in the specwright dev repo: `skills/sw/scripts/validate-spec.sh`); non-zero exit names the structural defect. Fix and re-run until it exits 0 — with one exception: a failure caused by the approved ticket itself (`issue.md`) means **stop and report it with the exact validator `FAIL` line** — to the user (standalone) or in a blocked report to the orchestrator (milestone) — and proceed only after an acknowledged resolution. The owner never rewords an approved criterion; any ticket edit is its own commit naming the changed criterion.
+1. **Mechanical** — `plugins/sw/scripts/validate-spec.sh <issue-folder>`; non-zero exit names the structural defect. Fix and re-run until it exits 0 — with one exception: a failure caused by the approved ticket itself (`issue.md`) means **stop and report it with the exact validator `FAIL` line** — to the user (standalone) or in a blocked report to the orchestrator (milestone) — and proceed only after an acknowledged resolution. The owner never rewords an approved criterion; any ticket edit is its own commit naming the changed criterion.
 2. **Spec-document-reviewer subagent** — dispatch it (see the sibling `spec-document-reviewer-prompt.md`) over `issue.md` + `spec.md` + `tasks.md`. Fix, re-dispatch until Approved (max 3 iterations, then surface to the human).
 3. **`/sw:review-spec`** — the external evaluator (conventions + issue compliance, vague ACs, scope creep). Fix any `FAIL`.
 
