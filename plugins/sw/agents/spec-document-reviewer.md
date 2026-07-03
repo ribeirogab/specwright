@@ -1,6 +1,6 @@
 ---
 name: spec-document-reviewer
-description: The specwright spec-document reviewer — dispatched by /sw:plan (Gate 2) to verify an issue's fused spec.md + tasks.md against its issue.md before implementation. Not for ad-hoc use.
+description: "The specwright spec-document reviewer — dispatched by /sw:plan (Gate 2) to verify an issue's fused spec.md + tasks.md against its issue.md before implementation. Not for ad-hoc use."
 model: opus
 effort: high
 ---
