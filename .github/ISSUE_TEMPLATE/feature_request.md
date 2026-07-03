@@ -7,7 +7,7 @@ labels: ["enhancement"]
 
 ## What should specwright do?
 
-Describe the improvement to the `sw` skill, a bundled companion (`sw-brainstorm`, `sw-plan`, `sw-pr`, `sw-review`, `sw-run`, `sw-update`), or a `/sw:*` command. Two or three concrete example prompts beat one abstract description.
+Describe the improvement to the `sw` plugin, a bundled companion (`sw-init`, `sw-brainstorm`, `sw-plan`, `sw-pr`, `sw-review`, `sw-run`), or a `/sw:*` command. Two or three concrete example prompts beat one abstract description.
 
 ## Why does it belong in specwright?
 
