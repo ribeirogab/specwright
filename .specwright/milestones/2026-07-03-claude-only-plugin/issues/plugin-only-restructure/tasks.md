@@ -94,17 +94,22 @@ created: 2026-07-03
 - [ ] Step 4: Verify: `grep -n 'scaffold/templates\|\.agents/skills\|skills/sw/scripts' plugins/sw/skills/brainstorm/SKILL.md` returns nothing
 - [ ] Step 5: Commit — `refactor(plugin): rewire brainstorm skill to plugins/sw/ paths`
 
-### Task 7: Rewire the update skill's leftover sw-update.sh path mentions
+### Task 7: Move sw-update.sh verbatim; rewire the update skill's 2 direct self-references only
 
-**AC:** AC-3
-**Delegable:** yes — isolated context: "Edit `plugins/sw/skills/update/SKILL.md`. It references `.agents/skills/sw/scripts/sw-update.sh` (the run command) and `.agents/skills/sw/.update-manifest.json` (the manifest baseline) — both paths live under `skills/sw/` which this issue deletes. Do a straight path substitution to `plugins/sw/scripts/sw-update.sh` and `plugins/sw/.update-manifest.json` — do not delete the file, do not remove the `update` skill, do not change its behavior description. Removing the `update` skill/command entirely is a different issue (`remove-sw-update`) — this task only prevents a dangling path reference in the meantime."
+**AC:** AC-2, AC-3
+**Delegable:** no (requires judgment on which of the ~18 `.agents/skills`/`scaffold/skills` hits inside `sw-update.sh` are the documented exception vs. an actual dangling reference — keep in the owner's hands)
 **Files:**
-- Modify: `plugins/sw/skills/update/SKILL.md`
+- Move (`git mv`): `skills/sw/scripts/sw-update.sh` → `plugins/sw/scripts/sw-update.sh` (verbatim, zero logic change)
+- Modify: `plugins/sw/skills/update/SKILL.md` (2 direct self-reference path mentions only; the "What is managed" table's companion-skill-sync row is left as-is with an inline note — see spec.md's Constraints)
 
-- [ ] Step 1: Replace `.agents/skills/sw/scripts/sw-update.sh` occurrences with `plugins/sw/scripts/sw-update.sh`
-- [ ] Step 2: Replace `.agents/skills/sw/.update-manifest.json` occurrences with `plugins/sw/.update-manifest.json`
-- [ ] Step 3: Verify: `grep -n '\.agents/skills' plugins/sw/skills/update/SKILL.md` returns nothing
-- [ ] Step 4: Commit — `refactor(plugin): rewire update skill's leftover script path`
+`sw-update.sh`'s `managed_pairs()` function and its self-test fixtures hard-code an **installed target repo's** local path (`.agents/skills/sw-<name>/SKILL.md`) and the **upstream clone's** path (`<clone>/skills/sw/scaffold/skills/sw-<name>/SKILL.md`) — both are other filesystems, not this repo's own deleted trees. Do NOT edit `managed_pairs()`, `_selftest_apply`, or any of the `$d/lo`/`$d/up` fixture paths inside the script — that is `remove-sw-update`'s redesign, not this task's.
+
+- [ ] Step 1: `git mv skills/sw/scripts/sw-update.sh plugins/sw/scripts/sw-update.sh`
+- [ ] Step 2: In `plugins/sw/skills/update/SKILL.md`, replace the 2 direct self-reference mentions — `.agents/skills/sw/scripts/sw-update.sh` (the run/record command examples) → `plugins/sw/scripts/sw-update.sh`, and `.agents/skills/sw/.update-manifest.json` (the manifest baseline mention) → `plugins/sw/.update-manifest.json`
+- [ ] Step 3: Leave the "What is managed" table's companion-skill-sync row (`.agents/skills/sw-<name>/SKILL.md` / `<clone>/skills/sw/scaffold/skills/sw-<name>/SKILL.md`) untouched; add the inline note explaining it describes an installed target repo, not this one (see spec.md Constraints for the exact wording used)
+- [ ] Step 4: Run `bash plugins/sw/scripts/sw-update.sh --self-test` — confirm `self-test: PASS` (behavior unchanged by the move)
+- [ ] Step 5: Verify: `grep -n '\.agents/skills\|scaffold/skills' plugins/sw/skills/update/SKILL.md` shows only the companion-skill-sync row (expected, documented) — no other hit
+- [ ] Step 6: Commit — `refactor(plugin): move sw-update.sh verbatim; rewire update skill's direct self-references`
 
 ## Phase 3: Delete the agent-agnostic layer
 
@@ -177,7 +182,7 @@ created: 2026-07-03
 - Read-only verification task; no new file edits expected beyond what Tasks 9-11 already made, unless the sweep finds something new
 
 - [ ] Step 1: Run `grep -rn '\.agents/skills\|scaffold/skills' .` (repo root, excluding `.git/`)
-- [ ] Step 2: For every remaining hit, classify: (a) `install.sh:26` and `install.sh:153` → the two documented, intentional survivors (end-user-machine target path, see spec.md's Constraints) — expected, not a defect; (b) inside an issue/milestone folder whose own `issue.md` says `status: shipped` → historical record, leave as-is; (c) anywhere else → live reference, must be fixed now
+- [ ] Step 2: For every remaining hit, classify: (a) `install.sh:26` and `install.sh:153`, and every hit inside `plugins/sw/scripts/sw-update.sh` → documented, intentional survivors (end-user-machine / installed-target-repo / upstream-clone paths, see spec.md's Constraints) — expected, not a defect; (b) inside an issue/milestone folder whose own `issue.md` says `status: shipped` → historical record, leave as-is; (c) anywhere else → live reference, must be fixed now
 - [ ] Step 3: Fix any category-(c) hit found that wasn't already covered by Tasks 4-11
 - [ ] Step 4: Record the final grep output (hit count + file list, annotated survivor/shipped/live) for the PR body's runtime-verification section
 - [ ] Step 5: Commit any fixes from Step 3 — `refactor(plugin): fix remaining dangling path references`
@@ -203,11 +208,11 @@ created: 2026-07-03
 **Files:**
 - Verification only
 
-- [ ] Step 1: **AC-1** — `find plugins/sw/templates plugins/sw/scripts plugins/sw/references -type f | sort` and confirm: 5 templates, `validate-spec.sh` + `fixtures/` (18 fixture files across 6 dirs) + the 3 vendored scripts, 5 reference docs — each exactly once
+- [ ] Step 1: **AC-1** — `find plugins/sw/templates plugins/sw/scripts plugins/sw/references -type f | sort` and confirm: 5 templates, `validate-spec.sh` + `fixtures/` (18 fixture files across 6 dirs) + the 3 vendored scripts + `sw-update.sh`, 5 reference docs — each exactly once
 - [ ] Step 2: **AC-2** — `[ ! -e .agents ] && [ ! -e skills/sw ] && echo "both absent"` confirms neither directory exists
-- [ ] Step 3: **AC-3** — repo-wide `grep -rn '\.agents/skills\|scaffold/skills' .` (excluding `.git/`) returns only the two documented `install.sh` survivors (lines 26, 153) plus any shipped-historical hits; zero matches in every other live file (per the scope resolution in spec.md). Tick the AC with the inline note specified in spec.md's Constraints rather than a bare "zero matches" claim
+- [ ] Step 3: **AC-3** — repo-wide `grep -rn '\.agents/skills\|scaffold/skills' .` (excluding `.git/`) returns only: the two documented `install.sh` survivors (lines 26, 153), the documented hits inside `plugins/sw/scripts/sw-update.sh` and the companion-skill-sync row of `plugins/sw/skills/update/SKILL.md`, plus any shipped-historical hits; zero matches in every other live file (per the scope resolution in spec.md). Tick the AC with the inline note specified in spec.md's Constraints rather than a bare "zero matches" claim
 - [ ] Step 4: **AC-4** — `find . -name SKILL.md -path '*brainstorm*' -o -name SKILL.md -path '*plan*' -o -name SKILL.md -path '*pr*' -o -name SKILL.md -path '*review*' -o -name SKILL.md -path '*run*'` (excluding `.git/`) confirms each of the 5 companion skills' `SKILL.md` exists exactly once, under `plugins/sw/skills/`
-- [ ] Step 5: **AC-5** — for every path mentioned in `plugins/sw/skills/plan/SKILL.md` and `plugins/sw/skills/brainstorm/SKILL.md` (the 3+3 rewired in Tasks 4/6, plus Task 5/7's), run `[ -f <path> ] && echo OK` for each and confirm all resolve
+- [ ] Step 5: **AC-5** — for every path mentioned in `plugins/sw/skills/plan/SKILL.md` and `plugins/sw/skills/brainstorm/SKILL.md` (the 3+3 rewired in Tasks 4/6, plus Task 5's), run `[ -f <path> ] && echo OK` for each and confirm all resolve
 - [ ] Step 6: Tick `[x]` on each AC in `issue.md` that was actually observed above; mark `needs-human-verification` with a reason for any that couldn't be checked this way (expect none — all 5 are file-existence/grep checks doable in this environment)
 - [ ] Step 7: Commit — `docs(issue): tick verified acceptance criteria`
 
