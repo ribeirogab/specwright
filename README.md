@@ -56,7 +56,7 @@ flowchart TD
     B -- "no, revise" --> A
     B -- yes --> C{"Scope: single issue or milestone?<br/>(agent suggests, you decide)"}
     C -- "single issue" --> D["Batch: branch + worktree + handoff<br/>→ issues/YYYY-MM-DD-slug/issue.md"]
-    D --> E["sw:plan — just-in-time spec + tasks<br/>self-reviewed: reviewer subagent +<br/>sw:review-spec + validate-spec.sh"]
+    D --> E["sw:plan — just-in-time spec + tasks<br/>self-reviewed: spec-document-reviewer subagent +<br/>sw:review-spec + validate-spec.sh"]
     E --> F["Implement → quality gate →<br/>runtime verification (run it for real;<br/>UI via browser or needs-human-verification)"]
     F --> G(["sw:pr + sw:review to lgtm → shipped"])
     C -- milestone --> H["Batch: worktree<br/>→ goal.md + board.md + N issue.md<br/>→ mandatory handoff, planning stops"]
@@ -88,7 +88,7 @@ Companion skills live in exactly **one copy** each, under `plugins/sw/skills/<na
 
 ```
 specwright/
-├── plugins/sw/              # Claude Code plugin — /sw:* commands, companion skills, templates, validator, references
+├── plugins/sw/              # Claude Code plugin — /sw:* commands, companion skills, agents, templates, validator, references
 ├── .claude-plugin/          # marketplace manifest
 ├── tests/                   # install smoke tests
 ├── LICENSE                  # MIT

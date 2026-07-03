@@ -1,8 +1,8 @@
 ---
 feature: role-subagents
 created: 2026-07-03
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-03
 ---
 # Per-Role Subagents with Model + Effort — Issue
 
@@ -27,13 +27,13 @@ Today the roles are dispatched as generic subagents that inherit the conducting 
 
 Number each criterion sequentially as `AC-N` — the IDs are stable handles that `tasks.md` references and that `/sw:review` walks to prove every criterion was delivered. Each criterion is a binary, observable check verifiable in under a minute.
 
-- [ ] **AC-1** `plugins/sw/agents/` contains exactly four files — `issue-owner.md`, `task-worker.md`, `spec-document-reviewer.md`, `reviewer.md` — and each has YAML frontmatter with non-empty `name`, `description`, `model`, and `effort` keys.
-- [ ] **AC-2** The four definitions carry these exact pairs: `issue-owner` → `model: opus` + `effort: xhigh`; `task-worker` → `model: sonnet` + `effort: medium`; `spec-document-reviewer` → `model: opus` + `effort: high`; `reviewer` → `model: opus` + `effort: xhigh`.
-- [ ] **AC-3** `issue-owner.md` lists `plan` under a `skills:` frontmatter key and `reviewer.md` lists `review`; `task-worker.md` and `spec-document-reviewer.md` have no `skills:` key.
-- [ ] **AC-4** `plugins/sw/skills/plan/spec-document-reviewer-prompt.md` no longer exists, and the reviewer instructions it held now appear verbatim in the body of `plugins/sw/agents/spec-document-reviewer.md`.
-- [ ] **AC-5** In `plugins/sw/skills/run/SKILL.md`, the issue-owner dispatch step names the `issue-owner` subagent as the dispatch target rather than describing a generic worker.
-- [ ] **AC-6** In `plugins/sw/skills/plan/SKILL.md`, Gate 2 names the `spec-document-reviewer` subagent and the fan-out step names the `task-worker` subagent as their dispatch targets, and the file no longer references `spec-document-reviewer-prompt.md`.
-- [ ] **AC-7** In `plugins/sw/skills/review/SKILL.md`, the three-lane review names the `reviewer` subagent as the dispatch target for each of the three lanes (A/B/C).
-- [ ] **AC-8** `CLAUDE.md` names `plugins/sw/agents/` as the home of the bundled role subagents, in or beside the "Editing the bundled skills" section.
+- [x] **AC-1** `plugins/sw/agents/` contains exactly four files — `issue-owner.md`, `task-worker.md`, `spec-document-reviewer.md`, `reviewer.md` — and each has YAML frontmatter with non-empty `name`, `description`, `model`, and `effort` keys.
+- [x] **AC-2** The four definitions carry these exact pairs: `issue-owner` → `model: opus` + `effort: xhigh`; `task-worker` → `model: sonnet` + `effort: medium`; `spec-document-reviewer` → `model: opus` + `effort: high`; `reviewer` → `model: opus` + `effort: xhigh`.
+- [x] **AC-3** `issue-owner.md` lists `plan` under a `skills:` frontmatter key and `reviewer.md` lists `review`; `task-worker.md` and `spec-document-reviewer.md` have no `skills:` key.
+- [x] **AC-4** `plugins/sw/skills/plan/spec-document-reviewer-prompt.md` no longer exists, and the reviewer instructions it held now appear verbatim in the body of `plugins/sw/agents/spec-document-reviewer.md`.
+- [x] **AC-5** In `plugins/sw/skills/run/SKILL.md`, the issue-owner dispatch step names the `issue-owner` subagent as the dispatch target rather than describing a generic worker.
+- [x] **AC-6** In `plugins/sw/skills/plan/SKILL.md`, Gate 2 names the `spec-document-reviewer` subagent and the fan-out step names the `task-worker` subagent as their dispatch targets, and the file no longer references `spec-document-reviewer-prompt.md`.
+- [x] **AC-7** In `plugins/sw/skills/review/SKILL.md`, the three-lane review names the `reviewer` subagent as the dispatch target for each of the three lanes (A/B/C).
+- [x] **AC-8** `CLAUDE.md` names `plugins/sw/agents/` as the home of the bundled role subagents, in or beside the "Editing the bundled skills" section.
 
 Tick each `[x]` when verified. Runtime verification checks each criterion by observed behavior (file inspection and the install smoke test) before the PR opens; any criterion requiring a live milestone dispatch that cannot run in the authoring session is marked `needs-human-verification` with the reason.
