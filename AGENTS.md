@@ -43,7 +43,7 @@ flowchart TD
 
 > All entries shown in Claude Code syntax (plugin namespace `sw:`). Codex users invoke as `$sw-<verb>`; Cursor users as `@sw-<verb>`.
 
-Commands + companion skills ship through the `sw` plugin (marketplace `specwright`, in this repo's `.claude/settings.json`). Non-Claude agents read canonical copies under `.agents/skills/sw-<name>/`.
+Commands + companion skills ship through the `sw` plugin (marketplace `specwright`, in this repo's `.claude/settings.json`).
 - **`/sw:brainstorm`** — design exploration; concludes single issue vs milestone and writes the artifacts.
 - **`/sw:spec`** — enter the issue flow from the conversation.
 - **`/sw:plan`** — the issue pipeline: just-in-time spec + tasks, gates, delivery.
@@ -55,4 +55,4 @@ Commands + companion skills ship through the `sw` plugin (marketplace `specwrigh
 
 ### Editing the bundled skills
 
-Companion skills ship in **three copies that must stay in sync**: the canonical `.agents/skills/sw-<name>/SKILL.md`, a byte-identical scaffold copy under `skills/sw/scaffold/skills/sw-<name>/`, and the plugin copy under `plugins/sw/skills/<name>/` (identical except its line-2 `name:`). `sw-spec` and `sw-review-spec` ship in **two** (canonical + scaffold; Claude Code serves those as plugin *commands*, not skills). The `sw` scaffolder skill (`skills/sw/`) and `validate-spec.sh` are **single-copy**. Edit the canonical copy, propagate, then verify with `diff`: the scaffold copy must differ in nothing, the plugin copy in exactly the `name:` line.
+Every companion skill's `SKILL.md` lives exactly **once**, under `plugins/sw/skills/<name>/` — no copy to keep in sync. The artifact templates live at `plugins/sw/templates/`, the mechanical validator at `plugins/sw/scripts/validate-spec.sh`, and the reference docs at `plugins/sw/references/`.
