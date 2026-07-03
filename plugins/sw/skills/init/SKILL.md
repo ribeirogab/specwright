@@ -82,8 +82,13 @@ Never touch the rest of an existing `CLAUDE.md` — it is project-authored conte
 
 ```bash
 touch .gitignore
-grep -qxF '.specwright/worktrees/' .gitignore || echo '.specwright/worktrees/' >> .gitignore
+if ! grep -qxF '.specwright/worktrees/' .gitignore; then
+  [ -s .gitignore ] && [ -z "$(tail -c1 .gitignore)" ] || printf '\n' >> .gitignore
+  echo '.specwright/worktrees/' >> .gitignore
+fi
 ```
+
+The blank-line guard matters: appending straight onto a non-empty `.gitignore` that lacks a trailing newline would concatenate onto its last existing line instead of starting a new one — silently mangling an entry the skill must never touch.
 
 Idempotent by construction: the `grep -qxF` guard means a second run adds no duplicate line.
 
