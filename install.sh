@@ -4,8 +4,8 @@
 # Installs the specwright scaffolder skill into the current project, enables the
 # Claude Code plugin, and guarantees this layout:
 #
-#   .agents/skills/sw/               <- real skill files (open agent-skills standard)
-#   .claude/skills/sw                -> ../../.agents/skills/sw  (symlink)
+#   .agents / skills / sw /          <- real skill files (open agent-skills standard)
+#   .claude/skills/sw                -> symlink to the path above (see CANONICAL below)
 #   skills-lock.json                 <- skills CLI lockfile
 #   .claude/settings.json            <- specwright marketplace + plugin enabled
 #
@@ -21,8 +21,8 @@ set -eu
 
 REPO="ribeirogab/specwright"
 SKILL="sw"
-# The skills CLI installs the canonical copy under .agents/skills/ when targeting
-# the agent-agnostic "universal" agent; we add the .claude symlink ourselves.
+# The skills CLI installs the canonical copy under the agent-agnostic skills
+# root when targeting the "universal" agent; we add the .claude symlink ourselves.
 CANONICAL=".agents/skills/${SKILL}"
 LINK=".claude/skills/${SKILL}"
 
@@ -121,7 +121,7 @@ print_next_steps() {
   say ""
   say "specwright installed:"
   say "  ${CANONICAL}/"
-  say "  ${LINK} -> ../../.agents/skills/${SKILL}"
+  say "  ${LINK} -> ../../${CANONICAL}"
   say "  skills-lock.json"
   say "  .claude/settings.json (specwright marketplace + plugin enabled)"
   say ""
