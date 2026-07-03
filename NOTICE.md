@@ -4,13 +4,13 @@ specwright is licensed under the MIT License, the same as the repository as a wh
 
 It includes third-party content vendored or adapted from public open-source repositories, preserved with their original licenses and copyright notices; modifications are documented below.
 
-## Vendored under `skills/sw/scripts/`
+## Vendored under `plugins/sw/scripts/`
 
 specwright bundles two scripts vendored from `anthropics/skills` so the skill is self-contained and does not depend on the upstream project being installed alongside it:
 
 | Field | Value |
 |---|---|
-| Files | `skills/sw/scripts/quick_validate.py`, `skills/sw/scripts/package_skill.py` |
+| Files | `plugins/sw/scripts/quick_validate.py`, `plugins/sw/scripts/package_skill.py` |
 | Original source | [https://github.com/anthropics/skills/tree/main/skill-creator/scripts](https://github.com/anthropics/skills/tree/main/skill-creator/scripts) |
 | Original license | Apache-2.0 |
 | Copyright holder | Anthropic |

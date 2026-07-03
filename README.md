@@ -14,7 +14,7 @@ curl -fsSL https://raw.githubusercontent.com/ribeirogab/specwright/main/install.
 
 This:
 
-- installs the scaffolder skill — `.agents/skills/sw/`, plus the `.claude/skills/sw` symlink, and
+- installs the scaffolder skill — the agent-agnostic canonical skill path, plus the `.claude/skills/sw` symlink, and
 - enables the `sw` plugin in `.claude/settings.json`.
 
 Then open the repo in your agent and run `/sw` to audit and scaffold the `.specwright/` vault. The plugin commands (`/sw:spec`, `/sw:pr`, …) load once Claude Code trusts the workspace.
@@ -27,7 +27,7 @@ Point an agent at any repo where you want specwright installed:
 
 The skill is audit-first, autonomous-fix, and safe to re-run. After the first run the repo has a working `.specwright/` vault, the bundled `sw-*` companion skills, the `/sw:*` slash commands, and an `AGENTS.md` — all dogfood-tested by specwright's own validator.
 
-**Source:** [`skills/sw/SKILL.md`](skills/sw/SKILL.md)
+**Source:** [`plugins/sw/`](plugins/sw/)
 
 ## What you get
 
@@ -80,26 +80,19 @@ A few things worth knowing:
 
 The workflow ships with opinionated defaults — all plain markdown, so change them to fit your team.
 
-Companion skills live in **three kept-in-sync copies**:
-
-- `.agents/skills/sw-<name>/` — canonical, what non-Claude agents read,
-- `plugins/sw/skills/<name>/` — the Claude Code plugin copy,
-- `skills/sw/scaffold/skills/sw-<name>/` — what new installs receive.
-
-Edit the copy your agent loads. To change what **future** installs get, edit the `scaffold/` copy too — and keep the three in sync.
+Companion skills live in exactly **one copy** each, under `plugins/sw/skills/<name>/` — edit that file directly, no second copy to keep in sync.
 
 - **PR conventions (`/sw:pr`)** — title/body format, the draft-vs-ready choice, labels, the PR-template fill, push behavior all live in the `sw-pr` `SKILL.md`. Edit it to change how PRs are opened (e.g. write the body in another language, change the default base branch, or add labels).
 - **Review rules (`/sw:review`)** — there are two levers. (1) **Project conventions** the reviewer reads: your installed repo's `.specwright/conventions/` — edit those to change the project-specific standard. (2) **The universal rubric** — the embedded rubric and severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the blocker calibration, and the output format — live in the `sw-review` `SKILL.md` (Unix philosophy + meaningful comments + security are baked in).
-- **Orchestration (`/sw:run`)** — the dispatch rules, circuit-breaker thresholds, and closeout behavior live in the `sw-run` `SKILL.md`; the board/goal/issue shapes live in `skills/sw/scaffold/templates/`.
-- **The issue-flow steps** — the flow is documented in `AGENTS.md` under `### Issue flow`. To change the steps for an already-installed repo, edit that block; to change what new installs get, edit `### Issue flow` in `skills/sw/references/agents-md-template.md` (keep the two consistent).
+- **Orchestration (`/sw:run`)** — the dispatch rules, circuit-breaker thresholds, and closeout behavior live in the `sw-run` `SKILL.md`; the board/goal/issue shapes live in `plugins/sw/templates/`.
+- **The issue-flow steps** — the flow is documented in `AGENTS.md` under `### Issue flow`. To change the steps for an already-installed repo, edit that block; to change what new installs get, edit `### Issue flow` in `plugins/sw/references/agents-md-template.md` (keep the two consistent).
 
 ## Repository layout
 
 ```
 specwright/
 ├── install.sh               # the one-line installer (curl-piped from main)
-├── skills/sw/               # the scaffolder skill: SKILL.md, references/, scaffold/, scripts/
-├── plugins/sw/              # Claude Code plugin — /sw:* commands (commands/) + companion skills (skills/)
+├── plugins/sw/              # Claude Code plugin — /sw:* commands, companion skills, templates, validator, references
 ├── .claude-plugin/          # marketplace manifest
 ├── tests/                   # install smoke tests
 ├── LICENSE                  # MIT
@@ -110,11 +103,11 @@ specwright/
 └── README.md
 ```
 
-The repository also contains `AGENTS.md` (with its `CLAUDE.md` symlink), `.agents/`, `.claude/`, and `.specwright/` — files and dirs used to dogfood specwright on its own development (the entry-point contract, the bundled companion skills, the per-agent symlinks, and the maintainer's spec vault). They are not what the installer puts in your repo.
+The repository also contains `AGENTS.md` (with its `CLAUDE.md` symlink), `.claude/`, and `.specwright/` — files and dirs used to dogfood specwright on its own development (the entry-point contract and the maintainer's spec vault). They are not what the installer puts in your repo.
 
 ## License
 
-This repository's original work is licensed under the [MIT License](LICENSE). The two vendored scripts under `skills/sw/scripts/` (`quick_validate.py`, `package_skill.py`) are Apache-2.0; see [`NOTICE.md`](NOTICE.md) for attribution.
+This repository's original work is licensed under the [MIT License](LICENSE). The two vendored scripts under `plugins/sw/scripts/` (`quick_validate.py`, `package_skill.py`) are Apache-2.0; see [`NOTICE.md`](NOTICE.md) for attribution.
 
 ## Contributing
 

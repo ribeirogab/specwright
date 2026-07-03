@@ -21,12 +21,12 @@ If a report goes unanswered for more than two weeks, a polite follow-up email is
 
 In scope:
 
-- The `sw` skill under [`skills/sw/`](skills/sw/) — the published surface that `npx skills add` installs, plus its bundled companions under `.agents/skills/sw-*/`.
+- The `sw` plugin under [`plugins/sw/`](plugins/sw/) — the published surface, including its bundled companion skills, templates, validator, and reference docs.
 - Vendored third-party content inside a published skill **only when** the issue is specific to how this repository ships or wraps it. Issues in upstream content should be reported to the upstream project — see [`NOTICE.md`](NOTICE.md) for source URLs.
 
 Out of scope:
 
-- The `.agents/`, `.claude/`, and `.specwright/` directories — maintainer-local content (dogfooded specwright output). Not consumed by `npx skills add` and not part of the published skill surface.
+- The `.claude/` and `.specwright/` directories — maintainer-local content (dogfooded specwright output). Not part of the published plugin surface.
 - Vulnerabilities in any agent runtime (Claude Code, Codex, Cursor, etc.), the underlying model APIs, or any third-party service. Report those to the corresponding vendor.
 
 ## Threat model
