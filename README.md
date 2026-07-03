@@ -1,45 +1,43 @@
 # specwright
 
-`specwright` gives any repository an explicit **issue-driven workflow** — every non-trivial change becomes an **issue** (1 issue = 1 branch = 1 PR) running through one pipeline: brainstorm → issue → spec + tasks → implement → quality gate → runtime verification → PR → review-to-`lgtm`. Large deliveries become **milestones**: a goal, a live board, and issues conducted in a loop by an orchestrator. Agent-agnostic and self-hosting.
+`specwright` gives any repository an explicit **issue-driven workflow** — every non-trivial change becomes an **issue** (1 issue = 1 branch = 1 PR) running through one pipeline: brainstorm → issue → spec + tasks → implement → quality gate → runtime verification → PR → review-to-`lgtm`. Large deliveries become **milestones**: a goal, a live board, and issues conducted in a loop by an orchestrator. Self-hosting.
 
 ---
 
 ## Install
 
-From your project root:
+Install the plugin once, globally, from Claude Code:
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/ribeirogab/specwright/main/install.sh | sh
+```
+claude plugin marketplace add ribeirogab/specwright
+claude plugin install sw@specwright
 ```
 
-This:
-
-- installs the scaffolder skill — the agent-agnostic canonical skill path, plus the `.claude/skills/sw` symlink, and
-- enables the `sw` plugin in `.claude/settings.json`.
-
-Then open the repo in your agent and run `/sw` to audit and scaffold the `.specwright/` vault. The plugin commands (`/sw:spec`, `/sw:pr`, …) load once Claude Code trusts the workspace.
+Every `/sw:*` command is now available in any repository — nothing is copied onto disk for this step.
 
 ## Use
 
-Point an agent at any repo where you want specwright installed:
+Open the repo you want specwright in and run:
 
-> "Audit specwright in this repo and scaffold whatever is missing."
+```
+/sw:init
+```
 
-The skill is audit-first, autonomous-fix, and safe to re-run. After the first run the repo has a working `.specwright/` vault, the bundled `sw-*` companion skills, the `/sw:*` slash commands, and an `AGENTS.md` — all dogfood-tested by specwright's own validator.
+This scaffolds the `.specwright/` vault (`conventions/`, `issues/`, `milestones/`) and writes a `CLAUDE.md` entry point stating the plugin requirement. It writes no machine configuration — no `.claude/settings.json` edits, no files copied from the plugin. `/sw:init` is idempotent — re-run it any time; it fills in what is missing and leaves existing content untouched.
 
 **Source:** [`plugins/sw/`](plugins/sw/)
 
 ## What you get
 
-After install the repo has:
+After running `/sw:init` the repo has:
 
-- an **`AGENTS.md`** describing the issue-driven workflow,
+- a **`CLAUDE.md`** describing the issue-driven workflow,
 - a **`.specwright/` vault** holding `conventions/` (whatever standards the repo wants kept consistent — you fill it, `/sw:review` enforces it), `issues/` (dated standalone-issue folders), and `milestones/` (dated milestone folders), and
-- a set of **`/sw:*` commands** and companion skills:
+- every **`/sw:*` command** below, already available from the globally installed plugin:
 
 | Command | What it does |
 |---|---|
-| `/sw` | Scaffold or audit specwright in the current repo — set up, verify, or fix. Idempotent. |
+| `/sw:init` | Scaffold or audit the `.specwright/` vault and `CLAUDE.md` entry point in the current repo. Idempotent. |
 | `/sw:brainstorm` | Explore intent and design before any non-trivial change → an issue or a milestone. |
 | `/sw:spec` | Turn the current conversation into an issue and enter the flow. |
 | `/sw:plan` | The issue pipeline: just-in-time `spec.md` + `tasks.md`, gates, delivery. |
@@ -47,7 +45,6 @@ After install the repo has:
 | `/sw:review` | Review the branch diff with find-only subagents until `lgtm`. |
 | `/sw:review-spec` | External-evaluator pass over an issue's plan — flags vagueness, scope creep, drift. |
 | `/sw:pr` | Open the issue's PR — branch/base, push, PR template, Conventional-Commit title. |
-| `/sw:update` | Sync the installed specwright with upstream without clobbering local edits. |
 
 ## How the flow works
 
@@ -85,13 +82,12 @@ Companion skills live in exactly **one copy** each, under `plugins/sw/skills/<na
 - **PR conventions (`/sw:pr`)** — title/body format, the draft-vs-ready choice, labels, the PR-template fill, push behavior all live in the `sw-pr` `SKILL.md`. Edit it to change how PRs are opened (e.g. write the body in another language, change the default base branch, or add labels).
 - **Review rules (`/sw:review`)** — there are two levers. (1) **Project conventions** the reviewer reads: your installed repo's `.specwright/conventions/` — edit those to change the project-specific standard. (2) **The universal rubric** — the embedded rubric and severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the blocker calibration, and the output format — live in the `sw-review` `SKILL.md` (Unix philosophy + meaningful comments + security are baked in).
 - **Orchestration (`/sw:run`)** — the dispatch rules, circuit-breaker thresholds, and closeout behavior live in the `sw-run` `SKILL.md`; the board/goal/issue shapes live in `plugins/sw/templates/`.
-- **The issue-flow steps** — the flow is documented in `AGENTS.md` under `### Issue flow`. To change the steps for an already-installed repo, edit that block; to change what new installs get, edit `### Issue flow` in `plugins/sw/references/agents-md-template.md` (keep the two consistent).
+- **The issue-flow steps** — the flow is documented in this repo's own `CLAUDE.md` under `### Issue flow`. To change the steps for an already-installed repo, edit that block directly. To change what `/sw:init` generates for a repo with no existing `CLAUDE.md`, edit `### Issue flow` in `plugins/sw/references/claude-md-template.md` (keep the two consistent) — note that `/sw:init` never rewrites an existing `CLAUDE.md`'s issue-flow section; it only appends a short plugin-requirement block when one is missing.
 
 ## Repository layout
 
 ```
 specwright/
-├── install.sh               # the one-line installer (curl-piped from main)
 ├── plugins/sw/              # Claude Code plugin — /sw:* commands, companion skills, templates, validator, references
 ├── .claude-plugin/          # marketplace manifest
 ├── tests/                   # install smoke tests
@@ -103,7 +99,7 @@ specwright/
 └── README.md
 ```
 
-The repository also contains `AGENTS.md` (with its `CLAUDE.md` symlink), `.claude/`, and `.specwright/` — files and dirs used to dogfood specwright on its own development (the entry-point contract and the maintainer's spec vault). They are not what the installer puts in your repo.
+The repository also contains `CLAUDE.md`, `.claude/`, and `.specwright/` — files and dirs used to dogfood specwright on its own development (the entry-point contract and the maintainer's spec vault). They are not something `/sw:init` puts in your repo automatically; running `/sw:init` there produces the equivalent for your own project.
 
 ## License
 
