@@ -1,4 +1,4 @@
 {
   "name": "sw",
-  "description": "specwright slash commands (/sw:spec, /sw:review-spec) and companion skills (init, brainstorm, plan, run, review, pr, update) — the specwright issue-driven workflow as a Claude Code plugin."
+  "description": "specwright slash commands (/sw:spec, /sw:review-spec) and companion skills (init, brainstorm, plan, run, review, pr) — the specwright issue-driven workflow as a Claude Code plugin."
 }
