@@ -20,7 +20,7 @@ You are about to write a code review. LLM training pushes you toward headers, em
 The review enforces two things, in this order:
 
 1. The **universal coding standard** below — the reviewer's built-in rubric. It always applies.
-2. The project-specific `.specwright/conventions/` — any convention relevant to the changed files (e.g. skill validation requirements when a `SKILL.md` changed), plus the `AGENTS.md` of each area the diff touches.
+2. The project-specific `.specwright/conventions/` — any convention relevant to the changed files (e.g. skill validation requirements when a `SKILL.md` changed), plus the `CLAUDE.md` of each area the diff touches.
 
 A finding that maps to a rubric rule or a convention cites it by name (e.g. "Meaningful Comments", "Modularity", "skill-validation convention").
 
@@ -120,12 +120,12 @@ A blocker MUST change before merge. Real blockers here:
 - a violation of a project convention in `.specwright/conventions/` relevant to the changed files.
 - a `SKILL.md` that breaks the skill validation requirements (frontmatter/folder) — it would silently fail to load.
 - a committed artifact not in English; chat may be PT-BR, files may not.
-- `AGENTS.md` over its 80-line cap.
+- `CLAUDE.md` over its 80-line cap.
 - new logic with zero tests in an area that has tests.
 - an acceptance criterion (`AC-N`) in the issue satisfied by no change in the diff — the issue-conformance pass flags it by ID (Completeness miss).
 - an `AC-N` ticked as verified with no runtime-verification evidence in the PR body, or a criterion silently skipped instead of marked `needs-human-verification`.
 - a silent test-integrity regression in a tested area (installed repos with a test suite): the touched area's test count drops, or an assertion is weakened/`skip`ped/deleted, with no in-spec justification.
-- a live doc left contradicting the behavior this diff introduces — a stale flow/step/count/artifact reference in `README`, `AGENTS.md`, a command/skill doc, or a convention (the documentation pass flags it). Shipped issues under `.specwright/issues/` and `.specwright/milestones/` are historical record and exempt.
+- a live doc left contradicting the behavior this diff introduces — a stale flow/step/count/artifact reference in `README`, `CLAUDE.md`, a command/skill doc, or a convention (the documentation pass flags it). Shipped issues under `.specwright/issues/` and `.specwright/milestones/` are historical record and exempt.
 
 NOT blockers — these are nits or suggestions, never request-changes:
 
@@ -143,7 +143,7 @@ Scan your draft for: any emoji; the strings `## Review` / `### Blocker` / `### S
 ## Workflow
 
 1. Resolve the scope (default: branch vs main + uncommitted work).
-2. Read the reviewer's standard (the universal standard above, plus `.specwright/conventions/` and the touched-area `AGENTS.md`).
+2. Read the reviewer's standard (the universal standard above, plus `.specwright/conventions/` and the touched-area `CLAUDE.md`).
 3. Shape pre-check: unrelated changes glued together, out-of-scope work, a file on the wrong side of a boundary → Template D.
 4. Review in order: correctness/bugs → security → tests → rubric/conventions compliance → readability → DRY/SOLID. Classify each finding per the calibration list.
 5. Run the pre-reply gate, then send exactly one template.
@@ -152,14 +152,14 @@ Scan your draft for: any emoji; the strings `## Review` / `### Blocker` / `### S
 
 In the issue pipeline's delivery step, review runs as **three** find-only sub-agents over the open branch (none edits code). Each owns **one lane** and must stay in it — do not duplicate another lane's findings or wander into its scope. The lanes are deliberately non-overlapping so the merge is clean.
 
-- **Subagent A — rubric + conventions.** *Question it answers:* does the diff obey the universal coding standard and the project's conventions? Reviews against the universal standard above, the area `AGENTS.md`, and `.specwright/conventions/` — correctness/bugs, security, tests, rubric/conventions compliance, readability, DRY/SOLID (the calibration above). **Not A's job:** whether the issue's acceptance criteria were delivered (that's B); whether docs went stale (that's C).
+- **Subagent A — rubric + conventions.** *Question it answers:* does the diff obey the universal coding standard and the project's conventions? Reviews against the universal standard above, the area `CLAUDE.md`, and `.specwright/conventions/` — correctness/bugs, security, tests, rubric/conventions compliance, readability, DRY/SOLID (the calibration above). **Not A's job:** whether the issue's acceptance criteria were delivered (that's B); whether docs went stale (that's C).
 - **Subagent B — issue-conformance.** *Question it answers:* does the diff deliver **this issue**? Walks the issue's Acceptance Criteria (the `AC-N` in `issue.md`) against the diff and reports three dimensions, citing each `AC-N` by ID:
   - **Completeness** — every `AC-N` is satisfied by a concrete change; an `AC-N` with no satisfying change is a **blocker**.
   - **Correctness** — the change actually meets the criterion (and its edge cases), not just gestures at it.
   - **Verification** — the PR body's runtime-verification record covers each `AC-N`: verified by observed behavior, or explicitly marked `needs-human-verification` with a reason. A ticked criterion with neither is a **blocker**.
   - **Coherence** — the spec's architecture / file-structure decisions appear in the code as written.
   **Not B's job:** general rubric/style/security (that's A); documentation staleness beyond what an `AC-N` explicitly requires (that's C). If there is no issue behind the branch (ad-hoc review), B does not run.
-- **Subagent C — documentation consistency.** *Question it answers:* after this diff, does the project's **live documentation** still match the code? Audits the docs the change touches or implies — `README.md`, the `AGENTS.md` homes, the convention docs, the plugin command docs, the bundled templates, and the three kept-in-sync copies of any touched companion skill — looking for: references to something the diff renamed/removed/changed, counts or lists that no longer match (step counts, check counts, file lists), a new artifact/flag/step/command left undocumented, or the 3 skill copies drifting beyond the allowed `name:` line. **Decisive rule:** flag only **live** docs; **never** flag shipped issues under `.specwright/issues/` or `.specwright/milestones/` — those are historical record and legitimately keep their ship-time wording. **Not C's job:** code correctness (A) or AC delivery (B) — C judges only whether the docs match the shipped behavior.
+- **Subagent C — documentation consistency.** *Question it answers:* after this diff, does the project's **live documentation** still match the code? Audits the docs the change touches or implies — `README.md`, the `CLAUDE.md` homes, the convention docs, the plugin command docs, and the bundled templates — looking for: references to something the diff renamed/removed/changed, counts or lists that no longer match (step counts, check counts, file lists), and a new artifact/flag/step/command left undocumented. **Decisive rule:** flag only **live** docs; **never** flag shipped issues under `.specwright/issues/` or `.specwright/milestones/` — those are historical record and legitimately keep their ship-time wording. **Not C's job:** code correctness (A) or AC delivery (B) — C judges only whether the docs match the shipped behavior.
 
 The **main agent merges** all three lanes into a **single** reply in one of the A/B/C/D templates: union and dedupe, blockers first, then triage — fix what makes sense, contest the rest to consensus, push, and re-request review. The verdict is `lgtm` **only when all three lanes are clean** — no open blocker from A, B, or C.
 
