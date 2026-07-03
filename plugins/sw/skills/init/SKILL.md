@@ -1,5 +1,6 @@
 ---
 name: init
+user-invocable: false
 description: "Set up specwright's per-repository content in the current repo: the .specwright/ vault (conventions/, issues/, milestones/), a root CLAUDE.md entry point stating the sw plugin requirement, and the .gitignore worktrees line. Content-only — writes no machine configuration. Idempotent, safe to re-run. Trigger on '/sw:init', 'set up specwright here', 'initialize specwright in this repo'."
 ---
 

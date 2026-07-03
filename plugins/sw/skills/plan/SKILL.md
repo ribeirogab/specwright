@@ -1,5 +1,6 @@
 ---
 name: plan
+user-invocable: false
 description: "Use when an approved issue (issue.md) needs its technical plan — produces the fused spec.md + tasks.md just-in-time, self-reviews them, then drives the issue pipeline: implement, quality gate, runtime verification, PR, review to lgtm, learnings. The issue owner's skill."
 ---
 

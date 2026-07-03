@@ -1,5 +1,6 @@
 ---
 name: brainstorm
+user-invocable: false
 description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation, concludes whether the work is a single issue or a milestone (a large delivery decomposed into issues), and writes the issue/milestone artifacts."
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: pr
+user-invocable: false
 description: "Open the pull request for the current issue, following specwright PR conventions — resolves branch/base, pushes if needed, fills the repo PR template, English Conventional-Commit title and body, records the runtime-verification results, no AI attribution. Use as the delivery step of the issue pipeline, or whenever the user asks to open a PR."
 ---
 

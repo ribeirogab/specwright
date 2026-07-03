@@ -1,5 +1,6 @@
 ---
 name: run
+user-invocable: false
 description: "Conduct a specwright milestone: read the board, dispatch every ready issue to an issue-owner sub-agent (parallel, one worktree each), track progress, apply circuit breakers, and close out with goal reconciliation, learnings promotion, and a final report. Resumable from any fresh session. Trigger on '/sw:run', 'run the milestone', 'continue the milestone', or when the user asks to resume conducting a milestone."
 ---
 

@@ -77,7 +77,7 @@ A few things worth knowing:
 
 The workflow ships with opinionated defaults — all plain markdown, so change them to fit your team.
 
-Companion skills live in exactly **one copy** each, under `plugins/sw/skills/<name>/` — edit that file directly, no second copy to keep in sync.
+Companion skills live in exactly **one copy** each, under `plugins/sw/skills/<name>/` — edit that file directly, no second copy to keep in sync. Each is `user-invocable: false` (hidden from the `/` menu) and fronted by a thin command at `plugins/sw/commands/<name>.md` that only reads and runs the skill; that pairing is what makes every entry point appear namespaced as `/sw:<name>` and never as a bare `/<name>`. The command is a pure redirect — behavior lives in the `SKILL.md`.
 
 - **PR conventions (`/sw:pr`)** — title/body format, the draft-vs-ready choice, labels, the PR-template fill, push behavior all live in the `sw-pr` `SKILL.md`. Edit it to change how PRs are opened (e.g. write the body in another language, change the default base branch, or add labels).
 - **Review rules (`/sw:review`)** — there are two levers. (1) **Project conventions** the reviewer reads: your installed repo's `.specwright/conventions/` — edit those to change the project-specific standard. (2) **The universal rubric** — the embedded rubric and severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the blocker calibration, and the output format — live in the `sw-review` `SKILL.md` (Unix philosophy + meaningful comments + security are baked in).

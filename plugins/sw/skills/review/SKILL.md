@@ -1,5 +1,6 @@
 ---
 name: review
+user-invocable: false
 description: "Review a branch diff (or any diff/files pointed at) with specialized find-only subagents — rubric+conventions (the universal coding standard plus the project's conventions), issue-conformance (the issue's AC-N and its runtime-verification results), and documentation-consistency (stale or missing docs after the change) — merged into one plain-text verdict that reaches lgtm only when every lane is clean. Classify findings (blocker/suggestion/nitpick/question). Portable: no dependency on a native review tool. Trigger on 'review this branch', 'code review', 'review the diff', 'review again', or the delivery step of the issue pipeline."
 ---
 
