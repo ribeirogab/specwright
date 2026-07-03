@@ -8,7 +8,7 @@ The maintenance model is **solo, best-effort, no SLA**. Pull requests are review
 
 ### What is in scope
 
-- **Bug fixes and improvements to `sw`** — including bundled payloads (the companion skills under `plugins/sw/skills/*/`, and the vendored validator scripts under `plugins/sw/scripts/`).
+- **Bug fixes and improvements to `sw`** — including bundled payloads (the companion skills under `plugins/sw/skills/*/`, the bundled role subagents under `plugins/sw/agents/*.md`, and the vendored validator scripts under `plugins/sw/scripts/`).
 - **Documentation fixes** to `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `NOTICE.md`.
 - **Vendored-content updates** when a skill bundles upstream code that was refreshed; update `NOTICE.md` accordingly.
 
@@ -38,6 +38,13 @@ python plugins/sw/scripts/package_skill.py plugins/sw/skills/<the-skill-you-chan
 ```
 
 `quick_validate.py` enforces the frontmatter contract (kebab-case `name`, `description` ≤ 1024 chars, no XML angle brackets, no reserved words, only canonical top-level keys). `package_skill.py` re-runs that validation and additionally confirms the skill packages cleanly into a `.skill` artifact (no broken file references, no excluded patterns left behind).
+
+For a change to a bundled **agent** (`plugins/sw/agents/*.md`) instead of a skill, validate the plugin manifest and its agent/command/skill frontmatter with:
+
+```bash
+claude plugin validate ./plugins/sw
+# expected: "Validation passed" — errors block, warnings are advisory
+```
 
 ## Pull request checklist
 
