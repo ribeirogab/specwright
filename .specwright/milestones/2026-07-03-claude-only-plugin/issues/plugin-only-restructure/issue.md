@@ -1,7 +1,7 @@
 ---
 feature: plugin-only-restructure
 created: 2026-07-03
-status: pending
+status: in-progress
 shipped: null
 ---
 # Plugin-only Restructure — Issue
