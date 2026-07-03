@@ -1,10 +1,42 @@
-# specwright — Agent Instructions
+# CLAUDE.md Template
 
-Instructions for AI coding assistants and developers working on the specwright codebase.
+`CLAUDE.md` is the repo-root entry point Claude Code loads into every session. Load this reference when creating or repairing it.
+
+## Filling rules
+
+- The intro is exactly two lines: `Instructions for AI coding assistants and developers working on the {{project}} codebase.` followed by a blank line and `**Never give up on the right solution.**`. No repo-structure paragraph.
+- Fill `{{Project Name}}` and `{{project}}` from the project info `/sw:init` gathers (a manifest's declared name, falling back to the repository directory name, or asked of the user when neither resolves).
+- The `### Issue flow` is fixed — the same steps for every project (it encodes the specwright delivery pipeline, not project specifics).
+- The `## Skills and slash commands` section's plugin-requirement line and the two install commands are fixed text — copy them verbatim, no project-specific substitution.
+
+Do **not** leave `{{placeholders}}` in the final file — only the two tokens above exist in this template, and both must be filled before the file is written.
+
+## Size constraint
+
+The final `CLAUDE.md` must be **≤ 80 lines** (target 45–70). The file is loaded into every agent session as the entry-point contract; longer than that and it crowds out conversation context and starts rotting.
+
+When trimming to fit:
+
+- Tighten body prose rather than dropping a required section header.
+- Replace any longer narrative inside a section with a one-line pointer (e.g., a project convention in `.specwright/conventions/`).
+- Never drop a required section header.
+
+## Required section headers
+
+None of these may be missing:
+
+- `## Workflow Spec Driven`
+- `## Coding standard`
+- `## Skills and slash commands`
+
+## Template
+
+````markdown
+# {{Project Name}} — Agent Instructions
+
+Instructions for AI coding assistants and developers working on the {{project}} codebase.
 
 **Never give up on the right solution.**
-
-This repo builds and ships specwright (a markdown + shell skill repo, no build pipeline) and dogfoods the issue-driven workflow on itself.
 
 ## Workflow Spec Driven
 
@@ -41,8 +73,13 @@ flowchart TD
 
 ## Skills and slash commands
 
-Commands + companion skills ship through the `sw` Claude Code plugin (marketplace `specwright`), installed once, globally — nothing is copied into this repo.
-- **`/sw:init`** — set up this repo's `.specwright/` vault and `CLAUDE.md` entry point.
+This repository requires the `sw` Claude Code plugin — every `/sw:*` command below comes from it, globally, with nothing copied into this repo. If these commands are unavailable, install the plugin once:
+
+```
+claude plugin marketplace add ribeirogab/specwright
+claude plugin install sw@specwright
+```
+
 - **`/sw:brainstorm`** — design exploration; concludes single issue vs milestone and writes the artifacts.
 - **`/sw:spec`** — enter the issue flow from the conversation.
 - **`/sw:plan`** — the issue pipeline: just-in-time spec + tasks, gates, delivery.
@@ -50,7 +87,4 @@ Commands + companion skills ship through the `sw` Claude Code plugin (marketplac
 - **`/sw:review`** — bespoke, portable review cycle to `lgtm`.
 - **`/sw:review-spec`** — external evaluator pass over an issue's plan (agent self-review).
 - **`/sw:pr`** — open the issue's PR.
-
-### Editing the bundled skills
-
-Every companion skill's `SKILL.md` lives exactly **once**, under `plugins/sw/skills/<name>/` — no copy to keep in sync. The artifact templates live at `plugins/sw/templates/`, the mechanical validator at `plugins/sw/scripts/validate-spec.sh`, and the reference docs at `plugins/sw/references/`.
+````

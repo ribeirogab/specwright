@@ -73,7 +73,7 @@ The line's **language follows the conversation** — the reference above is pt-B
 ## Closeout (all shipped)
 
 1. **Reconcile `goal.md`** — flag any goal statement superseded by decisions recorded during conduction (board notes, blocker resolutions); propose the reconciling edit; **apply only with the maintainer's approval**. Nothing superseded → say so and move on.
-2. **Promote durable learnings** — read every issue's `learnings.md`; propose the facts that outlive the milestone (data formats, invariants, conventions) for promotion into the area `AGENTS.md` or `.specwright/conventions/`. **Apply only what the user approves.** Ephemeral learnings stay in the issue folders as history.
+2. **Promote durable learnings** — read every issue's `learnings.md`; propose the facts that outlive the milestone (data formats, invariants, conventions) for promotion into the area `CLAUDE.md` or `.specwright/conventions/`. **Apply only what the user approves.** Ephemeral learnings stay in the issue folders as history.
 3. Append a final summary to the board: issues shipped, PR URLs, blockers survived. Written **after** the reconciliation and promotion approvals above; if a draft went in earlier, amend only within the appended summary section — the rest of the board stays frozen.
 4. Report to the user: the milestone is done; merging the PRs is theirs.
 

@@ -7,11 +7,11 @@ labels: ["bug"]
 
 ## Component affected
 
-The `sw` skill, a bundled companion (`sw-brainstorm`, `sw-plan`, `sw-pr`, `sw-review`, `sw-run`, `sw-update`), or a `/sw:*` command.
+The `sw` plugin, a bundled companion (`sw-init`, `sw-brainstorm`, `sw-plan`, `sw-pr`, `sw-review`, `sw-run`), or a `/sw:*` command.
 
-## Agent and version
+## Claude Code version
 
-Which agent runtime you used and its version (e.g. Claude Code 2.1.123, Codex CLI, Cursor 0.42, OpenCode, etc.) plus the operating system.
+Which Claude Code version you used (e.g. 2.1.123) plus the operating system.
 
 ## Reproduction steps
 

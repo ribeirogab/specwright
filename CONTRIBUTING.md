@@ -8,32 +8,32 @@ The maintenance model is **solo, best-effort, no SLA**. Pull requests are review
 
 ### What is in scope
 
-- **Bug fixes and improvements to `sw`** — including bundled payloads (the scaffold content it copies into target repos, the bundled companion skills under `.agents/skills/sw-*/`, and the vendored validator scripts under `skills/sw/scripts/`).
+- **Bug fixes and improvements to `sw`** — including bundled payloads (the companion skills under `plugins/sw/skills/*/`, and the vendored validator scripts under `plugins/sw/scripts/`).
 - **Documentation fixes** to `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `NOTICE.md`.
 - **Vendored-content updates** when a skill bundles upstream code that was refreshed; update `NOTICE.md` accordingly.
 
 ### What is out of scope
 
 - **Skills unrelated to specwright.** This repository is dedicated to specwright. The [skills CLI](https://github.com/vercel-labs/skills) makes any public GitHub repo installable, so publish unrelated skills from your own repo.
-- **`.specwright/`, `.agents/`, `.claude/`, `evals/`** — these are the maintainer's local-only dirs (dogfooded specwright output, eval workspaces). They are not part of the published skill surface and PRs touching them will be closed without merge.
+- **`.specwright/`, `.claude/`, `evals/`** — these are the maintainer's local-only dirs (dogfooded specwright output, eval workspaces). They are not part of the published skill surface and PRs touching them will be closed without merge.
 - **Governance proposals**, maintainer hierarchies, decision-making frameworks, funding models, sponsorship, and similar process documents. The project is intentionally solo and lightweight.
 
 ## How to fix a bug or improve a skill
 
 1. **File an issue first** for non-trivial changes so we can confirm scope before you spend time. Trivial fixes (typos, broken links, obvious bugs) can go straight to PR.
-2. **Make the change** under `skills/<the-skill>/`. If the skill ships a scaffold or other payload that gets copied into target repos at runtime, remember those files run elsewhere — keep them generic and re-runnable.
+2. **Make the change** under `plugins/sw/skills/<the-skill>/`.
 3. **Run the quality bar checks** (next section) on the modified skill.
 4. **Open the PR** with the template's checklist filled in.
 
 ## Quality bar
 
-Mechanical checks must pass on the modified skill before the PR is opened. Both scripts are vendored copies of the canonical authoring validators (Apache-2.0, see [`NOTICE.md`](NOTICE.md)) and ship under `skills/sw/scripts/`:
+Mechanical checks must pass on the modified skill before the PR is opened. Both scripts are vendored copies of the canonical authoring validators (Apache-2.0, see [`NOTICE.md`](NOTICE.md)) and ship under `plugins/sw/scripts/`:
 
 ```bash
-python skills/sw/scripts/quick_validate.py skills/<the-skill-you-changed>
+python plugins/sw/scripts/quick_validate.py plugins/sw/skills/<the-skill-you-changed>
 # expected output: "Skill is valid!"
 
-python skills/sw/scripts/package_skill.py skills/<the-skill-you-changed> /tmp
+python plugins/sw/scripts/package_skill.py plugins/sw/skills/<the-skill-you-changed> /tmp
 # expected output: ends with "Successfully packaged skill to: /tmp/<skill-name>.skill"
 ```
 
@@ -46,7 +46,7 @@ The PR template carries this checklist; the items below explain each entry.
 - [ ] **Branch name** is descriptive and not `main`. Suggested prefixes: `feat/`, `fix/`, `docs/`.
 - [ ] **`quick_validate.py` and `package_skill.py` pass** on every modified skill (or N/A — your PR doesn't touch a skill).
 - [ ] **`NOTICE.md` updated** when vendored content is refreshed or modified.
-- [ ] **No edits under `.specwright/`, `.agents/`, `.claude/`, or `evals/`** (maintainer-local dirs, out of scope).
+- [ ] **No edits under `.specwright/`, `.claude/`, or `evals/`** (maintainer-local dirs, out of scope).
 - [ ] **Commit messages** follow Conventional Commits style (`feat(<scope>): ...`, `fix(<scope>): ...`, `docs: ...`, `chore: ...`).
 - [ ] **No AI-attribution footers** in commits or PR description (e.g. `Co-Authored-By: Claude`, `Generated with Cursor`, `Co-authored-by: Codex`, etc.).
 
