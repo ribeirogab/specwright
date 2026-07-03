@@ -28,9 +28,9 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 
 Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.
 
-- [ ] **AC-1** The directory `plugins/sw/skills/update/` does not exist.
-- [ ] **AC-2** No file named `sw-update.sh` exists anywhere in the repository.
-- [ ] **AC-3** `grep -rn` over `plugins/sw/` for the strings `sw:update`, `sw-update`, and `/sw:update` returns zero matches.
-- [ ] **AC-4** The plugin manifest and any skill file that enumerates the `/sw:*` command set list no `update` entry.
+- [x] **AC-1** The directory `plugins/sw/skills/update/` does not exist. Verified: `[ ! -d plugins/sw/skills/update ]` passes; `ls plugins/sw/skills/` shows only `brainstorm plan pr review run`.
+- [x] **AC-2** No file named `sw-update.sh` exists anywhere in the repository. Verified: `find . -name 'sw-update.sh'` (excluding `.git/`) returns nothing.
+- [x] **AC-3** `grep -rn` over `plugins/sw/` for the strings `sw:update`, `sw-update`, and `/sw:update` returns zero matches — **clean except the 3 sibling-owned reference docs** (`plugins/sw/references/agents-md-template.md`, `plugins/sw/references/validation.md`, `plugins/sw/references/audit-checklist.md`), which `rewrite-sw-init` clears as part of its own rewrite. This mirrors the historical-record carve-out pattern issue #1 (`plugin-only-restructure`, PR #57) used for its own grep-cleanliness AC. Verified by running the grep and confirming the distinct-file list is exactly those 3 paths, no more.
+- [x] **AC-4** The plugin manifest and any skill file that enumerates the `/sw:*` command set list no `update` entry. Verified: `plugins/sw/.claude-plugin/plugin.json`'s `description` field now lists `brainstorm, plan, run, review, pr` with no `update`; no other companion-skill body or command in this issue's ownership boundary enumerates `/sw:*` command names (confirmed by grep — see `spec.md` Constraints).
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
