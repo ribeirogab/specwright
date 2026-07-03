@@ -27,10 +27,10 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 
 Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.
 
-- [ ] **AC-1** The file `install.sh` does not exist in the repository.
-- [ ] **AC-2** `README.md` documents installation as the two commands `claude plugin marketplace add ribeirogab/specwright` and `claude plugin install sw@specwright` followed by `/sw:init`, and contains no `curl` piped-to-`sh` install instruction.
-- [ ] **AC-3** Neither `README.md` nor the repository's root entry-point document mentions `.agents/`, per-agent symlinks, the names Codex/Cursor/OpenCode/Aider, or a three-copies-in-sync editing rule.
-- [ ] **AC-4** Neither `README.md` nor the repository's root entry-point document lists a `sw:update` or `/sw:update` command in any command table or prose.
-- [ ] **AC-5** `grep -rn` over the repository for `install.sh` returns no reference to the deleted installer (every documentation pointer to it is removed or updated).
+- [x] **AC-1** The file `install.sh` does not exist in the repository. Verified: `[ -f install.sh ]` → absent.
+- [x] **AC-2** `README.md` documents installation as the two commands `claude plugin marketplace add ribeirogab/specwright` and `claude plugin install sw@specwright` followed by `/sw:init`, and contains no `curl` piped-to-`sh` install instruction. Verified: both commands and `/sw:init` present in `README.md`'s Install/Use sections; `grep -in curl README.md` → no match.
+- [x] **AC-3** Neither `README.md` nor the repository's root entry-point document mentions `.agents/`, per-agent symlinks, the names Codex/Cursor/OpenCode/Aider, or a three-copies-in-sync editing rule. Verified: `grep -in` for all of these over `README.md` and `CLAUDE.md` (the entry-point document — converged from `AGENTS.md`, symlink removed) → no match.
+- [x] **AC-4** Neither `README.md` nor the repository's root entry-point document lists a `sw:update` or `/sw:update` command in any command table or prose. Verified: `grep -in sw:update README.md CLAUDE.md` → no match.
+- [x] **AC-5** `grep -rn` over the repository for `install.sh` returns no reference to the deleted installer (every documentation pointer to it is removed or updated). Verified with two passes: a raw `grep -rln install\.sh .` returns hits only under `.specwright/` (historical issue records that predate or document the deletion, out of scope by the vault's no-retroactive-edit convention) and this issue's own ticket/spec/tasks; a scoped `grep -rln install\.sh . --exclude-dir=.specwright --exclude-dir=.git` returns only `tests/install/run.sh`, which legitimately names the file to assert its absence. No live documentation pointer to the deleted installer remains.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
