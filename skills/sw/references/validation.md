@@ -193,9 +193,10 @@ else
   ' "$f" | sort -u)
   claude=$(awk '/^### claude/{c=1; next} /^### /{c=0} c' "$f")
   missing=""
-  for t in $tiers; do
+  while IFS= read -r t; do
+    [ -n "$t" ] || continue
     printf '%s\n' "$claude" | grep -Eq "^\|[[:space:]]*${t}[[:space:]]" || missing="${missing:+$missing, }$t"
-  done
+  done <<< "$tiers"
   [ -z "$missing" ] && echo PASS || echo "FAIL — tier(s) with no ### claude binding: $missing"
 fi
 ```
