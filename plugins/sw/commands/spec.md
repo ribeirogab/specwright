@@ -1,6 +1,6 @@
 ---
 description: Turn the current conversation into an issue (or milestone) using the specwright brainstorm flow
-argument-hint: <optional: topic or direction to focus on>
+argument-hint: "<optional: topic or direction to focus on>"
 ---
 
 # Spec — Refine and Formalize
