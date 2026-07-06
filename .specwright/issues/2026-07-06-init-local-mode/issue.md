@@ -1,7 +1,7 @@
 ---
 feature: init-local-mode
 created: 2026-07-06
-status: pending
+status: in-progress
 shipped: null
 ---
 # Init Local Mode — Issue
@@ -33,7 +33,7 @@ Runtime verification checks each criterion by observed behavior before the PR op
 - [ ] **AC-3** Choosing `local` writes the entry point to `CLAUDE.local.md`, creates and edits no `CLAUDE.md`, and appends both `.specwright/` and `CLAUDE.local.md` to `.gitignore`.
 - [ ] **AC-4** After a `local` init, `git status --porcelain` lists no path under `.specwright/` and does not list `CLAUDE.local.md`, and `git check-ignore .specwright/ CLAUDE.local.md` prints both paths.
 - [ ] **AC-5** Re-running `/sw:init` and choosing the mode that already matches the on-disk state adds no duplicate `.gitignore` line and overwrites no existing `CLAUDE.local.md`, `CLAUDE.md`, or vault content — a second run in the same mode leaves an empty `git diff`.
-- [ ] **AC-6** Re-running `/sw:init` and choosing a mode that differs from the on-disk state changes no file until the user confirms: init first prints the migration consequences and waits for explicit confirmation.
+- [ ] **AC-6** Re-running `/sw:init` and choosing a mode that differs from the on-disk state changes no file: init reports the detected current mode, prints the consequences of switching and the exact manual commands to perform it, then stops. Switching modes is a deliberate manual action; init never auto-migrates.
 - [ ] **AC-7** The init self-audit (`plugins/sw/references/validation.md`) reports a `local`-initialized repo as valid: the entry-point checks that today match the literal `CLAUDE.md` recognize `CLAUDE.local.md` as the entry point in `local` mode.
 - [ ] **AC-8** Invoking `/sw:run` in a `local`-mode repo halts with a message stating milestone conduction is not supported in `local` mode yet and dispatches no issue owner.
 - [ ] **AC-9** Each doc that describes what `/sw:init` writes — `README.md`, `plugins/sw/commands/init.md`, `plugins/sw/references/audit-checklist.md`, `plugins/sw/references/claude-md-template.md`, `plugins/sw/references/vault-files.md`, and the repo's dogfood `CLAUDE.md` — describes both modes and names `CLAUDE.local.md` plus the two `local`-mode `.gitignore` lines.
