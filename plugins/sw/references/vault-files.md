@@ -32,6 +32,10 @@ What does **not** live in the vault (do not create any of these):
 - The issue **validator** `validate-spec.sh` — it ships with the plugin under `plugins/sw/scripts/validate-spec.sh`. It is not copied into the vault.
 - No editor config, no index or map files, no per-note templates, no workflow guide, no separate issue tracker, and no scripts directory inside `.specwright/`.
 
+### Commit mode — shared vs local
+
+`/sw:init` asks a commit mode. In **shared** mode the whole vault is committed. In **local** mode the vault is git-ignored (a blanket `.specwright/` line) so an adopter can use specwright inside a repo they do not own — the `.gitkeep` and `README` keep-files still exist on disk but are not committed. In local mode the clone-survival guarantee, milestone resumability from a fresh clone, and PR bodies that link `issue.md`/`spec.md`/`tasks.md` as committed GitHub URLs do **not** apply; that is why `/sw:run` refuses to conduct a milestone in local mode.
+
 ---
 
 ## `.specwright/conventions/` — the conventions directory

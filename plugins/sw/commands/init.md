@@ -1,5 +1,5 @@
 ---
-description: Set up specwright's per-repo content — the .specwright/ vault, a root CLAUDE.md entry point, and the .gitignore worktrees line. Idempotent, safe to re-run
+description: Set up specwright's per-repo content — the .specwright/ vault, an entry point (CLAUDE.md, or git-ignored CLAUDE.local.md in local mode), and the .gitignore lines. Always asks a shared or local commit mode. Idempotent, safe to re-run
 ---
 
 # init — set up specwright's per-repo content
