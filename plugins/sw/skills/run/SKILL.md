@@ -10,6 +10,18 @@ Conduct a milestone from its board to done. The orchestrator is a **pure conduct
 
 **Announce at start:** "Conducting the milestone..."
 
+## Preflight — commit mode
+
+Milestone conduction needs the vault **committed**: `/sw:run` dispatches each issue owner into its own worktree (`git worktree add`), which materializes only tracked content — a git-ignored `.specwright/` and a git-ignored `CLAUDE.local.md` never reach the owner's worktree, so the owner would start with neither the specwright contract nor its issue folder. `local` commit mode (see `/sw:init`) git-ignores the vault, so conduction is not supported there yet.
+
+Detect it and halt before locating anything:
+
+```bash
+git check-ignore -q .specwright/milestones && echo "local mode"
+```
+
+If the probe reports local mode, **stop**: report that milestone conduction is not supported in `local` mode yet — the single-issue flow (`/sw:plan`) is — and dispatch no issue owner. Otherwise proceed.
+
 ## Locate the milestone
 
 1. `$ARGUMENTS` names a slug → `.specwright/milestones/*<slug>*/`.

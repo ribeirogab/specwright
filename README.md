@@ -32,7 +32,7 @@ Open the repo you want specwright in and run:
 /sw:init
 ```
 
-This scaffolds the `.specwright/` vault (`conventions/`, `issues/`, `milestones/`) and writes a `CLAUDE.md` entry point stating the plugin requirement. It writes no machine configuration — no `.claude/settings.json` edits, no files copied from the plugin. `/sw:init` is idempotent — re-run it any time; it fills in what is missing and leaves existing content untouched.
+This scaffolds the `.specwright/` vault (`conventions/`, `issues/`, `milestones/`) and writes an entry point stating the plugin requirement. It **asks a commit mode**: **shared** (default — a committed `CLAUDE.md` and committed vault) or **local** (a git-ignored `CLAUDE.local.md` and git-ignored vault, for using specwright inside a repo you don't own — only the `.gitignore` change is committed). It writes no machine configuration — no `.claude/settings.json` edits, no files copied from the plugin. `/sw:init` is idempotent — re-run it any time (it re-asks the mode); it fills in what is missing and leaves existing content untouched. Milestone conduction (`/sw:run`) needs `shared` mode.
 
 **Source:** [`plugins/sw/`](plugins/sw/)
 
@@ -40,13 +40,13 @@ This scaffolds the `.specwright/` vault (`conventions/`, `issues/`, `milestones/
 
 After running `/sw:init` the repo has:
 
-- a **`CLAUDE.md`** describing the issue-driven workflow,
+- an **entry point** describing the issue-driven workflow (`CLAUDE.md` in shared mode, or a git-ignored `CLAUDE.local.md` in local mode),
 - a **`.specwright/` vault** holding `conventions/` (whatever standards the repo wants kept consistent — you fill it, `/sw:review` enforces it), `issues/` (dated standalone-issue folders), and `milestones/` (dated milestone folders), and
 - every **`/sw:*` command** below, already available from the globally installed plugin:
 
 | Command | What it does |
 |---|---|
-| `/sw:init` | Scaffold or audit the `.specwright/` vault and `CLAUDE.md` entry point in the current repo. Idempotent. |
+| `/sw:init` | Scaffold or audit the `.specwright/` vault and the entry point (`CLAUDE.md`, or git-ignored `CLAUDE.local.md` in **local** mode) in the current repo. Asks a shared/local commit mode. Idempotent. |
 | `/sw:brainstorm` | Explore intent and design before any non-trivial change → an issue or a milestone. |
 | `/sw:spec` | Turn the current conversation into an issue and enter the flow. |
 | `/sw:plan` | The issue pipeline: just-in-time `spec.md` + `tasks.md`, gates, delivery. |

@@ -42,7 +42,7 @@ flowchart TD
 ## Skills and slash commands
 
 Commands + companion skills ship through the `sw` Claude Code plugin (marketplace `specwright`), installed once, globally — nothing is copied into this repo.
-- **`/sw:init`** — set up this repo's `.specwright/` vault and `CLAUDE.md` entry point.
+- **`/sw:init`** — set up this repo's `.specwright/` vault and entry point; asks a shared or local commit mode (local = git-ignored `CLAUDE.local.md` + git-ignored vault).
 - **`/sw:brainstorm`** — design exploration; concludes single issue vs milestone and writes the artifacts.
 - **`/sw:spec`** — enter the issue flow from the conversation.
 - **`/sw:plan`** — the issue pipeline: just-in-time spec + tasks, gates, delivery.
