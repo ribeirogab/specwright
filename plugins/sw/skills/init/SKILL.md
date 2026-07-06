@@ -70,7 +70,7 @@ else
 fi
 ```
 
-Ask the user for the mode, presenting `established` as the current-state context, then branch:
+`local` wins the tie (the check order above): a normal repo never carries both entry points, since each mode writes only its own. Ask the user for the mode, presenting `established` as the current-state context, then branch:
 
 - **`established=none`, or the chosen mode equals `established`** → proceed to Step 3 and Step 4 in the chosen mode. On a matching re-run this is idempotent — the steps fill only what is missing.
 - **The chosen mode differs from `established`** → **do not migrate.** Print the detected current mode, the consequences of switching, and the exact manual commands to switch, then **stop without writing anything**:
