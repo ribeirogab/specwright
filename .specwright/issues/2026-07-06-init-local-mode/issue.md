@@ -1,8 +1,8 @@
 ---
 feature: init-local-mode
 created: 2026-07-06
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-06
 ---
 # Init Local Mode — Issue
 
@@ -29,13 +29,13 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.
 
 - [ ] **AC-1** Running `/sw:init` prompts the user to choose the commit mode (`shared` or `local`) before it writes the entry point or edits `.gitignore` — on a fresh repo and on a re-run alike. *(needs-human-verification: the always-ask prompt is agent-conversational behavior in `init/SKILL.md` Step 2; verified by inspection, but observing the prompt requires invoking `/sw:init` in a live session.)*
-- [ ] **AC-2** Choosing `shared` produces the same files as before this change: a committed `CLAUDE.md`, a committed `.specwright/` vault, and only `.specwright/worktrees/` appended to `.gitignore` — no other file differs from a pre-change `/sw:init` run.
-- [ ] **AC-3** Choosing `local` writes the entry point to `CLAUDE.local.md`, creates and edits no `CLAUDE.md`, and appends both `.specwright/` and `CLAUDE.local.md` to `.gitignore`.
-- [ ] **AC-4** After a `local` init, `git status --porcelain` lists no path under `.specwright/` and does not list `CLAUDE.local.md`, and `git check-ignore .specwright/ CLAUDE.local.md` prints both paths.
-- [ ] **AC-5** Re-running `/sw:init` and choosing the mode that already matches the on-disk state adds no duplicate `.gitignore` line and overwrites no existing `CLAUDE.local.md`, `CLAUDE.md`, or vault content — a second run in the same mode leaves an empty `git diff`.
+- [x] **AC-2** Choosing `shared` produces the same files as before this change: a committed `CLAUDE.md`, a committed `.specwright/` vault, and only `.specwright/worktrees/` appended to `.gitignore` — no other file differs from a pre-change `/sw:init` run.
+- [x] **AC-3** Choosing `local` writes the entry point to `CLAUDE.local.md`, creates and edits no `CLAUDE.md`, and appends both `.specwright/` and `CLAUDE.local.md` to `.gitignore`.
+- [x] **AC-4** After a `local` init, `git status --porcelain` lists no path under `.specwright/` and does not list `CLAUDE.local.md`, and `git check-ignore .specwright/ CLAUDE.local.md` prints both paths.
+- [x] **AC-5** Re-running `/sw:init` and choosing the mode that already matches the on-disk state adds no duplicate `.gitignore` line and overwrites no existing `CLAUDE.local.md`, `CLAUDE.md`, or vault content — a second run in the same mode leaves an empty `git diff`.
 - [ ] **AC-6** Re-running `/sw:init` and choosing a mode that differs from the on-disk state changes no file: init reports the detected current mode, prints the consequences of switching and the exact manual commands to perform it, then stops. Switching modes is a deliberate manual action; init never auto-migrates. *(needs-human-verification: the guard message and stop are agent-conversational behavior in `init/SKILL.md` Step 2; verified by inspection, but observing the print-and-stop requires invoking `/sw:init` in a live session.)*
-- [ ] **AC-7** The init self-audit (`plugins/sw/references/validation.md`) reports a `local`-initialized repo as valid: the entry-point checks that today match the literal `CLAUDE.md` recognize `CLAUDE.local.md` as the entry point in `local` mode.
-- [ ] **AC-8** Invoking `/sw:run` in a `local`-mode repo halts with a message stating milestone conduction is not supported in `local` mode yet and dispatches no issue owner.
-- [ ] **AC-9** Each doc that describes what `/sw:init` writes — `README.md`, `plugins/sw/commands/init.md`, `plugins/sw/references/audit-checklist.md`, `plugins/sw/references/claude-md-template.md`, `plugins/sw/references/vault-files.md`, and the repo's dogfood `CLAUDE.md` — describes both modes and names `CLAUDE.local.md` plus the two `local`-mode `.gitignore` lines.
+- [x] **AC-7** The init self-audit (`plugins/sw/references/validation.md`) reports a `local`-initialized repo as valid: the entry-point checks that today match the literal `CLAUDE.md` recognize `CLAUDE.local.md` as the entry point in `local` mode.
+- [x] **AC-8** Invoking `/sw:run` in a `local`-mode repo halts with a message stating milestone conduction is not supported in `local` mode yet and dispatches no issue owner.
+- [x] **AC-9** Each doc that describes what `/sw:init` writes — `README.md`, `plugins/sw/commands/init.md`, `plugins/sw/references/audit-checklist.md`, `plugins/sw/references/claude-md-template.md`, `plugins/sw/references/vault-files.md`, and the repo's dogfood `CLAUDE.md` — describes both modes and names `CLAUDE.local.md` plus the two `local`-mode `.gitignore` lines.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
