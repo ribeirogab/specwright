@@ -9,11 +9,20 @@
 Install the plugin once, globally, from Claude Code:
 
 ```bash
-claude plugin marketplace add ribeirogab/specwright
-claude plugin install sw@specwright
+claude plugin marketplace add ribeirogab/specwright && claude plugin install sw@specwright
 ```
 
 Every `/sw:*` command is now available in any repository — nothing is copied onto disk for this step.
+
+## Update
+
+specwright pins no `version`, so every commit to the marketplace repo counts as a new release. To pull the latest, refresh the marketplace cache and re-install (`claude plugin install` is also the update path — there is no `claude plugin update`):
+
+```bash
+claude plugin marketplace update specwright && claude plugin install sw@specwright
+```
+
+Then run `/reload-plugins` (or restart the session) for the new version to take effect. Updating the plugin never requires re-running `/sw:init` — that scaffolds a repo's `.specwright/` vault, not the commands.
 
 ## Use
 
