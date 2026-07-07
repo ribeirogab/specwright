@@ -34,7 +34,7 @@ What does **not** live in the vault (do not create any of these):
 
 ### Commit mode — shared vs local
 
-`/sw:init` asks a commit mode. In **shared** mode the whole vault is committed. In **local** mode the vault is git-ignored (a blanket `.specwright/` line, alongside the git-ignored `CLAUDE.local.md` entry point) so an adopter can use specwright inside a repo they do not own — the `.gitkeep` and `README` keep-files still exist on disk but are not committed. In local mode the clone-survival guarantee, milestone resumability from a fresh clone, and PR bodies that link `issue.md`/`spec.md`/`tasks.md` as committed GitHub URLs do **not** apply; that is why `/sw:run` refuses to conduct a milestone in local mode.
+`/sw:init` asks a commit mode. In **shared** mode the whole vault is committed. In **local** mode the vault is git-ignored (a blanket `.specwright/` line, alongside the git-ignored `CLAUDE.local.md` entry point) so an adopter can use specwright inside a repo they do not own — the `.gitkeep` and `README` keep-files still exist on disk but are not committed. In local mode the clone-survival guarantee, milestone resumability from a fresh clone, and PR bodies that link `issue.md`/`spec.md`/`tasks.md` as committed GitHub URLs do **not** apply. `/sw:run` still conducts milestones in local mode: it resolves the canonical vault from the checkout where you ran `/sw:init local`, copies the contract and each issue folder into the worktrees it creates, and syncs owners' folders back on return (`/sw:pr` omits the un-pushable artifact links).
 
 ---
 
