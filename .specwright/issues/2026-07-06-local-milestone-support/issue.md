@@ -1,8 +1,8 @@
 ---
 feature: local-milestone-support
 created: 2026-07-06
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-06
 ---
 # Local Milestone Support — Issue
 
@@ -28,13 +28,13 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 
 Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.
 
-- [ ] **AC-1** In `local` mode, `/sw:run` invoked from a checkout that has no `.specwright/` vault stops with a message that names the fix (run it from the checkout where `/sw:init local` ran) and dispatches no owner.
-- [ ] **AC-2** In `local` mode, `/sw:run` invoked from the vault-holding checkout proceeds to conduct — it does not hit the unconditional local-mode refusal that PR #63 added; that refusal is replaced by the AC-1 conditional stop.
-- [ ] **AC-3** When `/sw:run` dispatches an owner in `local` mode, it copies `CLAUDE.local.md` and the ready issue's folder into the new worktree after `git worktree add`, and both are git-ignored in that worktree (`git status --porcelain` in the worktree lists neither the copied `CLAUDE.local.md` nor the copied issue folder as a path to commit).
-- [ ] **AC-4** After an owner returns in `local` mode, its updated issue folder (the `status:` it flipped in `issue.md`, plus `spec.md`/`tasks.md`/`learnings.md`) is synced back into the canonical vault — the canonical `issue.md` reflects the owner's final `status:`.
+- [x] **AC-1** In `local` mode, `/sw:run` invoked from a checkout that has no `.specwright/` vault stops with a message that names the fix (run it from the checkout where `/sw:init local` ran) and dispatches no owner.
+- [x] **AC-2** In `local` mode, `/sw:run` invoked from the vault-holding checkout proceeds to conduct — it does not hit the unconditional local-mode refusal that PR #63 added; that refusal is replaced by the AC-1 conditional stop.
+- [x] **AC-3** When `/sw:run` dispatches an owner in `local` mode, it copies `CLAUDE.local.md` and the ready issue's folder into the new worktree after `git worktree add`, and both are git-ignored in that worktree (`git status --porcelain` in the worktree lists neither the copied `CLAUDE.local.md` nor the copied issue folder as a path to commit).
+- [x] **AC-4** After an owner returns in `local` mode, its updated issue folder (the `status:` it flipped in `issue.md`, plus `spec.md`/`tasks.md`/`learnings.md`) is synced back into the canonical vault — the canonical `issue.md` reflects the owner's final `status:`.
 - [ ] **AC-5** In `local` mode, `/sw:run` reads each dependency's readiness `status:` from the canonical vault, not from a dependency branch checkout. *(needs-human-verification: the readiness source is a loop instruction observable only in a live multi-issue `/sw:run` round with a dependency; verified by inspection of `run/SKILL.md` loop step 1, but not sandbox-runnable.)*
-- [ ] **AC-6** In `local` mode, `/sw:pr` emits no GitHub-URL links to `issue.md`/`spec.md`/`tasks.md` (which would 404 for un-pushed files); it omits them or inlines a short artifact summary instead.
-- [ ] **AC-7** `shared`-mode conduction and PR behavior are unchanged: every `local`-mode branch above is gated behind local-mode detection, and a `shared` run of `/sw:run` and `/sw:pr` produces the same behavior as before this change.
-- [ ] **AC-8** The docs that stated `local` mode does not support milestones — `plugins/sw/references/claude-md-template.md`, `plugins/sw/references/vault-files.md`, and `README.md` (its "Milestone conduction needs `shared` mode" line), plus the `run`/`pr` skill docs — are updated to describe the now-supported `local`-mode conduction and its copy-in/sync-back model.
+- [x] **AC-6** In `local` mode, `/sw:pr` emits no GitHub-URL links to `issue.md`/`spec.md`/`tasks.md` (which would 404 for un-pushed files); it omits them or inlines a short artifact summary instead.
+- [x] **AC-7** `shared`-mode conduction and PR behavior are unchanged: every `local`-mode branch above is gated behind local-mode detection, and a `shared` run of `/sw:run` and `/sw:pr` produces the same behavior as before this change.
+- [x] **AC-8** The docs that stated `local` mode does not support milestones — `plugins/sw/references/claude-md-template.md`, `plugins/sw/references/vault-files.md`, and `README.md` (its "Milestone conduction needs `shared` mode" line), plus the `run`/`pr` skill docs — are updated to describe the now-supported `local`-mode conduction and its copy-in/sync-back model.
 
 Tick each `[x]` when verified. An issue is **not shippable** with empty or double-brace-placeholder acceptance criteria — `validate-spec.sh` and `/sw:review-spec` will reject it.
