@@ -12,15 +12,22 @@ Conduct a milestone from its board to done. The orchestrator is a **pure conduct
 
 ## Preflight — commit mode
 
-Milestone conduction needs the vault **committed**: `/sw:run` dispatches each issue owner into its own worktree (`git worktree add`), which materializes only tracked content — a git-ignored `.specwright/` and a git-ignored `CLAUDE.local.md` never reach the owner's worktree, so the owner would start with neither the specwright contract nor its issue folder. `local` commit mode (see `/sw:init`) git-ignores the vault, so conduction is not supported there yet.
-
-Detect it and halt before locating anything:
+Detect the commit mode before locating anything, and set `mode` for the loop below:
 
 ```bash
-git check-ignore -q .specwright/milestones && echo "local mode"
+if git check-ignore -q .specwright/milestones; then
+  mode=local
+  [ -d .specwright/milestones ] || { echo "local-mode vault not found in this checkout; run /sw:run from the checkout where you ran /sw:init local"; exit; }
+else
+  mode=shared
+fi
 ```
 
-If the probe reports local mode, **stop**: report that milestone conduction is not supported in `local` mode yet — the single-issue flow (`/sw:plan`) is — and dispatch no issue owner. Otherwise proceed.
+- **`shared`** → conduct as normal; git carries the artifacts across worktrees.
+- **`local`** → the vault and `CLAUDE.local.md` are git-ignored, so `git worktree add` cannot carry them into an owner's worktree and git cannot sync an owner's artifacts back. specwright bridges that with an explicit file copy in and out (the loop's local-mode branches below); because the `.gitignore` lines are committed in `local` mode, every copied artifact lands git-ignored in the worktree, so an owner never commits it.
+  - The `git check-ignore` probe reports `local` from **any** worktree (the `.gitignore` is committed and present in every checkout). The separate `[ -d .specwright/milestones ]` test asks whether *this* checkout actually holds the vault — in `local` mode the vault lives only where `/sw:init local` ran.
+  - **Vault absent here** → **stop** with the message above and dispatch nothing: an externally-created worktree (e.g. one under `.claude/worktrees/`) is not the conductor's home.
+  - **Vault present** → this checkout is the **canonical vault**; conduct with the loop's local-mode adaptations.
 
 ## Locate the milestone
 
@@ -32,17 +39,32 @@ If the probe reports local mode, **stop**: report that milestone conduction is n
 
 Repeat until no issue is ready and none is running:
 
-1. **Find ready issues** — every issue whose `issue.md` says `status: pending` and whose board dependencies all say `status: shipped`. Readiness reads each dependency's `issue.md` **from the dependency's own branch** (its worktree or branch checkout): while the dependency's PR is unmerged, the `main` copy still says `pending` — the on-branch copy is the truth.
+1. **Find ready issues** — every issue whose `issue.md` says `status: pending` and whose board dependencies all say `status: shipped`. In `shared` mode readiness reads each dependency's `issue.md` **from the dependency's own branch** (its worktree or branch checkout): while the dependency's PR is unmerged, the `main` copy still says `pending` — the on-branch copy is the truth. In **`local`** mode there is no on-branch copy (the artifacts are git-ignored); readiness reads each dependency's `status:` from the **canonical vault** — this checkout's own `.specwright/`, kept current by the sync-back in Track.
 2. **Dispatch one issue owner per ready issue** — all of them, in parallel, no concurrency cap. Interactive approval asks are scoped to **this round's writes** (its worktrees, branches, commits, pushes, PRs) — never the whole milestone; a later round is a new loop turn and requires a new ask. For each:
    - Branch from `main` — or, when a dependency's PR is not yet merged, stack on the dependency's branch: the owner branches from it, notes the stacked base in the PR body, and re-targets the PR onto `main` after the dependency merges.
    - **Worktree is mandatory for parallel dispatch** — two owners in one working tree trample each other:
      ```bash
      git worktree add .specwright/worktrees/<slug> -b <branch>
      ```
+   - **In `local` mode, copy the contract and the issue folder into the new worktree** right after creating it — otherwise the owner starts with neither (git carries only tracked content). Both land git-ignored in the worktree (the `.gitignore` lines are committed), so the owner never commits them. `<slug>` is the issue slug you fill per dispatch; `$ISSUE_REL` is the issue folder's repo-relative path (e.g. `.specwright/milestones/<m-slug>/issues/<slug>`):
+     ```bash
+     if [ "$mode" = local ]; then
+       cp CLAUDE.local.md ".specwright/worktrees/<slug>/CLAUDE.local.md"
+       mkdir -p ".specwright/worktrees/<slug>/$(dirname "$ISSUE_REL")"
+       cp -R "$ISSUE_REL" ".specwright/worktrees/<slug>/$ISSUE_REL"
+     fi
+     ```
    - **Dispatch the `issue-owner` subagent** — it pins the owner's model + effort and preloads the `plan` skill. Its prompt is just the coordinates: the issue folder path, the milestone path, and the worktree path. The pipeline it runs (plan → self-review → implement → quality gate → runtime verification → PR → review to `lgtm` → curate `learnings.md` → flip `issue.md` status) and the return contract — `shipped` (+ PR URL + one line per learning) or `blocked` (+ a paste-ready Blockers block, **Why / Tried / Needs**, written by the owner for the board) — live in the agent definition, not this prompt.
    - Append `dispatched` to the board's Dispatch Log and commit — the per-append commit rule (Track, below) starts with this first append.
    - Keep the **agentId** from the spawn result — name aliases expire; address every resume or relay by that ID, never by name. Treat relays as one-way: read the owner's answers from repository artifacts, not from message replies.
 3. **Track** — as each owner returns, append the event to the Dispatch Log, and **commit the board after every Dispatch Log append** — not only at round close; an uncommitted line is lost to a crash. On `shipped`: note the learnings one-liners and PR URL. On `blocked`: paste the owner's paste-ready Blockers block (Why / Tried / Needs) into the board's Blockers section **unmodified** — the conductor never composes or restructures it. Owners flip their own `issue.md` status; the orchestrator never edits an `issue.md`.
+   - **In `local` mode, sync the returned owner's issue folder back into the canonical vault first** — this is how the owner's flipped `status:` and its `spec.md`/`tasks.md`/`learnings.md` reach the vault (git-ignored artifacts have no branch to carry them, and readiness reads the vault):
+     ```bash
+     if [ "$mode" = local ]; then
+       cp -R ".specwright/worktrees/<slug>/$ISSUE_REL/." "$ISSUE_REL/"
+     fi
+     ```
+     This is **transport, not authorship** — the orchestrator moves the owner's own files to the canonical location (git's stand-in) and never composes or edits their content, so the boundary above holds. Also in `local` mode the board is git-ignored, so the per-append **commit** is a no-op; the board persists by file write in the canonical vault (there is no branch to lose an uncommitted line to).
    - Completion notifications reach only the top-level session — never wait on them. Poll each dispatched owner's **observable state** (repository files, branches, commit and output timestamps) on a cadence of a few minutes; treat silence as still-running only until a state check says otherwise.
    - **Watchdog:** 10 minutes without observable progress from an owner → flag it and verify its state directly; a confirmed stall is resumed by its agentId or re-dispatched.
 4. **Re-evaluate** — newly shipped issues may make others ready (and their learnings now feed those issues' plans). Go to 1.
