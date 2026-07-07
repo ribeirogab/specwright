@@ -17,7 +17,7 @@ Detect the commit mode before locating anything, and set `mode` for the loop bel
 ```bash
 if git check-ignore -q .specwright/milestones; then
   mode=local
-  [ -d .specwright/milestones ] || { echo "local-mode vault not found in this checkout; run /sw:run from the checkout where you ran /sw:init local"; exit; }
+  [ -d .specwright/milestones ] || { echo "local-mode vault not found in this checkout; run /sw:run from the checkout where you ran /sw:init local"; exit 1; }
 else
   mode=shared
 fi
@@ -50,8 +50,8 @@ Repeat until no issue is ready and none is running:
      ```bash
      if [ "$mode" = local ]; then
        cp CLAUDE.local.md ".specwright/worktrees/<slug>/CLAUDE.local.md"
-       mkdir -p ".specwright/worktrees/<slug>/$(dirname "$ISSUE_REL")"
-       cp -R "$ISSUE_REL" ".specwright/worktrees/<slug>/$ISSUE_REL"
+       mkdir -p ".specwright/worktrees/<slug>/$ISSUE_REL"
+       cp -R "$ISSUE_REL/." ".specwright/worktrees/<slug>/$ISSUE_REL/"
      fi
      ```
    - **Dispatch the `issue-owner` subagent** — it pins the owner's model + effort and preloads the `plan` skill. Its prompt is just the coordinates: the issue folder path, the milestone path, and the worktree path. The pipeline it runs (plan → self-review → implement → quality gate → runtime verification → PR → review to `lgtm` → curate `learnings.md` → flip `issue.md` status) and the return contract — `shipped` (+ PR URL + one line per learning) or `blocked` (+ a paste-ready Blockers block, **Why / Tried / Needs**, written by the owner for the board) — live in the agent definition, not this prompt.
