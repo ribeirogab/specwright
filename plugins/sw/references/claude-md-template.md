@@ -2,7 +2,7 @@
 
 `CLAUDE.md` is the repo-root entry point Claude Code loads into every session. Load this reference when creating or repairing it.
 
-**Entry-point filename by mode.** In `shared` mode `/sw:init` writes this content to `CLAUDE.md` (committed). In `local` mode it writes the identical content to `CLAUDE.local.md` (git-ignored, auto-loaded by Claude Code) and never touches `CLAUDE.md`. The filling rules and the size cap below apply to whichever file the mode selected. One caveat specific to `local` mode: a git-ignored `CLAUDE.local.md` is not materialized inside the worktrees `/sw:run` creates (`git worktree add` carries only tracked content), so milestone conduction is not supported in `local` mode yet — the single-issue flow is.
+**Entry-point filename by mode.** In `shared` mode `/sw:init` writes this content to `CLAUDE.md` (committed). In `local` mode it writes the identical content to `CLAUDE.local.md` (git-ignored, auto-loaded by Claude Code) and never touches `CLAUDE.md`. The filling rules and the size cap below apply to whichever file the mode selected. One caveat specific to `local` mode: a git-ignored `CLAUDE.local.md` is not materialized inside the worktrees `/sw:run` creates (`git worktree add` carries only tracked content) — so `/sw:run`, conducted from the checkout where you ran `/sw:init local`, copies the contract and each issue folder into the worktree it dispatches an owner into and syncs the owner's folder back into the canonical vault on return.
 
 ## Filling rules
 

@@ -32,7 +32,7 @@ Open the repo you want specwright in and run:
 /sw:init
 ```
 
-This scaffolds the `.specwright/` vault (`conventions/`, `issues/`, `milestones/`) and writes an entry point stating the plugin requirement. It **asks a commit mode**: **shared** (default — a committed `CLAUDE.md` and committed vault) or **local** (a git-ignored `CLAUDE.local.md` and git-ignored vault, for using specwright inside a repo you don't own — only the `.gitignore` change is committed). It writes no machine configuration — no `.claude/settings.json` edits, no files copied from the plugin. `/sw:init` is idempotent — re-run it any time (it re-asks the mode); it fills in what is missing and leaves existing content untouched. Milestone conduction (`/sw:run`) needs `shared` mode.
+This scaffolds the `.specwright/` vault (`conventions/`, `issues/`, `milestones/`) and writes an entry point stating the plugin requirement. It **asks a commit mode**: **shared** (default — a committed `CLAUDE.md` and committed vault) or **local** (a git-ignored `CLAUDE.local.md` and git-ignored vault, for using specwright inside a repo you don't own — only the `.gitignore` change is committed). It writes no machine configuration — no `.claude/settings.json` edits, no files copied from the plugin. `/sw:init` is idempotent — re-run it any time (it re-asks the mode); it fills in what is missing and leaves existing content untouched. Milestone conduction (`/sw:run`) works in both modes — in `local` mode, run it from the checkout where you scaffolded the vault, and it copies the artifacts into each worktree it creates.
 
 **Source:** [`plugins/sw/`](plugins/sw/)
 
