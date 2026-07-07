@@ -97,10 +97,12 @@ created: 2026-07-06
 **Files:**
 - Modify: `plugins/sw/references/claude-md-template.md`
 - Modify: `plugins/sw/references/vault-files.md`
+- Modify: `README.md`
 
 - [ ] **Step 1: `claude-md-template.md`** — rewrite the local-mode worktree caveat to describe supported conduction (copy-in + sync-back), dropping "not supported yet".
 - [ ] **Step 2: `vault-files.md`** — update the local-mode note to describe supported conduction instead of the refusal.
-- [ ] **Step 3: Sweep `run/SKILL.md`** for any residual "not supported yet" wording left by Task 1 and fix it.
+- [ ] **Step 3: `README.md`** — the "Milestone conduction (`/sw:run`) needs `shared` mode" line (arrived from the merged #63) now describes both modes conducting.
+- [ ] **Step 4: Sweep `run/SKILL.md`** for any residual "not supported yet" wording left by Task 1 and fix it.
 - [ ] **Step 4: Commit** — `docs(references): local mode now supports milestone conduction`
 
 ## Phase 4: Verification
