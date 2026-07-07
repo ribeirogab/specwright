@@ -1,7 +1,7 @@
 ---
 feature: local-milestone-support
 created: 2026-07-06
-status: pending
+status: in-progress
 shipped: null
 ---
 # Local Milestone Support — Issue
