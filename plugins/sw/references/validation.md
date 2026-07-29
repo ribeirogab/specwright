@@ -1,118 +1,146 @@
-# Validation — Phase 5 Checklist
+# Validation — Project State
 
-Run this checklist after `/sw:init` scaffolds or repairs a repository. Confirms the per-repo content is structurally sound. Each check is a quick command with a clear pass/fail.
-
-Report results as a table. Any `FAIL` triggers an automatic fix attempt using the recipe under each check, then re-runs the validator. Every fix here is additive (create a missing directory/file, or append a missing line) — none is destructive, so no confirmation is needed before applying it.
-
-## Contents
-
-- [Output format](#output-format)
-- [Checks](#checks) — 6 numbered checks against the entry-point file (`CLAUDE.md`, or `CLAUDE.local.md` in local mode): placeholder sweep, required headers, size cap, plugin requirement, vault directories, .gitignore lines
-- [When everything passes](#when-everything-passes)
-- [When something fails](#when-something-fails)
+Run after `sw:init` or `sw:update`. Validation is evidence, not an independent
+repair engine: do not mutate managed state outside the updater.
 
 ## Output format
 
-```
-## Phase 5 — Validation
+```text
+## specwright Validation
 
 | # | Check | Status |
-|---|-------|--------|
-| 1 | entry point has no surviving placeholders | FAIL — line 14: "{{Project Name}}" |
+|---|---|---|
+| 1 | updater classification | PASS — up-to-date |
 | ... | ... | ... |
 
-### Result: 5/6 PASS — 1 FAIL needs attention
+Result: 8/8 PASS
 ```
 
 ## Checks
 
-The entry-point checks below target `$ENTRY` — the file `/sw:init` wrote for the repo's commit mode: `CLAUDE.local.md` in `local` mode, otherwise `CLAUDE.md`. Resolve it once, then run the checks:
+### 1. Read-only plan is stable
 
 ```bash
-ENTRY=CLAUDE.md
-[ -f CLAUDE.local.md ] && grep -q 'claude plugin install sw@specwright' CLAUDE.local.md && ENTRY=CLAUDE.local.md
+python3 "$SW_PLUGIN_ROOT/scripts/sw_update.py" \
+  --plan --project "$PWD" --mode "$MODE" --format json
 ```
 
-### 1. The entry-point file has no surviving `{{placeholders}}`
+Require `state: up-to-date`, zero operations, and no diagnostics. Run it twice and
+require the same `plan_id`. Any other state is a failure; do not auto-repair drift.
+
+### 2. Canonical instructions and managed digest are valid
+
+Resolve:
 
 ```bash
-grep -n '{{' "$ENTRY" && echo FAIL || echo PASS
-```
-
-FAIL means the scaffold left an unsubstituted placeholder. Fix: ask the user for the missing info and patch the lines reported.
-
-### 2. The entry-point file contains all required section headers
-
-```bash
-required=(
-  "## Workflow Spec Driven"
-  "## Coding standard"
-  "## Skills and slash commands"
-)
-missing=()
-for h in "${required[@]}"; do
-  grep -qF "$h" "$ENTRY" || missing+=("$h")
-done
-[ ${#missing[@]} -eq 0 ] && echo PASS || printf 'FAIL — missing: %s\n' "${missing[@]}"
-```
-
-Fix: read `references/claude-md-template.md` and insert the missing sections in the canonical order.
-
-### 3. The entry-point file is at most 80 lines
-
-The file is loaded into every agent session as the entry-point contract. Letting it grow past 80 lines crowds context and reintroduces the "encyclopedia" anti-pattern that the canonical authoring rules explicitly reject. Target range is 45–70 lines.
-
-```bash
-lines=$(wc -l < "$ENTRY" | tr -d ' ')
-[ "$lines" -le 80 ] && echo "PASS ($lines lines)" || echo "FAIL ($lines lines, cap 80)"
-```
-
-FAIL means the entry-point file exceeded the cap. Fix: trim the body per the guidance in `references/claude-md-template.md` (`## Size constraint`) — tighten body prose and replace any longer narrative with a one-line pointer into `.specwright/`. Never drop a required section header (check #2 enforces those).
-
-### 4. The entry-point file declares the `sw` plugin requirement
-
-```bash
-grep -q 'claude plugin install sw@specwright' "$ENTRY" && echo PASS || echo FAIL
-```
-
-FAIL means the mandatory-plugin line is missing — a repo opened without the plugin installed would have no way to self-diagnose why `/sw:*` commands are unavailable. Fix: append the plugin-requirement block from `references/claude-md-template.md` (`## Skills and slash commands`).
-
-### 5. The three vault directories exist
-
-```bash
-[ -f .specwright/conventions/README.md ] && echo "PASS: conventions/" || echo "FAIL: conventions/README.md missing"
-[ -f .specwright/issues/.gitkeep ] && echo "PASS: issues/" || echo "FAIL: issues/.gitkeep missing"
-[ -f .specwright/milestones/.gitkeep ] && echo "PASS: milestones/" || echo "FAIL: milestones/.gitkeep missing"
-```
-
-Fix: create the missing directory and its keep-file per `references/vault-files.md`. Never overwrite an existing `conventions/` directory's contents — only seed `README.md` when the directory is empty.
-
-### 6. `.gitignore` contains the required lines exactly once each
-
-```bash
-count=$(grep -cxF '.specwright/worktrees/' .gitignore 2>/dev/null || echo 0)
-[ "$count" -eq 1 ] && echo PASS || echo "FAIL ($count occurrences)"
-# local mode also git-ignores the vault and the entry point
-if [ "$ENTRY" = CLAUDE.local.md ]; then
-  for line in '.specwright/' 'CLAUDE.local.md'; do
-    c=$(grep -cxF "$line" .gitignore 2>/dev/null || echo 0)
-    [ "$c" -eq 1 ] && echo "PASS ($line)" || echo "FAIL ($line: $c occurrences)"
-  done
+if [ "$MODE" = local ]; then
+  CANONICAL=AGENTS.override.md
+  ADAPTER=CLAUDE.local.md
+else
+  CANONICAL=AGENTS.md
+  ADAPTER=CLAUDE.md
 fi
 ```
 
-FAIL means a required line is missing (0) or duplicated (2+). Fix: for 0, append the line; for 2+, de-duplicate down to one occurrence. The required set is `.specwright/worktrees/` in both modes, plus `.specwright/` and `CLAUDE.local.md` in `local` mode.
+The canonical path must be a regular file with exactly one opening
+`<!-- sw:managed version=... digest=... -->` marker and one
+`<!-- /sw:managed -->` marker. The updater's `up-to-date` classification proves
+that the digest matches the body and the installed version.
 
-## When everything passes
+Project-authored text outside the block has no required heading, size, or host
+installation phrase.
 
-Report:
+### 3. Claude adapter is the exact relative symlink
 
+```bash
+[ -L "$ADAPTER" ] || exit 1
+[ "$(readlink "$ADAPTER")" = "$CANONICAL" ] || exit 1
 ```
-## Phase 5 — Validation: 6/6 PASS
 
-specwright is structurally sound.
+A regular-file copy is a failure even when bytes match.
+
+### 4. Codex role profiles match installed templates
+
+```bash
+for name in \
+  sw-issue-owner \
+  sw-spec-document-reviewer \
+  sw-reviewer \
+  sw-task-worker
+do
+  cmp \
+    "$SW_PLUGIN_ROOT/templates/codex-agents/$name.toml" \
+    ".codex/agents/$name.toml"
+done
 ```
 
-## When something fails
+All four destinations must be regular files. Unrelated `.codex` content must be
+unchanged.
 
-Report each FAIL with the specific reason (file path, missing line, line count), then apply the fixes listed under each check above and re-run validation. Loop until clean. Only stop the loop when a check has no auto-repair recipe or the same fix has failed twice — in that case, surface the residual failure to the user with the exact reason.
+### 5. Ignore rules match the selected mode
+
+Shared mode requires exactly:
+
+```text
+.specwright/worktrees/
+```
+
+Local mode requires exactly:
+
+```text
+.specwright/worktrees/
+.specwright/
+AGENTS.override.md
+CLAUDE.local.md
+.codex/agents/sw-*.toml
+```
+
+Each required line occurs once. Preserve unrelated project rules. Local mode may
+coexist with project-owned shared instructions and must not alter them.
+
+### 6. Vault directories survive the selected mode
+
+```bash
+test -f .specwright/conventions/README.md
+test -f .specwright/issues/.gitkeep
+test -f .specwright/milestones/.gitkeep
+```
+
+The conventions signpost is created only when that directory was empty. Never
+overwrite existing conventions, issues, milestones, or their artifacts.
+
+### 7. Package surfaces remain host-equivalent
+
+From the plugin repository:
+
+```bash
+claude plugin validate --strict plugins/sw
+bash tests/install/run.sh package init
+bash tests/release/run.sh
+```
+
+The source and installed inventories contain the same nine shared skills, and all
+nine Claude command files remain pure redirects. Native Codex ingestion runs only
+in an isolated environment with `CI_EPHEMERAL_RUNNER=1`.
+
+### 8. Active task topology is schema 2
+
+For every active issue with `tasks.md`, run the issue validator. Require unique
+stable IDs, existing acyclic dependencies, mandatory metadata, explicit isolated
+file ownership and validation, and no same-wave overlap between independent
+isolated tasks.
+
+A shipped historical issue may retain legacy tasks as history. An active legacy
+task file is a blocking diagnostic and must be explicitly replanned; neither init
+nor update may infer its topology.
+
+## Failure handling
+
+- `new` or `legacy-migratable`: show the ordered plan and complete `plan_id`, then
+  ask for explicit apply confirmation.
+- `drifted`: show all diagnostics and stop without writes.
+- identity mismatch: produce a new read-only plan and obtain new confirmation.
+- unsupported symlink, invalid parent, or changed profile source: stop; there is
+  no copy or overwrite fallback.
+- vault-only missing keep-file: `sw:init` may create it without overwriting
+  existing vault content after managed state is accepted or already healthy.

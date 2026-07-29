@@ -1,66 +1,121 @@
 # Audit Checklist
 
-Full inventory of what `/sw:init` checks before scaffolding, and what a repair pass restores. `/sw:init` is content-only: it never installs or configures tooling — the plugin already provides every `/sw:*` command globally. This checklist covers only what a single repository still needs.
-
-## Contents
-
-- [Status meanings](#status-meanings)
-- [Files and directories to check](#files-and-directories-to-check)
-- [Entry-point drift detection (required headers + size cap)](#entry-point-drift-detection-required-headers--size-cap)
-- [Report format](#report-format)
+Inventory for `sw:init` and `sw:update`. Both hosts share the same per-repository
+state. The updater, not ad-hoc edits, decides whether managed state can be created
+or migrated.
 
 ## Status meanings
 
-For each item, check existence and content correctness. Report status as:
-- `OK` — exists and looks correct
-- `MISSING` — doesn't exist at all
-- `DRIFT` — exists but content has diverged from expected structure (e.g., `CLAUDE.md` missing a required section, or over the size cap)
+- `OK` — the observed state exactly matches the selected mode and installed
+  version.
+- `MISSING` — the project is new and the deterministic plan can create the item.
+- `LEGACY` — every legacy byte matches a recognized Claude-only installation and
+  can be migrated.
+- `DRIFT` — a managed path, digest, link, profile, mode, or ignore rule differs
+  from a recognized shape. Stop; do not overwrite it.
 
-## Files and directories to check
+## Read-only classification
 
+Resolve the installed plugin root and run:
+
+```bash
+python3 "$SW_PLUGIN_ROOT/scripts/sw_update.py" \
+  --plan \
+  --project "$PWD" \
+  --mode "<shared-or-local>" \
+  --format json
 ```
-.specwright/
-  .specwright/conventions/    (directory exists, contains README.md signpost — clone survival)
-  .specwright/issues/         (directory exists, contains .gitkeep — holds dated YYYY-MM-DD-<slug>/ issue folders)
-  .specwright/milestones/     (directory exists, contains .gitkeep — holds dated YYYY-MM-DD-<slug>/ milestone folders)
 
-CLAUDE.md                      (shared mode — repo root — self-contained issue flow + the sw plugin requirement, ≤ 80 lines)
-CLAUDE.local.md                (local mode — same content as CLAUDE.md, git-ignored instead of committed)
+The plan must report `state`, installed `version`, selected `mode`, diagnostics,
+ordered operations, and the complete `plan_id`. It performs no writes and never
+fetches or compares remote `main`.
 
-.gitignore                     (contains .specwright/worktrees/; local mode also contains .specwright/ and CLAUDE.local.md)
+Map states as follows:
+
+- `new` → `MISSING`;
+- `legacy-migratable` → `LEGACY`;
+- `up-to-date` → `OK`;
+- `drifted` → `DRIFT`.
+
+Only `new` and `legacy-migratable` may be applied, and only after explicit
+confirmation of the exact displayed `plan_id`. `up-to-date` needs no apply.
+`drifted` has no automatic repair.
+
+## Shared-mode inventory
+
+```text
+AGENTS.md                                  regular canonical file
+CLAUDE.md -> AGENTS.md                     relative symlink
+.codex/agents/sw-issue-owner.toml
+.codex/agents/sw-spec-document-reviewer.toml
+.codex/agents/sw-reviewer.toml
+.codex/agents/sw-task-worker.toml          byte-matched installed profiles
+.specwright/conventions/README.md          clone-survival signpost
+.specwright/issues/.gitkeep
+.specwright/milestones/.gitkeep
+.gitignore                                 exactly .specwright/worktrees/
 ```
 
-That is the complete list — the entry point is `CLAUDE.md` in shared mode or `CLAUDE.local.md` in local mode (never both), and local mode additionally lists `.specwright/` and `CLAUDE.local.md` in `.gitignore`. `/sw:init` writes no machine configuration and creates no per-agent discovery files or links of any kind — every `/sw:*` command is served by the globally installed `sw` plugin, so there is nothing else for a single repository to hold.
+The canonical file has exactly one bounded `sw:managed` block. Its opening marker
+contains the installed calendar version and SHA-256 digest of the exact block body.
+Project-owned text before and after the block is unconstrained and preserved.
 
-The artifact **templates** (`issue.md` / `spec.md` / `tasks.md` / `goal.md` / `board.md` blueprints) and the mechanical issue **validator** are **not** scaffolded into the target repo — they ship with the plugin under `plugins/sw/templates/` and `plugins/sw/scripts/validate-spec.sh`, available to every repo the plugin is installed in.
+## Local-mode inventory
 
-## Entry-point drift detection (required headers + size cap)
+```text
+AGENTS.override.md                         regular canonical file
+CLAUDE.local.md -> AGENTS.override.md      relative symlink
+.codex/agents/sw-*.toml                    four byte-matched profiles
+.specwright/                               same three vault directories
+.gitignore:
+  .specwright/worktrees/
+  .specwright/
+  AGENTS.override.md
+  CLAUDE.local.md
+  .codex/agents/sw-*.toml
+```
 
-The entry-point file — `CLAUDE.md` in shared mode, `CLAUDE.local.md` in local mode — must contain all of these section headers — missing any one is `DRIFT`:
+Existing project-owned `AGENTS.md`, `CLAUDE.md`, and unrelated `.codex` files may
+coexist in local mode and must remain byte-for-byte unchanged.
 
-- `## Workflow Spec Driven`
-- `## Coding standard`
-- `## Skills and slash commands`
+## Path and content checks
 
-The entry-point file must also state the `sw` plugin requirement — missing the phrase `claude plugin install sw@specwright` is `DRIFT`.
+For every audit:
 
-The entry-point file must also be **≤ 80 lines** (target range 45–70). The file is loaded into every agent session as the entry-point contract; growing past this cap crowds context and reintroduces the "encyclopedia" anti-pattern that the canonical authoring rules reject. If it exceeds 80 lines, status is `DRIFT` and the fix is to trim the body per the guidance in `references/claude-md-template.md` (`## Size constraint`) — never by dropping a required section header.
+1. Verify the canonical AGENTS path is a regular file, not a symlink.
+2. Verify the Claude adapter is a relative symlink to that exact canonical
+   filename.
+3. Verify one opening marker, one closing marker, and a valid body digest.
+4. Verify all four profile files are regular files and byte-match the installed
+   templates.
+5. Verify exact ignore membership without deleting unrelated project rules.
+6. Verify the vault keep-files without overwriting existing conventions or issue
+   content.
+7. Verify no opposite-mode managed state creates ambiguity.
+8. Re-run `--plan`; a healthy project is `up-to-date` with zero operations.
+
+Symlink probing is a required preflight. If the filesystem cannot create the
+relative link, report `DRIFT`/failure clearly; never substitute a copied file.
 
 ## Report format
 
-```
+```text
 ## specwright Audit
 
-| Status | Item |
-|--------|------|
-| OK     | CLAUDE.md |
-| MISSING| .specwright/conventions/ |
-| DRIFT  | CLAUDE.md (missing section: "## Coding standard") |
-| ...    | ... |
+State: up-to-date
+Version: YYYY.M.D
+Mode: shared
+Plan ID: <complete-plan-id>
 
-### Summary
-- X/Y items OK
-- N missing, M drifted
+| Status | Item | Detail |
+|---|---|---|
+| OK | AGENTS.md | managed digest valid; project text preserved |
+| OK | CLAUDE.md | relative symlink to AGENTS.md |
+| OK | .codex/agents/sw-*.toml | four installed profiles match |
+| OK | .specwright/ | three vault directories present |
+| OK | .gitignore | exact mode rules present once |
 ```
 
-After rendering this report, proceed directly to restoring any `MISSING` or `DRIFT` item — no mid-run confirmation needed, since every fix here is additive (create a missing directory or file, or append a missing line) and never destroys existing content. If everything passes, run Phase 5 validation (see `references/validation.md`) before reporting "specwright is healthy."
+For `DRIFT`, include every updater diagnostic and stop without writes. For an
+applicable plan, display every operation and request exact-plan confirmation
+before calling `--apply`.

@@ -470,6 +470,11 @@ The initial draft pull request contains only these planning artifacts and, when 
 - Modify: `plugins/sw/references/audit-checklist.md`
 - Modify: `plugins/sw/references/validation.md`
 - Modify: `plugins/sw/references/vault-files.md`
+- Modify: `plugins/sw/skills/brainstorm/SKILL.md`
+- Modify: `plugins/sw/skills/pr/SKILL.md`
+- Modify: `plugins/sw/skills/review/SKILL.md`
+- Modify: `plugins/sw/skills/run/SKILL.md`
+- Modify: `plugins/sw/skills/spec/SKILL.md`
 **Validation:** a documentation audit finds separate host install/invocation/update paths, canonical AGENTS/symlink modes, explicit permission boundaries, project profiles, local worktree propagation, schema-2 waves, and owner cherry-pick rules.
 
 - [ ] **Step 1: Update README installation docs** — describe each native marketplace and the host's exact install command.

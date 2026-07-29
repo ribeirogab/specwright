@@ -1,120 +1,222 @@
 # specwright
 
-`specwright` is a **Claude Code plugin** that gives any repository an explicit **issue-driven workflow** — every non-trivial change becomes an **issue** (1 issue = 1 branch = 1 PR) running through one pipeline: brainstorm → issue → spec + tasks → implement → quality gate → runtime verification → PR → review-to-`lgtm`. Large deliveries become **milestones**: a goal, a live board, and issues conducted in a loop by an orchestrator. Self-hosting.
+`specwright` (`sw`) is a dual-host plugin for Claude Code and Codex. It gives a
+repository one explicit, issue-driven engineering workflow:
 
----
+> brainstorm → issue → spec + tasks → implementation → integrated validation →
+> runtime verification → PR → review
+
+One issue owns one branch and one PR. Larger deliveries become milestones with a
+goal, a board, and multiple issues conducted by an orchestrator.
+
+The implementation of every workflow lives once under
+[`plugins/sw/skills/`](plugins/sw/skills/). Claude Code exposes thin `/sw:*`
+command adapters; Codex discovers the same skills as `$sw:*`.
 
 ## Install
 
-Install the plugin once, globally, from Claude Code:
+### Claude Code
 
 ```bash
-claude plugin marketplace add ribeirogab/specwright && claude plugin install sw@specwright
+claude plugin marketplace add ribeirogab/specwright
+claude plugin install sw@specwright
 ```
 
-Every `/sw:*` command is now available in any repository — nothing is copied onto disk for this step.
+Reload plugins or restart Claude Code after installation.
+
+### Codex
+
+```bash
+codex plugin marketplace add ribeirogab/specwright
+codex plugin add sw@specwright
+```
+
+Both hosts install the same package and the same nine skills.
+
+## Initialize a repository
+
+Run the host surface available in the current session:
+
+```text
+Claude Code: /sw:init
+Codex:       $sw:init
+```
+
+`sw:init` first asks for a mode and displays a read-only, deterministic plan.
+Only an explicit confirmation of that exact `plan_id` permits the apply step.
+Host permissions and sandbox approvals remain authoritative.
+
+- **shared** tracks `.specwright/`, `AGENTS.md`, the relative
+  `CLAUDE.md -> AGENTS.md` symlink, and four `.codex/agents/sw-*.toml` role
+  profiles. Only `.specwright/worktrees/` is ignored.
+- **local** keeps specwright state private in the checkout. It uses
+  `AGENTS.override.md`, the relative
+  `CLAUDE.local.md -> AGENTS.override.md` symlink, a local vault, and the same
+  four profiles. The vault, both local instruction paths, the `sw-*` profiles,
+  and worktrees are ignored.
+
+`AGENTS.md` or `AGENTS.override.md` is always the canonical instruction file.
+The corresponding `CLAUDE*.md` path is only a compatibility symlink. There is no
+regular-file fallback: a filesystem that cannot create symlinks is rejected
+before managed state is changed.
+
+Initialization never edits personal host configuration, installs plugins, copies
+skill implementations, or creates `.claude/settings.json`. It preserves
+project-authored instructions outside the versioned `sw:managed` block and
+unrelated `.codex` configuration.
 
 ## Update
 
-specwright pins no `version`, so every commit to the marketplace repo counts as a new release. To pull the latest, refresh the marketplace cache and re-install (`claude plugin install` is also the update path — there is no `claude plugin update`):
+Update the installed plugin with the native host mechanism first:
 
 ```bash
-claude plugin marketplace update specwright && claude plugin install sw@specwright
+# Claude Code
+claude plugin marketplace update specwright
+claude plugin install sw@specwright
+
+# Codex
+codex plugin marketplace upgrade specwright
+codex plugin add sw@specwright
 ```
 
-Then run `/reload-plugins` (or restart the session) for the new version to take effect. Updating the plugin never requires re-running `/sw:init` — that scaffolds a repo's `.specwright/` vault, not the commands.
+Then migrate each initialized repository:
 
-## Use
-
-Open the repo you want specwright in and run:
-
-```bash
-/sw:init
+```text
+Claude Code: /sw:update
+Codex:       $sw:update
 ```
 
-This scaffolds the `.specwright/` vault (`conventions/`, `issues/`, `milestones/`) and writes an entry point stating the plugin requirement. It **asks a commit mode**: **shared** (default — a committed `CLAUDE.md` and committed vault) or **local** (a git-ignored `CLAUDE.local.md` and git-ignored vault, for using specwright inside a repo you don't own — only the `.gitignore` change is committed). It writes no machine configuration — no `.claude/settings.json` edits, no files copied from the plugin. `/sw:init` is idempotent — re-run it any time (it re-asks the mode); it fills in what is missing and leaves existing content untouched. Milestone conduction (`/sw:run`) works in both modes — in `local` mode, run it from the checkout where you scaffolded the vault, and it copies the artifacts into each worktree it creates.
+`sw:update` reads the target version from the already installed Codex manifest.
+It never fetches or compares remote `main`. Its `--plan` phase is read-only and
+classifies the checkout as `new`, `legacy-migratable`, `up-to-date`, or
+`drifted`. For a migration, it shows every operation and the complete `plan_id`,
+requires explicit confirmation, then applies only that unchanged identity.
 
-**Source:** [`plugins/sw/`](plugins/sw/)
+The updater owns only:
 
-## What you get
+- the bounded, digest-protected `sw:managed` block in the canonical AGENTS file;
+- the relative Claude adapter symlink;
+- the four `.codex/agents/sw-*.toml` profiles; and
+- the exact specwright `.gitignore` rules for the selected mode.
 
-After running `/sw:init` the repo has:
+Project text outside the managed block is preserved byte-for-byte. Unexpected
+shapes, modified managed digests, plan identity changes, invalid profile sources,
+or unavailable symlinks fail noisily before apply; drift is never overwritten.
 
-- an **entry point** describing the issue-driven workflow (`CLAUDE.md` in shared mode, or a git-ignored `CLAUDE.local.md` in local mode),
-- a **`.specwright/` vault** holding `conventions/` (whatever standards the repo wants kept consistent — you fill it, `/sw:review` enforces it), `issues/` (dated standalone-issue folders), and `milestones/` (dated milestone folders), and
-- every **`/sw:*` command** below, already available from the globally installed plugin:
+## Command parity
 
-| Command | What it does |
-|---|---|
-| `/sw:init` | Scaffold or audit the `.specwright/` vault and the entry point (`CLAUDE.md`, or git-ignored `CLAUDE.local.md` in **local** mode) in the current repo. Asks a shared/local commit mode. Idempotent. |
-| `/sw:brainstorm` | Explore intent and design before any non-trivial change → an issue or a milestone. |
-| `/sw:spec` | Turn the current conversation into an issue and enter the flow. |
-| `/sw:plan` | The issue pipeline: just-in-time `spec.md` + `tasks.md`, gates, delivery. |
-| `/sw:run` | Conduct a milestone: dispatch every ready issue, track the board, close out. |
-| `/sw:review` | Review the branch diff with find-only subagents until `lgtm`. |
-| `/sw:review-spec` | External-evaluator pass over an issue's plan — flags vagueness, scope creep, drift. |
-| `/sw:pr` | Open the issue's PR — branch/base, push, PR template, Conventional-Commit title. |
+| Workflow | Claude Code | Codex | Purpose |
+|---|---|---|---|
+| Initialize | `/sw:init` | `$sw:init` | Plan and create dual-host project state. |
+| Brainstorm | `/sw:brainstorm` | `$sw:brainstorm` | Explore intent and approve a design. |
+| Specify | `/sw:spec` | `$sw:spec` | Turn the current design into an issue or milestone. |
+| Plan | `/sw:plan` | `$sw:plan` | Produce schema-2 tasks, implement, and validate an issue. |
+| Conduct | `/sw:run` | `$sw:run` | Dispatch ready milestone issues and maintain the board. |
+| Review | `/sw:review` | `$sw:review` | Review a branch diff with read-only specialist roles. |
+| Review spec | `/sw:review-spec` | `$sw:review-spec` | Evaluate an issue plan for clarity and conformance. |
+| Pull request | `/sw:pr` | `$sw:pr` | Push and open the issue PR using repository conventions. |
+| Update | `/sw:update` | `$sw:update` | Plan and apply a versioned project migration. |
 
-## How the flow works
+Natural-language requests can trigger the same Codex skills. Explicit `$sw:*`
+invocation is useful when the desired entry point should be unambiguous.
 
-Every non-trivial change runs through one pipeline. **Design approval is the only human review** — everything after it runs on its own; your other control points are merging the PRs and the circuit-breaker reports.
+## Project state after initialization
 
-```mermaid
-flowchart TD
-    A(["sw:brainstorm — explore + design"]) --> B{"Design approved?"}
-    B -- "no, revise" --> A
-    B -- yes --> C{"Scope: single issue or milestone?<br/>(agent suggests, you decide)"}
-    C -- "single issue" --> D["Batch: branch + worktree + handoff<br/>→ issues/YYYY-MM-DD-slug/issue.md"]
-    D --> E["sw:plan — just-in-time spec + tasks<br/>self-reviewed: spec-document-reviewer subagent +<br/>sw:review-spec + validate-spec.sh"]
-    E --> F["Implement → quality gate →<br/>runtime verification (run it for real;<br/>UI via browser or needs-human-verification)"]
-    F --> G(["sw:pr + sw:review to lgtm → shipped"])
-    C -- milestone --> H["Batch: worktree<br/>→ goal.md + board.md + N issue.md<br/>→ mandatory handoff, planning stops"]
-    H --> I["sw:run — the orchestrator loop:<br/>dispatch every ready issue to an owner<br/>(parallel, one worktree each) → each owner<br/>runs the pipeline → learnings feed later issues"]
-    I --> G
+```text
+.
+├── AGENTS.md                         # shared canonical instructions
+├── CLAUDE.md -> AGENTS.md            # shared Claude adapter
+├── .codex/agents/
+│   ├── sw-issue-owner.toml
+│   ├── sw-reviewer.toml
+│   ├── sw-spec-document-reviewer.toml
+│   └── sw-task-worker.toml
+└── .specwright/
+    ├── conventions/
+    ├── issues/
+    ├── milestones/
+    └── worktrees/                    # ignored worker/issue checkouts
 ```
 
-A few things worth knowing:
+Local mode substitutes `AGENTS.override.md` and
+`CLAUDE.local.md -> AGENTS.override.md`; all specwright-local state is ignored.
+Existing shared instructions may coexist and remain untouched.
 
-- **One human gate.** You approve the design — nothing else. The agent reviews its *own* plan (the spec-document-reviewer subagent + `/sw:review-spec` + the `validate-spec.sh` mechanical gate). Design approval is the standing consent to commit, push, open the PR, and review to `lgtm`.
-- **Issues everywhere.** The unit of work is one folder — `issue.md` (ticket + `AC-N` + `status:`), `spec.md`, `tasks.md`, optional `learnings.md`, plus any issue-specific artifacts (e.g. `findings.md`, `evidence/`) — identical standalone and inside milestones.
-- **Milestones run as a loop.** The orchestrator (`/sw:run`) never touches code: it dispatches issue owners, tracks the live `board.md`, carries curated learnings from shipped issues into later plans, and stops on circuit breakers (three identical failures → `blocked` + a report) instead of thrashing.
-- **Runtime verification.** Before any PR, the agent executes what it built and checks each `AC-N` by observed behavior — UI through a browser when the agent has one, otherwise the criterion is marked `needs-human-verification`, never faked.
-- **Worktree.** A specwright-native checkout under `.specwright/worktrees/` — default yes; mandatory for parallel milestone dispatch.
-- **Handoff.** Fresh context per phase: optional for a standalone issue, mandatory after milestone planning (the planning session never conducts — `/sw:run` resumes from the board in any new session).
+## Issue flow and worker integration
 
-## Customizing
+Design approval authorizes continuation of the specwright workflow, but it never
+overrides either host's file, command, Git, network, or external-action approval
+policy.
 
-The workflow ships with opinionated defaults — all plain markdown, so change them to fit your team.
+Each active `tasks.md` uses `tasks_schema: 2`. Every task has:
 
-Companion skills live in exactly **one copy** each, under `plugins/sw/skills/<name>/` — edit that file directly, no second copy to keep in sync. Each is `user-invocable: false` (hidden from the `/` menu) and fronted by a thin command at `plugins/sw/commands/<name>.md` that only reads and runs the skill; that pairing is what makes every entry point appear namespaced as `/sw:<name>` and never as a bare `/<name>`. The command is a pure redirect — behavior lives in the `SKILL.md`.
+- a stable `Tn` ID;
+- `Delegable`, `Depends on`, `Files`, `Integration`, and `Validation`;
+- explicit repository-relative ownership for `Integration: isolated`; and
+- valid, acyclic dependencies.
 
-- **PR conventions (`/sw:pr`)** — title/body format, the draft-vs-ready choice, labels, the PR-template fill, push behavior all live in the `sw-pr` `SKILL.md`. Edit it to change how PRs are opened (e.g. write the body in another language, change the default base branch, or add labels).
-- **Review rules (`/sw:review`)** — there are two levers. (1) **Project conventions** the reviewer reads: your installed repo's `.specwright/conventions/` — edit those to change the project-specific standard. (2) **The universal rubric** — the embedded rubric and severity classes (`blocker`/`suggestion`/`nitpick`/`question`), the blocker calibration, and the output format — live in the `sw-review` `SKILL.md` (Unix philosophy + meaningful comments + security are baked in).
-- **Orchestration (`/sw:run`)** — the dispatch rules, circuit-breaker thresholds, and closeout behavior live in the `sw-run` `SKILL.md`; the board/goal/issue shapes live in `plugins/sw/templates/`.
-- **Per-role model + effort (`plugins/sw/agents/`)** — each dispatched role (`issue-owner`, `task-worker`, `spec-document-reviewer`, `reviewer`) is a bundled subagent whose `model` and `effort` are pinned in its frontmatter. Edit `plugins/sw/agents/<role>.md` to run a role on a different model or reasoning effort — cheaper implementation, higher-effort review. The two chat-session roles — the milestone orchestrator and the single-issue owner — inherit your session's model/effort.
-- **The issue-flow steps** — the flow is documented in this repo's own `CLAUDE.md` under `### Issue flow`. To change the steps for an already-installed repo, edit that block directly. To change what `/sw:init` generates for a repo with no existing `CLAUDE.md`, edit `### Issue flow` in `plugins/sw/references/claude-md-template.md` (keep the two consistent) — note that `/sw:init` never rewrites an existing `CLAUDE.md`'s issue-flow section; it only appends a short plugin-requirement block when one is missing.
+The validator rejects missing metadata, unknown dependencies, cycles, and file
+overlap between independent isolated tasks in the same dependency wave. Historical
+shipped issues remain valid records; an active legacy task file must be explicitly
+replanned because the updater cannot infer ownership or dependencies safely.
+
+An **issue owner** is the sole editor and integrator of the issue branch,
+issue artifacts, learnings, and PR. It forms a **wave** from currently ready,
+pairwise non-overlapping isolated tasks. Every worker receives a branch at the
+wave's exact issue HEAD and a sibling worktree under `.specwright/worktrees/`.
+
+A **task worker** may edit only its declared files in its own branch/worktree. It
+does not edit issue artifacts, create a PR, integrate branches, or write learnings.
+It returns its base SHA, ordered commit SHAs, validations, touched files, and
+discoveries. The owner verifies ancestry and scope, reviews the diff, and
+cherry-picks accepted commits. Mechanical conflicts may be resolved by the owner;
+semantic conflicts, ownership overlap, and scope changes require rejection and
+replanning. Integrated validation after every wave gates dependent tasks.
+
+Worker worktrees are retained for inspection and are never removed automatically.
+
+In local mode, `sw:run` copies the canonical local instructions, their Claude
+symlink, the project-installed `sw-*` Codex profiles, and the issue folder into an
+issue worktree. On return it copies back only the issue folder; instructions and
+profiles remain conductor-owned state.
 
 ## Repository layout
 
-```
+```text
 specwright/
-├── plugins/sw/              # Claude Code plugin — /sw:* commands, companion skills, agents, templates, validator, references
-├── .claude-plugin/          # marketplace manifest
-├── tests/                   # install smoke tests
-├── LICENSE                  # MIT
-├── NOTICE.md                # attribution for the two vendored Apache-2.0 scripts
-├── CONTRIBUTING.md
-├── CODE_OF_CONDUCT.md
-├── SECURITY.md
-└── README.md
+├── .agents/plugins/                 # Codex marketplace
+├── .claude-plugin/                  # Claude marketplace
+├── plugins/sw/
+│   ├── .claude-plugin/              # Claude package manifest
+│   ├── .codex-plugin/               # Codex package manifest + calendar version
+│   ├── agents/                      # Claude role adapters
+│   ├── commands/                    # thin Claude redirects
+│   ├── skills/                      # single workflow implementation
+│   ├── templates/                   # issue and Codex role templates
+│   ├── scripts/                     # validators and deterministic updater
+│   └── references/
+├── tests/
+└── .specwright/                     # dogfooded project vault
 ```
 
-The repository also contains `CLAUDE.md`, `.claude/`, and `.specwright/` — files and dirs used to dogfood specwright on its own development (the entry-point contract and the maintainer's spec vault). They are not something `/sw:init` puts in your repo automatically; running `/sw:init` there produces the equivalent for your own project.
+## Customize and contribute
+
+Project-specific review rules belong in `.specwright/conventions/`. Shared
+workflow behavior belongs in the relevant `plugins/sw/skills/<name>/SKILL.md`;
+do not add host-specific behavior to a command redirect. Claude role manifests
+and Codex TOML templates use the same role names:
+
+| Role | Codex model/effort | Sandbox |
+|---|---|---|
+| `sw-issue-owner` | `gpt-5.6`, high | workspace write |
+| `sw-spec-document-reviewer` | `gpt-5.6`, high | read-only |
+| `sw-reviewer` | `gpt-5.6`, high | read-only |
+| `sw-task-worker` | `gpt-5.6-terra`, medium | workspace write |
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the validation matrix and release
+gates. Security reports follow [`SECURITY.md`](SECURITY.md).
 
 ## License
 
-This repository's original work is licensed under the [MIT License](LICENSE). The two vendored scripts under `plugins/sw/scripts/` (`quick_validate.py`, `package_skill.py`) are Apache-2.0; see [`NOTICE.md`](NOTICE.md) for attribution.
-
-## Contributing
-
-Pull requests welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md) for scope, the quality bar, and the per-PR checklist. By participating, you agree to the [Code of Conduct](CODE_OF_CONDUCT.md). Security concerns go to [`SECURITY.md`](SECURITY.md).
+Original work is licensed under the [MIT License](LICENSE). Vendored Apache-2.0
+scripts are documented in [`NOTICE.md`](NOTICE.md).

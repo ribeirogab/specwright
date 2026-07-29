@@ -89,7 +89,7 @@ When worktree = no, create the branch in place: `git checkout -b <branch>`.
 
 **Artifact:** write `.specwright/issues/YYYY-MM-DD-<slug>/issue.md` from the bundled template (`plugins/sw/templates/issue.md`): Purpose, Motivation, Non-Goals, numbered `AC-N` acceptance criteria, frontmatter `status: pending`. This is the durable record of the approved design — not a second review gate. Run the mechanical validator on the issue folder before committing — same run and baseline as milestone tickets (see Milestone — batch and artifacts). Commit it.
 
-**Next:** handoff = yes → print a ```txt``` handoff (one-paragraph summary + the issue path; first line `cd .specwright/worktrees/<slug>` when one was created) and stop — the user resumes in a fresh context. Handoff = no → invoke the plan skill now. Approval of the design is the standing consent to commit, push the feature branch, open the PR, and run review to `lgtm` — the pipeline runs to the end without further asks.
+**Next:** handoff = yes → print a ```txt``` handoff (one-paragraph summary + the issue path; first line `cd .specwright/worktrees/<slug>` when one was created) and stop — the user resumes in a fresh context. Handoff = no → invoke the plan skill now. Approval of the design authorizes the specwright workflow to continue through delivery without another design review. It never overrides the current host's permission, sandbox, Git, network, credential, or external-action approval policy; obtain every approval that policy requires.
 
 ## Milestone — batch and artifacts
 

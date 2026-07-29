@@ -2,39 +2,90 @@
 
 ## Reporting a vulnerability
 
-If you find a security issue in specwright or its bundled companions, please report it privately by emailing **gblosr@gmail.com**. Do not open a public issue or pull request that describes the vulnerability — that exposes other users before a fix is available.
+Report security issues privately to **gblosr@gmail.com**. Do not publish a
+vulnerability in an issue or pull request before a coordinated fix is available.
 
-When reporting, please include:
+Include the affected component, concrete reproduction, host and version, operating
+system, impact, and any suggested mitigation.
 
-- The affected component (the `sw` skill, a bundled companion, or a script).
-- A concrete description of the issue and how to reproduce it.
-- The agent and version you observed it on (Claude Code, Codex, Cursor, OpenCode, etc.) and the operating system.
-- Any suggested mitigation, if you have one.
-
-## Response expectation
-
-This repository is maintained on a **best-effort** basis by a single maintainer, with **no SLA**. Reports will be acknowledged when the maintainer is available; high-impact issues are prioritized over lower-impact ones. There is no guarantee of a fix within any specific timeframe.
-
-If a report goes unanswered for more than two weeks, a polite follow-up email is welcome. If the issue is urgent and you don't hear back, you may publish your findings after that follow-up — please coordinate with the maintainer first whenever possible.
+This repository is maintained by one person on a best-effort basis with no SLA.
+High-impact reports are prioritized. A polite follow-up after two weeks is
+welcome.
 
 ## Scope
 
 In scope:
 
-- The `sw` plugin under [`plugins/sw/`](plugins/sw/) — the published surface, including its bundled companion skills, templates, validator, and reference docs.
-- Vendored third-party content inside a published skill **only when** the issue is specific to how this repository ships or wraps it. Issues in upstream content should be reported to the upstream project — see [`NOTICE.md`](NOTICE.md) for source URLs.
+- both plugin manifests and marketplace catalogs;
+- shared skills and Claude command adapters;
+- project templates, role manifests/profiles, validators, and updater;
+- init/update behavior affecting `AGENTS*.md`, `CLAUDE*.md`,
+  `.codex/agents/sw-*.toml`, `.gitignore`, or `.specwright/`;
+- issue-owner/task-worker branch and worktree isolation; and
+- release tests that claim a host recognizes the package.
 
 Out of scope:
 
-- The `.claude/` and `.specwright/` directories — maintainer-local content (dogfooded specwright output). Not part of the published plugin surface.
-- Vulnerabilities in any agent runtime (Claude Code, Codex, Cursor, etc.), the underlying model APIs, or any third-party service. Report those to the corresponding vendor.
+- vulnerabilities in Claude Code, Codex, Git, the operating system, model APIs,
+  or unrelated third-party services;
+- personal host configuration not written by specwright; and
+- upstream vendored-code vulnerabilities unrelated to this repository's wrapper
+  or distribution.
 
 ## Threat model
 
-specwright and its bundled companions are markdown instructions loaded by an agent (Claude Code, Codex, Cursor, OpenCode, or any other tool that supports the open agent skills standard), occasionally with small bundled scripts (Python, bash). The skills do not process untrusted user input as part of their normal operation; they receive instructions from the user invoking the skill in their own agent session. The most realistic risks are:
+specwright is an instruction-driven plugin with standard-library Python and shell
+helpers. It can guide agents that have repository write, Git, and external-service
+capabilities, so the main trust boundaries are host permissions, managed project
+state, filesystem paths, and worker integration.
 
-- A skill that prompts the agent to execute a destructive action without surfacing it to the user first.
-- A bundled script with a path-traversal, command-injection, or credential-leak bug.
-- A vendored upstream piece carrying a known issue that this repository did not patch.
+### Host authority
 
-Reports along any of those lines are welcome and will be handled with care.
+Design approval and specwright plan confirmation do not bypass host sandbox,
+command, Git, network, credential, or external-action approval policy. A skill
+that implies broader authority than the host granted is a security defect.
+
+### Project migration
+
+The updater treats the installed Codex manifest as the target version and performs
+no network access or remote-branch lookup. A read-only plan includes observed
+state, ordered operations, and a deterministic `plan_id`; apply requires that
+exact identity.
+
+The managed AGENTS block carries a SHA-256 digest. Text outside it belongs to the
+project and must be preserved. Unexpected file kinds, modified digests, stale
+plan identity, invalid template sources, unsafe parent paths, or an unsupported
+symlink operation must fail before managed writes. There is no regular-file
+fallback for Claude adapters.
+
+Profile files are project configuration and may grant write capability to an
+agent. Their names, models, reasoning effort, and sandbox mode are therefore part
+of the reviewed security surface. The two reviewer roles must remain read-only;
+owner and worker write roles remain constrained by their protocol and host policy.
+
+### Worker isolation
+
+The issue owner records the exact base SHA, declared paths, and validation command
+before dispatch. A returned worker branch is untrusted integration input until the
+owner verifies ancestry, commit order, touched paths, and the full diff. Workers
+must never write issue artifacts, integrate branches, create PRs, or alter files
+outside their assignment.
+
+Mechanical conflicts may be resolved and revalidated by the owner. Semantic
+conflicts, scope changes, or ownership overlap require rejection and replanning.
+Path traversal, symlink escape, common-Git-root confusion, or accepting commits
+outside the recorded base are security defects.
+
+### Package recognition
+
+Structural checks alone do not prove that a host can ingest the package. Release
+CI uses the native Claude strict validator and a disposable Codex marketplace and
+plugin home. Positive installation and negative manifest/skill fixtures must fail
+the release if either host no longer recognizes the expected package.
+
+### Credentials and destructive actions
+
+Skills and scripts must not print credentials, copy personal host settings, or
+silently perform destructive actions. Temporary test state must be isolated from
+maintainer configuration. Reports about command injection, path traversal,
+credential disclosure, unsafe overwrite, or permission escalation are welcome.
