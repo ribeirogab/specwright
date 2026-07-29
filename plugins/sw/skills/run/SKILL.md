@@ -24,7 +24,7 @@ fi
 ```
 
 - **`shared`** → conduct as normal; git carries the artifacts across worktrees.
-- **`local`** → the vault and `CLAUDE.local.md` are git-ignored, so `git worktree add` cannot carry them into an owner's worktree and git cannot sync an owner's artifacts back. specwright bridges that with an explicit file copy in and out (the loop's local-mode branches below); because the `.gitignore` lines are committed in `local` mode, every copied artifact lands git-ignored in the worktree, so an owner never commits it.
+- **`local`** → the vault, `AGENTS.override.md`, its `CLAUDE.local.md` adapter, and the `sw-*` Codex role profiles are git-ignored, so `git worktree add` cannot carry them into an owner's worktree and git cannot sync an owner's artifacts back. specwright bridges the owner contract and issue folder with an explicit copy in, then transports only the issue folder back out (the loop's local-mode branches below); because the `.gitignore` lines are committed in `local` mode, every copied artifact lands git-ignored in the worktree, so an owner never commits it.
   - The `git check-ignore` probe reports `local` from **any** worktree (the `.gitignore` is committed and present in every checkout). The separate `[ -d .specwright/milestones ]` test asks whether *this* checkout actually holds the vault — in `local` mode the vault lives only where `/sw:init local` ran.
   - **Vault absent here** → **stop** with the message above and dispatch nothing: an externally-created worktree (e.g. one under `.claude/worktrees/`) is not the conductor's home.
   - **Vault present** → this checkout is the **canonical vault**; conduct with the loop's local-mode adaptations.
@@ -46,10 +46,14 @@ Repeat until no issue is ready and none is running:
      ```bash
      git worktree add .specwright/worktrees/<slug> -b <branch>
      ```
-   - **In `local` mode, copy the contract and the issue folder into the new worktree** right after creating it — otherwise the owner starts with neither (git carries only tracked content). Both land git-ignored in the worktree (the `.gitignore` lines are committed), so the owner never commits them. `<slug>` is the issue slug you fill per dispatch; `$ISSUE_REL` is the issue folder's repo-relative path (e.g. `.specwright/milestones/<m-slug>/issues/<slug>`):
+   - **In `local` mode, copy the dual-host contract and issue folder into the new worktree** right after creating it — otherwise the owner starts without its instructions, Claude adapter, Codex role profiles, or issue (git carries only tracked content). All copied paths land git-ignored in the worktree (the `.gitignore` lines are committed), so the owner never commits them. `<slug>` is the issue slug you fill per dispatch; `$ISSUE_REL` is the issue folder's repo-relative path (e.g. `.specwright/milestones/<m-slug>/issues/<slug>`):
      ```bash
      if [ "$mode" = local ]; then
-       cp CLAUDE.local.md ".specwright/worktrees/<slug>/CLAUDE.local.md"
+       WORKTREE=".specwright/worktrees/<slug>"
+       cp AGENTS.override.md "$WORKTREE/AGENTS.override.md"
+       ln -s AGENTS.override.md "$WORKTREE/CLAUDE.local.md"
+       mkdir -p "$WORKTREE/.codex/agents"
+       cp .codex/agents/sw-*.toml "$WORKTREE/.codex/agents/"
        mkdir -p ".specwright/worktrees/<slug>/$ISSUE_REL"
        cp -R "$ISSUE_REL/." ".specwright/worktrees/<slug>/$ISSUE_REL/"
      fi
@@ -58,7 +62,7 @@ Repeat until no issue is ready and none is running:
    - Append `dispatched` to the board's Dispatch Log and commit — the per-append commit rule (Track, below) starts with this first append.
    - Keep the **agentId** from the spawn result — name aliases expire; address every resume or relay by that ID, never by name. Treat relays as one-way: read the owner's answers from repository artifacts, not from message replies.
 3. **Track** — as each owner returns, append the event to the Dispatch Log, and **commit the board after every Dispatch Log append** — not only at round close; an uncommitted line is lost to a crash. On `shipped`: note the learnings one-liners and PR URL. On `blocked`: paste the owner's paste-ready Blockers block (Why / Tried / Needs) into the board's Blockers section **unmodified** — the conductor never composes or restructures it. Owners flip their own `issue.md` status; the orchestrator never edits an `issue.md`.
-   - **In `local` mode, sync the returned owner's issue folder back into the canonical vault first** — this is how the owner's flipped `status:` and its `spec.md`/`tasks.md`/`learnings.md` reach the vault (git-ignored artifacts have no branch to carry them, and readiness reads the vault):
+   - **In `local` mode, sync only the returned owner's issue folder back into the canonical vault first** — this is how the owner's flipped `status:` and its `spec.md`/`tasks.md`/`learnings.md` reach the vault (git-ignored artifacts have no branch to carry them, and readiness reads the vault). Never sync instructions or Codex profiles back: they are canonical conductor state, not owner output.
      ```bash
      if [ "$mode" = local ]; then
        cp -R ".specwright/worktrees/<slug>/$ISSUE_REL/." "$ISSUE_REL/"
