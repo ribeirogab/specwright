@@ -1,12 +1,14 @@
-This draft defines the delivery contract for native Claude Code and Codex parity with owner-controlled worker integration.
-
-- Defines one shared nine-skill implementation with native adapters for both hosts.
-- Specifies versioned AGENTS migrations, project-scoped Codex roles, and symlink-only Claude compatibility.
-- Defines validated task waves and issue-owner cherry-pick integration for isolated workers.
-
 ## Summary
 
-This is an artifacts-only draft: implementation has intentionally not started. The approved design requires full first-release parity, an unpadded calendar SemVer from the Codex manifest, deterministic plan identities for project migration, and the issue owner as the sole integrator of worker commits.
+Adds first-class Claude Code and Codex packaging around one shared nine-skill implementation, a confirmed-plan project migrator, and owner-controlled integration for isolated task workers.
+
+- Adds native manifests and local marketplaces for both hosts, with the Codex manifest as the calendar-version source.
+- Makes `AGENTS.md` canonical, keeps Claude entry points as relative symlinks, and installs four project-scoped Codex role profiles.
+- Adds deterministic `sw:update` planning and guarded application for new, current, legacy, and drifted projects.
+- Adds schema-2 task topology validation and an issue-owner protocol for dependency waves, isolated worktrees, reviewed commit SHAs, and cherry-pick integration.
+- Dogfoods the dual-host contract in this repository.
+
+## Issue
 
 - [issue](https://github.com/ribeirogab/specwright/blob/feat/dual-host-safe-worker-orchestration/.specwright/issues/2026-07-28-dual-host-safe-worker-orchestration/issue.md)
 - [spec](https://github.com/ribeirogab/specwright/blob/feat/dual-host-safe-worker-orchestration/.specwright/issues/2026-07-28-dual-host-safe-worker-orchestration/spec.md)
@@ -14,29 +16,36 @@ This is an artifacts-only draft: implementation has intentionally not started. T
 
 ## Test plan
 
-- [ ] Not applicable yet — no skill implementation is modified in this draft.
-- [ ] Not applicable yet — end-to-end host behavior is deferred to the implementation tasks.
-- [x] Visually confirmed the rendered issue, spec, tasks, dependency metadata, and PR record.
-
-## Planning gates
-
-- Mechanical validator: PASS.
-- Author review: PASS — AC-1 through AC-12 are covered, no placeholders or unresolved questions remain, and the dependency graph is acyclic.
-- Spec-document reviewer: three iterations completed. The final iteration identified only a literal inline-ownership marker mismatch; it was corrected to exact `- None`. No fourth dispatch was made because the skill caps independent review at three iterations.
-- External issue/conventions review: PASS — required sections, scope discipline, concrete criteria, and project conventions are satisfied.
+- [x] `bash tests/install/run.sh`
+- [x] `bash tests/release/run.sh`
+- [x] `CI_EPHEMERAL_RUNNER=1 bash tests/release/run.sh`
+- [x] `python3 tests/update/test_plan.py` — 28 tests
+- [x] `python3 tests/task-topology/test_parser.py` — 10 tests
+- [x] `python3 tests/worktrees/test_local_copy.py`
+- [x] `bash plugins/sw/scripts/validate-spec.sh .specwright/issues/2026-07-28-dual-host-safe-worker-orchestration`
+- [x] `quick_validate.py` and `package_skill.py` for all nine skills in an offline PyYAML environment
+- [x] `claude plugin validate --strict plugins/sw`
+- [x] `bash -n`, `shellcheck`, `actionlint`, JSON parsing, TOML parsing, symlink checks, updater idempotence, and `git diff --check`
 
 ## Runtime verification
 
-AC-1 through AC-12 are not yet runtime-verified because this draft intentionally contains no implementation. Their exact fixture and host-native verification commands are defined in `tasks.md`.
+- **AC-1 — verified:** strict Claude validation exited 0; the ephemeral Codex smoke installed the local marketplace and package and discovered the expected inventory through native Codex commands.
+- **AC-2 — verified:** the install suite found exactly nine shared skills and nine homonymous thin Claude redirects; the native Codex resolver returned the same inventory.
+- **AC-3 — verified:** manifest assertions accepted `2026.7.28` and `./skills/`; updater tests rejected zero-padded, malformed, and impossible calendar versions.
+- **AC-4 — verified:** planner tests observed all four states, stable JSON and plan identities, read-only planning, identity mismatch rejection, and manifest-derived versions. Repository search found no remote fetch or `main` lookup in the updater.
+- **AC-5 — verified:** shared and local legacy fixtures migrated to canonical AGENTS files, relative Claude symlinks, and four matching profiles; drift, edited profiles, identity mismatch, and unsupported symlinks exited non-zero without preflight writes.
+- **AC-6 — verified:** shared and local initialization fixtures produced the correct canonical files, symlinks, profiles, and exact ignore rules while preserving unrelated `.codex/project.toml`.
+- **AC-7 — verified:** host-role assertions found the same four `sw-*` identities, required models and reasoning efforts, two read-only reviewers, and two workspace-write implementers.
+- **AC-8 — verified:** `test_local_copy.py` created a real temporary Git worktree and observed the local AGENTS file, relative Claude symlink, issue vault, and all profiles as present and ignored.
+- **AC-9 — verified:** the schema-2 parser and sixth validator check accepted valid and shipped-legacy fixtures and rejected missing dependencies, cycles, same-wave file collisions, and active legacy tasks.
+- **AC-10 — verified:** protocol assertions and the installed owner/worker profiles require exact issue-HEAD bases, repository-contained worktrees, declared-file diffs, ordered SHAs, owner-only cherry-picks, integrated wave validation, and replanning for semantic conflicts or scope changes.
+- **AC-11 — verified:** installation and release suites exercised both positive host paths and negative missing-manifest, missing-skill, and malformed-skill packages through native host validators.
+- **AC-12 — verified:** live documentation, templates, audit references, GitHub contribution templates, and dogfooded `AGENTS.md` describe both host surfaces, confirmed updates, symlinks, worker waves, cherry-pick integration, and host permission authority.
 
 ## Checklist
 
 - [x] Branch name is descriptive and not `main`.
-- [x] `NOTICE.md` is unchanged because no vendored content is added or modified.
-- [ ] Maintainer dogfood exception — this planning-only draft intentionally adds one issue folder under `.specwright/`.
+- [x] `NOTICE.md` records the approved local validator compatibility change.
 - [x] Commit messages follow Conventional Commits style.
-- [x] No AI-attribution footers appear in commits or this description.
-
-## Notes for the reviewer
-
-Implementation is intentionally pending. Review should focus on the approved scope, acceptance criteria, task ownership/dependencies, updater safety contract, host parity, and worker authority boundaries.
+- [x] No attribution footers appear in commits or this description.
+- [x] The pull request remains draft for maintainer review.
