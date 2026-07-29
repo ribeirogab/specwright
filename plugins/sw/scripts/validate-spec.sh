@@ -165,7 +165,7 @@ EOF
 fi
 
 # --- Check 6: task topology, ownership, and legacy policy ------------------
-if [ -f "$issue" ]; then
+if [ -f "$issue" ] && [ -f "$tasks" ]; then
   topology_status=0
   topology_output=$(python3 "$script_dir/validate_task_topology.py" --issue "$issue" "$tasks" 2>&1) || topology_status=$?
   if [ "$topology_status" -ne 0 ]; then

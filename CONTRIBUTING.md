@@ -39,8 +39,12 @@ are out of scope.
 Run the authoring checks for every modified skill:
 
 ```bash
-python3 plugins/sw/scripts/quick_validate.py plugins/sw/skills/<skill>
-python3 plugins/sw/scripts/package_skill.py plugins/sw/skills/<skill> /tmp
+UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
+  python3 plugins/sw/scripts/quick_validate.py plugins/sw/skills/<skill>
+UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
+  python3 plugins/sw/scripts/package_skill.py plugins/sw/skills/<skill> /tmp
+UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
+  python3 tests/skills/test_validation.py
 ```
 
 Then validate both package structures and the complete install/update matrix:
@@ -48,7 +52,7 @@ Then validate both package structures and the complete install/update matrix:
 ```bash
 claude plugin validate --strict plugins/sw
 bash tests/install/run.sh package init
-bash tests/install/run.sh update worktree
+bash tests/install/run.sh update worktree topology
 python3 tests/update/test_plan.py
 python3 tests/worktrees/test_local_copy.py
 python3 tests/task-topology/test_parser.py
@@ -81,9 +85,10 @@ CI_EPHEMERAL_RUNNER=1 bash tests/release/run.sh
 ```
 
 CI installs the pinned host CLIs, adds a temporary Codex marketplace, installs
-`sw@specwright`, checks the installed nine-skill inventory, and exercises negative
-fixtures for missing Claude/Codex manifests and a missing required skill. A host
-that cannot recognize the package blocks release.
+`sw@specwright`, checks the installed nine-skill inventory and profile models
+against the native Codex catalog, and exercises negative fixtures for missing
+Claude/Codex manifests and a missing or malformed required skill. A host that
+cannot recognize the package blocks release.
 
 ## Updater fixtures
 

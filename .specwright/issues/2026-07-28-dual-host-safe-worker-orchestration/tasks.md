@@ -115,9 +115,9 @@ The initial draft pull request contains only these planning artifacts and, when 
 - Modify: `plugins/sw/agents/task-worker.md`
 **Validation:** Python `tomllib` parses four files; an assertion compares exact role names, models, reasoning efforts, and read-only/write sandboxes across host manifests.
 
-- [ ] **Step 1: Create `sw-issue-owner.toml`** — set stable name, role description, `gpt-5.6`, high reasoning, workspace-write sandbox, and owner instructions.
-- [ ] **Step 2: Create `sw-spec-document-reviewer.toml`** — set `gpt-5.6`, high reasoning, read-only sandbox, and plan-document review instructions.
-- [ ] **Step 3: Create `sw-reviewer.toml`** — set `gpt-5.6`, high reasoning, read-only sandbox, and find-only code review instructions.
+- [ ] **Step 1: Create `sw-issue-owner.toml`** — set stable name, role description, `gpt-5.6-sol`, high reasoning, workspace-write sandbox, and owner instructions.
+- [ ] **Step 2: Create `sw-spec-document-reviewer.toml`** — set `gpt-5.6-sol`, high reasoning, read-only sandbox, and plan-document review instructions.
+- [ ] **Step 3: Create `sw-reviewer.toml`** — set `gpt-5.6-sol`, high reasoning, read-only sandbox, and find-only review instructions.
 - [ ] **Step 4: Create `sw-task-worker.toml`** — set `gpt-5.6-terra`, medium reasoning, workspace-write sandbox, and isolated-task instructions.
 - [ ] **Step 5: Align Claude manifest names** — use the same four `sw-*` identities and preserve Claude-native model fields.
 - [ ] **Step 6: Parse TOML**
@@ -198,6 +198,10 @@ The initial draft pull request contains only these planning artifacts and, when 
 - Create: `tests/update/fixtures/legacy-shared/CLAUDE.md`
 - Create: `tests/update/fixtures/legacy-local/CLAUDE.local.md`
 - Create: `tests/update/fixtures/up-to-date/AGENTS.md`
+- Create: `tests/update/fixtures/profiles/2026.7.27/sw-issue-owner.toml`
+- Create: `tests/update/fixtures/profiles/2026.7.27/sw-spec-document-reviewer.toml`
+- Create: `tests/update/fixtures/profiles/2026.7.27/sw-reviewer.toml`
+- Create: `tests/update/fixtures/profiles/2026.7.27/sw-task-worker.toml`
 **Validation:** updater tests prove identity mismatch, symlink failure, destination collision, legacy migration, preservation outside markers, apply idempotence, and zero writes on every preflight failure.
 
 - [ ] **Step 1: Write the identity-mismatch test** — plan a fixture, mutate one observed byte, run `--apply --expect-plan <old-id>`, expect non-zero and an unchanged post-mutation checksum.
@@ -511,6 +515,8 @@ The initial draft pull request contains only these planning artifacts and, when 
 - Create: `.codex/agents/sw-task-worker.toml`
 - Delete: `.claude/settings.json`
 - Modify: `.gitignore`
+- Modify: `tests/update/test_plan.py`
+- Create: `tests/update/fixtures/legacy-dogfood/CLAUDE.md`
 **Validation:** a second plan reports `up-to-date`; Claude symlink is relative; four profiles match templates byte-for-byte; tracked host-local settings are absent; broad `.codex` ignore rules are absent.
 
 - [ ] **Step 1: Run shared-mode plan** — inspect state, operations, and `plan_id`; stop if the repository is not recognized as migratable.

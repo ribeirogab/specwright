@@ -17,7 +17,7 @@ Codex, or natural language.
 - Host: Claude Code | Codex
 - Host version:
 - Operating system and filesystem:
-- Plugin version from `plugins/sw/.codex-plugin/plugin.json`:
+- Plugin version reported by `claude plugin list --json` or `codex plugin list --json`:
 - Project mode, when relevant: shared | local
 
 ## Reproduction steps

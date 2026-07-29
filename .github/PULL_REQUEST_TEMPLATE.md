@@ -4,8 +4,9 @@ What this PR does, in 1–3 bullets. Link any related issue.
 
 ## Test plan
 
-- [ ] (For modified skills) Ran `python plugins/sw/scripts/quick_validate.py <skill-path>` — output was `Skill is valid!`.
-- [ ] (For modified skills) Ran `python plugins/sw/scripts/package_skill.py <skill-path> /tmp` — output ended with `Successfully packaged skill to: /tmp/<skill-name>.skill`.
+- [ ] (For modified skills) Ran `UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML python3 plugins/sw/scripts/quick_validate.py <skill-path>` — output was `Skill is valid!`.
+- [ ] (For modified skills) Ran `UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML python3 plugins/sw/scripts/package_skill.py <skill-path> /tmp` — output ended with `Successfully packaged skill to: /tmp/<skill-name>.skill`.
+- [ ] (For validator changes) Ran `UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML python3 tests/skills/test_validation.py`.
 - [ ] (For package changes) Ran `claude plugin validate --strict plugins/sw` and the relevant `tests/install/run.sh` groups.
 - [ ] (For dual-host package changes) Ran `bash tests/release/run.sh`; native Codex ingestion ran in a disposable environment.
 - [ ] Tried the skill end-to-end in an agent session (Claude Code, Codex, Cursor, OpenCode, or whichever you use) and observed the expected behavior.

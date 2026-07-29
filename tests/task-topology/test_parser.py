@@ -159,7 +159,9 @@ class TaskParserTests(unittest.TestCase):
             "plugins/sw/**/*.py",
             ".git",
             ".git/config",
+            ".GIT/config",
             ".specwright/issues/example/issue.md",
+            ".SpecWright/issues/example/issue.md",
         )
         for path in entries:
             with self.subTest(path=path):
@@ -181,6 +183,33 @@ class TaskParserTests(unittest.TestCase):
                         or "isolated ownership may not include" in item.message
                         for item in result.diagnostics
                     )
+                )
+
+    def test_isolated_symlinks_reject_reserved_destinations_and_targets(self) -> None:
+        entries = (
+            ".GIT/config -> safe-target",
+            "safe-link -> .git/config",
+            "safe-link -> .SPECWRIGHT/issues/example/issue.md",
+        )
+        for entry in entries:
+            with self.subTest(entry=entry):
+                result = parse_task_document(
+                    "---\ntasks_schema: 2\n---\n"
+                    "### T1: Unsafe symlink\n\n"
+                    "**AC:** AC-1\n"
+                    "**Delegable:** yes\n"
+                    "**Depends on:** none\n"
+                    "**Files:**\n"
+                    f"- Replace with symlink: `{entry}`\n"
+                    "**Integration:** isolated\n"
+                    "**Validation:** true\n"
+                )
+                self.assertTrue(
+                    any(
+                        "isolated symlinks may not include" in item.message
+                        for item in result.diagnostics
+                    ),
+                    result.diagnostics,
                 )
 
     def test_approved_issue_tasks_have_no_parser_layer_diagnostics(self) -> None:

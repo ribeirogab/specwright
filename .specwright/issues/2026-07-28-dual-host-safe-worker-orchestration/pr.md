@@ -20,11 +20,12 @@ Adds first-class Claude Code and Codex packaging around one shared nine-skill im
 - [x] `bash tests/release/run.sh`
 - [x] `CI_EPHEMERAL_RUNNER=1 bash tests/release/run.sh`
 - [x] `python3 tests/update/test_plan.py` — 28 tests
-- [x] `python3 tests/task-topology/test_parser.py` — 10 tests
+- [x] `python3 tests/task-topology/test_parser.py` — 11 tests
 - [x] `python3 tests/worktrees/test_local_copy.py`
 - [x] `bash plugins/sw/scripts/validate-spec.sh .specwright/issues/2026-07-28-dual-host-safe-worker-orchestration`
 - [x] `quick_validate.py` and `package_skill.py` for all nine skills in an offline PyYAML environment
 - [x] `claude plugin validate --strict plugins/sw`
+- [x] Codex profile models checked against `codex debug models`
 - [x] `bash -n`, `shellcheck`, `actionlint`, JSON parsing, TOML parsing, symlink checks, updater idempotence, and `git diff --check`
 
 ## Runtime verification
@@ -35,7 +36,7 @@ Adds first-class Claude Code and Codex packaging around one shared nine-skill im
 - **AC-4 — verified:** planner tests observed all four states, stable JSON and plan identities, read-only planning, identity mismatch rejection, and manifest-derived versions. Repository search found no remote fetch or `main` lookup in the updater.
 - **AC-5 — verified:** shared and local legacy fixtures migrated to canonical AGENTS files, relative Claude symlinks, and four matching profiles; drift, edited profiles, identity mismatch, and unsupported symlinks exited non-zero without preflight writes.
 - **AC-6 — verified:** shared and local initialization fixtures produced the correct canonical files, symlinks, profiles, and exact ignore rules while preserving unrelated `.codex/project.toml`.
-- **AC-7 — verified:** host-role assertions found the same four `sw-*` identities, required models and reasoning efforts, two read-only reviewers, and two workspace-write implementers.
+- **AC-7 — verified:** `codex debug models` exposed `gpt-5.6-sol` and `gpt-5.6-terra`; host-role assertions found the same four `sw-*` identities, required models and reasoning efforts, two read-only reviewers, and two workspace-write implementers.
 - **AC-8 — verified:** `test_local_copy.py` created a real temporary Git worktree and observed the local AGENTS file, relative Claude symlink, issue vault, and all profiles as present and ignored.
 - **AC-9 — verified:** the schema-2 parser and sixth validator check accepted valid and shipped-legacy fixtures and rejected missing dependencies, cycles, same-wave file collisions, and active legacy tasks.
 - **AC-10 — verified:** protocol assertions and the installed owner/worker profiles require exact issue-HEAD bases, repository-contained worktrees, declared-file diffs, ordered SHAs, owner-only cherry-picks, integrated wave validation, and replanning for semantic conflicts or scope changes.

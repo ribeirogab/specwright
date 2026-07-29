@@ -386,11 +386,14 @@ def _parse_files(
             if normalized_replacement is None or normalized_target is None:
                 diagnostics.append(Diagnostic(line, "Files paths must be safe repository-relative paths"))
                 continue
-            if integration == "isolated" and _is_reserved_isolated_path(normalized_replacement):
+            if integration == "isolated" and (
+                _is_reserved_isolated_path(normalized_replacement)
+                or _is_reserved_isolated_path(normalized_target)
+            ):
                 diagnostics.append(
                     Diagnostic(
                         line,
-                        "isolated ownership may not include .git or .specwright paths",
+                        "isolated symlinks may not include .git or .specwright paths",
                     )
                 )
                 continue
@@ -424,7 +427,7 @@ def _parse_files(
 
 
 def _is_reserved_isolated_path(path: str) -> bool:
-    return path.split("/", 1)[0] in {".git", ".specwright"}
+    return path.split("/", 1)[0].casefold() in {".git", ".specwright"}
 
 
 def _split_symlink_entry(value: str) -> tuple[str, str]:

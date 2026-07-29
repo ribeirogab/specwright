@@ -71,8 +71,7 @@ Update the installed plugin with the native host mechanism first:
 
 ```bash
 # Claude Code
-claude plugin marketplace update specwright
-claude plugin install sw@specwright
+claude plugin update sw@specwright
 
 # Codex
 codex plugin marketplace upgrade specwright
@@ -208,9 +207,9 @@ and Codex TOML templates use the same role names:
 
 | Role | Codex model/effort | Sandbox |
 |---|---|---|
-| `sw-issue-owner` | `gpt-5.6`, high | workspace write |
-| `sw-spec-document-reviewer` | `gpt-5.6`, high | read-only |
-| `sw-reviewer` | `gpt-5.6`, high | read-only |
+| `sw-issue-owner` | `gpt-5.6-sol`, high | workspace write |
+| `sw-spec-document-reviewer` | `gpt-5.6-sol`, high | read-only |
+| `sw-reviewer` | `gpt-5.6-sol`, high | read-only |
 | `sw-task-worker` | `gpt-5.6-terra`, medium | workspace write |
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the validation matrix and release

@@ -85,6 +85,27 @@ if discovered != expected:
 PY
 }
 
+assert_codex_profile_models() {
+  local output="$1"
+
+  python3 - "$output" "$ROOT/plugins/sw/templates/codex-agents" <<'PY'
+import json
+import pathlib
+import sys
+import tomllib
+
+catalog = json.loads(pathlib.Path(sys.argv[1]).read_text(encoding="utf-8"))
+available = {entry["slug"] for entry in catalog.get("models", [])}
+profiles = [
+    tomllib.loads(path.read_text(encoding="utf-8"))
+    for path in pathlib.Path(sys.argv[2]).glob("sw-*.toml")
+]
+missing = sorted({profile["model"] for profile in profiles} - available)
+if missing:
+    raise SystemExit(f"Codex profiles select unavailable models: {missing}")
+PY
+}
+
 assert_source_inventory() {
   local skill
   local discovered
@@ -97,21 +118,24 @@ assert_source_inventory() {
 }
 
 run_codex_positive() {
-  local temporary_home plugin_json available_json discovery_json
+  local temporary_home plugin_json available_json discovery_json model_catalog_json
 
   temporary_home="$(mktemp -d "${TMPDIR:-/tmp}/specwright-codex.XXXXXX")"
   plugin_json="$temporary_home/plugin-add.json"
   available_json="$temporary_home/plugin-list.json"
   discovery_json="$temporary_home/prompt-input.json"
+  model_catalog_json="$temporary_home/model-catalog.json"
   mkdir -p "$temporary_home/home"
   (
     CODEX_HOME="$temporary_home/home" codex plugin marketplace add "$ROOT"
     CODEX_HOME="$temporary_home/home" codex plugin add sw@specwright --json >"$plugin_json"
     CODEX_HOME="$temporary_home/home" codex plugin list --marketplace specwright --available --json >"$available_json"
     CODEX_HOME="$temporary_home/home" codex debug prompt-input "\$sw:init" >"$discovery_json"
+    CODEX_HOME="$temporary_home/home" codex debug models >"$model_catalog_json"
     assert_plugin_json "$plugin_json"
     assert_available_json "$available_json"
     assert_codex_discovery_json "$discovery_json"
+    assert_codex_profile_models "$model_catalog_json"
   )
   rm -rf "$temporary_home"
   pass "Codex native marketplace ingestion"

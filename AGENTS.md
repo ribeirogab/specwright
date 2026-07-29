@@ -32,4 +32,12 @@ access external services.
 
 ### Editing the bundled skills
 
-Every companion skill's `SKILL.md` lives exactly **once**, under `plugins/sw/skills/<name>/` — no copy to keep in sync. Each companion skill is `user-invocable: false` (hidden from the `/` menu) and paired with a thin command at `plugins/sw/commands/<name>.md` that only reads and runs the skill's `SKILL.md`; that pairing is what makes every entry point surface as `/sw:<name>` in the picker (never a bare `/<name>`). Edit the `SKILL.md` for behavior — the command is a pure redirect and rarely changes. The artifact templates live at `plugins/sw/templates/`, the mechanical validator at `plugins/sw/scripts/validate-spec.sh`, and the reference docs at `plugins/sw/references/`. The bundled role subagents — `issue-owner`, `task-worker`, `spec-document-reviewer`, `reviewer` — live at `plugins/sw/agents/`, each pinning its `model` + `effort` and preloading (via `skills:`) the skill it runs.
+Every companion skill's `SKILL.md` lives exactly **once**, under
+`plugins/sw/skills/<name>/` — no copy to keep in sync. Each companion skill is
+paired with a thin redirect under `plugins/sw/commands/`. Edit the `SKILL.md` for
+behavior; the command rarely changes. Templates live under `plugins/sw/templates/`,
+the mechanical validator under `plugins/sw/scripts/`, and references under
+`plugins/sw/references/`. The stable role identities are `sw-issue-owner`,
+`sw-task-worker`, `sw-spec-document-reviewer`, and `sw-reviewer`. Their Claude
+manifests live under `plugins/sw/agents/`; only the owner and branch reviewer
+preload their workflow skill.

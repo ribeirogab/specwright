@@ -34,8 +34,10 @@ Out of scope:
 
 ## Threat model
 
-specwright is an instruction-driven plugin with standard-library Python and shell
-helpers. It can guide agents that have repository write, Git, and external-service
+specwright is an instruction-driven plugin. Its updater and task-topology engines
+use only the Python standard library; skill authoring validation and packaging use
+PyYAML in an ephemeral `uv` environment. Shell helpers connect those checks. The
+plugin can guide agents that have repository write, Git, and external-service
 capabilities, so the main trust boundaries are host permissions, managed project
 state, filesystem paths, and worker integration.
 
@@ -80,8 +82,9 @@ outside the recorded base are security defects.
 
 Structural checks alone do not prove that a host can ingest the package. Release
 CI uses the native Claude strict validator and a disposable Codex marketplace and
-plugin home. Positive installation and negative manifest/skill fixtures must fail
-the release if either host no longer recognizes the expected package.
+plugin home. It also rejects role profiles whose model is absent from the native
+Codex model catalog. Positive installation and negative manifest/skill fixtures
+must fail the release if either host no longer recognizes the expected package.
 
 ### Credentials and destructive actions
 

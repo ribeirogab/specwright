@@ -51,9 +51,9 @@ All preconditions, parent-directory writability, symlink capability, and destina
 
 Four Codex TOML templates live under `plugins/sw/templates/codex-agents/` and are installed under `.codex/agents/`. Their names match the Claude agent manifest names exactly:
 
-- `sw-issue-owner`: `gpt-5.6`, high reasoning, workspace write;
-- `sw-spec-document-reviewer`: `gpt-5.6`, high reasoning, read-only;
-- `sw-reviewer`: `gpt-5.6`, high reasoning, read-only;
+- `sw-issue-owner`: `gpt-5.6-sol`, high reasoning, workspace write;
+- `sw-spec-document-reviewer`: `gpt-5.6-sol`, high reasoning, read-only;
+- `sw-reviewer`: `gpt-5.6-sol`, high reasoning, read-only;
 - `sw-task-worker`: `gpt-5.6-terra`, medium reasoning, workspace write.
 
 The profiles contain role-specific developer instructions, not copies of the full skills. Skills dispatch roles by these stable names and therefore do not branch on host aliases. Shared initialization tracks the profiles; local initialization appends only `.codex/agents/sw-*.toml` to `.gitignore`, leaving any unrelated Codex configuration untouched.

@@ -217,9 +217,9 @@ assert_profiles() {
     esac
     assert_eq "profile $name carries its authority protocol" yes "$(grep -Fq "$required_fragment" "$template" && echo yes || echo no)"
   done <<'EOF'
-sw-issue-owner|sw-issue-owner|gpt-5.6|high|workspace-write
-sw-spec-document-reviewer|sw-spec-document-reviewer|gpt-5.6|high|read-only
-sw-reviewer|sw-reviewer|gpt-5.6|high|read-only
+sw-issue-owner|sw-issue-owner|gpt-5.6-sol|high|workspace-write
+sw-spec-document-reviewer|sw-spec-document-reviewer|gpt-5.6-sol|high|read-only
+sw-reviewer|sw-reviewer|gpt-5.6-sol|high|read-only
 sw-task-worker|sw-task-worker|gpt-5.6-terra|medium|workspace-write
 EOF
 }
@@ -431,6 +431,8 @@ PY
   assert_eq "unsupported symlink writes nothing" "$unsupported_before" "$unsupported_after"
 
   managed_update="$(new_update_project managed-update up-to-date)"
+  cp "$ROOT"/tests/update/fixtures/profiles/2026.7.27/sw-*.toml \
+    "$managed_update/.codex/agents/"
   if python3 - "$ROOT/plugins/sw/scripts" "$managed_update/AGENTS.md" <<'PY'
 from pathlib import Path
 import sys
@@ -484,7 +486,8 @@ run_worktree() {
   fi
 }
 run_topology() {
-  local fixture output status expected
+  local fixture output status expected preplan
+  ensure_temporary_root
   if python3 "$ROOT/tests/task-topology/test_parser.py"; then
     pass "schema-2 parser and topology unit tests"
   else
@@ -517,6 +520,20 @@ run_topology() {
       die "validator rejects $fixture topology fixture"
     fi
   done
+
+  preplan="$temporary_root/preplan"
+  mkdir -p "$preplan"
+  cp "$ROOT/plugins/sw/scripts/fixtures/good/issue.md" "$preplan/issue.md"
+  output="$temporary_root/preplan.out"
+  status=0
+  "$ROOT/plugins/sw/scripts/validate-spec.sh" "$preplan" >"$output" 2>&1 || status=$?
+  if [ "$status" -eq 1 ] \
+    && grep -qF "FAIL (check 2): spec.md not found" "$output" \
+    && ! grep -qF "FAIL (check 6)" "$output"; then
+    pass "validator preserves the pre-plan single-check baseline"
+  else
+    die "validator preserves the pre-plan single-check baseline"
+  fi
 }
 
 if [ "$#" -eq 0 ]; then

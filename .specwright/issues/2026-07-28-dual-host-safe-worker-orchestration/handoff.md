@@ -230,9 +230,9 @@ Do not reopen these decisions unless a verified host incompatibility makes one i
 9. **No remote updater fetch.** Project migration reads the installed Codex manifest and never fetches `main`.
 10. **Managed boundaries.** Only the versioned managed block, Claude symlinks, exact ignore rules, and `.codex/agents/sw-*.toml` profiles are updater-owned. Preserve user content outside the block and unrelated `.codex` files.
 11. **Four stable role names.**
-    - `sw-issue-owner`: `gpt-5.6`, high, write.
-    - `sw-spec-document-reviewer`: `gpt-5.6`, high, read-only.
-    - `sw-reviewer`: `gpt-5.6`, high, read-only.
+    - `sw-issue-owner`: `gpt-5.6-sol`, high, write.
+    - `sw-spec-document-reviewer`: `gpt-5.6-sol`, high, read-only.
+    - `sw-reviewer`: `gpt-5.6-sol`, high, read-only.
     - `sw-task-worker`: `gpt-5.6-terra`, medium, write.
 12. **Schema-2 tasks.** Stable IDs, AC coverage, dependencies, ownership, integration mode, and validation are mechanically checked.
 13. **Historical behavior.** Shipped schema-1 issues remain valid records; active schema-1 issues require explicit replanning.

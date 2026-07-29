@@ -50,7 +50,7 @@ CLAUDE.md -> AGENTS.md                     relative symlink
 .codex/agents/sw-spec-document-reviewer.toml
 .codex/agents/sw-reviewer.toml
 .codex/agents/sw-task-worker.toml          byte-matched installed profiles
-.specwright/conventions/README.md          clone-survival signpost
+.specwright/conventions/                   existing conventions, or README.md signpost when initially empty
 .specwright/issues/.gitkeep
 .specwright/milestones/.gitkeep
 .gitignore                                 exactly .specwright/worktrees/

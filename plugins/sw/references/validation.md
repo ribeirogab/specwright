@@ -101,13 +101,15 @@ coexist with project-owned shared instructions and must not alter them.
 ### 6. Vault directories survive the selected mode
 
 ```bash
-test -f .specwright/conventions/README.md
+test -d .specwright/conventions
+test -n "$(find .specwright/conventions -mindepth 1 -maxdepth 1 -type f -print -quit)"
 test -f .specwright/issues/.gitkeep
 test -f .specwright/milestones/.gitkeep
 ```
 
-The conventions signpost is created only when that directory was empty. Never
-overwrite existing conventions, issues, milestones, or their artifacts.
+An initially empty conventions directory receives the signpost; an existing
+directory keeps its own convention files instead. Never overwrite existing
+conventions, issues, milestones, or their artifacts.
 
 ### 7. Package surfaces remain host-equivalent
 

@@ -37,7 +37,7 @@ Before the prose review, run the mechanical validator over the issue folder. It 
 "$SW_PLUGIN_ROOT/scripts/validate-spec.sh" <issue-folder>
 ```
 
-It deterministically checks `issue.md` frontmatter (`feature`/`created`/`status` + the status enum), `spec.md` frontmatter (`feature`/`created`/`scope` + the scope enum), surviving double-brace placeholders, vague-verb acceptance criteria, and `AC-N` task coverage. A **non-zero exit is a blocking FAIL** — record it as the `0. Mechanical validator` row, and the verdict is `Block` regardless of the prose findings. Still complete the prose review below so the author fixes everything in one pass. If the script is absent (older install), note `validator missing` and proceed with the prose review only.
+It deterministically checks `issue.md` frontmatter (`feature`/`created`/`status` + the status enum), `spec.md` frontmatter (`feature`/`created`/`scope` + the scope enum), surviving double-brace placeholders, vague-verb acceptance criteria, and `AC-N` task coverage. When `tasks.md` exists, check 6 also enforces `tasks_schema: 2`, required task metadata, valid acyclic dependencies, explicit isolated ownership, and no same-wave file collision; a shipped legacy issue remains readable while an active legacy issue requires replanning. A **non-zero exit is a blocking FAIL** — record it as the `0. Mechanical validator` row, and the verdict is `Block` regardless of the prose findings. Still complete the prose review below so the author fixes everything in one pass. If the script is absent (older install), note `validator missing` and proceed with the prose review only.
 
 ## What to evaluate
 

@@ -17,8 +17,8 @@ directories; ignored worktrees are runtime transport, not vault records.
 ```
 
 The scaffolder creates no artifact templates or validators inside the vault.
-Those stay in the installed plugin under `plugins/sw/templates/` and
-`plugins/sw/scripts/`.
+Resolve the installed plugin root as `SW_PLUGIN_ROOT`; bundled resources stay
+under `$SW_PLUGIN_ROOT/templates/` and `$SW_PLUGIN_ROOT/scripts/`.
 
 `conventions/README.md` is an inert signpost created only when the directory is
 empty. Existing conventions are never overwritten. Empty `issues/` and
