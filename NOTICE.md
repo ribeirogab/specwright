@@ -14,7 +14,7 @@ specwright bundles two scripts vendored from `anthropics/skills` so the skill is
 | Original source | [https://github.com/anthropics/skills/tree/main/skill-creator/scripts](https://github.com/anthropics/skills/tree/main/skill-creator/scripts) |
 | Original license | Apache-2.0 |
 | Copyright holder | Anthropic |
-| Modifications | `quick_validate.py` is verbatim. `package_skill.py` has one change vs upstream: the `from scripts.quick_validate import validate_skill` line is replaced with `sys.path.insert(0, str(Path(__file__).parent))` followed by `from quick_validate import validate_skill`, so the file works whether invoked as `python -m scripts.package_skill`, `python scripts/package_skill.py`, or by absolute path. The change is documented inline in the file's module docstring. |
+| Modifications | `quick_validate.py` accepts Claude's supported boolean `user-invocable` frontmatter key and rejects non-boolean values; unknown-key rejection remains strict. `package_skill.py` has one change vs upstream: the `from scripts.quick_validate import validate_skill` line is replaced with `sys.path.insert(0, str(Path(__file__).parent))` followed by `from quick_validate import validate_skill`, so the file works whether invoked as `python -m scripts.package_skill`, `python scripts/package_skill.py`, or by absolute path. The change is documented inline in the file's module docstring. |
 
 ## Adapted under the `sw` skills (`brainstorm`, `plan`)
 
