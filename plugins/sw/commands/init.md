@@ -1,5 +1,5 @@
 ---
-description: Set up specwright's per-repo content — the .specwright/ vault, an entry point (CLAUDE.md, or git-ignored CLAUDE.local.md in local mode), and the .gitignore lines. Always asks a shared or local commit mode. Idempotent, safe to re-run
+description: Set up specwright's dual-host project state — the .specwright/ vault, canonical AGENTS instructions, Claude symlinks, Codex role profiles, and exact ignore rules
 ---
 
 # init — set up specwright's per-repo content
