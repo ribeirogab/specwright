@@ -46,6 +46,22 @@ claude plugin validate ./plugins/sw
 # expected: "Validation passed" — errors block, warnings are advisory
 ```
 
+## Dual-host release smoke test
+
+The release smoke test verifies the published package through both native host surfaces. It always runs the static nine-skill inventory and Claude's strict package validation:
+
+```bash
+bash tests/release/run.sh
+```
+
+Codex marketplace installation changes its configured marketplace and plugin state, so the Codex ingestion test and its negative fixtures run only in a disposable runner:
+
+```bash
+CI_EPHEMERAL_RUNNER=1 bash tests/release/run.sh
+```
+
+Use the second command only in an ephemeral CI environment. It installs the package with `codex plugin marketplace add`, `codex plugin add sw@specwright --json`, and `codex plugin list --marketplace specwright --available --json`; it also proves that a missing Claude manifest, Codex manifest, or required skill cannot pass the corresponding host gate.
+
 ## Pull request checklist
 
 The PR template carries this checklist; the items below explain each entry.
