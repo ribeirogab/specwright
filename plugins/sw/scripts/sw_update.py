@@ -247,10 +247,16 @@ def _classify(project: Path, mode: str, canonical: str, adapter: str, desired_bl
     adapter_path = project / adapter
     managed_paths = [canonical_path, adapter_path, *(project / PROFILE_DIRECTORY / name for name in PROFILE_NAMES)]
     existing = [path for path in managed_paths if path.is_symlink() or path.exists()]
-    opposite_canonical = project / ("AGENTS.override.md" if mode == "shared" else "AGENTS.md")
-    opposite_adapter = project / ("CLAUDE.local.md" if mode == "shared" else "CLAUDE.md")
-    if opposite_canonical.is_symlink() or opposite_canonical.exists() or opposite_adapter.is_symlink() or opposite_adapter.exists():
-        return "drifted", ("the opposite instruction mode is already present",), desired_block
+    if mode == "shared":
+        opposite_canonical = project / "AGENTS.override.md"
+        opposite_adapter = project / "CLAUDE.local.md"
+        if (
+            opposite_canonical.is_symlink()
+            or opposite_canonical.exists()
+            or opposite_adapter.is_symlink()
+            or opposite_adapter.exists()
+        ):
+            return "drifted", ("the local instruction mode is already present",), desired_block
     if not existing:
         return "new", (), desired_block
     if _is_up_to_date(project, mode, canonical, adapter, desired_block):

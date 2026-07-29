@@ -335,6 +335,23 @@ class UpdatePlanTests(unittest.TestCase):
                 self.assertIn("custom-rule/", ignore_lines)
                 self.assertTrue(expected_rules.issubset(ignore_lines))
 
+    def test_local_mode_preserves_existing_shared_project_instructions(self) -> None:
+        with self._fixture_copy("new") as project:
+            shared_agents = b"# Team AGENTS instructions\n"
+            shared_claude = b"# Team Claude instructions\n"
+            (project / "AGENTS.md").write_bytes(shared_agents)
+            (project / "CLAUDE.md").write_bytes(shared_claude)
+            plan = plan_update(project, "local")
+            self.assertEqual(plan.state, "new")
+            apply_update(project, "local", plan.plan_id)
+            self.assertEqual((project / "AGENTS.md").read_bytes(), shared_agents)
+            self.assertEqual((project / "CLAUDE.md").read_bytes(), shared_claude)
+            self.assertTrue((project / "AGENTS.override.md").is_file())
+            self.assertEqual(
+                (project / "CLAUDE.local.md").readlink(),
+                Path("AGENTS.override.md"),
+            )
+
     def test_managed_block_update_preserves_exact_project_bytes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
