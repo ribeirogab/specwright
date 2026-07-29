@@ -147,6 +147,8 @@ run_role_agents() {
   assert_eq "agent reviewer model and effort" opus/xhigh "$(agent_field reviewer model)/$(agent_field reviewer effort)"
   assert_eq "agent issue-owner preloads plan" yes "$(has_skills issue-owner && grep -Eq '^[[:space:]]*-[[:space:]]*plan$' "$agents_dir/issue-owner.md" && echo yes || echo no)"
   assert_eq "agent reviewer preloads review" yes "$(has_skills reviewer && grep -Eq '^[[:space:]]*-[[:space:]]*review$' "$agents_dir/reviewer.md" && echo yes || echo no)"
+  assert_eq "run dispatches stable sw-issue-owner role" yes "$(grep -Fq "Dispatch the \`sw-issue-owner\` subagent" "$ROOT/plugins/sw/skills/run/SKILL.md" && echo yes || echo no)"
+  assert_eq "review dispatches stable sw-reviewer role" yes "$(grep -Fq "\`sw-reviewer\` subagent" "$ROOT/plugins/sw/skills/review/SKILL.md" && echo yes || echo no)"
   assert_eq "agent task-worker has no skills key" no "$(has_skills task-worker && echo yes || echo no)"
   assert_eq "agent spec-document-reviewer has no skills key" no "$(has_skills spec-document-reviewer && echo yes || echo no)"
   assert_eq "legacy spec-document reviewer prompt is removed" no "$([ -f "$ROOT/plugins/sw/skills/plan/spec-document-reviewer-prompt.md" ] && echo yes || echo no)"
@@ -189,11 +191,15 @@ run_package() {
   done
   assert_eq "skill directory inventory is canonical" "$(printf '%s\n' "${skills[@]}")" "$(find "$ROOT/plugins/sw/skills" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort)"
   assert_eq "Claude redirect inventory is canonical" "$(printf '%s\n' "${skills[@]}" | sed 's/$/.md/' | sort)" "$(find "$ROOT/plugins/sw/commands" -maxdepth 1 -type f -name '*.md' -exec basename {} \; | sort)"
+  for skill in brainstorm plan review-spec; do
+    assert_eq "$skill resolves bundled resources from SW_PLUGIN_ROOT" yes "$(grep -q 'SW_PLUGIN_ROOT' "$ROOT/plugins/sw/skills/$skill/SKILL.md" && echo yes || echo no)"
+    assert_eq "$skill has no consumer-relative bundled path" no "$(grep -Eq 'plugins/sw/(templates|scripts)/' "$ROOT/plugins/sw/skills/$skill/SKILL.md" && echo yes || echo no)"
+  done
   run_role_agents
 }
 
 assert_profiles() {
-  local project="$1" name expected_name model effort sandbox template installed
+  local project="$1" name expected_name model effort sandbox template installed required_fragment
   while IFS='|' read -r name expected_name model effort sandbox; do
     template="$ROOT/plugins/sw/templates/codex-agents/$name.toml"
     installed="$project/.codex/agents/$name.toml"
@@ -203,6 +209,13 @@ assert_profiles() {
     assert_eq "profile $name reasoning effort" "$effort" "$(toml_value "$template" model_reasoning_effort)"
     assert_eq "profile $name sandbox" "$sandbox" "$(toml_value "$template" sandbox_mode)"
     assert_eq "installed profile $name matches template" 0 "$(cmp -s "$template" "$installed"; echo $?)"
+    case "$name" in
+      sw-issue-owner) required_fragment='sole editor and integrator' ;;
+      sw-spec-document-reviewer) required_fragment='schema-2 decomposition and ownership' ;;
+      sw-reviewer) required_fragment="\$sw:review workflow" ;;
+      sw-task-worker) required_fragment='original base SHA' ;;
+    esac
+    assert_eq "profile $name carries its authority protocol" yes "$(grep -Fq "$required_fragment" "$template" && echo yes || echo no)"
   done <<'EOF'
 sw-issue-owner|sw-issue-owner|gpt-5.6|high|workspace-write
 sw-spec-document-reviewer|sw-spec-document-reviewer|gpt-5.6|high|read-only
@@ -308,7 +321,7 @@ expect_apply_failure() {
 run_update() {
   local new_project_path current_project legacy_shared legacy_local drifted
   local plan new_plan current_plan legacy_shared_plan legacy_local_plan drifted_plan
-  local identity_project identity_plan profile_drift profile_drift_plan unsupported
+  local identity_project identity_plan profile_drift profile_drift_plan ignore_negation ignore_negation_plan unsupported
   local unsupported_plan unsupported_before unsupported_after unsupported_status=0
   local managed_update managed_plan post_plan second_post_plan initial_plan_id
 
@@ -376,6 +389,16 @@ run_update() {
   run_plan "$profile_drift" shared "$profile_drift_plan"
   assert_eq "profile drift fixture state" drifted "$(json_value state "$profile_drift_plan")"
   expect_apply_failure profile-drift "$profile_drift" shared "$profile_drift_plan" "refusing to apply drifted project"
+
+  ignore_negation="$(new_update_project ignore-negation new)"
+  ignore_negation_plan="$temporary_root/ignore-negation-initial-plan.json"
+  run_plan "$ignore_negation" local "$ignore_negation_plan"
+  apply_plan "$ignore_negation" local "$ignore_negation_plan"
+  printf '!.codex/agents/sw-reviewer.toml\n' >>"$ignore_negation/.gitignore"
+  ignore_negation_plan="$temporary_root/ignore-negation-drift-plan.json"
+  run_plan "$ignore_negation" local "$ignore_negation_plan"
+  assert_eq "ignore negation fixture state" drifted "$(json_value state "$ignore_negation_plan")"
+  assert_eq "ignore negation makes managed profile trackable" 1 "$(git -C "$ignore_negation" check-ignore -q -- .codex/agents/sw-reviewer.toml; echo $?)"
 
   unsupported="$(new_update_project symlink-unsupported symlink-unsupported)"
   unsupported_plan="$temporary_root/symlink-unsupported-plan.json"
@@ -460,9 +483,44 @@ run_worktree() {
     die "local dual-host worktree copy"
   fi
 }
+run_topology() {
+  local fixture output status expected
+  if python3 "$ROOT/tests/task-topology/test_parser.py"; then
+    pass "schema-2 parser and topology unit tests"
+  else
+    die "schema-2 parser and topology unit tests"
+  fi
+
+  for fixture in good legacy-shipped; do
+    if "$ROOT/plugins/sw/scripts/validate-spec.sh" \
+      "$ROOT/plugins/sw/scripts/fixtures/$fixture" >/dev/null 2>&1; then
+      pass "validator accepts $fixture topology fixture"
+    else
+      die "validator accepts $fixture topology fixture"
+    fi
+  done
+
+  for fixture in bad-task-dependency bad-task-cycle bad-task-collision legacy-active; do
+    case "$fixture" in
+      bad-task-dependency) expected="depends on missing task" ;;
+      bad-task-cycle) expected="dependency cycle" ;;
+      bad-task-collision) expected="same-wave ownership collision" ;;
+      legacy-active) expected="requires explicit schema-2 replanning" ;;
+    esac
+    output="$temporary_root/$fixture.out"
+    status=0
+    "$ROOT/plugins/sw/scripts/validate-spec.sh" \
+      "$ROOT/plugins/sw/scripts/fixtures/$fixture" >"$output" 2>&1 || status=$?
+    if [ "$status" -ne 0 ] && grep -qF "$expected" "$output"; then
+      pass "validator rejects $fixture topology fixture"
+    else
+      die "validator rejects $fixture topology fixture"
+    fi
+  done
+}
 
 if [ "$#" -eq 0 ]; then
-  set -- package init update worktree
+  set -- package init update worktree topology
 fi
 for group in "$@"; do
   case "$group" in
@@ -470,6 +528,7 @@ for group in "$@"; do
     init) run_init ;;
     update) run_update ;;
     worktree) run_worktree ;;
+    topology) run_topology ;;
     *) die "unknown test group: $group" ;;
   esac
 done

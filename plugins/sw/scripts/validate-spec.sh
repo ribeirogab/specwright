@@ -142,11 +142,18 @@ fi
 
 # --- Check 5: every AC-N in issue.md is referenced by a task ---------------
 if [ -f "$issue" ] && [ -f "$tasks" ]; then
-  ac_ids=$({ grep -Eoh 'AC-[0-9]+' "$issue" || true; } | sort -u)
+  ac_ids=$(awk '
+    /^## Acceptance Criteria[[:space:]]*$/ {cap=1; next}
+    cap && /^## / {cap=0}
+    cap && /^[[:space:]]*- \[[ xX]\][[:space:]]+\*\*AC-[0-9]+\*\*/ {print}
+  ' "$issue" | { grep -Eoh 'AC-[0-9]+' || true; } | sort -u)
+  task_ac_ids=$({ grep -E '^\*\*AC:\*\*' "$tasks" || true; } \
+    | { grep -Eoh 'AC-[0-9]+' || true; } \
+    | sort -u)
   missing=""
   while IFS= read -r id; do
     [ -n "$id" ] || continue
-    if ! grep -qw "$id" "$tasks"; then
+    if ! printf '%s\n' "$task_ac_ids" | grep -qxF "$id"; then
       missing="${missing:+$missing, }$id"
     fi
   done <<EOF

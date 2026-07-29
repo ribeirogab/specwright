@@ -152,7 +152,11 @@ Scan your draft for: any emoji; the strings `## Review` / `### Blocker` / `### S
 
 ## Three-subagent review (issue pipeline) and degradation
 
-In the issue pipeline's delivery step, review runs as **three** dispatches of the `reviewer` subagent over the open branch, one per lane — it pins the reviewer's model + effort and preloads this skill; none edits code. Each owns **one lane** and must stay in it — do not duplicate another lane's findings or wander into its scope. The lanes are deliberately non-overlapping so the merge is clean.
+In the issue pipeline's delivery step, review runs as **three** dispatches of the
+`sw-reviewer` subagent over the open branch, one per lane — it pins the reviewer's
+model + effort and routes into this shared skill; none edits code. Each owns **one
+lane** and must stay in it — do not duplicate another lane's findings or wander
+into its scope. The lanes are deliberately non-overlapping so the merge is clean.
 
 - **Subagent A — rubric + conventions.** *Question it answers:* does the diff obey the universal coding standard and the project's conventions? Reviews against the universal standard above, applicable canonical AGENTS instructions, and `.specwright/conventions/` — correctness/bugs, security, tests, rubric/conventions compliance, readability, DRY/SOLID (the calibration above). **Not A's job:** whether the issue's acceptance criteria were delivered (that's B); whether docs went stale (that's C).
 - **Subagent B — issue-conformance.** *Question it answers:* does the diff deliver **this issue**? Walks the issue's Acceptance Criteria (the `AC-N` in `issue.md`) against the diff and reports three dimensions, citing each `AC-N` by ID:

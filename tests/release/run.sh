@@ -13,19 +13,6 @@ pass() {
   printf 'PASS: %s\n' "$1"
 }
 
-assert_skill_inventory() {
-  local plugin_path="$1"
-  local skill
-  local discovered
-
-  [ -d "$plugin_path" ] || fail "Codex returned an installed plugin directory"
-  discovered="$(find "$plugin_path/skills" -mindepth 2 -maxdepth 2 -type f -name SKILL.md | wc -l | tr -d ' ')"
-  [ "$discovered" = "${#SKILLS[@]}" ] || fail "Codex installed inventory has ${#SKILLS[@]} skills"
-  for skill in "${SKILLS[@]}"; do
-    [ -f "$plugin_path/skills/$skill/SKILL.md" ] || fail "Codex installed skill $skill"
-  done
-}
-
 installed_path_from_json() {
   local output="$1"
 
@@ -50,7 +37,6 @@ assert_plugin_json() {
 
   installed_path="$(installed_path_from_json "$output")"
   [ -f "$installed_path/.codex-plugin/plugin.json" ] || fail "Codex installed package includes its manifest"
-  assert_skill_inventory "$installed_path"
 }
 
 assert_available_json() {
@@ -68,6 +54,37 @@ if not any(entry.get("pluginId") == "sw@specwright" for entry in entries):
 PY
 }
 
+assert_codex_discovery_json() {
+  local output="$1"
+
+  python3 - "$output" "${SKILLS[@]}" <<'PY'
+import json
+import pathlib
+import re
+import sys
+
+messages = json.loads(pathlib.Path(sys.argv[1]).read_text(encoding="utf-8"))
+expected = sorted(sys.argv[2:])
+texts = []
+for message in messages:
+    for item in message.get("content", []):
+        if item.get("type") == "input_text":
+            texts.append(item.get("text", ""))
+discovered = sorted(
+    set(
+        re.findall(
+            r"(?m)^- sw:([a-z0-9-]+):",
+            "\n".join(texts),
+        )
+    )
+)
+if discovered != expected:
+    raise SystemExit(
+        f"Codex native skill discovery mismatch: expected {expected}, got {discovered}"
+    )
+PY
+}
+
 assert_source_inventory() {
   local skill
   local discovered
@@ -80,18 +97,21 @@ assert_source_inventory() {
 }
 
 run_codex_positive() {
-  local temporary_home plugin_json available_json
+  local temporary_home plugin_json available_json discovery_json
 
   temporary_home="$(mktemp -d "${TMPDIR:-/tmp}/specwright-codex.XXXXXX")"
   plugin_json="$temporary_home/plugin-add.json"
   available_json="$temporary_home/plugin-list.json"
+  discovery_json="$temporary_home/prompt-input.json"
   mkdir -p "$temporary_home/home"
   (
     CODEX_HOME="$temporary_home/home" codex plugin marketplace add "$ROOT"
     CODEX_HOME="$temporary_home/home" codex plugin add sw@specwright --json >"$plugin_json"
     CODEX_HOME="$temporary_home/home" codex plugin list --marketplace specwright --available --json >"$available_json"
+    CODEX_HOME="$temporary_home/home" codex debug prompt-input "\$sw:init" >"$discovery_json"
     assert_plugin_json "$plugin_json"
     assert_available_json "$available_json"
+    assert_codex_discovery_json "$discovery_json"
   )
   rm -rf "$temporary_home"
   pass "Codex native marketplace ingestion"
@@ -119,23 +139,49 @@ run_codex_missing_manifest() {
 }
 
 run_codex_missing_skill() {
-  local fixture_root temporary_home plugin_json
+  local fixture_root temporary_home plugin_json discovery_json
 
   fixture_root="$(mktemp -d "${TMPDIR:-/tmp}/specwright-codex-skill.XXXXXX")"
   temporary_home="$(mktemp -d "${TMPDIR:-/tmp}/specwright-codex-home.XXXXXX")"
   plugin_json="$temporary_home/plugin-add.json"
+  discovery_json="$temporary_home/prompt-input.json"
   cp -R "$ROOT/." "$fixture_root"
   rm "$fixture_root/plugins/sw/skills/review/SKILL.md"
   if (
     CODEX_HOME="$temporary_home" codex plugin marketplace add "$fixture_root"
     CODEX_HOME="$temporary_home" codex plugin add sw@specwright --json >"$plugin_json"
     assert_plugin_json "$plugin_json"
+    CODEX_HOME="$temporary_home" codex debug prompt-input "\$sw:init" >"$discovery_json"
+    assert_codex_discovery_json "$discovery_json"
   ); then
     rm -rf "$fixture_root" "$temporary_home"
     fail "Codex rejects a package without a required skill"
   fi
   rm -rf "$fixture_root" "$temporary_home"
   pass "Codex rejects a package without a required skill"
+}
+
+run_codex_malformed_skill() {
+  local fixture_root temporary_home plugin_json discovery_json
+
+  fixture_root="$(mktemp -d "${TMPDIR:-/tmp}/specwright-codex-malformed-skill.XXXXXX")"
+  temporary_home="$(mktemp -d "${TMPDIR:-/tmp}/specwright-codex-home.XXXXXX")"
+  plugin_json="$temporary_home/plugin-add.json"
+  discovery_json="$temporary_home/prompt-input.json"
+  cp -R "$ROOT/." "$fixture_root"
+  printf '%s\n' '# missing frontmatter' >"$fixture_root/plugins/sw/skills/review/SKILL.md"
+  if (
+    CODEX_HOME="$temporary_home" codex plugin marketplace add "$fixture_root"
+    CODEX_HOME="$temporary_home" codex plugin add sw@specwright --json >"$plugin_json"
+    assert_plugin_json "$plugin_json"
+    CODEX_HOME="$temporary_home" codex debug prompt-input "\$sw:init" >"$discovery_json"
+    assert_codex_discovery_json "$discovery_json"
+  ); then
+    rm -rf "$fixture_root" "$temporary_home"
+    fail "Codex rejects a malformed required skill"
+  fi
+  rm -rf "$fixture_root" "$temporary_home"
+  pass "Codex rejects a malformed required skill"
 }
 
 assert_source_inventory
@@ -162,3 +208,4 @@ pass "Claude rejects a package without its manifest"
 
 run_codex_missing_manifest
 run_codex_missing_skill
+run_codex_malformed_skill

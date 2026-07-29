@@ -35,6 +35,17 @@ LOCAL_IGNORE_RULES = (
     ".codex/agents/sw-*.toml",
 )
 SHARED_IGNORE_RULES = (".specwright/worktrees/",)
+ALL_MANAGED_IGNORE_RULES = tuple(dict.fromkeys((*SHARED_IGNORE_RULES, *LOCAL_IGNORE_RULES)))
+# Immutable predecessor digests distinguish a legitimate version upgrade from an
+# edited managed profile. Add the outgoing release here before changing a profile.
+KNOWN_PROFILE_DIGESTS_BY_VERSION: dict[str, dict[str, str]] = {
+    "2026.7.27": {
+        "sw-issue-owner.toml": "ac96f66830e336656caa4eb28ca8e2ce573da08e92eccbe8c5334b4dfa05939a",
+        "sw-spec-document-reviewer.toml": "71ac80e28c7a8c722325aee9fd6e950a495efb15cbd76141f6e7098a6028de51",
+        "sw-reviewer.toml": "d974747779ecebc3e4a44953c2f959bbe8d883275000c5749e436d7df0da27bc",
+        "sw-task-worker.toml": "384ad8f5595755e097887d500e782a7e4d9e50aee79870efcaf55fc7db0ada67",
+    }
+}
 LEGACY_DOGFOOD_DIGEST = "c32175b40821260004481eb131198c2239851b47b1334e475e962226c190a28b"
 LEGACY_GENERIC_TEMPLATE = """# {{Project Name}} — Agent Instructions
 
@@ -270,6 +281,23 @@ def _classify(project: Path, mode: str, canonical: str, adapter: str, desired_bl
     return "drifted", ("managed paths do not match a recognized specwright state",), desired_block
 
 
+def _ignore_rules_match(ignore_path: Path, mode: str) -> bool:
+    if ignore_path.is_symlink() or not ignore_path.is_file():
+        return False
+    lines = ignore_path.read_text(encoding="utf-8").splitlines()
+    required = LOCAL_IGNORE_RULES if mode == "local" else SHARED_IGNORE_RULES
+    forbidden = set(ALL_MANAGED_IGNORE_RULES) - set(required)
+    if any(lines.count(rule) != 1 for rule in required):
+        return False
+    if any(rule in lines for rule in forbidden):
+        return False
+    first_required_index = min(lines.index(rule) for rule in required)
+    return not any(
+        line.startswith("!") and not line.startswith(r"\!")
+        for line in lines[first_required_index + 1 :]
+    )
+
+
 def _is_up_to_date(project: Path, mode: str, canonical: str, adapter: str, desired_block: str) -> bool:
     canonical_path = project / canonical
     adapter_path = project / adapter
@@ -282,15 +310,7 @@ def _is_up_to_date(project: Path, mode: str, canonical: str, adapter: str, desir
         source = Path(__file__).resolve().parents[1] / "templates" / "codex-agents" / name
         if destination.is_symlink() or not destination.is_file() or destination.read_bytes() != source.read_bytes():
             return False
-    ignore_path = project / ".gitignore"
-    ignore_rules = LOCAL_IGNORE_RULES if mode == "local" else SHARED_IGNORE_RULES
-    if (
-        ignore_path.is_symlink()
-        or not ignore_path.is_file()
-        or not set(ignore_rules).issubset(
-            set(ignore_path.read_text(encoding="utf-8").splitlines())
-        )
-    ):
+    if not _ignore_rules_match(project / ".gitignore", mode):
         return False
     return True
 
@@ -309,19 +329,26 @@ def _managed_update_desired(
     if not adapter_path.is_symlink() or adapter_path.readlink() != Path(canonical):
         return None
     contents = canonical_path.read_text(encoding="utf-8")
-    current_block = _managed_block(contents)
-    if current_block is None or current_block == desired_block:
+    current_details = _managed_block_details(contents)
+    desired_details = _managed_block_details(desired_block)
+    if current_details is None or desired_details is None:
+        return None
+    current_block, current_version = current_details
+    _, desired_version = desired_details
+    if current_block == desired_block or current_version == desired_version:
+        return None
+    expected_profiles = KNOWN_PROFILE_DIGESTS_BY_VERSION.get(current_version)
+    if expected_profiles is None or set(expected_profiles) != set(PROFILE_NAMES):
         return None
     for name in PROFILE_NAMES:
         destination = project / PROFILE_DIRECTORY / name
-        source = Path(__file__).resolve().parents[1] / "templates" / "codex-agents" / name
-        if destination.is_symlink() or not destination.is_file() or destination.read_bytes() != source.read_bytes():
+        if (
+            destination.is_symlink()
+            or not destination.is_file()
+            or _digest_bytes(destination.read_bytes()) != expected_profiles[name]
+        ):
             return None
-    ignore_path = project / ".gitignore"
-    ignore_rules = LOCAL_IGNORE_RULES if mode == "local" else SHARED_IGNORE_RULES
-    if ignore_path.is_symlink() or not ignore_path.is_file():
-        return None
-    if not set(ignore_rules).issubset(set(ignore_path.read_text(encoding="utf-8").splitlines())):
+    if not _ignore_rules_match(project / ".gitignore", mode):
         return None
     return contents.replace(current_block, desired_block, 1)
 
@@ -359,7 +386,7 @@ def _split_dogfood_legacy(contents: str) -> tuple[str, str]:
     return prefix, suffix
 
 
-def _managed_block(contents: str) -> str | None:
+def _managed_block_details(contents: str) -> tuple[str, str] | None:
     lines = contents.splitlines(keepends=True)
     opening_indices = [index for index, line in enumerate(lines) if line.rstrip("\n").startswith("<!-- sw:managed")]
     closing_indices = [index for index, line in enumerate(lines) if line.rstrip("\n").startswith("<!-- /sw:managed")]
@@ -372,10 +399,18 @@ def _managed_block(contents: str) -> str | None:
     block = "".join(lines[opening_index : closing_index + 1]).rstrip("\n")
     opening = MANAGED_OPENING_PATTERN.match(lines[opening_index].rstrip("\n"))
     assert opening is not None
+    version = opening.group("version")
+    if not is_calendar_version(version):
+        return None
     body = "".join(lines[opening_index + 1 : closing_index]).rstrip("\n")
     if opening.group("digest") != _digest_text(body):
         return None
-    return block
+    return block, version
+
+
+def _managed_block(contents: str) -> str | None:
+    details = _managed_block_details(contents)
+    return details[0] if details is not None else None
 
 
 def _operations(project: Path, mode: str, canonical: str, adapter: str, desired_canonical: str, state: str) -> tuple[Operation, ...]:
@@ -414,14 +449,23 @@ def _operations(project: Path, mode: str, canonical: str, adapter: str, desired_
                     _digest_bytes(source.read_bytes()),
                 )
             )
+        elif (
+            state == "legacy-migratable"
+            and not destination.is_symlink()
+            and destination.is_file()
+            and destination.read_bytes() != source.read_bytes()
+        ):
+            operations.append(
+                Operation(
+                    "replace-profile",
+                    (PROFILE_DIRECTORY / name).as_posix(),
+                    _digest_bytes(destination.read_bytes()),
+                    _digest_bytes(source.read_bytes()),
+                )
+            )
     ignore_path = project / ".gitignore"
     ignore_rules = LOCAL_IGNORE_RULES if mode == "local" else SHARED_IGNORE_RULES
-    current_ignore_lines = (
-        set(ignore_path.read_text(encoding="utf-8").splitlines())
-        if not ignore_path.is_symlink() and ignore_path.is_file()
-        else set()
-    )
-    if not set(ignore_rules).issubset(current_ignore_lines):
+    if not _ignore_rules_match(ignore_path, mode):
         operations.append(
             Operation(
                 "ensure-ignore-rules",
@@ -520,7 +564,7 @@ def _validate_operation_precondition(destination: Path, operation: Operation) ->
         if exists:
             raise UpdateError(f"managed destination is occupied: {operation.relative_path}")
         return
-    if operation.action in {"replace-managed-block", "replace-with-symlink"}:
+    if operation.action in {"replace-managed-block", "replace-profile", "replace-with-symlink"}:
         if destination.is_symlink() or not destination.is_file():
             raise UpdateError(f"managed destination is not the expected regular file: {operation.relative_path}")
         if operation.expected_before != _digest_bytes(destination.read_bytes()):
@@ -538,9 +582,7 @@ def _validate_operation_precondition(destination: Path, operation: Operation) ->
 
 def _validate_profile_source(operation: Operation) -> None:
     profile_prefix = f"{PROFILE_DIRECTORY.as_posix()}/"
-    if operation.action != "create" or not operation.relative_path.startswith(
-        profile_prefix
-    ):
+    if operation.action not in {"create", "replace-profile"} or not operation.relative_path.startswith(profile_prefix):
         return
     source = (
         Path(__file__).resolve().parents[1]
@@ -586,7 +628,7 @@ def _apply_operation(project: Path, operation: Operation) -> None:
     destination = project / relative_path
     _validate_operation_precondition(destination, operation)
     _validate_profile_source(operation)
-    if operation.action in {"create", "replace-managed-block"}:
+    if operation.action in {"create", "replace-managed-block", "replace-profile"}:
         if operation.relative_path.startswith(f"{PROFILE_DIRECTORY.as_posix()}/"):
             source = (
                 Path(__file__).resolve().parents[1]
@@ -607,7 +649,7 @@ def _apply_operation(project: Path, operation: Operation) -> None:
             destination,
             contents,
             mode,
-            replace=operation.action == "replace-managed-block",
+            replace=operation.action != "create",
         )
         return
     if operation.action in {"create-symlink", "replace-with-symlink"}:
@@ -631,12 +673,17 @@ def _apply_operation(project: Path, operation: Operation) -> None:
 
 def _updated_ignore_bytes(destination: Path, rules: list[str]) -> bytes:
     existing = destination.read_bytes() if destination.is_file() and not destination.is_symlink() else b""
-    existing_lines = set(existing.decode("utf-8").splitlines())
-    missing_rules = [rule for rule in rules if rule not in existing_lines]
-    if not missing_rules:
-        return existing
-    separator = b"" if not existing or existing.endswith(b"\n") else b"\n"
-    return existing + separator + "".join(f"{rule}\n" for rule in missing_rules).encode("utf-8")
+    preserved = [
+        line
+        for line in existing.decode("utf-8").splitlines()
+        if line not in ALL_MANAGED_IGNORE_RULES
+    ]
+    while preserved and not preserved[-1]:
+        preserved.pop()
+    if preserved:
+        preserved.append("")
+    preserved.extend(rules)
+    return ("\n".join(preserved) + "\n").encode("utf-8")
 
 
 def _atomic_write(

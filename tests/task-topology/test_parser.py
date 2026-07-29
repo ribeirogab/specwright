@@ -11,7 +11,11 @@ import unittest
 SCRIPT_DIRECTORY = Path(__file__).resolve().parents[2] / "plugins" / "sw" / "scripts"
 sys.path.insert(0, str(SCRIPT_DIRECTORY))
 
-from validate_task_topology import parse_task_document
+from validate_task_topology import (
+    parse_task_document,
+    validate_issue_task_topology,
+    validate_task_topology,
+)
 
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -92,6 +96,92 @@ class TaskParserTests(unittest.TestCase):
         messages = {diagnostic.message for diagnostic in result.diagnostics}
         self.assertIn("duplicate AC field for T1", messages)
         self.assertIn("missing Validation field for T1", messages)
+
+    def test_dependency_cycle_and_wave_collision_fixtures_are_rejected(self) -> None:
+        expected = {
+            "bad-task-dependency": "depends on missing task",
+            "bad-task-cycle": "dependency cycle",
+            "bad-task-collision": "same-wave ownership collision",
+        }
+        fixture_root = REPOSITORY_ROOT / "plugins" / "sw" / "scripts" / "fixtures"
+        for name, fragment in expected.items():
+            with self.subTest(name=name):
+                result = validate_task_topology(
+                    (fixture_root / name / "tasks.md").read_text()
+                )
+                self.assertTrue(
+                    any(fragment in item.message for item in result.diagnostics),
+                    result.diagnostics,
+                )
+
+    def test_legacy_policy_accepts_shipped_and_blocks_active(self) -> None:
+        fixture_root = REPOSITORY_ROOT / "plugins" / "sw" / "scripts" / "fixtures"
+        shipped = validate_issue_task_topology(
+            (fixture_root / "legacy-shipped" / "issue.md").read_text(),
+            (fixture_root / "legacy-shipped" / "tasks.md").read_text(),
+        )
+        active = validate_issue_task_topology(
+            (fixture_root / "legacy-active" / "issue.md").read_text(),
+            (fixture_root / "legacy-active" / "tasks.md").read_text(),
+        )
+        self.assertEqual(shipped.diagnostics, ())
+        self.assertTrue(
+            any("requires explicit schema-2 replanning" in item.message for item in active.diagnostics)
+        )
+
+    def test_ac_traceability_uses_only_task_metadata_and_rejects_unknown_ids(self) -> None:
+        issue = (
+            "---\nstatus: in-progress\n---\n"
+            "## Acceptance Criteria\n\n"
+            "- [ ] **AC-1** observable behavior\n"
+        )
+        tasks = (
+            "---\ntasks_schema: 2\n---\n"
+            "### T1: Wrong AC\n\n"
+            "**AC:** AC-2\n"
+            "**Delegable:** no\n"
+            "**Depends on:** none\n"
+            "**Files:**\n"
+            "- None\n"
+            "**Integration:** inline\n"
+            "**Validation:** printf 'AC-1 appears only in prose'\n"
+        )
+        result = validate_issue_task_topology(issue, tasks)
+        messages = {item.message for item in result.diagnostics}
+        self.assertIn(
+            "acceptance criterion AC-1 is not covered by any task AC field",
+            messages,
+        )
+        self.assertIn("T1 references missing acceptance criterion AC-2", messages)
+
+    def test_isolated_ownership_rejects_globs_and_reserved_state(self) -> None:
+        entries = (
+            "plugins/sw/**/*.py",
+            ".git",
+            ".git/config",
+            ".specwright/issues/example/issue.md",
+        )
+        for path in entries:
+            with self.subTest(path=path):
+                result = parse_task_document(
+                    "---\ntasks_schema: 2\n---\n"
+                    "### T1: Unsafe ownership\n\n"
+                    "**AC:** AC-1\n"
+                    "**Delegable:** yes\n"
+                    "**Depends on:** none\n"
+                    "**Files:**\n"
+                    f"- Modify: `{path}`\n"
+                    "**Integration:** isolated\n"
+                    "**Validation:** true\n"
+                )
+                self.assertTrue(result.diagnostics)
+                self.assertTrue(
+                    any(
+                        "safe repository-relative" in item.message
+                        or "isolated ownership may not include" in item.message
+                        for item in result.diagnostics
+                    )
+                )
 
     def test_approved_issue_tasks_have_no_parser_layer_diagnostics(self) -> None:
         issue_tasks = REPOSITORY_ROOT / ".specwright" / "issues" / "2026-07-28-dual-host-safe-worker-orchestration" / "tasks.md"

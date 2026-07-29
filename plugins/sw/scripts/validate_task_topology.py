@@ -251,7 +251,36 @@ def _validate_wave_ownership(wave: list[Task], diagnostics: list[Diagnostic]) ->
 def validate_issue_task_topology(issue_text: str, tasks_text: str) -> ParseResult:
     """Apply the legacy policy before validating a schema-2 task document."""
     if _has_schema_two(tasks_text):
-        return validate_task_topology(tasks_text)
+        result = validate_task_topology(tasks_text)
+        if result.diagnostics:
+            return result
+        diagnostics: list[Diagnostic] = []
+        issue_ac_ids = set(_issue_ac_ids(issue_text))
+        task_ac_ids = {
+            ac_id
+            for task in result.tasks
+            for ac_id in task.ac_ids
+        }
+        for ac_id in sorted(issue_ac_ids - task_ac_ids):
+            diagnostics.append(
+                Diagnostic(
+                    1,
+                    f"acceptance criterion {ac_id} is not covered by any task AC field",
+                )
+            )
+        for task in result.tasks:
+            for ac_id in task.ac_ids:
+                if ac_id not in issue_ac_ids:
+                    diagnostics.append(
+                        Diagnostic(
+                            task.line,
+                            f"{task.task_id} references missing acceptance criterion {ac_id}",
+                        )
+                    )
+        return ParseResult(
+            result.tasks,
+            tuple(sorted(diagnostics, key=lambda item: item.line)),
+        )
 
     status = _issue_status(issue_text)
     if status == "shipped":
@@ -291,6 +320,23 @@ def _issue_status(text: str) -> str | None:
         if line.startswith("status:"):
             return line.partition(":")[2].strip() or None
     return None
+
+
+def _issue_ac_ids(text: str) -> tuple[str, ...]:
+    in_acceptance_criteria = False
+    identifiers: list[str] = []
+    for line in text.splitlines():
+        if line == "## Acceptance Criteria":
+            in_acceptance_criteria = True
+            continue
+        if in_acceptance_criteria and line.startswith("## "):
+            break
+        if not in_acceptance_criteria:
+            continue
+        match = re.match(r"^-\s+\[[ xX]\]\s+\*\*(AC-[1-9][0-9]*)\*\*", line)
+        if match:
+            identifiers.append(match.group(1))
+    return tuple(identifiers)
 
 
 def _parse_csv(value: str, pattern: re.Pattern[str], label: str, line: int, diagnostics: list[Diagnostic]) -> tuple[str, ...]:
@@ -340,6 +386,14 @@ def _parse_files(
             if normalized_replacement is None or normalized_target is None:
                 diagnostics.append(Diagnostic(line, "Files paths must be safe repository-relative paths"))
                 continue
+            if integration == "isolated" and _is_reserved_isolated_path(normalized_replacement):
+                diagnostics.append(
+                    Diagnostic(
+                        line,
+                        "isolated ownership may not include .git or .specwright paths",
+                    )
+                )
+                continue
             files.append(normalized_replacement)
             continue
         match = FILE_ENTRY_PATTERN.match(entry)
@@ -355,10 +409,22 @@ def _parse_files(
         if normalized is None:
             diagnostics.append(Diagnostic(line, "Files paths must be safe repository-relative paths"))
             continue
+        if integration == "isolated" and _is_reserved_isolated_path(normalized):
+            diagnostics.append(
+                Diagnostic(
+                    line,
+                    "isolated ownership may not include .git or .specwright paths",
+                )
+            )
+            continue
         files.append(normalized)
     if integration == "isolated" and not files:
         diagnostics.append(Diagnostic(files_line, "Integration: isolated requires at least one owned file"))
     return tuple(files)
+
+
+def _is_reserved_isolated_path(path: str) -> bool:
+    return path.split("/", 1)[0] in {".git", ".specwright"}
 
 
 def _split_symlink_entry(value: str) -> tuple[str, str]:
@@ -371,7 +437,13 @@ def _split_symlink_entry(value: str) -> tuple[str, str]:
 
 def _normalize_repository_path(value: str) -> str | None:
     candidate = _strip_code_span(value.strip())
-    if not candidate or "`" in candidate or "\\" in candidate or candidate.startswith("/"):
+    if (
+        not candidate
+        or "`" in candidate
+        or "\\" in candidate
+        or candidate.startswith("/")
+        or any(character in candidate for character in "*?[]{}")
+    ):
         return None
     path = PurePosixPath(candidate)
     if path.is_absolute() or any(part == ".." for part in path.parts):

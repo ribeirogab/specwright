@@ -1,7 +1,7 @@
 ---
 name: run
 user-invocable: false
-description: "Conduct a specwright milestone: read the board, dispatch every ready issue to an issue-owner sub-agent (parallel, one worktree each), track progress, apply circuit breakers, and close out with goal reconciliation, learnings promotion, and a final report. Resumable from any fresh session. Trigger on '/sw:run', 'run the milestone', 'continue the milestone', or when the user asks to resume conducting a milestone."
+description: "Conduct a specwright milestone: read the board, dispatch every ready issue to the sw-issue-owner role (parallel, one worktree each), track progress, apply circuit breakers, and close out with goal reconciliation, learnings promotion, and a final report. Resumable from any fresh session. Trigger on '/sw:run', '$sw:run', 'run the milestone', 'continue the milestone', or when the user asks to resume conducting a milestone."
 ---
 
 # run — the milestone orchestrator
@@ -17,7 +17,7 @@ Detect the commit mode before locating anything, and set `mode` for the loop bel
 ```bash
 if git check-ignore -q .specwright/milestones; then
   mode=local
-  [ -d .specwright/milestones ] || { echo "local-mode vault not found in this checkout; run /sw:run from the checkout where you ran /sw:init local"; exit 1; }
+  [ -d .specwright/milestones ] || { echo "local-mode vault not found in this checkout; invoke sw:run from the checkout where you initialized specwright in local mode"; exit 1; }
 else
   mode=shared
 fi
@@ -25,7 +25,7 @@ fi
 
 - **`shared`** → conduct as normal; git carries the artifacts across worktrees.
 - **`local`** → the vault, `AGENTS.override.md`, its `CLAUDE.local.md` adapter, and the `sw-*` Codex role profiles are git-ignored, so `git worktree add` cannot carry them into an owner's worktree and git cannot sync an owner's artifacts back. specwright bridges the owner contract and issue folder with an explicit copy in, then transports only the issue folder back out (the loop's local-mode branches below); because the `.gitignore` lines are committed in `local` mode, every copied artifact lands git-ignored in the worktree, so an owner never commits it.
-  - The `git check-ignore` probe reports `local` from **any** worktree (the `.gitignore` is committed and present in every checkout). The separate `[ -d .specwright/milestones ]` test asks whether *this* checkout actually holds the vault — in `local` mode the vault lives only where `/sw:init local` ran.
+  - The `git check-ignore` probe reports `local` from **any** worktree (the `.gitignore` is committed and present in every checkout). The separate `[ -d .specwright/milestones ]` test asks whether *this* checkout actually holds the vault — in `local` mode the vault lives only where `sw:init` ran.
   - **Vault absent here** → **stop** with the message above and dispatch nothing: an externally-created worktree (e.g. one under `.claude/worktrees/`) is not the conductor's home.
   - **Vault present** → this checkout is the **canonical vault**; conduct with the loop's local-mode adaptations.
 
@@ -58,7 +58,7 @@ Repeat until no issue is ready and none is running:
        cp -R "$ISSUE_REL/." ".specwright/worktrees/<slug>/$ISSUE_REL/"
      fi
      ```
-   - **Dispatch the `issue-owner` subagent** — it pins the owner's model + effort and preloads the `plan` skill. Its prompt is just the coordinates: the issue folder path, the milestone path, and the worktree path. The pipeline it runs (plan → self-review → implement → quality gate → runtime verification → PR → review to `lgtm` → curate `learnings.md` → flip `issue.md` status) and the return contract — `shipped` (+ PR URL + one line per learning) or `blocked` (+ a paste-ready Blockers block, **Why / Tried / Needs**, written by the owner for the board) — live in the agent definition, not this prompt.
+   - **Dispatch the `sw-issue-owner` subagent** — it pins the owner's model + effort and routes into the shared `sw:plan` workflow. Its prompt is just the coordinates: the issue folder path, the milestone path, and the worktree path. The pipeline it runs (plan → self-review → implement → quality gate → runtime verification → PR → review to `lgtm` → curate `learnings.md` → flip `issue.md` status) and the return contract — `shipped` (+ PR URL + one line per learning) or `blocked` (+ a paste-ready Blockers block, **Why / Tried / Needs**, written by the owner for the board) — live in the role definition and shared workflow, not this prompt.
    - Append `dispatched` to the board's Dispatch Log and commit — the per-append commit rule (Track, below) starts with this first append.
    - Keep the **agentId** from the spawn result — name aliases expire; address every resume or relay by that ID, never by name. Treat relays as one-way: read the owner's answers from repository artifacts, not from message replies.
 3. **Track** — as each owner returns, append the event to the Dispatch Log, and **commit the board after every Dispatch Log append** — not only at round close; an uncommitted line is lost to a crash. On `shipped`: note the learnings one-liners and PR URL. On `blocked`: paste the owner's paste-ready Blockers block (Why / Tried / Needs) into the board's Blockers section **unmodified** — the conductor never composes or restructures it. Owners flip their own `issue.md` status; the orchestrator never edits an `issue.md`.
@@ -123,6 +123,6 @@ When the agent cannot spawn sub-agents, the session itself acts as each issue's 
 ## Boundaries
 
 - Never edit code, tests, or docs outside the milestone folder — dispatch an owner.
-- Never approve reviews or merge PRs — `lgtm` comes from `/sw:review` inside each issue's pipeline; merging is the human's.
+- Never approve reviews or merge PRs — `lgtm` comes from the `sw:review` workflow inside each issue's pipeline; merging is the human's.
 - Never rewrite Dispatch Log history — it is append-only.
-- Natural language works: "continue the milestone" in a fresh session must behave exactly like `/sw:run`.
+- Natural language works: "continue the milestone" in a fresh session must behave exactly like the explicit host surface (`/sw:run` or `$sw:run`).

@@ -4,7 +4,7 @@ created: {{YYYY-MM-DD}}
 ---
 # {{Milestone Name}} — Board
 
-> The milestone's live state: issue order, dependencies, dispatch log, and blocker reports. The orchestrator (`/sw:run`) reads and writes this file on every loop turn. Issue `status:` lives in each issue's own `issue.md` frontmatter — it is **never duplicated here**; the board holds only what has no other home.
+> The milestone's live state: issue order, dependencies, dispatch log, and blocker reports. The `sw:run` orchestrator reads and writes this file on every loop turn. Issue `status:` lives in each issue's own `issue.md` frontmatter — it is **never duplicated here**; the board holds only what has no other home.
 
 ## Issues
 

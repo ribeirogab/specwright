@@ -14,7 +14,7 @@ Take what was discussed so far in this conversation and enter the issue flow.
 
 1. **Summarize the conversation so far** — extract the key decisions, constraints, and open questions that emerged from the discussion. Present a 3-5 bullet summary and ask: "Is this a fair read of where we landed?"
 
-2. **Enter the `/sw:brainstorm` skill** — use the conversation as context, but run the full flow. The prior discussion gives you a head start, not a shortcut. If something important was mentioned casually, confirm it explicitly before locking it in.
+2. **Enter the `sw:brainstorm` workflow** — use the conversation as context, but run the full flow. The prior discussion gives you a head start, not a shortcut. If something important was mentioned casually, confirm it explicitly before locking it in.
 
 3. **Follow the brainstorm flow normally** — clarifying conversation, approaches, design sections, design approval (the **only** design review; host permission and approval policy still applies to every action). After approval the brainstorm concludes the **scope** — single issue or milestone (agent suggests, user decides) — runs the matching post-design batch, and writes the artifacts: a standalone `issue.md` under `.specwright/issues/`, or `goal.md` + `board.md` + N `issue.md` under `.specwright/milestones/`. Single issue continues into the plan skill (spec + tasks + self-review, implement, quality gate, runtime verification, PR, review to `lgtm`); a milestone always ends planning with a handoff and is conducted later by the run skill. See the applicable canonical `AGENTS.md` or `AGENTS.override.md`.
 
@@ -22,8 +22,8 @@ Take what was discussed so far in this conversation and enter the issue flow.
 
 Use it to focus or narrow the scope. Examples:
 
-- `/sw:spec focus on the auth part` — scope the issue to just the auth subsystem discussed
-- `/sw:spec let's split this into two issues` — decompose before formalizing
+- `sw:spec focus on the auth part` — scope the issue to just the auth subsystem discussed
+- `sw:spec let's split this into two issues` — decompose before formalizing
 
 ## Key rule
 

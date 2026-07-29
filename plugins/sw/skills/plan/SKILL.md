@@ -13,9 +13,23 @@ Assume the implementing engineer has zero context for our codebase and questiona
 **Announce at start:** "I'm using the plan skill to write the technical spec and tasks."
 
 **Context:** runs after the issue exists — written by the brainstorm (standalone) or
-by the milestone decomposition (dispatched by the `run` workflow: `/sw:run` in
-Claude Code or `$sw:run` in Codex). Work in the issue's branch — or its worktree
-under `.specwright/worktrees/<slug>`, if one was created.
+by the milestone decomposition (dispatched by the `sw:run` workflow). Work in the
+issue's branch — or its worktree under `.specwright/worktrees/<slug>`, if one was
+created.
+
+## Resolve bundled resources
+
+Resolve `SW_PLUGIN_ROOT` before reading a template or invoking the validator:
+
+1. use `PLUGIN_ROOT` when it contains `.codex-plugin/plugin.json`;
+2. otherwise use `CLAUDE_PLUGIN_ROOT` when it contains
+   `.claude-plugin/plugin.json`;
+3. otherwise derive the root from this loaded `skills/plan/SKILL.md` real path
+   (two parents above the `skills/plan/` directory).
+
+Require `templates/spec.md`, `templates/tasks.md`, and
+`scripts/validate-spec.sh` beneath that root. Stop before writing if resolution
+fails. Never look for bundled resources under the target repository.
 
 ## Locate the issue folder
 
@@ -34,7 +48,7 @@ If the issue covers multiple independent subsystems, it should have been decompo
 
 ## Writing the technical spec (`spec.md`)
 
-Copy the bundled template (`plugins/sw/templates/spec.md`) into the issue folder and fill it:
+Copy `"$SW_PLUGIN_ROOT/templates/spec.md"` into the issue folder and fill it:
 
 - **Frontmatter** — `feature`, `created`, `scope:` (your honest sizing: one of `low | medium | high | complex`; recorded only), the issue's `branch:`, `worktree:` (path or `null`), and `milestone:` (the milestone folder or `null`).
 - **Architecture / File Structure / Phase Ordering** — the technical *how*. Map which files will be created or modified and what each is responsible for. Units with clear boundaries and one responsibility; smaller focused files over large ones; files that change together live together; follow the existing patterns of the codebase.
@@ -44,7 +58,9 @@ Copy the bundled template (`plugins/sw/templates/spec.md`) into the issue folder
 
 **Each step is one action (2-5 minutes):** "Write the failing test" — step. "Run it to make sure it fails" — step. "Implement the minimal code to make the test pass" — step. "Run the tests" — step. "Commit" — step.
 
-**Start `tasks.md` from the bundled template** (`plugins/sw/templates/tasks.md`) — keep its frontmatter and header note verbatim; the template is the single source of truth for the artifact's shape.
+**Start `tasks.md` from `"$SW_PLUGIN_ROOT/templates/tasks.md"`** — keep its
+frontmatter and header note verbatim; the template is the single source of truth
+for the artifact's shape.
 
 **Schema-2 task structure:**
 
@@ -108,7 +124,14 @@ permission, command-approval, Git, or external-action policy.
 
 **Gates (run in order):**
 
-1. **Mechanical** — `plugins/sw/scripts/validate-spec.sh <issue-folder>`; non-zero exit names the structural defect. Fix and re-run until it exits 0 — with one exception: a failure caused by the approved ticket itself (`issue.md`) means **stop and report it with the exact validator `FAIL` line** — to the user (standalone) or in a blocked report to the orchestrator (milestone) — and proceed only after an acknowledged resolution. The owner never rewords an approved criterion; any ticket edit is its own commit naming the changed criterion.
+1. **Mechanical** — `"$SW_PLUGIN_ROOT/scripts/validate-spec.sh" <issue-folder>`;
+   non-zero exit names the structural defect. Fix and re-run until it exits 0 —
+   with one exception: a failure caused by the approved ticket itself (`issue.md`)
+   means **stop and report it with the exact validator `FAIL` line** — to the user
+   (standalone) or in a blocked report to the orchestrator (milestone) — and
+   proceed only after an acknowledged resolution. The owner never rewords an
+   approved criterion; any ticket edit is its own commit naming the changed
+   criterion.
 2. **Spec-document-reviewer subagent** — dispatch the `sw-spec-document-reviewer` subagent over `issue.md` + `spec.md` + `tasks.md` (pass the three paths; its rubric and its model + effort live in the agent definition). Fix, re-dispatch until Approved (max 3 iterations, then surface to the human).
 3. **`sw:review-spec`** — invoke `/sw:review-spec` in Claude Code or
    `$sw:review-spec` in Codex. Fix every external-evaluator `FAIL`.
@@ -149,9 +172,15 @@ Immediately before dispatching a wave:
 1. Require a clean issue worktree.
 2. Record `base SHA` as the exact current issue `HEAD`. Every task in that wave
    starts from this same SHA.
-3. Derive a task branch name from the repository's established convention and the
+3. Inspect each declared path and every existing ancestor with `lstat`. Resolve
+   every existing entry and require it to remain inside the task worktree. A
+   symlink in the path is a blocker because a worker write could escape Git's
+   touched-path evidence. The only exception is a task whose exact operation is
+   `Delete` or `Replace with symlink` for the symlink leaf itself; that task must
+   operate on the link without dereferencing it.
+4. Derive a task branch name from the repository's established convention and the
    task ID. Never reuse or reset an unrelated branch.
-4. Resolve the shared repository root from the absolute Git common directory, so a
+5. Resolve the shared repository root from the absolute Git common directory, so a
    task worktree is a sibling even when the issue itself already runs in a
    worktree:
 
@@ -161,7 +190,7 @@ Immediately before dispatching a wave:
    TASK_WORKTREE="$REPOSITORY_ROOT/.specwright/worktrees/<issue-slug>-<lowercase-task-id>"
    ```
 
-5. Create the task worktree from that exact base:
+6. Create the task worktree from that exact base:
 
    ```bash
    git worktree add \
@@ -184,6 +213,7 @@ Send one worker this complete payload:
 - the normalized allowed file paths from `Files:`;
 - the exact `Validation:` command;
 - project conventions relevant to those paths;
+- the successful symlink/containment preflight for every allowed path;
 - these prohibitions: no path outside the allowed list, no `.specwright/` artifact,
   no issue branch, no PR, no `learnings.md`, no integration of another branch, and
   no worktree removal.
@@ -216,13 +246,15 @@ For each completed worker, before changing the issue branch:
 2. Verify every returned commit descends from that base, the ordered commit SHAs
    form the task branch's exact non-merge sequence, and the final SHA is its HEAD.
 3. Require a clean worker worktree.
-4. Compute `git diff --name-only <base-sha>..<final-sha>` and compare it with both
+4. Repeat the allowed-path `lstat` and resolved-containment check before accepting
+   the result. Reject a new or changed symlink that could escape the worktree.
+5. Compute `git diff --name-only <base-sha>..<final-sha>` and compare it with both
    the returned touched paths and the task's normalized allowed paths. Any
    undeclared path, `.specwright/` path, or ownership overlap rejects the result.
-5. Read the complete diff, not only its path list. Confirm it implements only the
+6. Read the complete diff, not only its path list. Confirm it implements only the
    task and that the exact validation command ran successfully with credible
    evidence.
-6. Record the worker's raw discoveries for later owner curation; workers never edit
+7. Record the worker's raw discoveries for later owner curation; workers never edit
    `learnings.md`.
 
 Reject an unverifiable SHA, merge commit, dirty worktree, path mismatch, missing

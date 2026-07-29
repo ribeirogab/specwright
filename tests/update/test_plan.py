@@ -183,6 +183,23 @@ class UpdatePlanTests(unittest.TestCase):
             (project / ".gitignore").write_text(".specwright/worktrees/\n")
             self.assertEqual(plan_update(project, "shared").state, "drifted")
 
+    def test_malformed_or_unknown_managed_versions_are_drifted(self) -> None:
+        for version in ("garbage", "2026.7.26"):
+            with self.subTest(version=version), tempfile.TemporaryDirectory() as directory:
+                project = Path(directory)
+                block = render_managed_block("2026.7.28").replace(
+                    "version=2026.7.28",
+                    f"version={version}",
+                    1,
+                )
+                (project / "AGENTS.md").write_text(block)
+                (project / "CLAUDE.md").symlink_to("AGENTS.md")
+                self._install_profiles(project)
+                (project / ".gitignore").write_text(".specwright/worktrees/\n")
+                plan = plan_update(project, "shared")
+                self.assertEqual(plan.state, "drifted")
+                self.assertEqual(plan.operations, ())
+
     def test_json_output_is_canonical_and_pure(self) -> None:
         with self._fixture_copy("new") as project:
             before = self._tree_snapshot(project)
@@ -366,17 +383,77 @@ class UpdatePlanTests(unittest.TestCase):
             (project / "CLAUDE.md").symlink_to("AGENTS.md")
             self._install_profiles(project)
             (project / ".gitignore").write_text(".specwright/worktrees/\n")
-            plan = plan_update(project, "shared")
-            self.assertEqual(plan.state, "legacy-migratable")
-            self.assertEqual(
-                [operation.relative_path for operation in plan.operations],
-                ["AGENTS.md"],
-            )
-            apply_update(project, "shared", plan.plan_id)
+            with mock.patch.dict(
+                sw_update.KNOWN_PROFILE_DIGESTS_BY_VERSION,
+                {"2026.7.27": self._installed_profile_digests(project)},
+                clear=True,
+            ):
+                plan = plan_update(project, "shared")
+                self.assertEqual(plan.state, "legacy-migratable")
+                self.assertEqual(
+                    [operation.relative_path for operation in plan.operations],
+                    ["AGENTS.md"],
+                )
+                apply_update(project, "shared", plan.plan_id)
             updated = agents.read_bytes()
             self.assertTrue(updated.startswith(prefix.encode("utf-8")))
             self.assertTrue(updated.endswith(suffix.encode("utf-8")))
             self.assertIn(render_managed_block("2026.7.28").encode("utf-8"), updated)
+
+    def test_known_version_upgrade_replaces_unchanged_managed_profiles(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            (project / "AGENTS.md").write_text(render_managed_block("2026.7.27"))
+            (project / "CLAUDE.md").symlink_to("AGENTS.md")
+            destination = project / ".codex" / "agents"
+            destination.mkdir(parents=True)
+            old_digests: dict[str, str] = {}
+            for name in sw_update.PROFILE_NAMES:
+                contents = f"managed profile from prior release: {name}\n".encode()
+                (destination / name).write_bytes(contents)
+                old_digests[name] = sw_update._digest_bytes(contents)
+            (project / ".gitignore").write_text(".specwright/worktrees/\n")
+
+            with mock.patch.dict(
+                sw_update.KNOWN_PROFILE_DIGESTS_BY_VERSION,
+                {"2026.7.27": old_digests},
+                clear=True,
+            ):
+                plan = plan_update(project, "shared")
+                self.assertEqual(plan.state, "legacy-migratable")
+                self.assertEqual(
+                    [operation.action for operation in plan.operations],
+                    ["replace-managed-block", *("replace-profile",) * 4],
+                )
+                apply_update(project, "shared", plan.plan_id)
+
+            self._assert_profiles_match(project)
+            self.assertEqual(plan_update(project, "shared").state, "up-to-date")
+
+    def test_ignore_negation_after_managed_rules_is_drift(self) -> None:
+        with self._fixture_copy("new") as project:
+            initial = plan_update(project, "local")
+            apply_update(project, "local", initial.plan_id)
+            with (project / ".gitignore").open("a") as ignore_file:
+                ignore_file.write("!.codex/agents/sw-reviewer.toml\n")
+            plan = plan_update(project, "local")
+            self.assertEqual(plan.state, "drifted")
+            self.assertEqual(plan.operations, ())
+
+    def test_new_plan_normalizes_managed_ignore_rules_to_the_end(self) -> None:
+        with self._fixture_copy("new") as project:
+            (project / ".gitignore").write_text(
+                ".codex/agents/sw-*.toml\n"
+                "!.codex/agents/sw-reviewer.toml\n"
+                "project-cache/\n"
+            )
+            plan = plan_update(project, "local")
+            self.assertEqual(plan.state, "new")
+            apply_update(project, "local", plan.plan_id)
+            lines = (project / ".gitignore").read_text().splitlines()
+            self.assertEqual(lines[-5:], list(sw_update.LOCAL_IGNORE_RULES))
+            self.assertEqual(lines.count(".codex/agents/sw-*.toml"), 1)
+            self.assertEqual(plan_update(project, "local").state, "up-to-date")
 
     def test_apply_is_idempotent_and_post_apply_identity_is_stable(self) -> None:
         with self._fixture_copy("new") as project:
@@ -476,6 +553,14 @@ class UpdatePlanTests(unittest.TestCase):
             )
         ):
             self.assertEqual((destination / source.name).read_bytes(), source.read_bytes())
+
+    @staticmethod
+    def _installed_profile_digests(project: Path) -> dict[str, str]:
+        destination = project / ".codex" / "agents"
+        return {
+            name: sw_update._digest_bytes((destination / name).read_bytes())
+            for name in sw_update.PROFILE_NAMES
+        }
 
 
 class _TemporaryProject:

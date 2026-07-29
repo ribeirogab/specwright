@@ -399,12 +399,12 @@ The initial draft pull request contains only these planning artifacts and, when 
 **Integration:** inline
 **Files:**
 - Modify: `tests/install/run.sh`
-- Create: `tests/install/fixtures/update/new/**`
-- Create: `tests/install/fixtures/update/up-to-date/**`
-- Create: `tests/install/fixtures/update/legacy-shared/**`
-- Create: `tests/install/fixtures/update/legacy-local/**`
-- Create: `tests/install/fixtures/update/drifted/**`
-- Create: `tests/install/fixtures/update/symlink-unsupported/**`
+- Create: `tests/install/fixtures/update/new/.gitkeep`
+- Create: `tests/install/fixtures/update/up-to-date/AGENTS.md`
+- Create: `tests/install/fixtures/update/legacy-shared/.gitkeep`
+- Create: `tests/install/fixtures/update/legacy-local/.gitkeep`
+- Create: `tests/install/fixtures/update/drifted/AGENTS.md`
+- Create: `tests/install/fixtures/update/symlink-unsupported/.gitkeep`
 **Validation:** `bash tests/install/run.sh update worktree` exits 0 and proves four states, plan purity, identity mismatch refusal, apply idempotence, drift/symlink zero-write failures, profile drift, and ignored worktree copy-in.
 
 - [ ] **Step 1: Add recursive checksums** — snapshot every fixture before and after plan/failure paths.
@@ -475,6 +475,14 @@ The initial draft pull request contains only these planning artifacts and, when 
 - Modify: `plugins/sw/skills/review/SKILL.md`
 - Modify: `plugins/sw/skills/run/SKILL.md`
 - Modify: `plugins/sw/skills/spec/SKILL.md`
+- Modify: `plugins/sw/templates/board.md`
+- Modify: `plugins/sw/templates/issue.md`
+- Modify: `plugins/sw/templates/spec.md`
+- Modify: `.github/ISSUE_TEMPLATE/bug.md`
+- Modify: `.github/ISSUE_TEMPLATE/feature_request.md`
+- Modify: `.github/PULL_REQUEST_TEMPLATE.md`
+- Modify: `.specwright/conventions/README.md`
+- Modify: `.specwright/conventions/skill-validation-requirements.md`
 **Validation:** a documentation audit finds separate host install/invocation/update paths, canonical AGENTS/symlink modes, explicit permission boundaries, project profiles, local worktree propagation, schema-2 waves, and owner cherry-pick rules.
 
 - [ ] **Step 1: Update README installation docs** — describe each native marketplace and the host's exact install command.

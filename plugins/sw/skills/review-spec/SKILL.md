@@ -6,9 +6,23 @@ description: "Review an issue plan against project conventions and the approved 
 
 # Review Spec — External Evaluator Pass
 
-Run an **independent** review of an issue's technical plan written by the agent. It runs inside `/sw:plan` after `spec.md` + `tasks.md` are written — the external pass between the author's own self-review and implementation. The point is to catch the things the author rationalized past.
+Run an **independent** review of an issue's technical plan written by the agent. It runs inside the `sw:plan` workflow after `spec.md` + `tasks.md` are written — the external pass between the author's own self-review and implementation. The point is to catch the things the author rationalized past.
 
 **Announce at start:** "Reviewing the plan against conventions and the issue..."
+
+## Resolve the validator
+
+Resolve `SW_PLUGIN_ROOT` before the mechanical pre-check:
+
+1. use `PLUGIN_ROOT` when it contains `.codex-plugin/plugin.json`;
+2. otherwise use `CLAUDE_PLUGIN_ROOT` when it contains
+   `.claude-plugin/plugin.json`;
+3. otherwise derive the root from this loaded `skills/review-spec/SKILL.md` real
+   path (two parents above the `skills/review-spec/` directory).
+
+Require `scripts/validate-spec.sh` beneath that root. A missing resource is
+`validator missing`; never fall back to a target-repository-relative
+`plugins/sw/` path.
 
 ## Inputs
 
@@ -20,7 +34,7 @@ Run an **independent** review of an issue's technical plan written by the agent.
 Before the prose review, run the mechanical validator over the issue folder. It ships with the `sw` skill:
 
 ```bash
-plugins/sw/scripts/validate-spec.sh <issue-folder>
+"$SW_PLUGIN_ROOT/scripts/validate-spec.sh" <issue-folder>
 ```
 
 It deterministically checks `issue.md` frontmatter (`feature`/`created`/`status` + the status enum), `spec.md` frontmatter (`feature`/`created`/`scope` + the scope enum), surviving double-brace placeholders, vague-verb acceptance criteria, and `AC-N` task coverage. A **non-zero exit is a blocking FAIL** — record it as the `0. Mechanical validator` row, and the verdict is `Block` regardless of the prose findings. Still complete the prose review below so the author fixes everything in one pass. If the script is absent (older install), note `validator missing` and proceed with the prose review only.
@@ -43,7 +57,7 @@ Locate the `## Acceptance Criteria` section **in `issue.md`**. Evaluate every bu
 - Is it **observable** by someone other than the implementer?
 - Could it be verified in **under a minute** with a fixture or a curl?
 - Does it avoid **vague verbs**: "works", "handles gracefully", "is robust", "is fast" (without a number), "is simple"?
-- Is each criterion **numbered** `AC-1`, `AC-2`, … (the traceability handle tasks and `/sw:review` reference)?
+- Is each criterion **numbered** `AC-1`, `AC-2`, … (the traceability handle tasks and `sw:review` reference)?
 
 `FAIL` if the section is missing, empty, contains only placeholder text, or every bullet is vague. `WARN` if some bullets are vague or unnumbered but at least one is testable. `PASS` if all bullets are concrete and numbered.
 

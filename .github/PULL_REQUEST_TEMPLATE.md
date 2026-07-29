@@ -6,6 +6,8 @@ What this PR does, in 1–3 bullets. Link any related issue.
 
 - [ ] (For modified skills) Ran `python plugins/sw/scripts/quick_validate.py <skill-path>` — output was `Skill is valid!`.
 - [ ] (For modified skills) Ran `python plugins/sw/scripts/package_skill.py <skill-path> /tmp` — output ended with `Successfully packaged skill to: /tmp/<skill-name>.skill`.
+- [ ] (For package changes) Ran `claude plugin validate --strict plugins/sw` and the relevant `tests/install/run.sh` groups.
+- [ ] (For dual-host package changes) Ran `bash tests/release/run.sh`; native Codex ingestion ran in a disposable environment.
 - [ ] Tried the skill end-to-end in an agent session (Claude Code, Codex, Cursor, OpenCode, or whichever you use) and observed the expected behavior.
 - [ ] (For documentation or template-only changes) Visually confirmed the rendered output is correct.
 
@@ -13,7 +15,8 @@ What this PR does, in 1–3 bullets. Link any related issue.
 
 - [ ] Branch name is descriptive and not `main`.
 - [ ] `NOTICE.md` was updated if vendored content was refreshed or modified.
-- [ ] No edits under `.specwright/` or `.claude/` (maintainer-local dirs, out of scope).
+- [ ] `.specwright/` edits, if any, are limited to the current dogfooded issue/milestone artifacts; unrelated historical artifacts are unchanged.
+- [ ] No personal host state such as `.claude/settings.json` is committed.
 - [ ] Commit messages follow Conventional Commits style.
 - [ ] No AI-attribution footers in commits or this description (e.g. `Co-Authored-By: Claude`, `Generated with Cursor`, `Co-authored-by: Codex`, etc.).
 

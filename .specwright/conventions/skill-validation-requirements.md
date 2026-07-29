@@ -4,62 +4,67 @@ tags:
   - workflow
 severity: important
 applies-to:
-  - skills/<name>/SKILL.md
-  - .claude/skills/<name>/SKILL.md
+  - plugins/sw/skills/<name>/SKILL.md
 created: 2026-04-30
 ---
-# Skill validation requirements (frontmatter and folder)
+# Skill validation requirements
 
-A skill that violates any of the following hard constraints will silently fail to load — the YAML frontmatter validator on Claude's runtime rejects it. These are not style preferences; they are validation rules from Anthropic's platform docs.
+A shared skill must be discoverable from the same `plugins/sw/skills/` source by
+both host adapters. Validation failures block release even when one host happens to
+accept the file.
 
-## Why
+## Folder and file
 
-These constraints are enforced by Claude's skill discovery system. Violating them produces silent failures (the skill never appears in the available list) or upload errors. They were originally introduced to prevent prompt-injection via frontmatter and to keep skill discovery deterministic across Claude.ai, Claude Code, and the API.
+- The folder name is kebab-case: lowercase letters, digits, and single hyphens.
+- The folder name matches the frontmatter `name`.
+- The entry file is exactly `SKILL.md`.
+- A skill folder contains no `README.md`; supporting material belongs in
+  `references/` or another explicitly bundled resource.
+- Workflow behavior lives only in `SKILL.md`. The homonymous Claude command is a
+  pure redirect, and the Codex manifest points at the shared skills root.
 
-## How to Apply
+## Frontmatter
 
-When creating or modifying any skill in this repo, the following must be true. If you cannot satisfy a constraint, the skill is not shippable.
+Required:
 
-### Folder
+- `name`: non-empty, at most 64 characters, kebab-case, no leading/trailing or
+  repeated hyphen.
+- `description`: non-empty, at most 1024 characters, no XML angle brackets, and
+  describes both behavior and triggers.
 
-- The skill folder name must be **kebab-case**: lowercase letters, numbers, hyphens. No spaces, no underscores, no capitals.
-  - ✓ `processing-pdfs`, `sw-pr`
-  - ✗ `Processing PDFs`, `processing_pdfs`, `ProcessingPDFs`
-- The folder name **should match the `name` field** in `SKILL.md` exactly.
-- The folder must **not** contain a `README.md` — all documentation goes in `SKILL.md` or `references/`. (A repo-level `README.md` outside the skill folder is fine for human visitors on GitHub.)
+Allowed optional top-level keys:
 
-### File
+- `license`
+- `compatibility` (at most 500 characters)
+- `allowed-tools`
+- `metadata`
+- `user-invocable` (boolean only)
 
-- The file must be named exactly **`SKILL.md`** — case-sensitive. `SKILL.MD`, `skill.md`, `Skill.md` all fail.
-- The file must begin with YAML frontmatter delimited by `---` lines.
+Any other top-level key is rejected. Nested custom data belongs under `metadata`.
 
-### Frontmatter — `name` (required)
+## Dual-host behavior
 
-- 1–64 characters.
-- Lowercase letters, numbers, and hyphens **only**.
-- **No XML angle brackets** (`<` or `>`).
-- **Must not contain** the reserved words `anthropic` or `claude`.
+- User-facing syntax in a shared skill is host-neutral or names both valid
+  surfaces: `/sw:*` for Claude Code and `$sw:*` for Codex.
+- Bundled templates and scripts resolve from the installed plugin root, never from
+  a presumed `plugins/sw/` directory in the consumer repository.
+- Operational role dispatch uses the stable `sw-*` names shared by Claude agent
+  manifests and Codex project profiles.
+- Design approval never overrides host permission or approval policy.
 
-### Frontmatter — `description` (required)
+## Required checks
 
-- Non-empty.
-- Maximum **1024 characters**.
-- **No XML angle brackets** (`<` or `>`).
-- Should describe both **what the skill does** and **when to use it**.
+```bash
+UV_CACHE_DIR=/tmp/specwright-uv-cache \
+  uv run --offline --with PyYAML \
+  python plugins/sw/scripts/quick_validate.py plugins/sw/skills/<name>
 
-### Frontmatter — optional fields
+UV_CACHE_DIR=/tmp/specwright-uv-cache \
+  uv run --offline --with PyYAML \
+  python plugins/sw/scripts/package_skill.py plugins/sw/skills/<name> /tmp
 
-- `license` — string, e.g. `MIT`, `Apache-2.0`. Use when shipping open source.
-- `compatibility` — 1–500 characters describing required environment (Claude Code only, MCP server X required, network access needed, etc.).
-- `allowed-tools` — restricts which tools the skill can use (e.g. `"Bash(python:*) Bash(npm:*) WebFetch"`).
-- `metadata` — arbitrary key-value pairs (`author`, `version`, `mcp-server`, `tags`, etc.).
+claude plugin validate --strict plugins/sw
+```
 
-### Forbidden anywhere in frontmatter
-
-- XML angle brackets `<` `>`.
-- Code execution constructs.
-- Reserved-word names (`claude-*`, `anthropic-*`).
-
-## Source
-
-Anthropic platform docs — *Skill authoring best practices*, "Technical notes" / "YAML frontmatter requirements" sections; *The Complete Guide to Building Skills for Claude* (PDF), Chapter 2 "Technical requirements" and Reference B.
+Package-surface changes also run `bash tests/install/run.sh` and the dual-host
+release smoke test.

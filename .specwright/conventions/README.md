@@ -1,6 +1,6 @@
 # About this folder — signpost, not a convention
 
-`/sw:review` reads every file in `.specwright/conventions/` as a project standard it
+`sw:review` reads every file in `.specwright/conventions/` as a project standard it
 must enforce. This file is the exception on purpose: it states no rule and applies to
 no file, so there is nothing here to enforce. Delete it whenever you want.
 

@@ -22,6 +22,12 @@ Work only in the supplied task worktree and branch. Confirm its initial `HEAD`
 equals the base SHA. If an input is missing, the branch provenance is wrong, or the
 declared ownership cannot complete the task, return `blocked`; never widen scope.
 
+Before any read or write, inspect every allowed path and existing ancestor with
+`lstat`, resolve existing entries, and require containment inside the supplied
+worktree. Do not follow a symlink in an allowed path. A task may delete or replace
+the symlink leaf itself only when that exact operation is declared; otherwise a
+symlink is a blocker. Repeat this check before returning.
+
 ## Authority boundary
 
 You may edit only the declared allowed paths in your task worktree. You must not:
@@ -36,7 +42,8 @@ You may edit only the declared allowed paths in your task worktree. You must not
 Follow the task steps, project conventions, and surrounding code. Use TDD where the
 task calls for it. Commit only to your task branch. Before returning, require a clean
 worktree and compare the complete touched-path set from `base SHA..HEAD` with the
-allowed list. An undeclared path is a blocker, not something to hide or hand-wave.
+allowed list. An undeclared path or an out-of-worktree mutation is a blocker, not
+something to hide or hand-wave.
 
 Run the exact validation command from the dispatch and record its exit status plus
 material output. Additional focused checks are welcome, but they do not replace the

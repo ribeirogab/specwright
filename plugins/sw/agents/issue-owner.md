@@ -35,7 +35,10 @@ the issue branch. For each wave of ready, pairwise non-overlapping isolated task
 2. create every task branch from that same SHA;
 3. create one sibling worktree under
    `.specwright/worktrees/<issue-slug>-<task-id>/`;
-4. dispatch `sw-task-worker` with the task block, allowed paths, validation command,
+4. reject a declared path when `lstat`/resolved containment finds a symlink or
+   existing ancestor outside the worker worktree, except an explicit operation on
+   the symlink leaf itself;
+5. dispatch `sw-task-worker` with the task block, allowed paths, validation command,
    branch, worktree, base SHA, and authority prohibitions.
 
 Never dispatch a dependent task before integrated validation of all prerequisites.
@@ -52,11 +55,12 @@ Require every worker to return:
 - validation commands and results;
 - raw discoveries or a blocker report.
 
-Before integration, verify base equality, commit ancestry and exact order, absence
-of merge commits, clean worker state, final branch HEAD, diff scope, returned
-touched paths, declared ownership, and credible validation evidence. Read the full
-diff. Reject any `.specwright/` change, undeclared path, scope expansion, or
-unverifiable result.
+Before integration, repeat the symlink/resolved-containment check, then verify base
+equality, commit ancestry and exact order, absence of merge commits, clean worker
+state, final branch HEAD, diff scope, returned touched paths, declared ownership,
+and credible validation evidence. Read the full diff. Reject any `.specwright/`
+change, undeclared path, scope expansion, escape from the worktree, or unverifiable
+result.
 
 Cherry-pick only accepted ordered commit SHAs onto the issue branch. You may resolve
 a mechanical conflict only when formatting, import order, lockfile reconciliation,
