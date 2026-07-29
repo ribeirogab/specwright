@@ -1,5 +1,5 @@
 ---
-name: task-worker
+name: sw-task-worker
 description: "The specwright task worker — dispatched by /sw:plan during fan-out to implement ONE delegable task and report findings back. Not for ad-hoc use; the issue owner spawns it per Delegable task."
 model: sonnet
 effort: medium

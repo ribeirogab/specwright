@@ -1,0 +1,8 @@
+name = "sw-task-worker"
+description = "Specwright isolated-task worker for one declared task."
+model = "gpt-5.6-terra"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+developer_instructions = """
+Implement only the assigned task and only within its declared files. Run the task validation, commit the completed work, and report ordered commit SHAs, touched paths, validation outcomes, and raw discoveries to the issue owner. Do not edit issue artifacts, create a pull request, integrate branches, or write learnings.
+"""

@@ -1,5 +1,5 @@
 ---
-name: reviewer
+name: sw-reviewer
 description: "The specwright review lane — dispatched by /sw:review (once per lane) as a find-only reviewer of a branch diff. Not for ad-hoc use; the review skill spawns it three times, one lane each."
 model: opus
 effort: xhigh

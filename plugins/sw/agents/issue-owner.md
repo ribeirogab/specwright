@@ -1,5 +1,5 @@
 ---
-name: issue-owner
+name: sw-issue-owner
 description: "The specwright issue owner — dispatched by /sw:run to conduct ONE milestone issue through the plan pipeline end to end. Not for ad-hoc use; the milestone orchestrator spawns it per ready issue."
 model: opus
 effort: xhigh
