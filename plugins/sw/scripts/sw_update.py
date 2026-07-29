@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build deterministic, read-only plans for specwright project migration."""
+"""Plan and safely apply deterministic specwright project migrations."""
 
 from __future__ import annotations
 
@@ -7,9 +7,12 @@ import argparse
 from dataclasses import asdict, dataclass
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
+import stat
 import sys
+import tempfile
 
 
 CALENDAR_VERSION_PATTERN = re.compile(r"^(?P<year>[1-9][0-9]{3})\.(?P<month>[1-9]|1[0-2])\.(?P<day>[1-9]|[12][0-9]|3[01])$")
@@ -117,6 +120,39 @@ class UpdatePlan:
     diagnostics: tuple[str, ...] = ()
 
 
+class UpdateError(RuntimeError):
+    """Raised when a confirmed update cannot be applied safely."""
+
+
+class WriteFailure(UpdateError):
+    def __init__(
+        self,
+        operation: Operation,
+        completed: tuple[str, ...],
+        pending: tuple[str, ...],
+        temporary_path: Path | None,
+        cause: Exception,
+    ) -> None:
+        self.operation = operation
+        self.completed = completed
+        self.pending = pending
+        self.temporary_path = temporary_path
+        self.cause = cause
+        temporary = f"; recoverable temporary: {temporary_path}" if temporary_path is not None else ""
+        super().__init__(
+            f"write failed for {operation.relative_path}: {cause}; "
+            f"completed: {', '.join(completed) or 'none'}; "
+            f"pending: {', '.join(pending) or 'none'}{temporary}"
+        )
+
+
+class OperationWriteError(OSError):
+    def __init__(self, cause: OSError, temporary_path: Path | None = None) -> None:
+        super().__init__(str(cause))
+        self.cause = cause
+        self.temporary_path = temporary_path
+
+
 def load_installed_version() -> str:
     """Return the validated unpadded calendar version from the installed manifest."""
     manifest_path = Path(__file__).resolve().parents[1] / ".codex-plugin" / "plugin.json"
@@ -195,6 +231,8 @@ def _observe_path(project: Path, relative_path: Path) -> ObservedPath:
         stat_result = absolute_path.lstat()
     except FileNotFoundError:
         return ObservedPath(relative_path.as_posix(), "missing", None)
+    except NotADirectoryError:
+        return ObservedPath(relative_path.as_posix(), "blocked-parent", None)
     if absolute_path.is_symlink():
         return ObservedPath(relative_path.as_posix(), "symlink", str(absolute_path.readlink()))
     if absolute_path.is_file():
@@ -217,6 +255,9 @@ def _classify(project: Path, mode: str, canonical: str, adapter: str, desired_bl
         return "new", (), desired_block
     if _is_up_to_date(project, mode, canonical, adapter, desired_block):
         return "up-to-date", (), desired_block
+    managed_result = _managed_update_desired(project, mode, canonical, adapter, desired_block)
+    if managed_result is not None:
+        return "legacy-migratable", (), managed_result
     legacy_result = None if _has_managed_profiles(project) else _legacy_desired(project, canonical, adapter, desired_block)
     if legacy_result is not None:
         return "legacy-migratable", (), legacy_result
@@ -237,9 +278,46 @@ def _is_up_to_date(project: Path, mode: str, canonical: str, adapter: str, desir
             return False
     ignore_path = project / ".gitignore"
     ignore_rules = LOCAL_IGNORE_RULES if mode == "local" else SHARED_IGNORE_RULES
-    if not ignore_path.is_file() or not set(ignore_rules).issubset(set(ignore_path.read_text(encoding="utf-8").splitlines())):
+    if (
+        ignore_path.is_symlink()
+        or not ignore_path.is_file()
+        or not set(ignore_rules).issubset(
+            set(ignore_path.read_text(encoding="utf-8").splitlines())
+        )
+    ):
         return False
     return True
+
+
+def _managed_update_desired(
+    project: Path,
+    mode: str,
+    canonical: str,
+    adapter: str,
+    desired_block: str,
+) -> str | None:
+    canonical_path = project / canonical
+    adapter_path = project / adapter
+    if canonical_path.is_symlink() or not canonical_path.is_file():
+        return None
+    if not adapter_path.is_symlink() or adapter_path.readlink() != Path(canonical):
+        return None
+    contents = canonical_path.read_text(encoding="utf-8")
+    current_block = _managed_block(contents)
+    if current_block is None or current_block == desired_block:
+        return None
+    for name in PROFILE_NAMES:
+        destination = project / PROFILE_DIRECTORY / name
+        source = Path(__file__).resolve().parents[1] / "templates" / "codex-agents" / name
+        if destination.is_symlink() or not destination.is_file() or destination.read_bytes() != source.read_bytes():
+            return None
+    ignore_path = project / ".gitignore"
+    ignore_rules = LOCAL_IGNORE_RULES if mode == "local" else SHARED_IGNORE_RULES
+    if ignore_path.is_symlink() or not ignore_path.is_file():
+        return None
+    if not set(ignore_rules).issubset(set(ignore_path.read_text(encoding="utf-8").splitlines())):
+        return None
+    return contents.replace(current_block, desired_block, 1)
 
 
 def _legacy_desired(project: Path, canonical: str, adapter: str, desired_block: str) -> str | None:
@@ -299,17 +377,310 @@ def _operations(project: Path, mode: str, canonical: str, adapter: str, desired_
         return ()
     operations: list[Operation] = []
     canonical_path = project / canonical
-    action = "create" if not canonical_path.exists() else "replace-managed-block"
-    operations.append(Operation(action, canonical, _digest_bytes(canonical_path.read_bytes()) if canonical_path.is_file() else None, desired_canonical))
+    if not (canonical_path.is_symlink() or canonical_path.exists()):
+        operations.append(Operation("create", canonical, None, desired_canonical))
+    elif canonical_path.is_file() and canonical_path.read_text(encoding="utf-8") != desired_canonical:
+        operations.append(
+            Operation(
+                "replace-managed-block",
+                canonical,
+                _digest_bytes(canonical_path.read_bytes()),
+                desired_canonical,
+            )
+        )
     adapter_path = project / adapter
-    operations.append(Operation("create-symlink" if not (adapter_path.exists() or adapter_path.is_symlink()) else "replace-with-symlink", adapter, _digest_bytes(adapter_path.read_bytes()) if adapter_path.is_file() else None, canonical))
+    if not (adapter_path.is_symlink() or adapter_path.exists()):
+        operations.append(Operation("create-symlink", adapter, None, canonical))
+    elif not (adapter_path.is_symlink() and adapter_path.readlink() == Path(canonical)):
+        expected = None
+        if not adapter_path.is_symlink() and adapter_path.is_file():
+            expected = _digest_bytes(adapter_path.read_bytes())
+        operations.append(Operation("replace-with-symlink", adapter, expected, canonical))
     for name in PROFILE_NAMES:
         source = Path(__file__).resolve().parents[1] / "templates" / "codex-agents" / name
-        operations.append(Operation("create", (PROFILE_DIRECTORY / name).as_posix(), None, _digest_bytes(source.read_bytes())))
+        destination = project / PROFILE_DIRECTORY / name
+        if not (destination.is_symlink() or destination.exists()):
+            operations.append(
+                Operation(
+                    "create",
+                    (PROFILE_DIRECTORY / name).as_posix(),
+                    None,
+                    _digest_bytes(source.read_bytes()),
+                )
+            )
     ignore_path = project / ".gitignore"
     ignore_rules = LOCAL_IGNORE_RULES if mode == "local" else SHARED_IGNORE_RULES
-    operations.append(Operation("ensure-ignore-rules", ".gitignore", _digest_bytes(ignore_path.read_bytes()) if ignore_path.is_file() else None, "\n".join(ignore_rules)))
+    current_ignore_lines = (
+        set(ignore_path.read_text(encoding="utf-8").splitlines())
+        if not ignore_path.is_symlink() and ignore_path.is_file()
+        else set()
+    )
+    if not set(ignore_rules).issubset(current_ignore_lines):
+        operations.append(
+            Operation(
+                "ensure-ignore-rules",
+                ".gitignore",
+                _digest_bytes(ignore_path.read_bytes())
+                if not ignore_path.is_symlink() and ignore_path.is_file()
+                else None,
+                "\n".join(ignore_rules),
+            )
+        )
     return tuple(operations)
+
+
+def apply_update(
+    project: Path,
+    mode: str,
+    expect_plan: str,
+    version: str | None = None,
+) -> tuple[UpdatePlan, tuple[str, ...]]:
+    """Replan, verify identity, preflight, and apply exactly the confirmed operations."""
+    project = project.resolve()
+    plan = plan_update(project, mode, version)
+    if not expect_plan or expect_plan != plan.plan_id:
+        raise UpdateError(
+            f"confirmed plan identity does not match current project state "
+            f"(expected {expect_plan or 'missing'}, current {plan.plan_id})"
+        )
+    if plan.state == "drifted":
+        details = "; ".join(plan.diagnostics) or "unrecognized managed state"
+        raise UpdateError(f"refusing to apply drifted project: {details}")
+    _preflight(project, plan)
+
+    completed: list[str] = []
+    for operation_index, operation in enumerate(plan.operations):
+        try:
+            _apply_operation(project, operation)
+        except (OSError, UpdateError) as error:
+            pending = tuple(item.relative_path for item in plan.operations[operation_index:])
+            temporary_path = getattr(error, "temporary_path", None)
+            cause = getattr(error, "cause", error)
+            raise WriteFailure(operation, tuple(completed), pending, temporary_path, cause) from error
+        completed.append(operation.relative_path)
+    return plan, tuple(completed)
+
+
+def _preflight(project: Path, plan: UpdatePlan) -> None:
+    if not project.is_dir():
+        raise UpdateError(f"project is not a directory: {project}")
+    for operation in plan.operations:
+        relative_path = _validated_relative_path(operation.relative_path)
+        destination = project / relative_path
+        _validate_parent_chain(project, relative_path.parent)
+        _validate_operation_precondition(destination, operation)
+        _validate_profile_source(operation)
+    symlink_operation = next(
+        (
+            operation
+            for operation in plan.operations
+            if operation.action in {"create-symlink", "replace-with-symlink"}
+        ),
+        None,
+    )
+    if symlink_operation is not None:
+        _probe_symlink_support(project, symlink_operation.desired_after)
+
+
+def _validated_relative_path(value: str) -> Path:
+    relative_path = Path(value)
+    if relative_path.is_absolute() or not relative_path.parts:
+        raise UpdateError(f"managed path must be repository-relative: {value}")
+    if any(part in {"", ".", ".."} for part in relative_path.parts):
+        raise UpdateError(f"managed path is not normalized: {value}")
+    return relative_path
+
+
+def _validate_parent_chain(project: Path, relative_parent: Path) -> None:
+    current = project
+    if not os.access(current, os.W_OK | os.X_OK):
+        raise UpdateError(f"managed parent is not writable: {current}")
+    for component in relative_parent.parts:
+        current = current / component
+        if current.is_symlink():
+            raise UpdateError(f"managed parent may not be a symlink: {current}")
+        if current.exists():
+            if not current.is_dir():
+                raise UpdateError(f"managed parent is not a directory: {current}")
+            if not os.access(current, os.W_OK | os.X_OK):
+                raise UpdateError(f"managed parent is not writable: {current}")
+            continue
+        break
+
+
+def _validate_operation_precondition(destination: Path, operation: Operation) -> None:
+    exists = destination.is_symlink() or destination.exists()
+    if operation.action in {"create", "create-symlink"}:
+        if exists:
+            raise UpdateError(f"managed destination is occupied: {operation.relative_path}")
+        return
+    if operation.action in {"replace-managed-block", "replace-with-symlink"}:
+        if destination.is_symlink() or not destination.is_file():
+            raise UpdateError(f"managed destination is not the expected regular file: {operation.relative_path}")
+        if operation.expected_before != _digest_bytes(destination.read_bytes()):
+            raise UpdateError(f"managed destination changed before apply: {operation.relative_path}")
+        return
+    if operation.action == "ensure-ignore-rules":
+        if destination.is_symlink() or (exists and not destination.is_file()):
+            raise UpdateError(".gitignore must be a regular file or missing")
+        actual = _digest_bytes(destination.read_bytes()) if destination.is_file() else None
+        if actual != operation.expected_before:
+            raise UpdateError(".gitignore changed before apply")
+        return
+    raise UpdateError(f"unknown managed operation: {operation.action}")
+
+
+def _validate_profile_source(operation: Operation) -> None:
+    profile_prefix = f"{PROFILE_DIRECTORY.as_posix()}/"
+    if operation.action != "create" or not operation.relative_path.startswith(
+        profile_prefix
+    ):
+        return
+    source = (
+        Path(__file__).resolve().parents[1]
+        / "templates"
+        / "codex-agents"
+        / Path(operation.relative_path).name
+    )
+    if source.is_symlink() or not source.is_file():
+        raise UpdateError(f"installed profile template is invalid: {source}")
+    if _digest_bytes(source.read_bytes()) != operation.desired_after:
+        raise UpdateError(f"installed profile template changed after planning: {source}")
+
+
+def _probe_symlink_support(project: Path, target: str) -> None:
+    temporary_path: Path | None = None
+    try:
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=".sw-symlink-probe-",
+            dir=project,
+        )
+        temporary_path = Path(temporary_name)
+        os.close(descriptor)
+        temporary_path.unlink()
+        os.symlink(target, temporary_path)
+        if not temporary_path.is_symlink() or temporary_path.readlink() != Path(target):
+            raise OSError("symlink probe did not preserve its relative target")
+    except OSError as error:
+        if temporary_path is not None and (
+            temporary_path.is_symlink() or temporary_path.exists()
+        ):
+            temporary_path.unlink()
+        raise UpdateError(
+            "symlink support is required; no regular-file fallback is available: "
+            f"{error}"
+        ) from error
+    assert temporary_path is not None
+    temporary_path.unlink()
+
+
+def _apply_operation(project: Path, operation: Operation) -> None:
+    relative_path = _validated_relative_path(operation.relative_path)
+    _validate_parent_chain(project, relative_path.parent)
+    destination = project / relative_path
+    _validate_operation_precondition(destination, operation)
+    _validate_profile_source(operation)
+    if operation.action in {"create", "replace-managed-block"}:
+        if operation.relative_path.startswith(f"{PROFILE_DIRECTORY.as_posix()}/"):
+            source = (
+                Path(__file__).resolve().parents[1]
+                / "templates"
+                / "codex-agents"
+                / destination.name
+            )
+            contents = source.read_bytes()
+            mode = stat.S_IMODE(source.stat().st_mode)
+        else:
+            contents = operation.desired_after.encode("utf-8")
+            mode = (
+                stat.S_IMODE(destination.stat().st_mode)
+                if destination.is_file() and not destination.is_symlink()
+                else 0o644
+            )
+        _atomic_write(
+            destination,
+            contents,
+            mode,
+            replace=operation.action == "replace-managed-block",
+        )
+        return
+    if operation.action in {"create-symlink", "replace-with-symlink"}:
+        _atomic_symlink(
+            destination,
+            operation.desired_after,
+            replace=operation.action == "replace-with-symlink",
+        )
+        return
+    if operation.action == "ensure-ignore-rules":
+        contents = _updated_ignore_bytes(destination, operation.desired_after.splitlines())
+        mode = (
+            stat.S_IMODE(destination.stat().st_mode)
+            if destination.is_file() and not destination.is_symlink()
+            else 0o644
+        )
+        _atomic_write(destination, contents, mode, replace=destination.exists())
+        return
+    raise UpdateError(f"unknown managed operation: {operation.action}")
+
+
+def _updated_ignore_bytes(destination: Path, rules: list[str]) -> bytes:
+    existing = destination.read_bytes() if destination.is_file() and not destination.is_symlink() else b""
+    existing_lines = set(existing.decode("utf-8").splitlines())
+    missing_rules = [rule for rule in rules if rule not in existing_lines]
+    if not missing_rules:
+        return existing
+    separator = b"" if not existing or existing.endswith(b"\n") else b"\n"
+    return existing + separator + "".join(f"{rule}\n" for rule in missing_rules).encode("utf-8")
+
+
+def _atomic_write(
+    destination: Path,
+    contents: bytes,
+    mode: int,
+    *,
+    replace: bool,
+) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{destination.name}.sw-",
+        dir=destination.parent,
+    )
+    temporary_path = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as temporary_file:
+            temporary_file.write(contents)
+            temporary_file.flush()
+            os.fsync(temporary_file.fileno())
+        temporary_path.chmod(mode)
+        if not replace and (destination.is_symlink() or destination.exists()):
+            raise FileExistsError(f"destination appeared during apply: {destination}")
+        os.replace(temporary_path, destination)
+    except OSError as error:
+        raise OperationWriteError(
+            error,
+            temporary_path if temporary_path.exists() or temporary_path.is_symlink() else None,
+        ) from error
+
+
+def _atomic_symlink(destination: Path, target: str, *, replace: bool) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{destination.name}.sw-",
+        dir=destination.parent,
+    )
+    temporary_path = Path(temporary_name)
+    os.close(descriptor)
+    temporary_path.unlink()
+    try:
+        os.symlink(target, temporary_path)
+        if not replace and (destination.is_symlink() or destination.exists()):
+            raise FileExistsError(f"destination appeared during apply: {destination}")
+        os.replace(temporary_path, destination)
+    except OSError as error:
+        raise OperationWriteError(
+            error,
+            temporary_path if temporary_path.exists() or temporary_path.is_symlink() else None,
+        ) from error
 
 
 def plan_as_dict(plan: UpdatePlan) -> dict[str, object]:
@@ -338,17 +709,36 @@ def _digest_bytes(value: bytes) -> str:
 
 def main(arguments: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--plan", action="store_true", required=True)
+    action = parser.add_mutually_exclusive_group(required=True)
+    action.add_argument("--plan", action="store_true")
+    action.add_argument("--apply", action="store_true")
     parser.add_argument("--project", type=Path, default=Path.cwd())
     parser.add_argument("--mode", choices=("shared", "local"), required=True)
     parser.add_argument("--format", choices=("text", "json"), default="text")
+    parser.add_argument("--expect-plan")
     parsed = parser.parse_args(arguments)
+    if parsed.apply and not parsed.expect_plan:
+        parser.error("--apply requires --expect-plan")
+    if parsed.plan and parsed.expect_plan:
+        parser.error("--expect-plan is valid only with --apply")
     try:
-        plan = plan_update(parsed.project, parsed.mode)
-    except ValueError as error:
-        parser.error(str(error))
+        if parsed.apply:
+            plan, completed = apply_update(
+                parsed.project,
+                parsed.mode,
+                parsed.expect_plan,
+            )
+        else:
+            plan = plan_update(parsed.project, parsed.mode)
+            completed = ()
+    except (ValueError, UpdateError) as error:
+        print(f"error: {error}", file=sys.stderr)
+        return 1
     if parsed.format == "json":
-        print(_canonical_json(plan_as_dict(plan)))
+        output = plan_as_dict(plan)
+        if parsed.apply:
+            output["applied"] = list(completed)
+        print(_canonical_json(output))
     else:
         print(f"state: {plan.state}")
         print(f"version: {plan.version}")
@@ -358,6 +748,9 @@ def main(arguments: list[str] | None = None) -> int:
             print(f"diagnostic: {diagnostic}")
         for operation in plan.operations:
             print(f"operation: {operation.action} {operation.relative_path}")
+        if parsed.apply:
+            for relative_path in completed:
+                print(f"applied: {relative_path}")
     return 0
 
 

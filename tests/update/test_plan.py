@@ -11,13 +11,25 @@ import shutil
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIRECTORY = REPOSITORY_ROOT / "plugins" / "sw" / "scripts"
 sys.path.insert(0, str(SCRIPT_DIRECTORY))
 
-from sw_update import LEGACY_GENERIC_TEMPLATE, is_calendar_version, main, plan_as_dict, plan_update, render_managed_block
+import sw_update
+from sw_update import (
+    LEGACY_GENERIC_TEMPLATE,
+    UpdateError,
+    WriteFailure,
+    apply_update,
+    is_calendar_version,
+    main,
+    plan_as_dict,
+    plan_update,
+    render_managed_block,
+)
 
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -191,6 +203,214 @@ class UpdatePlanTests(unittest.TestCase):
                 ".codex/agents/sw-*.toml",
             ])
 
+    def test_json_apply_cli_forwards_the_confirmed_plan(self) -> None:
+        with self._fixture_copy("new") as project:
+            plan = plan_update(project, "shared")
+            output = io.StringIO()
+            with redirect_stdout(output):
+                result = main(
+                    [
+                        "--apply",
+                        "--expect-plan",
+                        plan.plan_id,
+                        "--project",
+                        str(project),
+                        "--mode",
+                        "shared",
+                        "--format",
+                        "json",
+                    ]
+                )
+            self.assertEqual(result, 0)
+            payload = json.loads(output.getvalue())
+            self.assertEqual(payload["plan_id"], plan.plan_id)
+            self.assertEqual(payload["applied"][0:2], ["AGENTS.md", "CLAUDE.md"])
+            self.assertEqual(plan_update(project, "shared").state, "up-to-date")
+
+    def test_apply_rejects_an_identity_mismatch_without_writes(self) -> None:
+        with self._fixture_copy("new") as project:
+            plan = plan_update(project, "shared")
+            (project / ".gitignore").write_text("changed-after-confirmation\n")
+            before = self._full_tree_snapshot(project)
+            with self.assertRaisesRegex(UpdateError, "identity does not match"):
+                apply_update(project, "shared", plan.plan_id)
+            self.assertEqual(before, self._full_tree_snapshot(project))
+
+    def test_apply_rejects_drift_and_destination_collision_without_writes(self) -> None:
+        with self._fixture_copy("drifted") as project:
+            plan = plan_update(project, "shared")
+            before = self._full_tree_snapshot(project)
+            with self.assertRaisesRegex(UpdateError, "drifted"):
+                apply_update(project, "shared", plan.plan_id)
+            self.assertEqual(before, self._full_tree_snapshot(project))
+        with self._fixture_copy("new") as project:
+            plan = plan_update(project, "shared")
+            (project / "AGENTS.md").write_text("occupied\n")
+            before = self._full_tree_snapshot(project)
+            with self.assertRaisesRegex(UpdateError, "identity does not match"):
+                apply_update(project, "shared", plan.plan_id)
+            self.assertEqual(before, self._full_tree_snapshot(project))
+        with self._fixture_copy("new") as project:
+            (project / "CLAUDE.md").symlink_to("unexpected-target.md")
+            plan = plan_update(project, "shared")
+            self.assertEqual(plan.state, "drifted")
+            before = self._full_tree_snapshot(project)
+            with self.assertRaisesRegex(UpdateError, "drifted"):
+                apply_update(project, "shared", plan.plan_id)
+            self.assertEqual(before, self._full_tree_snapshot(project))
+
+    def test_preflight_rejects_unwritable_or_invalid_parents_without_writes(self) -> None:
+        with self._fixture_copy("new") as project:
+            plan = plan_update(project, "shared")
+            before = self._full_tree_snapshot(project)
+            with mock.patch.object(sw_update.os, "access", return_value=False):
+                with self.assertRaisesRegex(UpdateError, "not writable"):
+                    apply_update(project, "shared", plan.plan_id)
+            self.assertEqual(before, self._full_tree_snapshot(project))
+        with self._fixture_copy("new") as project:
+            (project / ".codex").write_text("not a directory\n")
+            plan = plan_update(project, "shared")
+            self.assertIn("blocked-parent", {item.kind for item in plan.observed})
+            before = self._full_tree_snapshot(project)
+            with self.assertRaisesRegex(UpdateError, "managed parent is not a directory"):
+                apply_update(project, "shared", plan.plan_id)
+            self.assertEqual(before, self._full_tree_snapshot(project))
+
+    def test_preflight_requires_real_symlink_support_without_fallback(self) -> None:
+        with self._fixture_copy("new") as project:
+            plan = plan_update(project, "local")
+            before = self._full_tree_snapshot(project)
+            with mock.patch.object(
+                sw_update.os,
+                "symlink",
+                side_effect=OSError("symlinks disabled"),
+            ):
+                with self.assertRaisesRegex(UpdateError, "no regular-file fallback"):
+                    apply_update(project, "local", plan.plan_id)
+            self.assertEqual(before, self._full_tree_snapshot(project))
+
+    def test_shared_and_local_legacy_migrations_install_only_managed_state(self) -> None:
+        cases = (
+            (
+                "legacy-shared",
+                "shared",
+                "AGENTS.md",
+                "CLAUDE.md",
+                {".specwright/worktrees/"},
+            ),
+            (
+                "legacy-local",
+                "local",
+                "AGENTS.override.md",
+                "CLAUDE.local.md",
+                {
+                    ".specwright/worktrees/",
+                    ".specwright/",
+                    "AGENTS.override.md",
+                    "CLAUDE.local.md",
+                    ".codex/agents/sw-*.toml",
+                },
+            ),
+        )
+        for fixture, mode, canonical, adapter, expected_rules in cases:
+            with self.subTest(mode=mode), self._fixture_copy(fixture) as project:
+                (project / ".gitignore").write_text("custom-rule/\n")
+                (project / ".codex").mkdir()
+                (project / ".codex" / "custom.toml").write_text("preserve = true\n")
+                plan = plan_update(project, mode)
+                self.assertEqual(plan.state, "legacy-migratable")
+                confirmed_id = plan.plan_id
+                applied, completed = apply_update(project, mode, confirmed_id)
+                self.assertEqual(applied.plan_id, confirmed_id)
+                self.assertTrue(completed)
+                self.assertTrue((project / adapter).is_symlink())
+                self.assertEqual((project / adapter).readlink(), Path(canonical))
+                self.assertIn("<!-- sw:managed version=2026.7.28", (project / canonical).read_text())
+                self._assert_profiles_match(project)
+                self.assertEqual(
+                    (project / ".codex" / "custom.toml").read_text(),
+                    "preserve = true\n",
+                )
+                ignore_lines = set((project / ".gitignore").read_text().splitlines())
+                self.assertIn("custom-rule/", ignore_lines)
+                self.assertTrue(expected_rules.issubset(ignore_lines))
+
+    def test_managed_block_update_preserves_exact_project_bytes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            prefix = "# Project-owned heading\n\nOpaque café bytes.\n"
+            suffix = "\nProject-owned suffix without final newline"
+            agents = project / "AGENTS.md"
+            agents.write_bytes(
+                prefix.encode("utf-8")
+                + render_managed_block("2026.7.27").encode("utf-8")
+                + suffix.encode("utf-8")
+            )
+            (project / "CLAUDE.md").symlink_to("AGENTS.md")
+            self._install_profiles(project)
+            (project / ".gitignore").write_text(".specwright/worktrees/\n")
+            plan = plan_update(project, "shared")
+            self.assertEqual(plan.state, "legacy-migratable")
+            self.assertEqual(
+                [operation.relative_path for operation in plan.operations],
+                ["AGENTS.md"],
+            )
+            apply_update(project, "shared", plan.plan_id)
+            updated = agents.read_bytes()
+            self.assertTrue(updated.startswith(prefix.encode("utf-8")))
+            self.assertTrue(updated.endswith(suffix.encode("utf-8")))
+            self.assertIn(render_managed_block("2026.7.28").encode("utf-8"), updated)
+
+    def test_apply_is_idempotent_and_post_apply_identity_is_stable(self) -> None:
+        with self._fixture_copy("new") as project:
+            initial = plan_update(project, "shared")
+            apply_update(project, "shared", initial.plan_id)
+            first = plan_update(project, "shared")
+            second = plan_update(project, "shared")
+            self.assertEqual(first.state, "up-to-date")
+            self.assertEqual(first.operations, ())
+            self.assertEqual(first.plan_id, second.plan_id)
+            self.assertNotEqual(initial.plan_id, first.plan_id)
+            before = self._full_tree_snapshot(project)
+            _, completed = apply_update(project, "shared", first.plan_id)
+            self.assertEqual(completed, ())
+            self.assertEqual(before, self._full_tree_snapshot(project))
+
+    def test_write_failure_reports_ledger_and_keeps_recoverable_temporary(self) -> None:
+        with self._fixture_copy("new") as project:
+            plan = plan_update(project, "shared")
+            original_replace = sw_update.os.replace
+            replace_count = 0
+
+            def fail_second_replace(source: str | bytes, destination: str | bytes) -> None:
+                nonlocal replace_count
+                replace_count += 1
+                if replace_count == 2:
+                    raise OSError("injected adapter failure")
+                original_replace(source, destination)
+
+            with mock.patch.object(sw_update.os, "replace", side_effect=fail_second_replace):
+                with self.assertRaises(WriteFailure) as raised:
+                    apply_update(project, "shared", plan.plan_id)
+            failure = raised.exception
+            self.assertEqual(failure.completed, ("AGENTS.md",))
+            self.assertEqual(failure.pending[0], "CLAUDE.md")
+            self.assertIsNotNone(failure.temporary_path)
+            assert failure.temporary_path is not None
+            self.assertTrue(
+                failure.temporary_path.is_symlink()
+                or failure.temporary_path.exists()
+            )
+            self.assertTrue((project / "AGENTS.md").is_file())
+            self.assertFalse((project / "CLAUDE.md").exists())
+
+    def test_static_up_to_date_fixture_is_recognized(self) -> None:
+        with self._fixture_copy("up-to-date") as project:
+            (project / "CLAUDE.md").symlink_to("AGENTS.md")
+            self._install_profiles(project)
+            (project / ".gitignore").write_text(".specwright/worktrees/\n")
+            self.assertEqual(plan_update(project, "shared").state, "up-to-date")
+
     def _fixture_copy(self, name: str):
         directory = tempfile.TemporaryDirectory()
         project = Path(directory.name) / "project"
@@ -204,6 +424,41 @@ class UpdatePlanTests(unittest.TestCase):
             for path in project.rglob("*")
             if path.is_file() and not path.is_symlink()
         ))
+
+    @staticmethod
+    def _full_tree_snapshot(
+        project: Path,
+    ) -> tuple[tuple[str, str, bytes | str | None], ...]:
+        entries: list[tuple[str, str, bytes | str | None]] = []
+        for path in project.rglob("*"):
+            relative = path.relative_to(project).as_posix()
+            if path.is_symlink():
+                entries.append((relative, "symlink", str(path.readlink())))
+            elif path.is_file():
+                entries.append((relative, "file", path.read_bytes()))
+            elif path.is_dir():
+                entries.append((relative, "directory", None))
+        return tuple(sorted(entries))
+
+    @staticmethod
+    def _install_profiles(project: Path) -> None:
+        destination = project / ".codex" / "agents"
+        destination.mkdir(parents=True, exist_ok=True)
+        for source in sorted(
+            (REPOSITORY_ROOT / "plugins/sw/templates/codex-agents").glob(
+                "sw-*.toml"
+            )
+        ):
+            shutil.copyfile(source, destination / source.name)
+
+    def _assert_profiles_match(self, project: Path) -> None:
+        destination = project / ".codex" / "agents"
+        for source in sorted(
+            (REPOSITORY_ROOT / "plugins/sw/templates/codex-agents").glob(
+                "sw-*.toml"
+            )
+        ):
+            self.assertEqual((destination / source.name).read_bytes(), source.read_bytes())
 
 
 class _TemporaryProject:
