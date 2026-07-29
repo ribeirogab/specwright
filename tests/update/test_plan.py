@@ -83,12 +83,9 @@ class UpdatePlanTests(unittest.TestCase):
             self.assertEqual(plan.state, "drifted")
             self.assertEqual(plan.operations, ())
 
-    def test_current_claude_only_repository_shape_is_legacy_migratable(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            project = Path(directory)
-            source = REPOSITORY_ROOT / "CLAUDE.md"
+    def test_dogfood_claude_only_repository_shape_is_legacy_migratable(self) -> None:
+        with self._fixture_copy("legacy-dogfood") as project:
             legacy = project / "CLAUDE.md"
-            legacy.write_bytes(source.read_bytes())
             before = legacy.read_bytes()
             plan = plan_update(project, "shared")
             self.assertEqual(plan.state, "legacy-migratable")
