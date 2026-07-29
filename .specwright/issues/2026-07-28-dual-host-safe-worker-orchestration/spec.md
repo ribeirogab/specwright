@@ -93,6 +93,9 @@ The owner verifies ancestry, ordered SHAs, diff scope, touched paths, and valida
 - **Create `plugins/sw/skills/review-spec/SKILL.md`** — shared external plan-review implementation moved from the Claude command.
 - **Create `plugins/sw/skills/update/SKILL.md`** — plan/confirm/apply project-update workflow.
 - **Modify `plugins/sw/commands/*.md`** — nine homonymous Claude redirects with no independent implementation.
+- **Modify `plugins/sw/scripts/quick_validate.py`** — accept and validate Claude's supported `user-invocable` boolean while preserving rejection of unknown frontmatter keys.
+- **Modify `NOTICE.md`** — record the approved validator compatibility change to the vendored script.
+- **Create `tests/skills/test_validation.py`** — prove supported invocation metadata passes validation and unknown keys still fail.
 - **Create `plugins/sw/scripts/sw_update.py`** — standard-library migration planner and applier.
 - **Create `plugins/sw/scripts/validate_task_topology.py`** — schema-2 parser and topology/file-ownership validator.
 - **Modify `plugins/sw/scripts/validate-spec.sh`** — invoke task-topology validation as check 6 and update exit-code documentation.
@@ -134,6 +137,7 @@ Tasks T1, T2, T3, and T8 form the first parallel wave. The remaining dependencie
 - The first release must provide complete Claude Code and Codex parity; compatibility-only discovery is insufficient.
 - The Codex manifest version is unpadded `YYYY.M.D` calendar SemVer and is the only migration target source.
 - Eight workflow skills plus the update maintenance skill are implemented once under `plugins/sw/skills/`.
+- Skill validation runs with PyYAML in an ephemeral `uv` environment and accepts the host-supported `user-invocable` field without weakening unknown-key rejection.
 - Symlink support is mandatory; absence is a preflight failure with no partial migration.
 - The updater uses only Python's standard library, preserves content outside its managed block, and never accesses the network.
 - Project-scoped Codex profiles may not overwrite or ignore unrelated `.codex` configuration.

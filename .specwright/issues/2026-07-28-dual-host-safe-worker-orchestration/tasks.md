@@ -64,7 +64,10 @@ The initial draft pull request contains only these planning artifacts and, when 
 - Modify: `plugins/sw/commands/review.md`
 - Modify: `plugins/sw/commands/review-spec.md`
 - Modify: `plugins/sw/commands/pr.md`
-**Validation:** both new skills pass `quick_validate.py`; an inventory assertion finds eight commands and eight homonymous skills and rejects workflow sections inside redirects.
+- Modify: `plugins/sw/scripts/quick_validate.py`
+- Modify: `NOTICE.md`
+- Create: `tests/skills/test_validation.py`
+**Validation:** both new skills pass `quick_validate.py`; the validator accepts boolean `user-invocable`, rejects unknown keys, and packages a companion skill; an inventory assertion finds eight commands and eight homonymous skills and rejects workflow sections inside redirects.
 
 - [ ] **Step 1: Inventory behavior in `commands/spec.md`** — list its inputs, issue mutations, template use, approval gate, and output in the new skill's checklist.
 - [ ] **Step 2: Create `skills/spec/SKILL.md`** — move every inventoried behavior under valid `name`, `description`, and invocation frontmatter.
@@ -73,17 +76,27 @@ The initial draft pull request contains only these planning artifacts and, when 
 - [ ] **Step 5: Create `skills/review-spec/SKILL.md`** — move every inventoried behavior under valid skill frontmatter.
 - [ ] **Step 6: Compare old and new review behavior** — use `diff` on normalized bodies; expect only frontmatter/redirect framing differences.
 - [ ] **Step 7: Normalize eight command files** — keep command frontmatter plus one plugin-root-relative homonymous skill load and argument forwarding.
-- [ ] **Step 8: Validate both skills**
+- [ ] **Step 8: Write validator compatibility tests** — cover boolean `user-invocable`, a non-boolean value, an unknown key, and packaging through the same validation path.
+- [ ] **Step 9: Extend the vendored validator** — validate `user-invocable` as a supported boolean, keep unknown-key rejection strict, and update `NOTICE.md` to record the local change.
+- [ ] **Step 10: Run the validator tests in an ephemeral dependency environment**
 
   ```bash
-  python3 plugins/sw/scripts/quick_validate.py plugins/sw/skills/spec
-  python3 plugins/sw/scripts/quick_validate.py plugins/sw/skills/review-spec
+  uv run --with pyyaml python3 tests/skills/test_validation.py
+  ```
+
+  Expected: `skill validation: PASS`.
+
+- [ ] **Step 11: Validate both skills**
+
+  ```bash
+  uv run --with pyyaml python3 plugins/sw/scripts/quick_validate.py plugins/sw/skills/spec
+  uv run --with pyyaml python3 plugins/sw/scripts/quick_validate.py plugins/sw/skills/review-spec
   ```
 
   Expected twice: `Skill is valid!`.
 
-- [ ] **Step 9: Run the inventory assertion** — for each workflow name, require one command, one skill, and one `skills/<name>/SKILL.md` reference; reject copied `## Architecture`, `## What to evaluate`, or `## Implement` sections in commands.
-- [ ] **Step 10: Commit** — `refactor(skills): share every workflow across hosts`
+- [ ] **Step 12: Run the inventory assertion** — for each workflow name, require one command, one skill, and one `skills/<name>/SKILL.md` reference; reject copied `## Architecture`, `## What to evaluate`, or `## Implement` sections in commands.
+- [ ] **Step 13: Commit** — `refactor(skills): share every workflow across hosts`
 
 ### T3: Create project-scoped role templates and stable identities
 
@@ -516,7 +529,8 @@ The initial draft pull request contains only these planning artifacts and, when 
 
 - [ ] **Step 2: Validate nine skills** — run `quick_validate.py` for each skill directory; expect nine `Skill is valid!` lines.
 - [ ] **Step 3: Package nine skills** — run `package_skill.py` into a temporary directory; require nine archives.
-- [ ] **Step 4: Run focused Python tests**
+- [ ] **Step 4: Validate the validator contract** — run `uv run --with pyyaml python3 tests/skills/test_validation.py`; expect `skill validation: PASS`.
+- [ ] **Step 5: Run focused Python tests**
 
   ```bash
   python3 tests/update/test_plan.py
@@ -526,7 +540,7 @@ The initial draft pull request contains only these planning artifacts and, when 
 
   Expected: three zero exits.
 
-- [ ] **Step 5: Run deterministic integration**
+- [ ] **Step 6: Run deterministic integration**
 
   ```bash
   bash tests/install/run.sh
@@ -534,8 +548,8 @@ The initial draft pull request contains only these planning artifacts and, when 
 
   Expected: all named groups pass.
 
-- [ ] **Step 6: Run release smoke** — execute `bash tests/release/run.sh` locally and the ephemeral workflow; record Claude strict output and Codex add/list JSON.
-- [ ] **Step 7: Run hygiene checks** — `git diff --check`, four JSON parses, four TOML parses, symlink target assertion, stale-language search, and tracked-file inventory.
-- [ ] **Step 8: Walk AC-1 through AC-12** — record the exact command/fixture that observed each outcome; do not tick criteria proved only by source inspection when runtime evidence is required.
-- [ ] **Step 9: Review integrated ownership** — compare the final diff against T1–T15 `Files` fields and reject any unrelated or worker-worktree path.
-- [ ] **Step 10: Commit** — no commit when the gate changes no files; any later evidence-only artifact uses a scoped docs commit.
+- [ ] **Step 7: Run release smoke** — execute `bash tests/release/run.sh` locally and the ephemeral workflow; record Claude strict output and Codex add/list JSON.
+- [ ] **Step 8: Run hygiene checks** — `git diff --check`, four JSON parses, four TOML parses, symlink target assertion, stale-language search, and tracked-file inventory.
+- [ ] **Step 9: Walk AC-1 through AC-12** — record the exact command/fixture that observed each outcome; do not tick criteria proved only by source inspection when runtime evidence is required.
+- [ ] **Step 10: Review integrated ownership** — compare the final diff against T1–T15 `Files` fields and reject any unrelated or worker-worktree path.
+- [ ] **Step 11: Commit** — no commit when the gate changes no files; any later evidence-only artifact uses a scoped docs commit.
