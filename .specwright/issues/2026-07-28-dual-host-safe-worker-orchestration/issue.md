@@ -1,8 +1,8 @@
 ---
 feature: dual-host-safe-worker-orchestration
 created: 2026-07-28
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-29
 ---
 # Dual-host Plugin and Safe Worker Orchestration — Issue
 

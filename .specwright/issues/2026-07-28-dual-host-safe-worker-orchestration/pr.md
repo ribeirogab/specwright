@@ -43,6 +43,12 @@ Adds first-class Claude Code and Codex packaging around one shared nine-skill im
 - **AC-11 — verified:** installation and release suites exercised both positive host paths and negative missing-manifest, missing-skill, and malformed-skill packages through native host validators.
 - **AC-12 — verified:** live documentation, templates, audit references, GitHub contribution templates, and dogfooded `AGENTS.md` describe both host surfaces, confirmed updates, symlinks, worker waves, cherry-pick integration, and host permission authority.
 
+## Review
+
+- Rubric and conventions lane: `lgtm. previous blockers resolved.`
+- Issue-conformance lane: `lgtm. previous blockers resolved.`
+- Documentation-consistency lane: `lgtm. previous blockers resolved.`
+
 ## Checklist
 
 - [x] Branch name is descriptive and not `main`.
