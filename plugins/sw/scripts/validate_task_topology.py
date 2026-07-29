@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Parse schema-2 task metadata without validating its dependency graph."""
+"""Parse and validate schema-2 task metadata and dependency topology."""
 
 from __future__ import annotations
 
@@ -31,6 +31,7 @@ class Task:
     files: tuple[str, ...]
     integration: str
     validation: str
+    line: int = 0
 
 
 @dataclass(frozen=True)
@@ -184,7 +185,112 @@ def _parse_task_block(block: _TaskBlock) -> tuple[Task | None, list[Diagnostic]]
 
     if diagnostics or delegable is None:
         return None, diagnostics
-    return Task(block.task_id, ac_ids, delegable, dependencies, files, integration, validation), diagnostics
+    return Task(
+        block.task_id, ac_ids, delegable, dependencies, files, integration, validation, block.line
+    ), diagnostics
+
+
+def validate_task_topology(text: str) -> ParseResult:
+    """Return parser and dependency-wave diagnostics for a schema-2 document."""
+    parsed = parse_task_document(text)
+    diagnostics = list(parsed.diagnostics)
+    if diagnostics:
+        return parsed
+
+    task_ids = {task.task_id for task in parsed.tasks}
+    for task in parsed.tasks:
+        for dependency in task.dependencies:
+            if dependency == task.task_id:
+                diagnostics.append(Diagnostic(task.line, f"{task.task_id} cannot depend on itself"))
+            elif dependency not in task_ids:
+                diagnostics.append(
+                    Diagnostic(task.line, f"{task.task_id} depends on missing task {dependency}")
+                )
+    if diagnostics:
+        return ParseResult(parsed.tasks, tuple(sorted(diagnostics, key=lambda item: item.line)))
+
+    remaining = {task.task_id: task for task in parsed.tasks}
+    completed: set[str] = set()
+    while remaining:
+        wave = [
+            task
+            for task in parsed.tasks
+            if task.task_id in remaining and set(task.dependencies).issubset(completed)
+        ]
+        if not wave:
+            cycle_ids = ", ".join(sorted(remaining))
+            diagnostics.append(Diagnostic(1, f"dependency cycle among remaining tasks: {cycle_ids}"))
+            break
+        _validate_wave_ownership(wave, diagnostics)
+        for task in wave:
+            completed.add(task.task_id)
+            del remaining[task.task_id]
+
+    return ParseResult(parsed.tasks, tuple(sorted(diagnostics, key=lambda item: item.line)))
+
+
+def _validate_wave_ownership(wave: list[Task], diagnostics: list[Diagnostic]) -> None:
+    owners: dict[str, Task] = {}
+    for task in wave:
+        if task.integration != "isolated":
+            continue
+        for filename in task.files:
+            previous = owners.get(filename)
+            if previous is None:
+                owners[filename] = task
+                continue
+            diagnostics.append(
+                Diagnostic(
+                    task.line,
+                    f"independent same-wave ownership collision for {filename}: "
+                    f"{previous.task_id}, {task.task_id}",
+                )
+            )
+
+
+def validate_issue_task_topology(issue_text: str, tasks_text: str) -> ParseResult:
+    """Apply the legacy policy before validating a schema-2 task document."""
+    if _has_schema_two(tasks_text):
+        return validate_task_topology(tasks_text)
+
+    status = _issue_status(issue_text)
+    if status == "shipped":
+        return ParseResult((), ())
+    return ParseResult(
+        (),
+        (
+            Diagnostic(
+                1,
+                "legacy tasks.md requires explicit schema-2 replanning "
+                f"(issue status: {status or 'missing'})",
+            ),
+        ),
+    )
+
+
+def _has_schema_two(text: str) -> bool:
+    lines = text.splitlines()
+    if not lines or lines[0] != "---":
+        return False
+    try:
+        closing_index = lines.index("---", 1)
+    except ValueError:
+        return False
+    return "tasks_schema: 2" in lines[1:closing_index]
+
+
+def _issue_status(text: str) -> str | None:
+    lines = text.splitlines()
+    if not lines or lines[0] != "---":
+        return None
+    try:
+        closing_index = lines.index("---", 1)
+    except ValueError:
+        return None
+    for line in lines[1:closing_index]:
+        if line.startswith("status:"):
+            return line.partition(":")[2].strip() or None
+    return None
 
 
 def _parse_csv(value: str, pattern: re.Pattern[str], label: str, line: int, diagnostics: list[Diagnostic]) -> tuple[str, ...]:
@@ -283,13 +389,23 @@ def _strip_code_span(value: str) -> str:
 
 
 def main(arguments: list[str]) -> int:
-    if len(arguments) != 1:
-        print("usage: validate_task_topology.py TASKS_MD", file=sys.stderr)
+    if len(arguments) == 1:
+        issue_filename = None
+        filename = arguments[0]
+    elif len(arguments) == 3 and arguments[0] == "--issue":
+        issue_filename = arguments[1]
+        filename = arguments[2]
+    else:
+        print("usage: validate_task_topology.py [--issue ISSUE_MD] TASKS_MD", file=sys.stderr)
         return 2
-    filename = arguments[0]
     try:
         with open(filename, encoding="utf-8") as task_file:
-            result = parse_task_document(task_file.read())
+            tasks_text = task_file.read()
+        if issue_filename is None:
+            result = validate_task_topology(tasks_text)
+        else:
+            with open(issue_filename, encoding="utf-8") as issue_file:
+                result = validate_issue_task_topology(issue_file.read(), tasks_text)
     except OSError as error:
         print(f"{filename}: {error}", file=sys.stderr)
         return 2

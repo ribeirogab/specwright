@@ -5,7 +5,7 @@
 #
 # Exit codes:
 #   0     every check passed (prints "PASS: <dir>").
-#   1-5   the number of DISTINCT checks that failed (prints one
+#   1-6   the number of DISTINCT checks that failed (prints one
 #         "FAIL (check N): <reason>" line per failing condition — a single
 #         check may emit several lines but counts once). This is a feedforward
 #         gate for /sw:review-spec — a structurally invalid issue fails noisily
@@ -30,6 +30,8 @@
 #      learnings.md.
 #   4. no banned vague verb in an acceptance-criteria bullet of issue.md.
 #   5. every AC-N defined in issue.md is referenced by at least one task.
+#   6. schema-2 task dependencies, waves, and isolated-file ownership are
+#      valid; shipped schema-1 issues remain readable historical records.
 set -euo pipefail
 
 usage() { echo "usage: validate-spec.sh <issue-folder>" >&2; exit 2; }
@@ -42,6 +44,7 @@ issue="$dir/issue.md"
 spec="$dir/spec.md"
 tasks="$dir/tasks.md"
 learnings="$dir/learnings.md"
+script_dir=$(cd -- "$(dirname -- "$0")" && pwd)
 
 # fail() prints every diagnostic line (Rule of Transparency) but counts each
 # check at most once, so the exit code is the number of distinct failed checks
@@ -151,6 +154,20 @@ $ac_ids
 EOF
   if [ -n "$missing" ]; then
     fail 5 "AC defined in issue.md but referenced by no task: ${missing}"
+  fi
+fi
+
+# --- Check 6: task topology, ownership, and legacy policy ------------------
+if [ -f "$issue" ]; then
+  topology_status=0
+  topology_output=$(python3 "$script_dir/validate_task_topology.py" --issue "$issue" "$tasks" 2>&1) || topology_status=$?
+  if [ "$topology_status" -ne 0 ]; then
+    while IFS= read -r diagnostic; do
+      [ -n "$diagnostic" ] || continue
+      fail 6 "$diagnostic"
+    done <<EOF
+$topology_output
+EOF
   fi
 fi
 
