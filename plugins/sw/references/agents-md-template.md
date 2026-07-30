@@ -23,8 +23,9 @@ review changes. Work that needs a durable design follows the change flow in
 ## Command surfaces
 
 Claude Code exposes the workflow as `/sw:*` commands. Codex exposes the same shared
-workflow as `$sw:*` skills. These are host adapters for the same workflow; use the
-surface available in the current host.
+workflow as `$sw:*` skills. OpenCode exposes the same workflow as `/sw-*` commands.
+These are host adapters for the same workflow; use the surface available in the
+current host.
 
 ## Permissions
 

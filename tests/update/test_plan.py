@@ -52,6 +52,7 @@ class UpdatePlanTests(unittest.TestCase):
             self.assertEqual(first.plan_id, second.plan_id)
             self.assertEqual(plan_as_dict(first), plan_as_dict(second))
             self.assertEqual([item.relative_path for item in first.observed], sorted(item.relative_path for item in first.observed))
+            self.assertEqual(len(first.observed), 20)
             self.assertEqual(before, self._tree_snapshot(project))
             self.assertEqual([item.relative_path for item in first.operations], [
                 "AGENTS.md",
@@ -60,6 +61,19 @@ class UpdatePlanTests(unittest.TestCase):
                 ".codex/agents/sw-spec-document-reviewer.toml",
                 ".codex/agents/sw-reviewer.toml",
                 ".codex/agents/sw-task-worker.toml",
+                ".opencode/agent/sw-change-owner.md",
+                ".opencode/agent/sw-reviewer.md",
+                ".opencode/agent/sw-spec-document-reviewer.md",
+                ".opencode/agent/sw-task-worker.md",
+                ".opencode/command/sw-brainstorm.md",
+                ".opencode/command/sw-init.md",
+                ".opencode/command/sw-plan.md",
+                ".opencode/command/sw-pr.md",
+                ".opencode/command/sw-review-spec.md",
+                ".opencode/command/sw-review.md",
+                ".opencode/command/sw-run.md",
+                ".opencode/command/sw-spec.md",
+                ".opencode/command/sw-update.md",
                 ".gitignore",
             ])
 
@@ -73,6 +87,7 @@ class UpdatePlanTests(unittest.TestCase):
             destination.mkdir(parents=True)
             for source in sorted((REPOSITORY_ROOT / "plugins/sw/templates/codex-agents").glob("sw-*.toml")):
                 shutil.copyfile(source, destination / source.name)
+            self._install_opencode_files(project)
             (project / ".gitignore").write_text(".specwright/worktrees/\n")
             plan = plan_update(project, "shared")
             self.assertEqual(plan.state, "up-to-date")
@@ -192,6 +207,8 @@ class UpdatePlanTests(unittest.TestCase):
                 "AGENTS.override.md",
                 "CLAUDE.local.md",
                 ".codex/agents/sw-*.toml",
+                ".opencode/agent/sw-*.md",
+                ".opencode/command/sw-*.md",
             ])
 
     def test_json_apply_cli_forwards_the_confirmed_plan(self) -> None:
@@ -344,7 +361,22 @@ class UpdatePlanTests(unittest.TestCase):
                 self.assertEqual(plan.state, "legacy-migratable")
                 self.assertEqual(
                     [operation.relative_path for operation in plan.operations],
-                    ["AGENTS.md"],
+                    [
+                        "AGENTS.md",
+                        ".opencode/agent/sw-change-owner.md",
+                        ".opencode/agent/sw-reviewer.md",
+                        ".opencode/agent/sw-spec-document-reviewer.md",
+                        ".opencode/agent/sw-task-worker.md",
+                        ".opencode/command/sw-brainstorm.md",
+                        ".opencode/command/sw-init.md",
+                        ".opencode/command/sw-plan.md",
+                        ".opencode/command/sw-pr.md",
+                        ".opencode/command/sw-review-spec.md",
+                        ".opencode/command/sw-review.md",
+                        ".opencode/command/sw-run.md",
+                        ".opencode/command/sw-spec.md",
+                        ".opencode/command/sw-update.md",
+                    ],
                 )
                 apply_update(project, "shared", plan.plan_id)
             updated = agents.read_bytes()
@@ -375,7 +407,7 @@ class UpdatePlanTests(unittest.TestCase):
                 self.assertEqual(plan.state, "legacy-migratable")
                 self.assertEqual(
                     [operation.action for operation in plan.operations],
-                    ["replace-managed-block", *("replace-profile",) * 4],
+                    ["replace-managed-block", *("replace-profile",) * 4, *("create",) * 13],
                 )
                 apply_update(project, "shared", plan.plan_id)
 
@@ -403,7 +435,7 @@ class UpdatePlanTests(unittest.TestCase):
             self.assertEqual(plan.state, "new")
             apply_update(project, "local", plan.plan_id)
             lines = (project / ".gitignore").read_text().splitlines()
-            self.assertEqual(lines[-5:], list(sw_update.LOCAL_IGNORE_RULES))
+            self.assertEqual(lines[-7:], list(sw_update.LOCAL_IGNORE_RULES))
             self.assertEqual(lines.count(".codex/agents/sw-*.toml"), 1)
             self.assertEqual(plan_update(project, "local").state, "up-to-date")
 
@@ -454,8 +486,61 @@ class UpdatePlanTests(unittest.TestCase):
         with self._fixture_copy("up-to-date") as project:
             (project / "CLAUDE.md").symlink_to("AGENTS.md")
             self._install_profiles(project)
+            self._install_opencode_files(project)
             (project / ".gitignore").write_text(".specwright/worktrees/\n")
             self.assertEqual(plan_update(project, "shared").state, "up-to-date")
+
+    def test_new_shared_apply_installs_opencode_files_and_reaches_up_to_date(self) -> None:
+        with self._fixture_copy("new") as project:
+            plan = plan_update(project, "shared")
+            self.assertEqual(plan.state, "new")
+            apply_update(project, "shared", plan.plan_id)
+            self._assert_opencode_files_match(project)
+            self.assertEqual(plan_update(project, "shared").state, "up-to-date")
+
+    def test_edited_opencode_file_is_drifted_with_zero_writes(self) -> None:
+        for directory, _, names in sw_update.MANAGED_TEMPLATE_SETS[1:]:
+            for name in names:
+                with self.subTest(path=f"{directory}/{name}"), self._fixture_copy("new") as project:
+                    plan = plan_update(project, "shared")
+                    apply_update(project, "shared", plan.plan_id)
+                    (project / directory / name).write_bytes(b"hand edited\n")
+                    drift_plan = plan_update(project, "shared")
+                    self.assertEqual(drift_plan.state, "drifted")
+                    self.assertEqual(drift_plan.operations, ())
+                    before = self._full_tree_snapshot(project)
+                    with self.assertRaisesRegex(UpdateError, "drifted"):
+                        apply_update(project, "shared", drift_plan.plan_id)
+                    self.assertEqual(before, self._full_tree_snapshot(project))
+
+    def test_real_2026_7_29_legacy_project_migrates_to_up_to_date(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            (project / "AGENTS.md").write_text(render_managed_block("2026.7.29"))
+            (project / "CLAUDE.md").symlink_to("AGENTS.md")
+            self._install_profiles(project)
+            (project / ".gitignore").write_text(".specwright/worktrees/\n")
+            plan = plan_update(project, "shared")
+            self.assertEqual(plan.state, "legacy-migratable")
+            self.assertEqual(
+                [operation.action for operation in plan.operations],
+                ["replace-managed-block", *("create",) * 13],
+            )
+            apply_update(project, "shared", plan.plan_id)
+            self._assert_profiles_match(project)
+            self._assert_opencode_files_match(project)
+            self.assertEqual(plan_update(project, "shared").state, "up-to-date")
+
+    def test_local_mode_apply_writes_exactly_seven_ignore_rules(self) -> None:
+        with self._fixture_copy("new") as project:
+            plan = plan_update(project, "local")
+            self.assertEqual(plan.state, "new")
+            apply_update(project, "local", plan.plan_id)
+            self.assertEqual(
+                (project / ".gitignore").read_text(),
+                "\n".join(sw_update.LOCAL_IGNORE_RULES) + "\n",
+            )
+            self.assertEqual(plan_update(project, "local").state, "up-to-date")
 
     def _fixture_copy(self, name: str):
         directory = tempfile.TemporaryDirectory()
@@ -496,6 +581,24 @@ class UpdatePlanTests(unittest.TestCase):
             )
         ):
             shutil.copyfile(source, destination / source.name)
+
+    @staticmethod
+    def _install_opencode_files(project: Path) -> None:
+        for directory, template_directory, names in sw_update.MANAGED_TEMPLATE_SETS[1:]:
+            destination = project / directory
+            destination.mkdir(parents=True, exist_ok=True)
+            for name in names:
+                source = REPOSITORY_ROOT / "plugins/sw/templates" / template_directory / name
+                shutil.copyfile(source, destination / name)
+
+    def _assert_opencode_files_match(self, project: Path) -> None:
+        for directory, template_directory, names in sw_update.MANAGED_TEMPLATE_SETS[1:]:
+            for name in names:
+                source = REPOSITORY_ROOT / "plugins/sw/templates" / template_directory / name
+                self.assertEqual(
+                    (project / directory / name).read_bytes(),
+                    source.read_bytes(),
+                )
 
     def _assert_profiles_match(self, project: Path) -> None:
         destination = project / ".codex" / "agents"

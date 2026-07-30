@@ -1,4 +1,4 @@
-<!-- sw:managed version=2026.7.29 digest=7258e63478a9ee574890baa9287257ad76cea4c4e9f5f21e27c1e307385e9f5b -->
+<!-- sw:managed version=2026.7.30 digest=bd7eb5084ec236be5ba58363717d12ecc7a3e6b2148cf51ab103907bd54edfb5 -->
 # specwright
 
 This repository uses specwright's change-driven engineering workflow.
@@ -12,8 +12,9 @@ review changes. Work that needs a durable design follows the change flow in
 ## Command surfaces
 
 Claude Code exposes the workflow as `/sw:*` commands. Codex exposes the same shared
-workflow as `$sw:*` skills. These are host adapters for the same workflow; use the
-surface available in the current host.
+workflow as `$sw:*` skills. OpenCode exposes the same workflow as `/sw-*` commands.
+These are host adapters for the same workflow; use the surface available in the
+current host.
 
 ## Permissions
 

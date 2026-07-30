@@ -224,6 +224,25 @@ sw-task-worker|sw-task-worker|gpt-5.6-terra|medium|workspace-write
 EOF
 }
 
+assert_opencode_files() {
+  local project="$1" name template installed
+  for name in sw-change-owner sw-reviewer sw-spec-document-reviewer sw-task-worker; do
+    template="$ROOT/plugins/sw/templates/opencode-agents/$name.md"
+    installed="$project/.opencode/agent/$name.md"
+    assert_file "opencode agent template $name exists" "$template"
+    assert_eq "installed opencode agent $name matches template" 0 "$(cmp -s "$template" "$installed"; echo $?)"
+    assert_eq "opencode agent $name is a subagent" yes "$(grep -Fq 'mode: subagent' "$template" && echo yes || echo no)"
+    assert_eq "opencode agent $name pins no model" no "$(grep -q '^model:' "$template" && echo yes || echo no)"
+  done
+  for name in sw-brainstorm sw-init sw-plan sw-pr sw-review-spec sw-review sw-run sw-spec sw-update; do
+    template="$ROOT/plugins/sw/templates/opencode-commands/$name.md"
+    installed="$project/.opencode/command/$name.md"
+    assert_file "opencode command template $name exists" "$template"
+    assert_eq "installed opencode command $name matches template" 0 "$(cmp -s "$template" "$installed"; echo $?)"
+    assert_eq "opencode command $name passes arguments through" yes "$(grep -Fq 'ARGUMENTS' "$template" && echo yes || echo no)"
+  done
+}
+
 run_init() {
   local shared local_project shared_plan local_plan
   ensure_temporary_root
@@ -242,8 +261,10 @@ run_init() {
   git -C "$shared" add .specwright
   assert_eq "shared vault conventions README is trackable" 0 "$(git -C "$shared" ls-files --error-unmatch .specwright/conventions/README.md >/dev/null 2>&1; echo $?)"
   assert_profiles "$shared"
+  assert_opencode_files "$shared"
   assert_eq "shared ignore rules are exact" '.specwright/worktrees/' "$(cat "$shared/.gitignore")"
   assert_eq "shared mode does not ignore profiles" 1 "$(git -C "$shared" check-ignore -q -- .codex/agents/sw-task-worker.toml; echo $?)"
+  assert_eq "shared mode does not ignore opencode agents" 1 "$(git -C "$shared" check-ignore -q -- .opencode/agent/sw-task-worker.md; echo $?)"
 
   local_project="$(new_project local)"
   assert_file "local fixture marker is copied" "$local_project/.gitkeep"
@@ -258,9 +279,11 @@ run_init() {
   assert_symlink "local Claude adapter" "$local_project/CLAUDE.local.md" AGENTS.override.md
   assert_vault local "$local_project"
   assert_profiles "$local_project"
-  assert_eq "local ignore rules are exact and ordered" $'.specwright/worktrees/\n.specwright/\nAGENTS.override.md\nCLAUDE.local.md\n.codex/agents/sw-*.toml' "$(cat "$local_project/.gitignore")"
+  assert_opencode_files "$local_project"
+  assert_eq "local ignore rules are exact and ordered" $'.specwright/worktrees/\n.specwright/\nAGENTS.override.md\nCLAUDE.local.md\n.codex/agents/sw-*.toml\n.opencode/agent/sw-*.md\n.opencode/command/sw-*.md' "$(cat "$local_project/.gitignore")"
   assert_eq "local vault conventions README is ignored" 0 "$(git -C "$local_project" check-ignore -q -- .specwright/conventions/README.md; echo $?)"
   assert_eq "local profile is ignored" 0 "$(git -C "$local_project" check-ignore -q -- .codex/agents/sw-task-worker.toml; echo $?)"
+  assert_eq "local opencode command is ignored" 0 "$(git -C "$local_project" check-ignore -q -- .opencode/command/sw-plan.md; echo $?)"
   assert_eq "unrelated .codex/project.toml is preserved" project-owned "$(tr -d '\n' <"$local_project/.codex/project.toml")"
   assert_eq "unrelated .codex/project.toml remains unignored" 1 "$(git -C "$local_project" check-ignore -q -- .codex/project.toml; echo $?)"
 }
@@ -277,6 +300,9 @@ new_update_project() {
       ln -s AGENTS.md "$project/CLAUDE.md"
       mkdir -p "$project/.codex/agents"
       cp "$ROOT"/plugins/sw/templates/codex-agents/sw-*.toml "$project/.codex/agents/"
+      mkdir -p "$project/.opencode/agent" "$project/.opencode/command"
+      cp "$ROOT"/plugins/sw/templates/opencode-agents/sw-*.md "$project/.opencode/agent/"
+      cp "$ROOT"/plugins/sw/templates/opencode-commands/sw-*.md "$project/.opencode/command/"
       printf '.specwright/worktrees/\n' >"$project/.gitignore"
       ;;
     unrecognized-shared)
@@ -324,6 +350,7 @@ run_update() {
   local identity_project identity_plan profile_drift profile_drift_plan ignore_negation ignore_negation_plan unsupported
   local unsupported_plan unsupported_before unsupported_after unsupported_status=0
   local managed_update managed_plan post_plan second_post_plan initial_plan_id
+  local opencode_drift opencode_drift_plan opencode_drift_before opencode_drift_after
 
   ensure_temporary_root
 
@@ -331,10 +358,10 @@ run_update() {
   new_plan="$temporary_root/new-plan.json"
   run_plan "$new_project_path" shared "$new_plan"
   assert_eq "new fixture state" new "$(json_value state "$new_plan")"
-  assert_eq "new fixture operation count" 7 "$(json_length operations "$new_plan")"
+  assert_eq "new fixture operation count" 20 "$(json_length operations "$new_plan")"
   assert_eq "new fixture first operation" AGENTS.md "$(json_value operations.0.relative_path "$new_plan")"
   assert_eq "new fixture second operation" CLAUDE.md "$(json_value operations.1.relative_path "$new_plan")"
-  assert_eq "new fixture final operation" .gitignore "$(json_value operations.6.relative_path "$new_plan")"
+  assert_eq "new fixture final operation" .gitignore "$(json_value operations.19.relative_path "$new_plan")"
   assert_plan_pure new "$new_project_path" shared
 
   current_project="$(new_update_project current up-to-date)"
@@ -368,6 +395,17 @@ run_update() {
   assert_eq "drifted fixture has diagnostics" yes "$([ "$(json_length diagnostics "$drifted_plan")" -gt 0 ] && echo yes || echo no)"
   assert_plan_pure drifted "$drifted" shared
   expect_apply_failure drifted-apply "$drifted" shared "$drifted_plan" "refusing to apply drifted project"
+
+  opencode_drift="$(new_update_project opencode-drift up-to-date)"
+  printf '# hand edit\n' >>"$opencode_drift/.opencode/command/sw-plan.md"
+  opencode_drift_before="$(tree_digest "$opencode_drift")"
+  opencode_drift_plan="$temporary_root/opencode-drift-plan.json"
+  run_plan "$opencode_drift" shared "$opencode_drift_plan"
+  assert_eq "opencode drift fixture state" drifted "$(json_value state "$opencode_drift_plan")"
+  assert_eq "opencode drift fixture has zero operations" 0 "$(json_length operations "$opencode_drift_plan")"
+  opencode_drift_after="$(tree_digest "$opencode_drift")"
+  assert_eq "opencode drift plan is read-only" "$opencode_drift_before" "$opencode_drift_after"
+  expect_apply_failure opencode-drift-apply "$opencode_drift" shared "$opencode_drift_plan" "refusing to apply drifted project"
 
   identity_project="$(new_update_project identity new)"
   identity_plan="$temporary_root/identity-plan.json"
