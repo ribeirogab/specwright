@@ -8,7 +8,8 @@ best-effort, and has no SLA; a polite follow-up after a couple of weeks is welco
 In scope:
 
 - shared workflow skills under `plugins/sw/skills/`;
-- thin Claude redirects under `plugins/sw/commands/`;
+- thin Claude redirects under `plugins/sw/commands/`; and OpenCode
+  command/agent adapters under `plugins/sw/templates/opencode-{agents,commands}/`;
 - Claude and Codex manifests and marketplaces;
 - role manifests/templates, project templates, updater, validators, tests, and
   documentation; and
@@ -27,8 +28,9 @@ are out of scope.
 3. Keep host adapters minimal and preserve the same nine-entry inventory.
 4. Keep project-managed instructions host-neutral. `AGENTS*.md` is canonical;
    `CLAUDE*.md` is a relative symlink.
-5. Treat `.codex/agents/sw-*.toml` as generated project profiles. Change their
-   source templates and migration tests together.
+5. Treat `.codex/agents/sw-*.toml` and `.opencode/{agent,command}/sw-*.md` as
+   generated project files. Change their source templates and migration tests
+   together.
 6. Never make update logic fetch a remote branch. The installed Codex manifest is
    the version source.
 7. Never weaken exact-plan confirmation, digest checking, atomic preflight, or
@@ -69,7 +71,7 @@ role, and worker role. The validator must continue to reject duplicate IDs,
 missing/unknown/cyclic dependencies, missing isolated metadata, and ownership
 collisions within a dependency wave.
 
-## Dual-host release smoke test
+## Host release smoke test
 
 The local release gate validates the nine-skill inventory and Claude's native
 strict package parser without modifying Codex state:
@@ -89,7 +91,8 @@ CI installs the pinned host CLIs, adds a temporary Codex marketplace, installs
 `sw@specwright`, checks the installed nine-skill inventory and profile models
 against the native Codex catalog, and exercises negative fixtures for missing
 Claude/Codex manifests and a missing or malformed required skill. A host that
-cannot recognize the package blocks release.
+cannot recognize the package blocks release. OpenCode has no package ingestion
+to smoke-test; its coverage is the install/update matrix.
 
 ## Updater fixtures
 
@@ -124,7 +127,7 @@ evidence. Any protocol change must test:
 - [ ] The branch is descriptive and is not `main`.
 - [ ] Modified skills pass `quick_validate.py` and `package_skill.py`.
 - [ ] Claude strict validation and the relevant install/update tests pass.
-- [ ] The dual-host release smoke test passes when package surfaces change.
+- [ ] The host release smoke test passes when package surfaces change.
 - [ ] `NOTICE.md` is updated when vendored content changes.
 - [ ] Project artifacts and documentation agree with the implemented contract.
 - [ ] Commit messages follow Conventional Commits.

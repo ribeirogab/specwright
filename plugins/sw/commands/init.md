@@ -1,5 +1,5 @@
 ---
-description: Set up specwright's dual-host project state — the .specwright/ vault, canonical AGENTS instructions, Claude symlinks, Codex role profiles, and exact ignore rules
+description: Set up specwright's project state — the .specwright/ vault, canonical AGENTS instructions, host adapter files, role profiles, and exact ignore rules
 ---
 
 # init — set up specwright's per-repo content

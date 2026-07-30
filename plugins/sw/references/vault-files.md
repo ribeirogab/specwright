@@ -28,22 +28,27 @@ empty. Existing conventions are never overwritten. Empty `changes/` and
 
 In **shared** mode the vault is tracked and only `.specwright/worktrees/` is
 ignored. Canonical instructions are `AGENTS.md`; `CLAUDE.md` is its relative
-symlink. The four project Codex profiles are tracked.
+symlink. The four project Codex profiles and the thirteen `.opencode/` files
+(four `.opencode/agent/sw-*.md` profiles and nine `.opencode/command/sw-*.md`
+redirects) are tracked.
 
 In **local** mode the whole vault, `AGENTS.override.md`, its
 `CLAUDE.local.md` relative symlink, the four `.codex/agents/sw-*.toml` profiles,
-and worktrees are ignored. Existing shared instructions and unrelated Codex
-configuration remain untouched.
+the `.opencode/agent/sw-*.md` and `.opencode/command/sw-*.md` files, and worktrees
+are ignored. Existing shared instructions and unrelated Codex configuration remain
+untouched.
 
 For a local-mode delivery dispatch, `sw:run` copies into each change worktree:
 
 - `AGENTS.override.md`;
 - `CLAUDE.local.md -> AGENTS.override.md`;
-- the project-installed `.codex/agents/sw-*.toml` files; and
+- the project-installed `.codex/agents/sw-*.toml` files;
+- the `.opencode/agent/sw-*.md` and `.opencode/command/sw-*.md` files; and
 - the change folder.
 
-On return it copies back only that change folder. Instructions and profiles are
-canonical conductor state and never sync back from a worker/owner worktree.
+On return it copies back only that change folder. Instructions, profiles, and
+OpenCode files are canonical conductor state and never sync back from a
+worker/owner worktree.
 
 ## Changes (flat, always)
 

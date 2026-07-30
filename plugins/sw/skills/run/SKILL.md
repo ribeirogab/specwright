@@ -1,7 +1,7 @@
 ---
 name: run
 user-invocable: false
-description: "Conduct a specwright delivery: read the board, dispatch every ready change to the sw-change-owner role (parallel, one worktree each), track progress, apply circuit breakers, and close out with delivery reconciliation, learnings promotion, and a final report. Resumable from any fresh session. Trigger on '/sw:run', '$sw:run', 'run the delivery', 'continue the delivery', or when the user asks to resume conducting a delivery."
+description: "Conduct a specwright delivery: read the board, dispatch every ready change to the sw-change-owner role (parallel, one worktree each), track progress, apply circuit breakers, and close out with delivery reconciliation, learnings promotion, and a final report. Resumable from any fresh session. Trigger on '/sw:run', '$sw:run', '/sw-run', 'run the delivery', 'continue the delivery', or when the user asks to resume conducting a delivery."
 ---
 
 # run — the delivery orchestrator
@@ -24,7 +24,7 @@ fi
 ```
 
 - **`shared`** → conduct as normal; git carries the artifacts across worktrees.
-- **`local`** → the vault, `AGENTS.override.md`, its `CLAUDE.local.md` adapter, and the `sw-*` Codex role profiles are git-ignored, so `git worktree add` cannot carry them into an owner's worktree and git cannot sync an owner's artifacts back. specwright bridges the owner contract and change folder with an explicit copy in, then transports only the change folder back out (the loop's local-mode branches below); because the `.gitignore` lines are committed in `local` mode, every copied artifact lands git-ignored in the worktree, so an owner never commits it.
+- **`local`** → the vault, `AGENTS.override.md`, its `CLAUDE.local.md` adapter, and   the `sw-*` Codex role profiles, and the `.opencode/agent/sw-*.md` and `.opencode/command/sw-*.md` files are git-ignored, so `git worktree add` cannot carry them into an owner's worktree and git cannot sync an owner's artifacts back. specwright bridges the owner contract and change folder with an explicit copy in, then transports only the change folder back out (the loop's local-mode branches below); because the `.gitignore` lines are committed in `local` mode, every copied artifact lands git-ignored in the worktree, so an owner never commits it.
   - The `git check-ignore` probe reports `local` from **any** worktree (the `.gitignore` is committed and present in every checkout). The separate `[ -d .specwright/deliveries ]` test asks whether *this* checkout actually holds the vault — in `local` mode the vault lives only where `sw:init` ran.
   - **Vault absent here** → **stop** with the message above and dispatch nothing: an externally-created worktree (e.g. one under `.claude/worktrees/`) is not the conductor's home.
   - **Vault present** → this checkout is the **canonical vault**; conduct with the loop's local-mode adaptations.
@@ -46,23 +46,26 @@ Repeat until no change is ready and none is running:
      ```bash
      git worktree add .specwright/worktrees/<slug> -b <branch>
      ```
-   - **In `local` mode, copy the dual-host contract and change folder into the new worktree** right after creating it — otherwise the owner starts without its instructions, Claude adapter, Codex role profiles, or change (git carries only tracked content). All copied paths land git-ignored in the worktree (the `.gitignore` lines are committed), so the owner never commits them. `<slug>` is the change slug you fill per dispatch; `$CHANGE_REL` is the change folder's repo-relative path (`.specwright/changes/<date>-<slug>`):
-     ```bash
-     if [ "$mode" = local ]; then
-       WORKTREE=".specwright/worktrees/<slug>"
-       cp AGENTS.override.md "$WORKTREE/AGENTS.override.md"
-       ln -s AGENTS.override.md "$WORKTREE/CLAUDE.local.md"
-       mkdir -p "$WORKTREE/.codex/agents"
-       cp .codex/agents/sw-*.toml "$WORKTREE/.codex/agents/"
-       mkdir -p ".specwright/worktrees/<slug>/$CHANGE_REL"
-       cp -R "$CHANGE_REL/." ".specwright/worktrees/<slug>/$CHANGE_REL/"
-     fi
-     ```
+    - **In `local` mode, copy the tri-host contract and change folder into the new worktree** right after creating it — otherwise the owner starts without its instructions, Claude adapter, Codex role profiles, OpenCode agent and command files, or change (git carries only tracked content). All copied paths land git-ignored in the worktree (the `.gitignore` lines are committed), so the owner never commits them. `<slug>` is the change slug you fill per dispatch; `$CHANGE_REL` is the change folder's repo-relative path (`.specwright/changes/<date>-<slug>`):
+      ```bash
+      if [ "$mode" = local ]; then
+        WORKTREE=".specwright/worktrees/<slug>"
+        cp AGENTS.override.md "$WORKTREE/AGENTS.override.md"
+        ln -s AGENTS.override.md "$WORKTREE/CLAUDE.local.md"
+        mkdir -p "$WORKTREE/.codex/agents"
+        cp .codex/agents/sw-*.toml "$WORKTREE/.codex/agents/"
+        mkdir -p "$WORKTREE/.opencode/agent" "$WORKTREE/.opencode/command"
+        cp .opencode/agent/sw-*.md "$WORKTREE/.opencode/agent/"
+        cp .opencode/command/sw-*.md "$WORKTREE/.opencode/command/"
+        mkdir -p ".specwright/worktrees/<slug>/$CHANGE_REL"
+        cp -R "$CHANGE_REL/." ".specwright/worktrees/<slug>/$CHANGE_REL/"
+      fi
+      ```
    - **Dispatch the `sw-change-owner` subagent** — it pins the owner's model + effort and routes into the shared `sw:plan` workflow. Its prompt is just the coordinates: the change folder path, the delivery path, and the worktree path. The pipeline it runs (plan → self-review → implement → quality gate → runtime verification → PR → review to `lgtm` → curate `learnings.md` → flip `change.md` status) and the return contract — `shipped` (+ PR URL + one line per learning) or `blocked` (+ a paste-ready Blockers block, **Why / Tried / Needs**, written by the owner for the board) — live in the role definition and shared workflow, not this prompt. Inside the change, the owner derives **waves** from the schema-2 task graph (`Depends on:` + `Files:` ownership): a wave is a dependency-ready, file-disjoint set of isolated tasks that may run in parallel — computed at dispatch time, never persisted.
    - Append `dispatched` to the board's Dispatch Log and commit — the per-append commit rule (Track, below) starts with this first append.
    - Keep the **agentId** from the spawn result — name aliases expire; address every resume or relay by that ID, never by name. Treat relays as one-way: read the owner's answers from repository artifacts, not from message replies.
 3. **Track** — as each owner returns, append the event to the Dispatch Log, and **commit the board after every Dispatch Log append** — not only at round close; an uncommitted line is lost to a crash. On `shipped`: note the learnings one-liners and PR URL. On `blocked`: paste the owner's paste-ready Blockers block (Why / Tried / Needs) into the board's Blockers section **unmodified** — the conductor never composes or restructures it. Owners flip their own `change.md` status; the orchestrator never edits a `change.md`.
-   - **In `local` mode, sync only the returned owner's change folder back into the canonical vault first** — this is how the owner's flipped `status:` and its `spec.md`/`tasks.md`/`learnings.md` reach the vault (git-ignored artifacts have no branch to carry them, and readiness reads the vault). Never sync instructions or Codex profiles back: they are canonical conductor state, not owner output.
+    - **In `local` mode, sync only the returned owner's change folder back into the canonical vault first** — this is how the owner's flipped `status:` and its `spec.md`/`tasks.md`/`learnings.md` reach the vault (git-ignored artifacts have no branch to carry them, and readiness reads the vault). Never sync instructions, Codex profiles, or OpenCode files back: they are canonical conductor state, not owner output.
      ```bash
      if [ "$mode" = local ]; then
        cp -R ".specwright/worktrees/<slug>/$CHANGE_REL/." "$CHANGE_REL/"
@@ -125,4 +128,4 @@ When the agent cannot spawn sub-agents, the session itself acts as each change's
 - Never edit code, tests, or docs outside the delivery folder — dispatch an owner.
 - Never approve reviews or merge PRs — `lgtm` comes from the `sw:review` workflow inside each change's pipeline; merging is the human's.
 - Never rewrite Dispatch Log history — it is append-only.
-- Natural language works: "continue the delivery" in a fresh session must behave exactly like the explicit host surface (`/sw:run` or `$sw:run`).
+- Natural language works: "continue the delivery" in a fresh session must behave exactly like the explicit host surface (`/sw:run` in Claude Code, `$sw:run` in Codex, `/sw-run` in OpenCode).

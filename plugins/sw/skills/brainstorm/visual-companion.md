@@ -70,6 +70,8 @@ When calling this via the Bash tool, set `run_in_background: true`. Then read `$
 scripts/start-server.sh --project-dir /path/to/project
 ```
 
+**OpenCode:** the visual companion has not been verified under OpenCode; treat background-process behavior as unknown.
+
 **Gemini CLI:**
 ```bash
 # Use --foreground and set is_background: true on your shell tool call

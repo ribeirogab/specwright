@@ -1,5 +1,5 @@
 ---
-description: Plan and apply a confirmed versioned specwright project migration across Claude Code and Codex without overwriting drift
+description: Plan and apply a confirmed versioned specwright project migration across every supported host without overwriting drift
 argument-hint: "<optional: shared or local>"
 ---
 

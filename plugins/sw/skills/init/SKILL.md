@@ -1,24 +1,25 @@
 ---
 name: init
 user-invocable: false
-description: "Initialize specwright's dual-host project state in shared or local mode: scaffold the .specwright vault, create canonical AGENTS instructions with Claude symlinks, install the four project-scoped Codex agent profiles, and add only the required ignore rules. Uses the deterministic updater and refuses drift. Trigger on '/sw:init', '$sw:init', 'set up specwright here', or 'initialize specwright in this repo'."
+description: "Initialize specwright's project state in shared or local mode: scaffold the .specwright vault, create canonical AGENTS instructions with Claude symlinks, install the four Codex role profiles and the thirteen OpenCode agent and command files, and add only the required ignore rules. Uses the deterministic updater and refuses drift. Trigger on '/sw:init', '$sw:init', '/sw-init', 'set up specwright here', or 'initialize specwright in this repo'."
 ---
 
 # Init — set up specwright project state
 
-Initialize the current repository for the same specwright workflow in Claude Code
-and Codex. The plugin already provides every workflow skill; this command creates
-only project-scoped content:
+Initialize the current repository for the same specwright workflow across every
+supported host. The plugin already provides every workflow skill; this command
+creates only project-scoped content:
 
 - the `.specwright/` vault;
 - canonical AGENTS instructions and the Claude adapter symlink;
 - four `.codex/agents/sw-*.toml` role profiles;
+- four `.opencode/agent/sw-*.md` role profiles and nine `.opencode/command/sw-*.md` redirects;
 - the exact ignore rules required by the selected mode.
 
 Never install or enable a plugin, edit personal host configuration, copy skill bodies,
 or create `.claude/settings.json`.
 
-**Announce at start:** "Setting up specwright's dual-host project state..."
+**Announce at start:** "Setting up specwright's project state..."
 
 ## 1. Resolve the installed plugin root
 
@@ -40,6 +41,19 @@ templates/codex-agents/sw-change-owner.toml
 templates/codex-agents/sw-spec-document-reviewer.toml
 templates/codex-agents/sw-reviewer.toml
 templates/codex-agents/sw-task-worker.toml
+templates/opencode-agents/sw-change-owner.md
+templates/opencode-agents/sw-spec-document-reviewer.md
+templates/opencode-agents/sw-reviewer.md
+templates/opencode-agents/sw-task-worker.md
+templates/opencode-commands/sw-init.md
+templates/opencode-commands/sw-brainstorm.md
+templates/opencode-commands/sw-spec.md
+templates/opencode-commands/sw-plan.md
+templates/opencode-commands/sw-run.md
+templates/opencode-commands/sw-review.md
+templates/opencode-commands/sw-review-spec.md
+templates/opencode-commands/sw-pr.md
+templates/opencode-commands/sw-update.md
 ```
 
 If the root or any required file cannot be resolved, stop before writing and report
@@ -49,14 +63,16 @@ the missing path. Do not search remote branches or fetch anything.
 
 Always ask, including on re-runs:
 
-- **shared** — track `.specwright/`, `AGENTS.md`, `CLAUDE.md -> AGENTS.md`, and
-  the four `.codex/agents/sw-*.toml` profiles. Ignore only
-  `.specwright/worktrees/`.
+- **shared** — track `.specwright/`, `AGENTS.md`, `CLAUDE.md -> AGENTS.md`,
+  the four `.codex/agents/sw-*.toml` profiles, and the four
+  `.opencode/agent/sw-*.md` profiles and nine `.opencode/command/sw-*.md`
+  redirects. Ignore only `.specwright/worktrees/`.
 - **local** — keep specwright private in this checkout. Use
   `AGENTS.override.md`, `CLAUDE.local.md -> AGENTS.override.md`, the local vault,
-  and the four role profiles. Ignore exactly `.specwright/worktrees/`,
-  `.specwright/`, `AGENTS.override.md`, `CLAUDE.local.md`, and
-  `.codex/agents/sw-*.toml`.
+  the four role profiles, and the OpenCode agent and command files. Ignore exactly
+  `.specwright/worktrees/`, `.specwright/`, `AGENTS.override.md`,
+  `CLAUDE.local.md`, `.codex/agents/sw-*.toml`, `.opencode/agent/sw-*.md`, and
+  `.opencode/command/sw-*.md`.
 
 Existing project-owned `AGENTS.md`, `CLAUDE.md`, and unrelated `.codex/` files are
 valid in local mode and must remain byte-for-byte unchanged. Present paths already
@@ -157,11 +173,13 @@ Run the checks in `references/validation.md`, plus all of these:
    `sw:managed` block.
 2. The Claude adapter is a relative symlink to that canonical file.
 3. All four `.codex/agents/sw-*.toml` files byte-match the installed templates.
-4. Shared mode ignores only `.specwright/worktrees/` from specwright-managed
-   state; local mode ignores all five exact local patterns.
-5. Unrelated `.codex` configuration and project-authored instructions are
+4. All four `.opencode/agent/sw-*.md` and nine `.opencode/command/sw-*.md` files
+   byte-match the installed templates.
+5. Shared mode ignores only `.specwright/worktrees/` from specwright-managed
+   state; local mode ignores all seven exact local patterns.
+6. Unrelated `.codex` configuration and project-authored instructions are
    unchanged.
-6. A second read-only plan reports `up-to-date` with zero operations.
+7. A second read-only plan reports `up-to-date` with zero operations.
 
 Report the mode and managed paths created. Do not stage or commit them unless the
 user separately authorizes Git actions.

@@ -134,8 +134,9 @@ permission, command-approval, Git, or external-action policy.
    approved criterion; any ticket edit is its own commit naming the changed
    criterion.
 2. **Spec-document-reviewer subagent** — dispatch the `sw-spec-document-reviewer` subagent over `change.md` + `spec.md` + `tasks.md` (pass the three paths; its rubric and its model + effort live in the agent definition). Fix, re-dispatch until Approved (max 3 iterations, then surface to the human).
-3. **`sw:review-spec`** — invoke `/sw:review-spec` in Claude Code or
-   `$sw:review-spec` in Codex. Fix every external-evaluator `FAIL`.
+3. **`sw:review-spec`** — invoke the host's `sw:review-spec` surface
+   (`/sw:review-spec` in Claude Code, `$sw:review-spec` in Codex,
+   `/sw-review-spec` in OpenCode). Fix every external-evaluator `FAIL`.
 
 **Commit the plan** — when the three gates pass, commit `spec.md` + `tasks.md` (including any gate fixes) before the first implementation commit. The PR body's quality-gate section must name these three gates and their outcomes — a repo-only auditor must be able to verify the gates ran.
 
@@ -302,8 +303,10 @@ After the quality gate and **before the PR**, execute what you built and check e
 
 ## Deliver
 
-Invoke the host's `sw:pr` workflow (`/sw:pr` or `$sw:pr`) and then `sw:review`
-(`/sw:review` or `$sw:review`) to `lgtm`. The change approval is standing workflow
+Invoke the host's `sw:pr` workflow (`/sw:pr` in Claude Code, `$sw:pr` in Codex,
+`/sw-pr` in OpenCode) and then `sw:review` (`/sw:review` in Claude Code,
+`$sw:review` in Codex, `/sw-review` in OpenCode) to `lgtm`. The change approval
+is standing workflow
 consent, not a permission bypass: obtain any approval the current host requires for
 Git, network, or external actions. Then:
 
