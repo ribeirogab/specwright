@@ -1,8 +1,8 @@
 ---
 feature: opencode-host-support
 created: 2026-07-29
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-30
 delivery: null
 ---
 # OpenCode Host Support — Change
