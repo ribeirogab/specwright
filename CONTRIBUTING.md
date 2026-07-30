@@ -12,7 +12,7 @@ In scope:
 - Claude and Codex manifests and marketplaces;
 - role manifests/templates, project templates, updater, validators, tests, and
   documentation; and
-- dogfooded issue artifacts when they are part of the proposed workflow change.
+- dogfooded change artifacts when they are part of the proposed workflow change.
 
 Unrelated skills, broad governance proposals, personal host settings, generated
 evaluation workspaces, and edits to unrelated historical `.specwright/` artifacts
@@ -20,7 +20,7 @@ are out of scope.
 
 ## Development rules
 
-1. File an issue before a non-trivial change.
+1. File a GitHub issue before a non-trivial change.
 2. Implement workflow behavior once in
    `plugins/sw/skills/<name>/SKILL.md`. A Claude command is a pure redirect to
    that skill; Codex discovers the same directory from its manifest.
@@ -45,6 +45,7 @@ UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
   python3 plugins/sw/scripts/package_skill.py plugins/sw/skills/<skill> /tmp
 UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
   python3 tests/skills/test_validation.py
+bash tests/validate-spec/run.sh
 ```
 
 Then validate both package structures and the complete install/update matrix:
@@ -99,17 +100,16 @@ Updater tests must prove both safety and identity:
 - `--apply` requires the displayed `--expect-plan`;
 - changes after planning invalidate that identity;
 - project text outside the managed block and unrelated `.codex` files survive;
-- recognized Claude-only legacy shapes migrate;
 - unrecognized or edited managed shapes are `drifted` and are not overwritten;
 - profiles byte-match the installed templates; and
 - unavailable symlinks fail before managed writes, with no copy fallback.
 
 Do not add a fixture that teaches the updater to guess ownership, dependencies, or
-task topology for an active legacy issue. Replanning is the required repair.
+task topology for an active schema-1 change. Replanning is the required repair.
 
 ## Owner/worker changes
 
-The issue owner is the only integrator. A worker branch must start at the recorded
+The change owner is the only integrator. A worker branch must start at the recorded
 wave base, own only declared files, and return ordered commits and validation
 evidence. Any protocol change must test:
 
@@ -132,7 +132,7 @@ evidence. Any protocol change must test:
 
 ## Reporting bugs and security issues
 
-Public bugs belong in the issue tracker with the host/version, reproduction, and
+Public bugs belong in the GitHub issue tracker with the host/version, reproduction, and
 expected versus actual result. Vulnerabilities must be reported privately using
 [`SECURITY.md`](SECURITY.md).
 

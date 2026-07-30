@@ -46,13 +46,13 @@ confirmation of the exact displayed `plan_id`. `up-to-date` needs no apply.
 ```text
 AGENTS.md                                  regular canonical file
 CLAUDE.md -> AGENTS.md                     relative symlink
-.codex/agents/sw-issue-owner.toml
+.codex/agents/sw-change-owner.toml
 .codex/agents/sw-spec-document-reviewer.toml
 .codex/agents/sw-reviewer.toml
 .codex/agents/sw-task-worker.toml          byte-matched installed profiles
 .specwright/conventions/                   existing conventions, or README.md signpost when initially empty
-.specwright/issues/.gitkeep
-.specwright/milestones/.gitkeep
+.specwright/changes/.gitkeep
+.specwright/deliveries/.gitkeep
 .gitignore                                 exactly .specwright/worktrees/
 ```
 
@@ -89,7 +89,7 @@ For every audit:
 4. Verify all four profile files are regular files and byte-match the installed
    templates.
 5. Verify exact ignore membership without deleting unrelated project rules.
-6. Verify the vault keep-files without overwriting existing conventions or issue
+6. Verify the vault keep-files without overwriting existing conventions or change
    content.
 7. Verify no opposite-mode managed state creates ambiguity.
 8. Re-run `--plan`; a healthy project is `up-to-date` with zero operations.

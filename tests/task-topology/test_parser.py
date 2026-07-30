@@ -13,7 +13,7 @@ sys.path.insert(0, str(SCRIPT_DIRECTORY))
 
 from validate_task_topology import (
     parse_task_document,
-    validate_issue_task_topology,
+    validate_change_task_topology,
     validate_task_topology,
 )
 
@@ -114,14 +114,14 @@ class TaskParserTests(unittest.TestCase):
                     result.diagnostics,
                 )
 
-    def test_legacy_policy_accepts_shipped_and_blocks_active(self) -> None:
+    def test_schema_one_policy_accepts_shipped_and_blocks_active(self) -> None:
         fixture_root = REPOSITORY_ROOT / "plugins" / "sw" / "scripts" / "fixtures"
-        shipped = validate_issue_task_topology(
-            (fixture_root / "legacy-shipped" / "issue.md").read_text(),
+        shipped = validate_change_task_topology(
+            (fixture_root / "legacy-shipped" / "change.md").read_text(),
             (fixture_root / "legacy-shipped" / "tasks.md").read_text(),
         )
-        active = validate_issue_task_topology(
-            (fixture_root / "legacy-active" / "issue.md").read_text(),
+        active = validate_change_task_topology(
+            (fixture_root / "legacy-active" / "change.md").read_text(),
             (fixture_root / "legacy-active" / "tasks.md").read_text(),
         )
         self.assertEqual(shipped.diagnostics, ())
@@ -130,7 +130,7 @@ class TaskParserTests(unittest.TestCase):
         )
 
     def test_ac_traceability_uses_only_task_metadata_and_rejects_unknown_ids(self) -> None:
-        issue = (
+        change = (
             "---\nstatus: in-progress\n---\n"
             "## Acceptance Criteria\n\n"
             "- [ ] **AC-1** observable behavior\n"
@@ -146,7 +146,7 @@ class TaskParserTests(unittest.TestCase):
             "**Integration:** inline\n"
             "**Validation:** printf 'AC-1 appears only in prose'\n"
         )
-        result = validate_issue_task_topology(issue, tasks)
+        result = validate_change_task_topology(change, tasks)
         messages = {item.message for item in result.diagnostics}
         self.assertIn(
             "acceptance criterion AC-1 is not covered by any task AC field",
@@ -160,8 +160,8 @@ class TaskParserTests(unittest.TestCase):
             ".git",
             ".git/config",
             ".GIT/config",
-            ".specwright/issues/example/issue.md",
-            ".SpecWright/issues/example/issue.md",
+            ".specwright/changes/example/change.md",
+            ".SpecWright/changes/example/change.md",
         )
         for path in entries:
             with self.subTest(path=path):
@@ -189,7 +189,7 @@ class TaskParserTests(unittest.TestCase):
         entries = (
             ".GIT/config -> safe-target",
             "safe-link -> .git/config",
-            "safe-link -> .SPECWRIGHT/issues/example/issue.md",
+            "safe-link -> .SPECWRIGHT/changes/example/change.md",
         )
         for entry in entries:
             with self.subTest(entry=entry):
@@ -212,9 +212,9 @@ class TaskParserTests(unittest.TestCase):
                     result.diagnostics,
                 )
 
-    def test_approved_issue_tasks_have_no_parser_layer_diagnostics(self) -> None:
-        issue_tasks = REPOSITORY_ROOT / ".specwright" / "issues" / "2026-07-28-dual-host-safe-worker-orchestration" / "tasks.md"
-        result = parse_task_document(issue_tasks.read_text())
+    def test_approved_change_tasks_have_no_parser_layer_diagnostics(self) -> None:
+        change_tasks = REPOSITORY_ROOT / ".specwright" / "changes" / "2026-07-28-dual-host-safe-worker-orchestration" / "tasks.md"
+        result = parse_task_document(change_tasks.read_text())
 
         self.assertEqual(result.diagnostics, ())
         self.assertEqual(result.tasks[14].task_id, "T15")

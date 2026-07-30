@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify local dual-host state reaches an issue worktree without becoming tracked."""
+"""Verify local dual-host state reaches a change worktree without becoming tracked."""
 
 from __future__ import annotations
 
@@ -50,19 +50,19 @@ class LocalWorktreeCopyTests(unittest.TestCase):
             run_git(project, "add", ".gitignore", "README.md")
             run_git(project, "commit", "-m", "test fixture")
 
-            issue_relative_path = Path(".specwright/milestones/example/issues/issue")
+            change_relative_path = Path(".specwright/changes/2026-01-01-example")
             canonical_instructions = project / "AGENTS.override.md"
             canonical_instructions.write_text("# Local instructions\n")
             canonical_profile_directory = project / ".codex/agents"
             canonical_profile_directory.mkdir(parents=True)
             for profile_template in sorted(PROFILE_TEMPLATES.glob("sw-*.toml")):
                 shutil.copyfile(profile_template, canonical_profile_directory / profile_template.name)
-            issue_directory = project / issue_relative_path
-            issue_directory.mkdir(parents=True)
-            (issue_directory / "issue.md").write_text("status: pending\n")
+            change_directory = project / change_relative_path
+            change_directory.mkdir(parents=True)
+            (change_directory / "change.md").write_text("status: pending\n")
 
-            worktree = project / ".specwright/worktrees/issue"
-            run_git(project, "worktree", "add", str(worktree), "-b", "test/issue")
+            worktree = project / ".specwright/worktrees/example"
+            run_git(project, "worktree", "add", str(worktree), "-b", "test/example")
 
             shutil.copyfile(canonical_instructions, worktree / "AGENTS.override.md")
             (worktree / "CLAUDE.local.md").symlink_to("AGENTS.override.md")
@@ -70,15 +70,15 @@ class LocalWorktreeCopyTests(unittest.TestCase):
             profile_destination.mkdir(parents=True)
             for canonical_profile in sorted(canonical_profile_directory.glob("sw-*.toml")):
                 shutil.copyfile(canonical_profile, profile_destination / canonical_profile.name)
-            copied_issue_directory = worktree / issue_relative_path
-            copied_issue_directory.mkdir(parents=True)
-            shutil.copytree(issue_directory, copied_issue_directory, dirs_exist_ok=True)
+            copied_change_directory = worktree / change_relative_path
+            copied_change_directory.mkdir(parents=True)
+            shutil.copytree(change_directory, copied_change_directory, dirs_exist_ok=True)
 
             self.assertEqual((worktree / "AGENTS.override.md").read_text(), "# Local instructions\n")
             claude_adapter = worktree / "CLAUDE.local.md"
             self.assertTrue(claude_adapter.is_symlink())
             self.assertEqual(claude_adapter.readlink(), Path("AGENTS.override.md"))
-            self.assertEqual((copied_issue_directory / "issue.md").read_text(), "status: pending\n")
+            self.assertEqual((copied_change_directory / "change.md").read_text(), "status: pending\n")
 
             copied_profiles = sorted(profile_destination.glob("sw-*.toml"))
             canonical_profiles = sorted(canonical_profile_directory.glob("sw-*.toml"))
@@ -91,9 +91,9 @@ class LocalWorktreeCopyTests(unittest.TestCase):
             canonical_profile_bytes = canonical_profiles[0].read_bytes()
             (worktree / "AGENTS.override.md").write_text("# Owner-local edit\n")
             copied_profiles[0].write_text("owner-local profile edit\n")
-            (copied_issue_directory / "issue.md").write_text("status: shipped\n")
-            shutil.copytree(copied_issue_directory, issue_directory, dirs_exist_ok=True)
-            self.assertEqual((issue_directory / "issue.md").read_text(), "status: shipped\n")
+            (copied_change_directory / "change.md").write_text("status: shipped\n")
+            shutil.copytree(copied_change_directory, change_directory, dirs_exist_ok=True)
+            self.assertEqual((change_directory / "change.md").read_text(), "status: shipped\n")
             self.assertEqual(canonical_instructions.read_bytes(), canonical_instruction_bytes)
             self.assertEqual(canonical_profiles[0].read_bytes(), canonical_profile_bytes)
 

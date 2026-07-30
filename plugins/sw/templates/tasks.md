@@ -1,13 +1,13 @@
 ---
-feature: {{kebab-slug-of-issue}}
+feature: {{kebab-slug-of-change}}
 created: {{YYYY-MM-DD}}
 tasks_schema: 2
 ---
-# {{Issue Name}} — Tasks
+# {{Change Name}} — Tasks
 
-**For this issue:** see the sibling `issue.md` (acceptance criteria) and `spec.md` (technical plan).
+**For this change:** see the sibling `change.md` (acceptance criteria) and `spec.md` (technical plan).
 
-> Every task has a stable `Tn` identifier and names the `AC:` criteria it satisfies. `Delegable:` begins with `yes` or `no` and may add a concise context after ` — `. `Delegable: yes` tasks use `Integration: isolated` and own explicit repository-relative files. `Delegable: no` tasks use `Integration: inline` and list exactly `- None` when they have no owned files. Workers report findings back to the issue owner; only the owner writes `learnings.md`.
+> Every task has a stable `Tn` identifier and names the `AC:` criteria it satisfies. `Delegable:` begins with `yes` or `no` and may add a concise context after ` — `. `Delegable: yes` tasks use `Integration: isolated` and own explicit repository-relative files. `Delegable: no` tasks use `Integration: inline` and list exactly `- None` when they have no owned files. `Depends on:` plus the `Files:` ownership set are the graph `sw:run` derives **waves** from — a wave is a dependency-ready, file-disjoint set of isolated tasks that may run in parallel; waves are computed at dispatch time and never persisted. Workers report findings back to the change-owner; only the owner writes `learnings.md`.
 
 ## Phase 1: {{name}}
 

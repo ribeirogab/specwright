@@ -248,20 +248,20 @@ def _validate_wave_ownership(wave: list[Task], diagnostics: list[Diagnostic]) ->
             )
 
 
-def validate_issue_task_topology(issue_text: str, tasks_text: str) -> ParseResult:
-    """Apply the legacy policy before validating a schema-2 task document."""
+def validate_change_task_topology(change_text: str, tasks_text: str) -> ParseResult:
+    """Apply the schema-1 policy before validating a schema-2 task document."""
     if _has_schema_two(tasks_text):
         result = validate_task_topology(tasks_text)
         if result.diagnostics:
             return result
         diagnostics: list[Diagnostic] = []
-        issue_ac_ids = set(_issue_ac_ids(issue_text))
+        change_ac_ids = set(_change_ac_ids(change_text))
         task_ac_ids = {
             ac_id
             for task in result.tasks
             for ac_id in task.ac_ids
         }
-        for ac_id in sorted(issue_ac_ids - task_ac_ids):
+        for ac_id in sorted(change_ac_ids - task_ac_ids):
             diagnostics.append(
                 Diagnostic(
                     1,
@@ -270,7 +270,7 @@ def validate_issue_task_topology(issue_text: str, tasks_text: str) -> ParseResul
             )
         for task in result.tasks:
             for ac_id in task.ac_ids:
-                if ac_id not in issue_ac_ids:
+                if ac_id not in change_ac_ids:
                     diagnostics.append(
                         Diagnostic(
                             task.line,
@@ -282,7 +282,7 @@ def validate_issue_task_topology(issue_text: str, tasks_text: str) -> ParseResul
             tuple(sorted(diagnostics, key=lambda item: item.line)),
         )
 
-    status = _issue_status(issue_text)
+    status = _change_status(change_text)
     if status == "shipped":
         return ParseResult((), ())
     return ParseResult(
@@ -290,8 +290,8 @@ def validate_issue_task_topology(issue_text: str, tasks_text: str) -> ParseResul
         (
             Diagnostic(
                 1,
-                "legacy tasks.md requires explicit schema-2 replanning "
-                f"(issue status: {status or 'missing'})",
+                "schema-1 tasks.md requires explicit schema-2 replanning "
+                f"(change status: {status or 'missing'})",
             ),
         ),
     )
@@ -308,7 +308,7 @@ def _has_schema_two(text: str) -> bool:
     return "tasks_schema: 2" in lines[1:closing_index]
 
 
-def _issue_status(text: str) -> str | None:
+def _change_status(text: str) -> str | None:
     lines = text.splitlines()
     if not lines or lines[0] != "---":
         return None
@@ -322,7 +322,7 @@ def _issue_status(text: str) -> str | None:
     return None
 
 
-def _issue_ac_ids(text: str) -> tuple[str, ...]:
+def _change_ac_ids(text: str) -> tuple[str, ...]:
     in_acceptance_criteria = False
     identifiers: list[str] = []
     for line in text.splitlines():
@@ -465,22 +465,22 @@ def _strip_code_span(value: str) -> str:
 
 def main(arguments: list[str]) -> int:
     if len(arguments) == 1:
-        issue_filename = None
+        change_filename = None
         filename = arguments[0]
-    elif len(arguments) == 3 and arguments[0] == "--issue":
-        issue_filename = arguments[1]
+    elif len(arguments) == 3 and arguments[0] == "--change":
+        change_filename = arguments[1]
         filename = arguments[2]
     else:
-        print("usage: validate_task_topology.py [--issue ISSUE_MD] TASKS_MD", file=sys.stderr)
+        print("usage: validate_task_topology.py [--change CHANGE_MD] TASKS_MD", file=sys.stderr)
         return 2
     try:
         with open(filename, encoding="utf-8") as task_file:
             tasks_text = task_file.read()
-        if issue_filename is None:
+        if change_filename is None:
             result = validate_task_topology(tasks_text)
         else:
-            with open(issue_filename, encoding="utf-8") as issue_file:
-                result = validate_issue_task_topology(issue_file.read(), tasks_text)
+            with open(change_filename, encoding="utf-8") as change_file:
+                result = validate_change_task_topology(change_file.read(), tasks_text)
     except OSError as error:
         print(f"{filename}: {error}", file=sys.stderr)
         return 2

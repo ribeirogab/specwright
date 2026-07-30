@@ -48,7 +48,7 @@ scaffold_vault() {
   local project="$1" directory
   mkdir -p "$project/.specwright/conventions"
   : >"$project/.specwright/conventions/README.md"
-  for directory in issues milestones; do
+  for directory in changes deliveries; do
     mkdir -p "$project/.specwright/$directory"
     : >"$project/.specwright/$directory/.gitkeep"
   done
@@ -57,7 +57,7 @@ assert_vault() {
   local label="$1" project="$2" directory
   assert_eq "$label vault directory conventions exists" yes "$([ -d "$project/.specwright/conventions" ] && echo yes || echo no)"
   assert_file "$label vault conventions README exists" "$project/.specwright/conventions/README.md"
-  for directory in issues milestones; do
+  for directory in changes deliveries; do
     assert_eq "$label vault directory $directory exists" yes "$([ -d "$project/.specwright/$directory" ] && echo yes || echo no)"
     assert_file "$label vault marker $directory exists" "$project/.specwright/$directory/.gitkeep"
   done
@@ -135,19 +135,19 @@ run_role_agents() {
   agent_field() { grep -E "^$2:" "$agents_dir/$1.md" 2>/dev/null | head -n 1 | sed -E "s/^$2:[[:space:]]*//; s/[[:space:]]*$//"; }
   has_skills() { grep -Eq '^skills:' "$agents_dir/$1.md"; }
 
-  for agent in issue-owner task-worker spec-document-reviewer reviewer; do
+  for agent in change-owner task-worker spec-document-reviewer reviewer; do
     assert_file "agent $agent.md exists" "$agents_dir/$agent.md"
     for key in name description model effort; do
       assert_eq "agent $agent.md frontmatter has $key" yes "$(grep -Eq "^$key:" "$agents_dir/$agent.md" 2>/dev/null && echo yes || echo no)"
     done
   done
-  assert_eq "agent issue-owner model and effort" opus/xhigh "$(agent_field issue-owner model)/$(agent_field issue-owner effort)"
+  assert_eq "agent change-owner model and effort" opus/xhigh "$(agent_field change-owner model)/$(agent_field change-owner effort)"
   assert_eq "agent task-worker model and effort" sonnet/medium "$(agent_field task-worker model)/$(agent_field task-worker effort)"
   assert_eq "agent spec-document-reviewer model and effort" opus/high "$(agent_field spec-document-reviewer model)/$(agent_field spec-document-reviewer effort)"
   assert_eq "agent reviewer model and effort" opus/xhigh "$(agent_field reviewer model)/$(agent_field reviewer effort)"
-  assert_eq "agent issue-owner preloads plan" yes "$(has_skills issue-owner && grep -Eq '^[[:space:]]*-[[:space:]]*plan$' "$agents_dir/issue-owner.md" && echo yes || echo no)"
+  assert_eq "agent change-owner preloads plan" yes "$(has_skills change-owner && grep -Eq '^[[:space:]]*-[[:space:]]*plan$' "$agents_dir/change-owner.md" && echo yes || echo no)"
   assert_eq "agent reviewer preloads review" yes "$(has_skills reviewer && grep -Eq '^[[:space:]]*-[[:space:]]*review$' "$agents_dir/reviewer.md" && echo yes || echo no)"
-  assert_eq "run dispatches stable sw-issue-owner role" yes "$(grep -Fq "Dispatch the \`sw-issue-owner\` subagent" "$ROOT/plugins/sw/skills/run/SKILL.md" && echo yes || echo no)"
+  assert_eq "run dispatches stable sw-change-owner role" yes "$(grep -Fq "Dispatch the \`sw-change-owner\` subagent" "$ROOT/plugins/sw/skills/run/SKILL.md" && echo yes || echo no)"
   assert_eq "review dispatches stable sw-reviewer role" yes "$(grep -Fq "\`sw-reviewer\` subagent" "$ROOT/plugins/sw/skills/review/SKILL.md" && echo yes || echo no)"
   assert_eq "agent task-worker has no skills key" no "$(has_skills task-worker && echo yes || echo no)"
   assert_eq "agent spec-document-reviewer has no skills key" no "$(has_skills spec-document-reviewer && echo yes || echo no)"
@@ -210,14 +210,14 @@ assert_profiles() {
     assert_eq "profile $name sandbox" "$sandbox" "$(toml_value "$template" sandbox_mode)"
     assert_eq "installed profile $name matches template" 0 "$(cmp -s "$template" "$installed"; echo $?)"
     case "$name" in
-      sw-issue-owner) required_fragment='sole editor and integrator' ;;
+      sw-change-owner) required_fragment='sole editor and integrator' ;;
       sw-spec-document-reviewer) required_fragment='schema-2 decomposition and ownership' ;;
       sw-reviewer) required_fragment="\$sw:review workflow" ;;
       sw-task-worker) required_fragment='original base SHA' ;;
     esac
     assert_eq "profile $name carries its authority protocol" yes "$(grep -Fq "$required_fragment" "$template" && echo yes || echo no)"
   done <<'EOF'
-sw-issue-owner|sw-issue-owner|gpt-5.6-sol|high|workspace-write
+sw-change-owner|sw-change-owner|gpt-5.6-sol|high|workspace-write
 sw-spec-document-reviewer|sw-spec-document-reviewer|gpt-5.6-sol|high|read-only
 sw-reviewer|sw-reviewer|gpt-5.6-sol|high|read-only
 sw-task-worker|sw-task-worker|gpt-5.6-terra|medium|workspace-write
@@ -279,11 +279,11 @@ new_update_project() {
       cp "$ROOT"/plugins/sw/templates/codex-agents/sw-*.toml "$project/.codex/agents/"
       printf '.specwright/worktrees/\n' >"$project/.gitignore"
       ;;
-    legacy-shared)
-      cp "$ROOT/tests/update/fixtures/legacy-shared/CLAUDE.md" "$project/CLAUDE.md"
+    unrecognized-shared)
+      printf '# Project Claude instructions\n\nUnrecognized pre-managed content.\n' >"$project/CLAUDE.md"
       ;;
-    legacy-local)
-      cp "$ROOT/tests/update/fixtures/legacy-local/CLAUDE.local.md" "$project/CLAUDE.local.md"
+    unrecognized-local)
+      printf '# Project Claude instructions\n\nUnrecognized pre-managed content.\n' >"$project/CLAUDE.local.md"
       ;;
   esac
   git -C "$project" init -q
@@ -319,8 +319,8 @@ expect_apply_failure() {
   assert_eq "$label writes nothing" "$before" "$after"
 }
 run_update() {
-  local new_project_path current_project legacy_shared legacy_local drifted
-  local plan new_plan current_plan legacy_shared_plan legacy_local_plan drifted_plan
+  local new_project_path current_project unrecognized_shared unrecognized_local drifted
+  local plan new_plan current_plan unrecognized_shared_plan unrecognized_local_plan drifted_plan
   local identity_project identity_plan profile_drift profile_drift_plan ignore_negation ignore_negation_plan unsupported
   local unsupported_plan unsupported_before unsupported_after unsupported_status=0
   local managed_update managed_plan post_plan second_post_plan initial_plan_id
@@ -344,29 +344,21 @@ run_update() {
   assert_eq "up-to-date fixture has zero operations" 0 "$(json_length operations "$current_plan")"
   assert_plan_pure current "$current_project" shared
 
-  legacy_shared="$(new_update_project legacy-shared legacy-shared)"
-  legacy_shared_plan="$temporary_root/legacy-shared-plan.json"
-  run_plan "$legacy_shared" shared "$legacy_shared_plan"
-  assert_eq "legacy shared fixture state" legacy-migratable "$(json_value state "$legacy_shared_plan")"
-  assert_eq "legacy shared first operation" AGENTS.md "$(json_value operations.0.relative_path "$legacy_shared_plan")"
-  assert_eq "legacy shared second operation" CLAUDE.md "$(json_value operations.1.relative_path "$legacy_shared_plan")"
-  assert_plan_pure legacy-shared "$legacy_shared" shared
-  apply_plan "$legacy_shared" shared "$legacy_shared_plan"
-  assert_file "legacy shared canonical AGENTS.md exists" "$legacy_shared/AGENTS.md"
-  assert_symlink "legacy shared Claude adapter" "$legacy_shared/CLAUDE.md" AGENTS.md
-  assert_profiles "$legacy_shared"
+  unrecognized_shared="$(new_update_project unrecognized-shared unrecognized-shared)"
+  unrecognized_shared_plan="$temporary_root/unrecognized-shared-plan.json"
+  run_plan "$unrecognized_shared" shared "$unrecognized_shared_plan"
+  assert_eq "unrecognized shared fixture state" drifted "$(json_value state "$unrecognized_shared_plan")"
+  assert_eq "unrecognized shared fixture has zero operations" 0 "$(json_length operations "$unrecognized_shared_plan")"
+  assert_plan_pure unrecognized-shared "$unrecognized_shared" shared
+  expect_apply_failure unrecognized-shared-apply "$unrecognized_shared" shared "$unrecognized_shared_plan" "refusing to apply drifted project"
 
-  legacy_local="$(new_update_project legacy-local legacy-local)"
-  legacy_local_plan="$temporary_root/legacy-local-plan.json"
-  run_plan "$legacy_local" local "$legacy_local_plan"
-  assert_eq "legacy local fixture state" legacy-migratable "$(json_value state "$legacy_local_plan")"
-  assert_eq "legacy local first operation" AGENTS.override.md "$(json_value operations.0.relative_path "$legacy_local_plan")"
-  assert_eq "legacy local second operation" CLAUDE.local.md "$(json_value operations.1.relative_path "$legacy_local_plan")"
-  assert_plan_pure legacy-local "$legacy_local" local
-  apply_plan "$legacy_local" local "$legacy_local_plan"
-  assert_file "legacy local canonical AGENTS.override.md exists" "$legacy_local/AGENTS.override.md"
-  assert_symlink "legacy local Claude adapter" "$legacy_local/CLAUDE.local.md" AGENTS.override.md
-  assert_profiles "$legacy_local"
+  unrecognized_local="$(new_update_project unrecognized-local unrecognized-local)"
+  unrecognized_local_plan="$temporary_root/unrecognized-local-plan.json"
+  run_plan "$unrecognized_local" local "$unrecognized_local_plan"
+  assert_eq "unrecognized local fixture state" drifted "$(json_value state "$unrecognized_local_plan")"
+  assert_eq "unrecognized local fixture has zero operations" 0 "$(json_length operations "$unrecognized_local_plan")"
+  assert_plan_pure unrecognized-local "$unrecognized_local" local
+  expect_apply_failure unrecognized-local-apply "$unrecognized_local" local "$unrecognized_local_plan" "refusing to apply drifted project"
 
   drifted="$(new_update_project drifted drifted)"
   drifted_plan="$temporary_root/drifted-plan.json"
@@ -431,52 +423,51 @@ PY
   assert_eq "unsupported symlink writes nothing" "$unsupported_before" "$unsupported_after"
 
   managed_update="$(new_update_project managed-update up-to-date)"
-  cp "$ROOT"/tests/update/fixtures/profiles/2026.7.27/sw-*.toml \
-    "$managed_update/.codex/agents/"
-  if python3 - "$ROOT/plugins/sw/scripts" "$managed_update/AGENTS.md" <<'PY'
+  if python3 - "$ROOT/plugins/sw/scripts" "$managed_update" >"$temporary_root/managed-update.out" 2>&1 <<'PY'
 from pathlib import Path
 import sys
+from unittest import mock
 
 sys.path.insert(0, sys.argv[1])
-from sw_update import render_managed_block
+import sw_update
 
-path = Path(sys.argv[2])
-path.write_bytes(
+project = Path(sys.argv[2])
+installed = sw_update.load_installed_version()
+agents = project / "AGENTS.md"
+agents.write_bytes(
     b"# Project-owned prefix\n\n"
-    + render_managed_block("2026.7.27").encode()
+    + sw_update.render_managed_block("2026.7.27").encode()
     + b"\nProject-owned suffix without final newline"
 )
-PY
-  managed_plan="$temporary_root/managed-update-plan.json"
-  run_plan "$managed_update" shared "$managed_plan"
-  assert_eq "managed update state" legacy-migratable "$(json_value state "$managed_plan")"
-  initial_plan_id="$(json_value plan_id "$managed_plan")"
-  apply_plan "$managed_update" shared "$managed_plan"
-  python3 - "$ROOT/plugins/sw/scripts" "$managed_update/AGENTS.md" <<'PY'
-from pathlib import Path
-import sys
-
-sys.path.insert(0, sys.argv[1])
-from sw_update import render_managed_block
-
-contents = Path(sys.argv[2]).read_bytes()
+digests = {
+    name: sw_update._digest_bytes((project / ".codex" / "agents" / name).read_bytes())
+    for name in sw_update.PROFILE_NAMES
+}
+with mock.patch.dict(
+    sw_update.KNOWN_PROFILE_DIGESTS_BY_VERSION,
+    {"2026.7.27": digests},
+    clear=True,
+):
+    plan = sw_update.plan_update(project, "shared")
+    assert plan.state == "legacy-migratable", plan.state
+    initial_plan_id = plan.plan_id
+    sw_update.apply_update(project, "shared", initial_plan_id)
+contents = agents.read_bytes()
 assert contents.startswith(b"# Project-owned prefix\n\n")
 assert contents.endswith(b"\nProject-owned suffix without final newline")
-assert render_managed_block("2026.7.28").encode() in contents
+assert sw_update.render_managed_block(installed).encode() in contents
+post = sw_update.plan_update(project, "shared")
+second_post = sw_update.plan_update(project, "shared")
+assert post.state == "up-to-date", post.state
+assert post.operations == (), post.operations
+assert post.plan_id == second_post.plan_id
+assert post.plan_id != initial_plan_id
 PY
   then
-    pass "managed update preserves project-owned bytes"
+    pass "managed update migrates a known-version project byte-exactly"
   else
-    die "managed update preserves project-owned bytes"
+    die "managed update migrates a known-version project byte-exactly — $(cat "$temporary_root/managed-update.out")"
   fi
-  post_plan="$temporary_root/managed-post-plan.json"
-  second_post_plan="$temporary_root/managed-second-post-plan.json"
-  run_plan "$managed_update" shared "$post_plan"
-  run_plan "$managed_update" shared "$second_post_plan"
-  assert_eq "post-apply state is up-to-date" up-to-date "$(json_value state "$post_plan")"
-  assert_eq "post-apply plan has zero operations" 0 "$(json_length operations "$post_plan")"
-  assert_eq "post-apply plan identity is stable" 0 "$(cmp -s "$post_plan" "$second_post_plan"; echo $?)"
-  assert_eq "post-apply identity differs from migration" yes "$([ "$initial_plan_id" != "$(json_value plan_id "$post_plan")" ] && echo yes || echo no)"
 }
 run_worktree() {
   if python3 "$ROOT/tests/worktrees/test_local_copy.py"; then
@@ -523,7 +514,7 @@ run_topology() {
 
   preplan="$temporary_root/preplan"
   mkdir -p "$preplan"
-  cp "$ROOT/plugins/sw/scripts/fixtures/good/issue.md" "$preplan/issue.md"
+  cp "$ROOT/plugins/sw/scripts/fixtures/good/change.md" "$preplan/change.md"
   output="$temporary_root/preplan.out"
   status=0
   "$ROOT/plugins/sw/scripts/validate-spec.sh" "$preplan" >"$output" 2>&1 || status=$?

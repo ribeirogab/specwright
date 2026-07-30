@@ -24,7 +24,7 @@ The `brainstorm` and `plan` skills are adapted from the **superpowers** project 
 |---|---|
 | Source | [https://github.com/obra/superpowers](https://github.com/obra/superpowers) |
 | Original license | MIT |
-| Modifications | Rebranded the brainstorm UI ("Superpowers Brainstorming" → "specwright Brainstorming"); moved the runtime mockup path `.superpowers/brainstorm/` → `.specwright/brainstorm/`; removed the `superpowers:*` sub-skill dependencies by inlining the execution-approach guidance; integrated both skills into the specwright issue-driven flow. |
+| Modifications | Rebranded the brainstorm UI ("Superpowers Brainstorming" → "specwright Brainstorming"); moved the runtime mockup path `.superpowers/brainstorm/` → `.specwright/brainstorm/`; removed the `superpowers:*` sub-skill dependencies by inlining the execution-approach guidance; integrated both skills into the specwright change-driven flow. |
 
 ## License compatibility
 

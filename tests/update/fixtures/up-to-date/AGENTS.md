@@ -1,13 +1,13 @@
-<!-- sw:managed version=2026.7.28 digest=817541586297fe96f9514fa0ac988fcd97650e6a4681717f89eb7774f5697549 -->
+<!-- sw:managed version=2026.7.29 digest=7258e63478a9ee574890baa9287257ad76cea4c4e9f5f21e27c1e307385e9f5b -->
 # specwright
 
-This repository uses specwright's issue-driven engineering workflow.
+This repository uses specwright's change-driven engineering workflow.
 
 ## Workflow
 
 Use the shared workflow skills to explore, specify, plan, implement, validate, and
-review changes. Work that needs a durable design follows the issue flow in
-`.specwright/`; issue artifacts are owned by the issue owner.
+review changes. Work that needs a durable design follows the change flow in
+`.specwright/`; change artifacts are owned by the change owner.
 
 ## Command surfaces
 

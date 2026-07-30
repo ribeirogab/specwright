@@ -21,7 +21,7 @@ In scope:
 - project templates, role manifests/profiles, validators, and updater;
 - init/update behavior affecting `AGENTS*.md`, `CLAUDE*.md`,
   `.codex/agents/sw-*.toml`, `.gitignore`, or `.specwright/`;
-- issue-owner/task-worker branch and worktree isolation; and
+- change-owner/task-worker branch and worktree isolation; and
 - release tests that claim a host recognizes the package.
 
 Out of scope:
@@ -67,10 +67,10 @@ owner and worker write roles remain constrained by their protocol and host polic
 
 ### Worker isolation
 
-The issue owner records the exact base SHA, declared paths, and validation command
+The change owner records the exact base SHA, declared paths, and validation command
 before dispatch. A returned worker branch is untrusted integration input until the
 owner verifies ancestry, commit order, touched paths, and the full diff. Workers
-must never write issue artifacts, integrate branches, create PRs, or alter files
+must never write change artifacts, integrate branches, create PRs, or alter files
 outside their assignment.
 
 Mechanical conflicts may be resolved and revalidated by the owner. Semantic

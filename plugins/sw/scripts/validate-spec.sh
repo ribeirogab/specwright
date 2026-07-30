@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# validate-spec.sh — mechanical structural check for a specwright issue folder.
+# validate-spec.sh — mechanical structural check for a specwright change folder.
 #
-# Usage: validate-spec.sh <issue-folder>
+# Usage: validate-spec.sh <change-folder>
 #
 # Exit codes:
 #   0     every check passed (prints "PASS: <dir>").
 #   1-6   the number of DISTINCT checks that failed (prints one
 #         "FAIL (check N): <reason>" line per failing condition — a single
 #         check may emit several lines but counts once). This is a feedforward
-#         gate for /sw:review-spec — a structurally invalid issue fails noisily
+#         gate for /sw:review-spec — a structurally invalid change fails noisily
 #         here before any prose review (Rule of Repair).
 #   2     ALSO used for operational errors (bad invocation, path not a
 #         directory). These print a "usage:" or "FAIL: not a directory" line to
@@ -18,7 +18,7 @@
 #         callers loop until exit 0), which sidesteps the overlap entirely.
 #
 # Checks (fixed set — never counted more than once each):
-#   1. issue.md frontmatter has feature/created/status; status is one of
+#   1. change.md frontmatter has feature/created/status; status is one of
 #      pending|in-progress|shipped|blocked. status: is load-bearing (the
 #      pipeline and audit read it), so an empty or missing value FAILS by
 #      deliberate choice — unlike scope: (check 2), which is recorded-only and
@@ -26,21 +26,21 @@
 #      (the enum test is skipped when the key is absent).
 #   2. spec.md frontmatter has feature/created/scope; scope is one of
 #      low|medium|high|complex, or empty (recorded-only; blank is tolerated).
-#   3. no surviving {{placeholder}} in issue.md / spec.md / tasks.md /
+#   3. no surviving {{placeholder}} in change.md / spec.md / tasks.md /
 #      learnings.md.
-#   4. no banned vague verb in an acceptance-criteria bullet of issue.md.
-#   5. every AC-N defined in issue.md is referenced by at least one task.
+#   4. no banned vague verb in an acceptance-criteria bullet of change.md.
+#   5. every AC-N defined in change.md is referenced by at least one task.
 #   6. schema-2 task dependencies, waves, and isolated-file ownership are
-#      valid; shipped schema-1 issues remain readable historical records.
+#      valid; shipped schema-1 changes remain readable historical records.
 set -euo pipefail
 
-usage() { echo "usage: validate-spec.sh <issue-folder>" >&2; exit 2; }
+usage() { echo "usage: validate-spec.sh <change-folder>" >&2; exit 2; }
 
 [ "$#" -eq 1 ] || usage
 dir="${1%/}"
 [ -d "$dir" ] || { echo "FAIL: not a directory: $dir" >&2; exit 2; }
 
-issue="$dir/issue.md"
+change="$dir/change.md"
 spec="$dir/spec.md"
 tasks="$dir/tasks.md"
 learnings="$dir/learnings.md"
@@ -61,15 +61,15 @@ fail() {
 
 frontmatter() { awk 'NR==1 && $0=="---"{f=1; next} f && $0=="---"{exit} f{print}' "$1"; }
 
-# --- Check 1: issue.md frontmatter keys + status enum ----------------------
-if [ ! -f "$issue" ]; then
-  fail 1 "issue.md not found in $dir"
+# --- Check 1: change.md frontmatter keys + status enum ----------------------
+if [ ! -f "$change" ]; then
+  fail 1 "change.md not found in $dir"
 else
-  fm=$(frontmatter "$issue")
+  fm=$(frontmatter "$change")
   status_present=1
   for key in feature created status; do
     if ! printf '%s\n' "$fm" | grep -Eq "^${key}:"; then
-      fail 1 "issue.md frontmatter missing required key: ${key}"
+      fail 1 "change.md frontmatter missing required key: ${key}"
       [ "$key" = status ] && status_present=0
     fi
   done
@@ -85,7 +85,7 @@ else
       | sed -E 's/^status:[[:space:]]*//; s/[[:space:]]*$//')
     case "$status_val" in
       pending|in-progress|shipped|blocked) : ;;
-      *) fail 1 "issue.md status must be one of pending|in-progress|shipped|blocked (got: '${status_val}')" ;;
+      *) fail 1 "change.md status must be one of pending|in-progress|shipped|blocked (got: '${status_val}')" ;;
     esac
   fi
 fi
@@ -111,7 +111,7 @@ else
 fi
 
 # --- Check 3: no surviving {{placeholder}} --------------------------------
-for f in "$issue" "$spec" "$tasks" "$learnings"; do
+for f in "$change" "$spec" "$tasks" "$learnings"; do
   [ -f "$f" ] || continue
   hit=$({ grep -nF '{{' "$f" || true; } | head -n1)
   if [ -n "$hit" ]; then
@@ -120,12 +120,12 @@ for f in "$issue" "$spec" "$tasks" "$learnings"; do
 done
 
 # --- Check 4: no banned vague verb in an acceptance-criteria bullet -------
-if [ -f "$issue" ]; then
+if [ -f "$change" ]; then
   ac=$(awk '
     /^## Acceptance Criteria[[:space:]]*$/ {cap=1; next}
     cap && /^## / {cap=0}
     cap {print}
-  ' "$issue")
+  ' "$change")
   ac_bullets=$(printf '%s\n' "$ac" | { grep -E '^[[:space:]]*- \[[ xX]\]' || true; })
   vague=$(printf '%s\n' "$ac_bullets" | { grep -Ewin 'works|robust|simple|gracefully' || true; } | head -n1)
   if [ -n "$vague" ]; then
@@ -140,13 +140,13 @@ if [ -f "$issue" ]; then
   fi
 fi
 
-# --- Check 5: every AC-N in issue.md is referenced by a task ---------------
-if [ -f "$issue" ] && [ -f "$tasks" ]; then
+# --- Check 5: every AC-N in change.md is referenced by a task ---------------
+if [ -f "$change" ] && [ -f "$tasks" ]; then
   ac_ids=$(awk '
     /^## Acceptance Criteria[[:space:]]*$/ {cap=1; next}
     cap && /^## / {cap=0}
     cap && /^[[:space:]]*- \[[ xX]\][[:space:]]+\*\*AC-[0-9]+\*\*/ {print}
-  ' "$issue" | { grep -Eoh 'AC-[0-9]+' || true; } | sort -u)
+  ' "$change" | { grep -Eoh 'AC-[0-9]+' || true; } | sort -u)
   task_ac_ids=$({ grep -E '^\*\*AC:\*\*' "$tasks" || true; } \
     | { grep -Eoh 'AC-[0-9]+' || true; } \
     | sort -u)
@@ -160,14 +160,14 @@ if [ -f "$issue" ] && [ -f "$tasks" ]; then
 $ac_ids
 EOF
   if [ -n "$missing" ]; then
-    fail 5 "AC defined in issue.md but referenced by no task: ${missing}"
+    fail 5 "AC defined in change.md but referenced by no task: ${missing}"
   fi
 fi
 
 # --- Check 6: task topology, ownership, and legacy policy ------------------
-if [ -f "$issue" ] && [ -f "$tasks" ]; then
+if [ -f "$change" ] && [ -f "$tasks" ]; then
   topology_status=0
-  topology_output=$(python3 "$script_dir/validate_task_topology.py" --issue "$issue" "$tasks" 2>&1) || topology_status=$?
+  topology_output=$(python3 "$script_dir/validate_task_topology.py" --change "$change" "$tasks" 2>&1) || topology_status=$?
   if [ "$topology_status" -ne 0 ]; then
     while IFS= read -r diagnostic; do
       [ -n "$diagnostic" ] || continue

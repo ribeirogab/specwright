@@ -11,4 +11,4 @@ Rules:
 - Never edit a quote after the run it records; if context is needed, add it outside the quote.
 - A recording-convention header must not overclaim: label relayed summaries as `(relayed)` and only call `verbatim` what actually is.
 
-Provenance: settled identically by four independent review lanes during the 2026-07-02 e2e-validation milestone.
+Provenance: settled identically by four independent review lanes during the 2026-07-02 e2e-validation delivery.

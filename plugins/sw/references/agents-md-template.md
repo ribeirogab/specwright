@@ -12,13 +12,13 @@ rendered. Do not add installation commands here.
 <!-- sw:managed version={{version}} digest={{digest}} -->
 # specwright
 
-This repository uses specwright's issue-driven engineering workflow.
+This repository uses specwright's change-driven engineering workflow.
 
 ## Workflow
 
 Use the shared workflow skills to explore, specify, plan, implement, validate, and
-review changes. Work that needs a durable design follows the issue flow in
-`.specwright/`; issue artifacts are owned by the issue owner.
+review changes. Work that needs a durable design follows the change flow in
+`.specwright/`; change artifacts are owned by the change owner.
 
 ## Command surfaces
 

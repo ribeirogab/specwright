@@ -14,7 +14,7 @@ example prompts beat one abstract description.
 
 ## Why does it belong in specwright?
 
-Explain how it improves the issue-driven engineering workflow or preserves
+Explain how it improves the change-driven engineering workflow or preserves
 behavioral parity between Claude Code and Codex. Unrelated skills should live in
 their own repository.
 
