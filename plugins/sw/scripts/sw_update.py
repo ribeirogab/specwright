@@ -14,7 +14,6 @@ import stat
 import sys
 import tempfile
 
-
 CALENDAR_VERSION_PATTERN = re.compile(r"^(?P<year>[1-9][0-9]{3})\.(?P<month>[1-9]|1[0-2])\.(?P<day>[1-9]|[12][0-9]|3[01])$")
 MANAGED_OPENING_PATTERN = re.compile(
     r"^<!-- sw:managed version=(?P<version>[^ ]+) digest=(?P<digest>[0-9a-f]{64}) -->$"
@@ -22,7 +21,7 @@ MANAGED_OPENING_PATTERN = re.compile(
 MANAGED_CLOSING_MARKER = "<!-- /sw:managed -->"
 PROFILE_DIRECTORY = Path(".codex/agents")
 PROFILE_NAMES = (
-    "sw-issue-owner.toml",
+    "sw-change-owner.toml",
     "sw-spec-document-reviewer.toml",
     "sw-reviewer.toml",
     "sw-task-worker.toml",
@@ -38,72 +37,7 @@ SHARED_IGNORE_RULES = (".specwright/worktrees/",)
 ALL_MANAGED_IGNORE_RULES = tuple(dict.fromkeys((*SHARED_IGNORE_RULES, *LOCAL_IGNORE_RULES)))
 # Immutable predecessor digests distinguish a legitimate version upgrade from an
 # edited managed profile. Add the outgoing release here before changing a profile.
-KNOWN_PROFILE_DIGESTS_BY_VERSION: dict[str, dict[str, str]] = {
-    "2026.7.27": {
-        "sw-issue-owner.toml": "ac96f66830e336656caa4eb28ca8e2ce573da08e92eccbe8c5334b4dfa05939a",
-        "sw-spec-document-reviewer.toml": "71ac80e28c7a8c722325aee9fd6e950a495efb15cbd76141f6e7098a6028de51",
-        "sw-reviewer.toml": "d974747779ecebc3e4a44953c2f959bbe8d883275000c5749e436d7df0da27bc",
-        "sw-task-worker.toml": "384ad8f5595755e097887d500e782a7e4d9e50aee79870efcaf55fc7db0ada67",
-    }
-}
-LEGACY_DOGFOOD_DIGEST = "c32175b40821260004481eb131198c2239851b47b1334e475e962226c190a28b"
-LEGACY_GENERIC_TEMPLATE = """# {{Project Name}} — Agent Instructions
-
-Instructions for AI coding assistants and developers working on the {{project}} codebase.
-
-**Never give up on the right solution.**
-
-## Workflow Spec Driven
-
-Implementing, modifying, or creating something? Ask: "Can I describe the complete solution in one sentence?"
-- **Yes** → implement directly.
-- **Almost** (1-2 open decisions) → ask the user: issue or go direct?
-- **No** → enter the Issue flow.
-
-If the user is asking, investigating, or exploring — just answer.
-
-### Issue flow
-
-The **issue** is the unit of work: one folder (`issue.md` ticket with `AC-N` + `status:`, technical `spec.md`, `tasks.md`, optional `learnings.md` + any issue-specific artifacts), one branch, one PR. A large delivery is a **milestone**: `goal.md` + live `board.md` + `issues/<slug>/`, conducted in a loop by `/sw:run`.
-
-1. `/sw:brainstorm` → open design conversation (converse first, decide at the end); design approval is the **only** human review. The agent then concludes the **scope** — single issue or milestone (it suggests, you decide) — and asks one batch: single issue = branch + worktree + handoff; milestone = worktree only.
-2. **Single issue** → write `issues/YYYY-MM-DD-<slug>/issue.md`, then `/sw:plan`: just-in-time `spec.md` + `tasks.md`, self-reviewed (spec-document-reviewer subagent + `/sw:review-spec` + `validate-spec.sh` — no human gate) → implement → **quality gate** (run every test/lint/typecheck/build the touched area has; test integrity: no silent count drop, no weakened assertions) → **runtime verification** (execute it; check each `AC-N` by observed behavior; UI via browser or mark `needs-human-verification`) → `/sw:pr` → `/sw:review` to `lgtm` → set `issue.md` `status: shipped` + date. Three identical failures of one gate → stop and report; never thrash.
-3. **Milestone** → write `goal.md` + `board.md` + N `issue.md`, print the mandatory handoff and stop (the planning session never conducts). `/sw:run` in a fresh session conducts: dispatch every **ready** issue (pending + deps shipped) to an issue-owner sub-agent in parallel, one worktree each (`.specwright/worktrees/<slug>`, git-ignored; specwright creates worktrees, never removes them); each owner runs step 2's pipeline and curates the issue's `learnings.md` (facts future issues inherit via their specs); blocked issues get a report on the board and the loop moves on; closeout promotes durable learnings to `CLAUDE.md`/conventions with your approval. Merging PRs stays yours.
-
-```mermaid
-flowchart TD
-    A(["/sw:brainstorm"]) --> B{"design approved?"}
-    B -- "no, revise" --> A
-    B -- yes --> C{"scope?"}
-    C -- "single issue" --> D["issue.md → /sw:plan → implement<br/>→ quality gate → runtime verification<br/>→ /sw:pr → /sw:review lgtm"]
-    C -- milestone --> E["goal + board + issues → handoff"]
-    E --> F["/sw:run: dispatch ready issues to owners<br/>→ each runs the pipeline → learnings<br/>→ loop until done or blocked"]
-    D --> G(["shipped"])
-    F --> G
-```
-
-## Coding standard
-
-`/sw:review` enforces the coding standard (Unix philosophy, meaningful comments, security). `.specwright/conventions/` holds whatever standards this repo wants kept consistent — code style, architecture, naming, testing, any project preference — which you fill over time and `/sw:review` enforces alongside its universal rubric. Standalone issues live in `.specwright/issues/`; milestones in `.specwright/milestones/`.
-
-## Skills and slash commands
-
-This repository requires the `sw` Claude Code plugin — every `/sw:*` command below comes from it, globally, with nothing copied into this repo. If these commands are unavailable, install the plugin once:
-
-```
-claude plugin marketplace add ribeirogab/specwright
-claude plugin install sw@specwright
-```
-
-- **`/sw:brainstorm`** — design exploration; concludes single issue vs milestone and writes the artifacts.
-- **`/sw:spec`** — enter the issue flow from the conversation.
-- **`/sw:plan`** — the issue pipeline: just-in-time spec + tasks, gates, delivery.
-- **`/sw:run`** — conduct a milestone: dispatch ready issues, track the board, close out.
-- **`/sw:review`** — bespoke, portable review cycle to `lgtm`.
-- **`/sw:review-spec`** — external evaluator pass over an issue's plan (agent self-review).
-- **`/sw:pr`** — open the issue's PR.
-"""
-
+KNOWN_PROFILE_DIGESTS_BY_VERSION: dict[str, dict[str, str]] = {}
 
 @dataclass(frozen=True)
 class ObservedPath:
@@ -111,14 +45,12 @@ class ObservedPath:
     kind: str
     digest_or_target: str | None
 
-
 @dataclass(frozen=True)
 class Operation:
     action: str
     relative_path: str
     expected_before: str | None
     desired_after: str
-
 
 @dataclass(frozen=True)
 class UpdatePlan:
@@ -130,10 +62,8 @@ class UpdatePlan:
     plan_id: str
     diagnostics: tuple[str, ...] = ()
 
-
 class UpdateError(RuntimeError):
     """Raised when a confirmed update cannot be applied safely."""
-
 
 class WriteFailure(UpdateError):
     def __init__(
@@ -156,13 +86,11 @@ class WriteFailure(UpdateError):
             f"pending: {', '.join(pending) or 'none'}{temporary}"
         )
 
-
 class OperationWriteError(OSError):
     def __init__(self, cause: OSError, temporary_path: Path | None = None) -> None:
         super().__init__(str(cause))
         self.cause = cause
         self.temporary_path = temporary_path
-
 
 def load_installed_version() -> str:
     """Return the validated unpadded calendar version from the installed manifest."""
@@ -175,7 +103,6 @@ def load_installed_version() -> str:
     if not isinstance(version, str) or not is_calendar_version(version):
         raise ValueError("Codex manifest version must be an unpadded valid calendar SemVer")
     return version
-
 
 def is_calendar_version(version: str) -> bool:
     match = CALENDAR_VERSION_PATTERN.fullmatch(version)
@@ -190,7 +117,6 @@ def is_calendar_version(version: str) -> bool:
         return False
     return True
 
-
 def render_managed_block(version: str) -> str:
     template_path = Path(__file__).resolve().parents[1] / "references" / "agents-md-template.md"
     template = template_path.read_text(encoding="utf-8")
@@ -203,7 +129,6 @@ def render_managed_block(version: str) -> str:
     rendered_body = body.replace("{{version}}", version)
     digest = _digest_text(rendered_body)
     return block.replace("{{version}}", version).replace("{{digest}}", digest)
-
 
 def plan_update(project: Path, mode: str, version: str | None = None) -> UpdatePlan:
     """Inspect *project* and return a deterministic plan without changing it."""
@@ -229,12 +154,10 @@ def plan_update(project: Path, mode: str, version: str | None = None) -> UpdateP
     plan_id = _digest_text(_canonical_json(payload))
     return UpdatePlan(state, version, mode, observed, operations, plan_id, diagnostics)
 
-
 def _observe_paths(project: Path, canonical: str, adapter: str) -> tuple[ObservedPath, ...]:
     paths = [Path(canonical), Path(adapter), Path(".gitignore")]
     paths.extend(PROFILE_DIRECTORY / name for name in PROFILE_NAMES)
     return tuple(sorted((_observe_path(project, path) for path in paths), key=lambda item: item.relative_path))
-
 
 def _observe_path(project: Path, relative_path: Path) -> ObservedPath:
     absolute_path = project / relative_path
@@ -251,7 +174,6 @@ def _observe_path(project: Path, relative_path: Path) -> ObservedPath:
     if absolute_path.is_dir():
         return ObservedPath(relative_path.as_posix(), "directory", None)
     return ObservedPath(relative_path.as_posix(), f"other:{stat_result.st_mode:o}", None)
-
 
 def _classify(project: Path, mode: str, canonical: str, adapter: str, desired_block: str) -> tuple[str, tuple[str, ...], str]:
     canonical_path = project / canonical
@@ -275,11 +197,7 @@ def _classify(project: Path, mode: str, canonical: str, adapter: str, desired_bl
     managed_result = _managed_update_desired(project, mode, canonical, adapter, desired_block)
     if managed_result is not None:
         return "legacy-migratable", (), managed_result
-    legacy_result = None if _has_managed_profiles(project) else _legacy_desired(project, canonical, adapter, desired_block)
-    if legacy_result is not None:
-        return "legacy-migratable", (), legacy_result
     return "drifted", ("managed paths do not match a recognized specwright state",), desired_block
-
 
 def _ignore_rules_match(ignore_path: Path, mode: str) -> bool:
     if ignore_path.is_symlink() or not ignore_path.is_file():
@@ -297,7 +215,6 @@ def _ignore_rules_match(ignore_path: Path, mode: str) -> bool:
         for line in lines[first_required_index + 1 :]
     )
 
-
 def _is_up_to_date(project: Path, mode: str, canonical: str, adapter: str, desired_block: str) -> bool:
     canonical_path = project / canonical
     adapter_path = project / adapter
@@ -313,7 +230,6 @@ def _is_up_to_date(project: Path, mode: str, canonical: str, adapter: str, desir
     if not _ignore_rules_match(project / ".gitignore", mode):
         return False
     return True
-
 
 def _managed_update_desired(
     project: Path,
@@ -352,40 +268,6 @@ def _managed_update_desired(
         return None
     return contents.replace(current_block, desired_block, 1)
 
-
-def _legacy_desired(project: Path, canonical: str, adapter: str, desired_block: str) -> str | None:
-    canonical_path = project / canonical
-    adapter_path = project / adapter
-    if canonical_path.is_symlink() or canonical_path.exists() or adapter_path.is_symlink() or not adapter_path.is_file():
-        return None
-    contents = adapter_path.read_text(encoding="utf-8")
-    if _matches_legacy_generic(contents):
-        return desired_block
-    if _digest_bytes(contents.encode("utf-8")) == LEGACY_DOGFOOD_DIGEST:
-        prefix, suffix = _split_dogfood_legacy(contents)
-        return prefix + "\n\n" + desired_block + "\n\n" + suffix
-    return None
-
-
-def _has_managed_profiles(project: Path) -> bool:
-    return any((project / PROFILE_DIRECTORY / name).is_symlink() or (project / PROFILE_DIRECTORY / name).exists() for name in PROFILE_NAMES)
-
-
-def _matches_legacy_generic(contents: str) -> bool:
-    expression = re.escape(LEGACY_GENERIC_TEMPLATE)
-    expression = expression.replace(re.escape("{{Project Name}}"), r"[^\n]+")
-    expression = expression.replace(re.escape("{{project}}"), r"[^\n]+")
-    return re.fullmatch(expression, contents) is not None
-
-
-def _split_dogfood_legacy(contents: str) -> tuple[str, str]:
-    workflow_index = contents.index("## Workflow Spec Driven")
-    editing_index = contents.index("### Editing the bundled skills")
-    prefix = contents[:workflow_index].rstrip()
-    suffix = contents[editing_index:].rstrip()
-    return prefix, suffix
-
-
 def _managed_block_details(contents: str) -> tuple[str, str] | None:
     lines = contents.splitlines(keepends=True)
     opening_indices = [index for index, line in enumerate(lines) if line.rstrip("\n").startswith("<!-- sw:managed")]
@@ -407,11 +289,9 @@ def _managed_block_details(contents: str) -> tuple[str, str] | None:
         return None
     return block, version
 
-
 def _managed_block(contents: str) -> str | None:
     details = _managed_block_details(contents)
     return details[0] if details is not None else None
-
 
 def _operations(project: Path, mode: str, canonical: str, adapter: str, desired_canonical: str, state: str) -> tuple[Operation, ...]:
     if state in {"up-to-date", "drifted"}:
@@ -478,7 +358,6 @@ def _operations(project: Path, mode: str, canonical: str, adapter: str, desired_
         )
     return tuple(operations)
 
-
 def apply_update(
     project: Path,
     mode: str,
@@ -510,7 +389,6 @@ def apply_update(
         completed.append(operation.relative_path)
     return plan, tuple(completed)
 
-
 def _preflight(project: Path, plan: UpdatePlan) -> None:
     if not project.is_dir():
         raise UpdateError(f"project is not a directory: {project}")
@@ -531,7 +409,6 @@ def _preflight(project: Path, plan: UpdatePlan) -> None:
     if symlink_operation is not None:
         _probe_symlink_support(project, symlink_operation.desired_after)
 
-
 def _validated_relative_path(value: str) -> Path:
     relative_path = Path(value)
     if relative_path.is_absolute() or not relative_path.parts:
@@ -539,7 +416,6 @@ def _validated_relative_path(value: str) -> Path:
     if any(part in {"", ".", ".."} for part in relative_path.parts):
         raise UpdateError(f"managed path is not normalized: {value}")
     return relative_path
-
 
 def _validate_parent_chain(project: Path, relative_parent: Path) -> None:
     current = project
@@ -556,7 +432,6 @@ def _validate_parent_chain(project: Path, relative_parent: Path) -> None:
                 raise UpdateError(f"managed parent is not writable: {current}")
             continue
         break
-
 
 def _validate_operation_precondition(destination: Path, operation: Operation) -> None:
     exists = destination.is_symlink() or destination.exists()
@@ -579,7 +454,6 @@ def _validate_operation_precondition(destination: Path, operation: Operation) ->
         return
     raise UpdateError(f"unknown managed operation: {operation.action}")
 
-
 def _validate_profile_source(operation: Operation) -> None:
     profile_prefix = f"{PROFILE_DIRECTORY.as_posix()}/"
     if operation.action not in {"create", "replace-profile"} or not operation.relative_path.startswith(profile_prefix):
@@ -594,7 +468,6 @@ def _validate_profile_source(operation: Operation) -> None:
         raise UpdateError(f"installed profile template is invalid: {source}")
     if _digest_bytes(source.read_bytes()) != operation.desired_after:
         raise UpdateError(f"installed profile template changed after planning: {source}")
-
 
 def _probe_symlink_support(project: Path, target: str) -> None:
     temporary_path: Path | None = None
@@ -620,7 +493,6 @@ def _probe_symlink_support(project: Path, target: str) -> None:
         ) from error
     assert temporary_path is not None
     temporary_path.unlink()
-
 
 def _apply_operation(project: Path, operation: Operation) -> None:
     relative_path = _validated_relative_path(operation.relative_path)
@@ -670,7 +542,6 @@ def _apply_operation(project: Path, operation: Operation) -> None:
         return
     raise UpdateError(f"unknown managed operation: {operation.action}")
 
-
 def _updated_ignore_bytes(destination: Path, rules: list[str]) -> bytes:
     existing = destination.read_bytes() if destination.is_file() and not destination.is_symlink() else b""
     preserved = [
@@ -684,7 +555,6 @@ def _updated_ignore_bytes(destination: Path, rules: list[str]) -> bytes:
         preserved.append("")
     preserved.extend(rules)
     return ("\n".join(preserved) + "\n").encode("utf-8")
-
 
 def _atomic_write(
     destination: Path,
@@ -714,7 +584,6 @@ def _atomic_write(
             temporary_path if temporary_path.exists() or temporary_path.is_symlink() else None,
         ) from error
 
-
 def _atomic_symlink(destination: Path, target: str, *, replace: bool) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary_name = tempfile.mkstemp(
@@ -735,7 +604,6 @@ def _atomic_symlink(destination: Path, target: str, *, replace: bool) -> None:
             temporary_path if temporary_path.exists() or temporary_path.is_symlink() else None,
         ) from error
 
-
 def plan_as_dict(plan: UpdatePlan) -> dict[str, object]:
     return {
         "state": plan.state,
@@ -747,18 +615,14 @@ def plan_as_dict(plan: UpdatePlan) -> dict[str, object]:
         "diagnostics": list(plan.diagnostics),
     }
 
-
 def _canonical_json(value: object) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
-
 
 def _digest_text(value: str) -> str:
     return _digest_bytes(value.encode("utf-8"))
 
-
 def _digest_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
-
 
 def main(arguments: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -805,7 +669,6 @@ def main(arguments: list[str] | None = None) -> int:
             for relative_path in completed:
                 print(f"applied: {relative_path}")
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

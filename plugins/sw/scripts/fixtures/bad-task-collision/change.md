@@ -3,7 +3,7 @@ feature: topology-fixture
 created: 2026-07-29
 status: pending
 ---
-# Topology Fixture — Issue
+# Topology Fixture — Change
 
 ## Acceptance Criteria
 

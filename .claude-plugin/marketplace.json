@@ -7,7 +7,7 @@
     {
       "name": "sw",
       "source": "./plugins/sw",
-      "description": "specwright for Claude Code and Codex — the issue-driven workflow: init, brainstorm, spec, plan, run, review, review-spec, pr, and update."
+      "description": "specwright for Claude Code and Codex \u2014 the change-driven workflow: init, brainstorm, spec, plan, run, review, review-spec, pr, and update."
     }
   ]
 }

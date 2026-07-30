@@ -5,7 +5,7 @@ tasks_schema: 2
 ---
 # Sample Feature — Tasks
 
-**For this issue:** see the sibling issue.md and spec.md.
+**For this change:** see the sibling change.md and spec.md.
 
 ## Phase 1: Build
 

@@ -4,11 +4,11 @@ created: 2026-06-14
 status: pending
 shipped: null
 ---
-# Sample Feature — Issue
+# Sample Feature — Change
 
 ## Purpose
 
-Demonstrate a well-formed issue folder for validator testing.
+Demonstrate a well-formed change folder for validator testing.
 
 ## Motivation
 
@@ -21,4 +21,4 @@ Not a real feature; it exists only to exercise the validator.
 ## Acceptance Criteria
 
 - [ ] **AC-1** `greet("world")` returns the exact string `Hello, world`.
-- [ ] **AC-2** `greet("")` returns HTTP 400 with body `{"code":"EMPTY_NAME"}`.
+- [ ] **AC-2** The greet function works gracefully.

@@ -20,7 +20,6 @@ sys.path.insert(0, str(SCRIPT_DIRECTORY))
 
 import sw_update
 from sw_update import (
-    LEGACY_GENERIC_TEMPLATE,
     UpdateError,
     WriteFailure,
     apply_update,
@@ -33,6 +32,8 @@ from sw_update import (
 
 
 FIXTURES = Path(__file__).parent / "fixtures"
+INSTALLED_VERSION = sw_update.load_installed_version()
+UNRECOGNIZED_CONTENT = "# Project Claude instructions\n\nUnrecognized pre-managed content.\n"
 
 
 class UpdatePlanTests(unittest.TestCase):
@@ -55,7 +56,7 @@ class UpdatePlanTests(unittest.TestCase):
             self.assertEqual([item.relative_path for item in first.operations], [
                 "AGENTS.md",
                 "CLAUDE.md",
-                ".codex/agents/sw-issue-owner.toml",
+                ".codex/agents/sw-change-owner.toml",
                 ".codex/agents/sw-spec-document-reviewer.toml",
                 ".codex/agents/sw-reviewer.toml",
                 ".codex/agents/sw-task-worker.toml",
@@ -66,7 +67,7 @@ class UpdatePlanTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
             agents = project / "AGENTS.md"
-            agents.write_text("before\n" + render_managed_block("2026.7.28") + "\nafter\n")
+            agents.write_text("before\n" + render_managed_block(INSTALLED_VERSION) + "\nafter\n")
             (project / "CLAUDE.md").symlink_to("AGENTS.md")
             destination = project / ".codex" / "agents"
             destination.mkdir(parents=True)
@@ -83,54 +84,31 @@ class UpdatePlanTests(unittest.TestCase):
             self.assertEqual(plan.state, "drifted")
             self.assertEqual(plan.operations, ())
 
-    def test_dogfood_claude_only_repository_shape_is_legacy_migratable(self) -> None:
-        with self._fixture_copy("legacy-dogfood") as project:
-            legacy = project / "CLAUDE.md"
-            before = legacy.read_bytes()
-            plan = plan_update(project, "shared")
-            self.assertEqual(plan.state, "legacy-migratable")
-            self.assertEqual(legacy.read_bytes(), before)
-            desired = plan.operations[0].desired_after
-            self.assertTrue(desired.startswith("# specwright — Agent Instructions\n\nInstructions for AI coding assistants"))
-            self.assertIn("<!-- sw:managed version=2026.7.28", desired)
-            self.assertIn("### Editing the bundled skills", desired)
-            self.assertNotIn("## Workflow Spec Driven", desired)
-
-    def test_exact_generic_shared_and_local_legacy_shapes_are_migratable(self) -> None:
-        legacy = LEGACY_GENERIC_TEMPLATE.replace("{{Project Name}}", "Example").replace("{{project}}", "example")
+    def test_unrecognized_shared_and_local_shapes_are_drifted(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
-            (project / "CLAUDE.md").write_text(legacy)
+            (project / "CLAUDE.md").write_text(UNRECOGNIZED_CONTENT)
             shared = plan_update(project, "shared")
-            self.assertEqual(shared.state, "legacy-migratable")
-            self.assertEqual(shared.operations[0].desired_after, render_managed_block("2026.7.28"))
+            self.assertEqual(shared.state, "drifted")
+            self.assertEqual(shared.operations, ())
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
-            (project / "CLAUDE.local.md").write_text(legacy)
+            (project / "CLAUDE.local.md").write_text(UNRECOGNIZED_CONTENT)
             local = plan_update(project, "local")
-            self.assertEqual(local.state, "legacy-migratable")
-            self.assertEqual(local.operations[0].relative_path, "AGENTS.override.md")
-            self.assertEqual(local.operations[-1].desired_after.splitlines(), [
-                ".specwright/worktrees/",
-                ".specwright/",
-                "AGENTS.override.md",
-                "CLAUDE.local.md",
-                ".codex/agents/sw-*.toml",
-            ])
+            self.assertEqual(local.state, "drifted")
+            self.assertEqual(local.operations, ())
 
-    def test_edited_legacy_like_file_is_drifted(self) -> None:
-        legacy = LEGACY_GENERIC_TEMPLATE.replace("{{Project Name}}", "Example").replace("{{project}}", "example")
-        edited = legacy.replace("## Coding standard", "## Coding standard\n\nProject-owned edit.")
+    def test_edited_unrecognized_file_is_drifted(self) -> None:
+        edited = UNRECOGNIZED_CONTENT + "\nProject-owned edit.\n"
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
             (project / "CLAUDE.md").write_text(edited)
             self.assertEqual(plan_update(project, "shared").state, "drifted")
 
-    def test_legacy_with_a_conflicting_managed_profile_is_drifted(self) -> None:
-        legacy = LEGACY_GENERIC_TEMPLATE.replace("{{Project Name}}", "Example").replace("{{project}}", "example")
+    def test_unrecognized_shape_with_a_conflicting_managed_profile_is_drifted(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
-            (project / "CLAUDE.md").write_text(legacy)
+            (project / "CLAUDE.md").write_text(UNRECOGNIZED_CONTENT)
             destination = project / ".codex" / "agents"
             destination.mkdir(parents=True)
             shutil.copyfile(REPOSITORY_ROOT / "plugins/sw/templates/codex-agents/sw-reviewer.toml", destination / "sw-reviewer.toml")
@@ -139,16 +117,15 @@ class UpdatePlanTests(unittest.TestCase):
     def test_unexpected_adapter_kind_is_drifted(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
-            (project / "AGENTS.md").write_text(render_managed_block("2026.7.28"))
+            (project / "AGENTS.md").write_text(render_managed_block(INSTALLED_VERSION))
             (project / "CLAUDE.md").write_text("not a symlink")
             self.assertEqual(plan_update(project, "shared").state, "drifted")
 
-    def test_legacy_adapter_symlink_is_drifted_without_following_it(self) -> None:
-        legacy = LEGACY_GENERIC_TEMPLATE.replace("{{Project Name}}", "Example").replace("{{project}}", "example")
+    def test_unrecognized_adapter_symlink_is_drifted_without_following_it(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
-            target = project / "legacy-source.md"
-            target.write_text(legacy)
+            target = project / "unrecognized-source.md"
+            target.write_text(UNRECOGNIZED_CONTENT)
             (project / "CLAUDE.md").symlink_to(target.name)
             self.assertEqual(plan_update(project, "shared").state, "drifted")
 
@@ -159,7 +136,7 @@ class UpdatePlanTests(unittest.TestCase):
             self.assertEqual(plan_update(project, "shared").state, "drifted")
 
     def test_duplicate_or_malformed_managed_markers_are_drifted(self) -> None:
-        block = render_managed_block("2026.7.28")
+        block = render_managed_block(INSTALLED_VERSION)
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
             (project / "AGENTS.md").write_text(block + "\n" + block)
@@ -171,11 +148,11 @@ class UpdatePlanTests(unittest.TestCase):
             self.assertEqual(plan_update(project, "shared").state, "drifted")
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)
-            (project / "AGENTS.md").write_text(render_managed_block("2026.7.28"))
+            (project / "AGENTS.md").write_text(render_managed_block(INSTALLED_VERSION))
             (project / "CLAUDE.md").symlink_to("AGENTS.md")
             destination = project / ".codex" / "agents"
             destination.mkdir(parents=True)
-            source = REPOSITORY_ROOT / "plugins/sw/templates/codex-agents/sw-issue-owner.toml"
+            source = REPOSITORY_ROOT / "plugins/sw/templates/codex-agents/sw-change-owner.toml"
             shutil.copyfile(source, destination / source.name)
             (project / ".gitignore").write_text(".specwright/worktrees/\n")
             self.assertEqual(plan_update(project, "shared").state, "drifted")
@@ -184,8 +161,8 @@ class UpdatePlanTests(unittest.TestCase):
         for version in ("garbage", "2026.7.26"):
             with self.subTest(version=version), tempfile.TemporaryDirectory() as directory:
                 project = Path(directory)
-                block = render_managed_block("2026.7.28").replace(
-                    "version=2026.7.28",
+                block = render_managed_block(INSTALLED_VERSION).replace(
+                    f"version={INSTALLED_VERSION}",
                     f"version={version}",
                     1,
                 )
@@ -303,51 +280,29 @@ class UpdatePlanTests(unittest.TestCase):
                     apply_update(project, "local", plan.plan_id)
             self.assertEqual(before, self._full_tree_snapshot(project))
 
-    def test_shared_and_local_legacy_migrations_install_only_managed_state(self) -> None:
+    def test_unrecognized_shapes_refuse_apply_without_writes(self) -> None:
         cases = (
-            (
-                "legacy-shared",
-                "shared",
-                "AGENTS.md",
-                "CLAUDE.md",
-                {".specwright/worktrees/"},
-            ),
-            (
-                "legacy-local",
-                "local",
-                "AGENTS.override.md",
-                "CLAUDE.local.md",
-                {
-                    ".specwright/worktrees/",
-                    ".specwright/",
-                    "AGENTS.override.md",
-                    "CLAUDE.local.md",
-                    ".codex/agents/sw-*.toml",
-                },
-            ),
+            ("shared", "CLAUDE.md"),
+            ("local", "CLAUDE.local.md"),
         )
-        for fixture, mode, canonical, adapter, expected_rules in cases:
-            with self.subTest(mode=mode), self._fixture_copy(fixture) as project:
+        for mode, adapter in cases:
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as directory:
+                project = Path(directory)
+                (project / adapter).write_text(UNRECOGNIZED_CONTENT)
                 (project / ".gitignore").write_text("custom-rule/\n")
                 (project / ".codex").mkdir()
                 (project / ".codex" / "custom.toml").write_text("preserve = true\n")
                 plan = plan_update(project, mode)
-                self.assertEqual(plan.state, "legacy-migratable")
-                confirmed_id = plan.plan_id
-                applied, completed = apply_update(project, mode, confirmed_id)
-                self.assertEqual(applied.plan_id, confirmed_id)
-                self.assertTrue(completed)
-                self.assertTrue((project / adapter).is_symlink())
-                self.assertEqual((project / adapter).readlink(), Path(canonical))
-                self.assertIn("<!-- sw:managed version=2026.7.28", (project / canonical).read_text())
-                self._assert_profiles_match(project)
+                self.assertEqual(plan.state, "drifted")
+                before = self._full_tree_snapshot(project)
+                with self.assertRaisesRegex(UpdateError, "drifted"):
+                    apply_update(project, mode, plan.plan_id)
+                self.assertEqual(before, self._full_tree_snapshot(project))
+                self.assertEqual((project / adapter).read_text(), UNRECOGNIZED_CONTENT)
                 self.assertEqual(
                     (project / ".codex" / "custom.toml").read_text(),
                     "preserve = true\n",
                 )
-                ignore_lines = set((project / ".gitignore").read_text().splitlines())
-                self.assertIn("custom-rule/", ignore_lines)
-                self.assertTrue(expected_rules.issubset(ignore_lines))
 
     def test_local_mode_preserves_existing_shared_project_instructions(self) -> None:
         with self._fixture_copy("new") as project:
@@ -395,7 +350,7 @@ class UpdatePlanTests(unittest.TestCase):
             updated = agents.read_bytes()
             self.assertTrue(updated.startswith(prefix.encode("utf-8")))
             self.assertTrue(updated.endswith(suffix.encode("utf-8")))
-            self.assertIn(render_managed_block("2026.7.28").encode("utf-8"), updated)
+            self.assertIn(render_managed_block(INSTALLED_VERSION).encode("utf-8"), updated)
 
     def test_known_version_upgrade_replaces_unchanged_managed_profiles(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

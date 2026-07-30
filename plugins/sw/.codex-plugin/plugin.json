@@ -1,15 +1,15 @@
 {
   "name": "sw",
-  "version": "2026.7.28",
-  "description": "The specwright issue-driven workflow for Claude Code and Codex.",
+  "version": "2026.7.29",
+  "description": "The specwright change-driven workflow for Claude Code and Codex.",
   "author": {
     "name": "Gabriel Ribeiro"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "specwright",
-    "shortDescription": "Run an issue-driven engineering workflow",
-    "longDescription": "Plan, implement, validate, and review changes through specwright's issue-driven engineering workflow.",
+    "shortDescription": "Run an change-driven engineering workflow",
+    "longDescription": "Plan, implement, validate, and review changes through specwright's change-driven engineering workflow.",
     "developerName": "Gabriel Ribeiro",
     "category": "Productivity",
     "capabilities": [
@@ -18,7 +18,7 @@
     ],
     "defaultPrompt": [
       "Set up specwright for this repository",
-      "Turn this change into a specwright issue",
+      "Turn this change into a specwright change",
       "Plan and validate the next specwright task"
     ]
   }

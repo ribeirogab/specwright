@@ -4,11 +4,11 @@ created: 2026-06-14
 scope: low
 branch: feat/sample-feature
 worktree: null
-milestone: null
+delivery: null
 ---
 # Sample Feature — Spec
 
-**Issue:** issue.md
+**Change:** change.md
 **Scope:** A sample spec used to exercise the validator fixtures.
 
 ## Architecture
@@ -33,7 +33,7 @@ None beyond the project defaults.
 
 ## Acceptance Criteria
 
-Defined in the sibling issue.md.
+Defined in the sibling change.md.
 
 ## Risks and Mitigations
 

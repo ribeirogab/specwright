@@ -4,11 +4,11 @@ created: 2026-06-14
 status: pending
 shipped: null
 ---
-# Sample Feature — Issue
+# Sample Feature — Change
 
 ## Purpose
 
-Demonstrate a well-formed issue folder for validator testing.
+Demonstrate a well-formed change folder for validator testing.
 
 ## Motivation
 

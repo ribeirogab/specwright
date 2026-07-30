@@ -3,7 +3,7 @@ feature: legacy-fixture
 created: 2026-06-14
 status: pending
 ---
-# Legacy Fixture — Issue
+# Schema-1 Fixture — Change
 
 ## Acceptance Criteria
 
