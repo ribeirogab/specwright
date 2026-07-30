@@ -10,7 +10,7 @@ created: 2026-04-30
 # Skill validation requirements
 
 A shared skill must be discoverable from the same `plugins/sw/skills/` source by
-both host adapters. Validation failures block release even when one host happens to
+every host adapter. Validation failures block release even when one host happens to
 accept the file.
 
 ## Folder and file
@@ -21,7 +21,8 @@ accept the file.
 - A skill folder contains no `README.md`; supporting material belongs in
   `references/` or another explicitly bundled resource.
 - Workflow behavior lives only in `SKILL.md`. The homonymous Claude command is a
-  pure redirect, and the Codex manifest points at the shared skills root.
+  pure redirect, the Codex manifest points at the shared skills root, and OpenCode
+  commands in `templates/opencode-commands/` are equally pure redirects.
 
 ## Frontmatter
 
@@ -42,14 +43,14 @@ Allowed optional top-level keys:
 
 Any other top-level key is rejected. Nested custom data belongs under `metadata`.
 
-## Dual-host behavior
+## Host-surface behavior
 
-- User-facing syntax in a shared skill is host-neutral or names both valid
-  surfaces: `/sw:*` for Claude Code and `$sw:*` for Codex.
+- User-facing syntax in a shared skill is host-neutral or names every valid
+  surface: `/sw:*` for Claude Code, `$sw:*` for Codex, `/sw-*` for OpenCode.
 - Bundled templates and scripts resolve from the installed plugin root, never from
   a presumed `plugins/sw/` directory in the consumer repository.
 - Operational role dispatch uses the stable `sw-*` names shared by Claude agent
-  manifests and Codex project profiles.
+  manifests, Codex project profiles, and OpenCode agent templates.
 - Design approval never overrides host permission or approval policy.
 
 ## Required checks
@@ -66,5 +67,5 @@ UV_CACHE_DIR=/tmp/specwright-uv-cache \
 claude plugin validate --strict plugins/sw
 ```
 
-Package-surface changes also run `bash tests/install/run.sh` and the dual-host
+Package-surface changes also run `bash tests/install/run.sh` and the host
 release smoke test.

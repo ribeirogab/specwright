@@ -1,15 +1,16 @@
 ---
 name: update
 user-invocable: false
-description: "Plan and apply a versioned specwright project migration for Claude Code and Codex. Reads the installed Codex manifest version, displays a deterministic plan and plan_id, requires explicit confirmation, and applies only that unchanged identity. Refuses drift and never fetches a remote branch. Trigger on '/sw:update', '$sw:update', or 'update specwright in this repo'."
+description: "Plan and apply a versioned specwright project migration across every supported host. Reads the installed Codex manifest version, displays a deterministic plan and plan_id, requires explicit confirmation, and applies only that unchanged identity. Refuses drift and never fetches a remote branch. Trigger on '/sw:update', '$sw:update', '/sw-update', or 'update specwright in this repo'."
 ---
 
 # Update — migrate managed project state
 
 Update only specwright-managed project state: the bounded block in the canonical
 AGENTS file, the Claude adapter symlink, the four project-scoped Codex profiles,
-and exact specwright ignore rules. Preserve every project-owned byte outside the
-managed block and every unrelated `.codex` file.
+the four `.opencode/agent/sw-*.md` profiles and the nine `.opencode/command/sw-*.md`
+redirects, and exact specwright ignore rules. Preserve every project-owned byte
+outside the managed block and every unrelated `.codex` file.
 
 **Announce at start:** "Planning the specwright project update..."
 
@@ -96,7 +97,9 @@ Run `--plan` again with the same project and mode. Success requires:
 - state `up-to-date`;
 - zero operations;
 - one canonical AGENTS regular file and the correct relative Claude symlink;
-- four profiles that byte-match the installed templates;
+- four Codex profiles that byte-match the installed templates;
+- four `.opencode/agent/sw-*.md` and nine `.opencode/command/sw-*.md` files that
+  byte-match the installed templates;
 - no change to project-owned instructions or unrelated `.codex` configuration.
 
 Report the applied paths and target version. Do not stage, commit, push, or change a

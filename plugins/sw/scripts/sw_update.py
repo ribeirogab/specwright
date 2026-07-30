@@ -32,12 +32,45 @@ LOCAL_IGNORE_RULES = (
     "AGENTS.override.md",
     "CLAUDE.local.md",
     ".codex/agents/sw-*.toml",
+    ".opencode/agent/sw-*.md",
+    ".opencode/command/sw-*.md",
 )
 SHARED_IGNORE_RULES = (".specwright/worktrees/",)
 ALL_MANAGED_IGNORE_RULES = tuple(dict.fromkeys((*SHARED_IGNORE_RULES, *LOCAL_IGNORE_RULES)))
+OPENCODE_AGENT_DIRECTORY = Path(".opencode/agent")
+OPENCODE_AGENT_NAMES = (
+    "sw-change-owner.md",
+    "sw-reviewer.md",
+    "sw-spec-document-reviewer.md",
+    "sw-task-worker.md",
+)
+OPENCODE_COMMAND_DIRECTORY = Path(".opencode/command")
+OPENCODE_COMMAND_NAMES = (
+    "sw-brainstorm.md",
+    "sw-init.md",
+    "sw-plan.md",
+    "sw-pr.md",
+    "sw-review-spec.md",
+    "sw-review.md",
+    "sw-run.md",
+    "sw-spec.md",
+    "sw-update.md",
+)
+MANAGED_TEMPLATE_SETS = (
+    (PROFILE_DIRECTORY, "codex-agents", PROFILE_NAMES),
+    (OPENCODE_AGENT_DIRECTORY, "opencode-agents", OPENCODE_AGENT_NAMES),
+    (OPENCODE_COMMAND_DIRECTORY, "opencode-commands", OPENCODE_COMMAND_NAMES),
+)
 # Immutable predecessor digests distinguish a legitimate version upgrade from an
 # edited managed profile. Add the outgoing release here before changing a profile.
-KNOWN_PROFILE_DIGESTS_BY_VERSION: dict[str, dict[str, str]] = {}
+KNOWN_PROFILE_DIGESTS_BY_VERSION: dict[str, dict[str, str]] = {
+    "2026.7.29": {
+        "sw-change-owner.toml": "e284400ad6ae02350b1978e2dbd5242c5d3c782fd7dd0d4e327a0c47089135c5",
+        "sw-spec-document-reviewer.toml": "289862b98d25197db8afd074de3613bd45e3360c7df930f4aaadc3da368954df",
+        "sw-reviewer.toml": "c3178c120cba83622d2346f8b92e5c2f53a435fdea0e34c0aec1572490690274",
+        "sw-task-worker.toml": "bd43f3856048b804d49326eae461dcea49c19382121272a57f54f58218f0b516",
+    },
+}
 
 @dataclass(frozen=True)
 class ObservedPath:
@@ -156,7 +189,11 @@ def plan_update(project: Path, mode: str, version: str | None = None) -> UpdateP
 
 def _observe_paths(project: Path, canonical: str, adapter: str) -> tuple[ObservedPath, ...]:
     paths = [Path(canonical), Path(adapter), Path(".gitignore")]
-    paths.extend(PROFILE_DIRECTORY / name for name in PROFILE_NAMES)
+    paths.extend(
+        directory / name
+        for directory, _, names in MANAGED_TEMPLATE_SETS
+        for name in names
+    )
     return tuple(sorted((_observe_path(project, path) for path in paths), key=lambda item: item.relative_path))
 
 def _observe_path(project: Path, relative_path: Path) -> ObservedPath:
@@ -175,10 +212,31 @@ def _observe_path(project: Path, relative_path: Path) -> ObservedPath:
         return ObservedPath(relative_path.as_posix(), "directory", None)
     return ObservedPath(relative_path.as_posix(), f"other:{stat_result.st_mode:o}", None)
 
+def _template_source(relative_path: str) -> Path | None:
+    """Return the installed template for a managed destination path, or None."""
+    path = Path(relative_path)
+    for directory, template_directory, names in MANAGED_TEMPLATE_SETS:
+        if path.parent == directory and path.name in names:
+            return (
+                Path(__file__).resolve().parents[1]
+                / "templates"
+                / template_directory
+                / path.name
+            )
+    return None
+
 def _classify(project: Path, mode: str, canonical: str, adapter: str, desired_block: str) -> tuple[str, tuple[str, ...], str]:
     canonical_path = project / canonical
     adapter_path = project / adapter
-    managed_paths = [canonical_path, adapter_path, *(project / PROFILE_DIRECTORY / name for name in PROFILE_NAMES)]
+    managed_paths = [
+        canonical_path,
+        adapter_path,
+        *(
+            project / directory / name
+            for directory, _, names in MANAGED_TEMPLATE_SETS
+            for name in names
+        ),
+    ]
     existing = [path for path in managed_paths if path.is_symlink() or path.exists()]
     if mode == "shared":
         opposite_canonical = project / "AGENTS.override.md"
@@ -222,11 +280,13 @@ def _is_up_to_date(project: Path, mode: str, canonical: str, adapter: str, desir
         return False
     if _managed_block(canonical_path.read_text(encoding="utf-8")) != desired_block:
         return False
-    for name in PROFILE_NAMES:
-        destination = project / PROFILE_DIRECTORY / name
-        source = Path(__file__).resolve().parents[1] / "templates" / "codex-agents" / name
-        if destination.is_symlink() or not destination.is_file() or destination.read_bytes() != source.read_bytes():
-            return False
+    for directory, _, names in MANAGED_TEMPLATE_SETS:
+        for name in names:
+            destination = project / directory / name
+            source = _template_source((directory / name).as_posix())
+            assert source is not None
+            if destination.is_symlink() or not destination.is_file() or destination.read_bytes() != source.read_bytes():
+                return False
     if not _ignore_rules_match(project / ".gitignore", mode):
         return False
     return True
@@ -264,6 +324,17 @@ def _managed_update_desired(
             or _digest_bytes(destination.read_bytes()) != expected_profiles[name]
         ):
             return None
+    for directory, _, names in MANAGED_TEMPLATE_SETS[1:]:
+        for name in names:
+            destination = project / directory / name
+            if destination.is_symlink():
+                return None
+            if not destination.exists():
+                continue
+            source = _template_source((directory / name).as_posix())
+            assert source is not None
+            if not destination.is_file() or destination.read_bytes() != source.read_bytes():
+                return None
     if not _ignore_rules_match(project / ".gitignore", mode):
         return None
     return contents.replace(current_block, desired_block, 1)
@@ -317,32 +388,30 @@ def _operations(project: Path, mode: str, canonical: str, adapter: str, desired_
         if not adapter_path.is_symlink() and adapter_path.is_file():
             expected = _digest_bytes(adapter_path.read_bytes())
         operations.append(Operation("replace-with-symlink", adapter, expected, canonical))
-    for name in PROFILE_NAMES:
-        source = Path(__file__).resolve().parents[1] / "templates" / "codex-agents" / name
-        destination = project / PROFILE_DIRECTORY / name
-        if not (destination.is_symlink() or destination.exists()):
-            operations.append(
-                Operation(
-                    "create",
-                    (PROFILE_DIRECTORY / name).as_posix(),
-                    None,
-                    _digest_bytes(source.read_bytes()),
+    for directory, _, names in MANAGED_TEMPLATE_SETS:
+        for name in names:
+            source = _template_source((directory / name).as_posix())
+            assert source is not None
+            destination = project / directory / name
+            relative = (directory / name).as_posix()
+            if not (destination.is_symlink() or destination.exists()):
+                operations.append(
+                    Operation("create", relative, None, _digest_bytes(source.read_bytes()))
                 )
-            )
-        elif (
-            state == "legacy-migratable"
-            and not destination.is_symlink()
-            and destination.is_file()
-            and destination.read_bytes() != source.read_bytes()
-        ):
-            operations.append(
-                Operation(
-                    "replace-profile",
-                    (PROFILE_DIRECTORY / name).as_posix(),
-                    _digest_bytes(destination.read_bytes()),
-                    _digest_bytes(source.read_bytes()),
+            elif (
+                state == "legacy-migratable"
+                and not destination.is_symlink()
+                and destination.is_file()
+                and destination.read_bytes() != source.read_bytes()
+            ):
+                operations.append(
+                    Operation(
+                        "replace-profile",
+                        relative,
+                        _digest_bytes(destination.read_bytes()),
+                        _digest_bytes(source.read_bytes()),
+                    )
                 )
-            )
     ignore_path = project / ".gitignore"
     ignore_rules = LOCAL_IGNORE_RULES if mode == "local" else SHARED_IGNORE_RULES
     if not _ignore_rules_match(ignore_path, mode):
@@ -455,15 +524,11 @@ def _validate_operation_precondition(destination: Path, operation: Operation) ->
     raise UpdateError(f"unknown managed operation: {operation.action}")
 
 def _validate_profile_source(operation: Operation) -> None:
-    profile_prefix = f"{PROFILE_DIRECTORY.as_posix()}/"
-    if operation.action not in {"create", "replace-profile"} or not operation.relative_path.startswith(profile_prefix):
+    if operation.action not in {"create", "replace-profile"}:
         return
-    source = (
-        Path(__file__).resolve().parents[1]
-        / "templates"
-        / "codex-agents"
-        / Path(operation.relative_path).name
-    )
+    source = _template_source(operation.relative_path)
+    if source is None:
+        return
     if source.is_symlink() or not source.is_file():
         raise UpdateError(f"installed profile template is invalid: {source}")
     if _digest_bytes(source.read_bytes()) != operation.desired_after:
@@ -501,13 +566,8 @@ def _apply_operation(project: Path, operation: Operation) -> None:
     _validate_operation_precondition(destination, operation)
     _validate_profile_source(operation)
     if operation.action in {"create", "replace-managed-block", "replace-profile"}:
-        if operation.relative_path.startswith(f"{PROFILE_DIRECTORY.as_posix()}/"):
-            source = (
-                Path(__file__).resolve().parents[1]
-                / "templates"
-                / "codex-agents"
-                / destination.name
-            )
+        source = _template_source(operation.relative_path)
+        if source is not None:
             contents = source.read_bytes()
             mode = stat.S_IMODE(source.stat().st_mode)
         else:

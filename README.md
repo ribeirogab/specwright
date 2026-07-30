@@ -1,6 +1,6 @@
 # specwright
 
-`specwright` (`sw`) is a dual-host plugin for Claude Code and Codex. It gives a
+`specwright` (`sw`) is a multi-host plugin for Claude Code, Codex, and OpenCode. It gives a
 repository one explicit, change-driven engineering workflow:
 
 > brainstorm → change → spec + tasks → implementation → integrated validation →
@@ -12,7 +12,8 @@ orchestrator.
 
 The implementation of every workflow lives once under
 [`plugins/sw/skills/`](plugins/sw/skills/). Claude Code exposes thin `/sw:*`
-command adapters; Codex discovers the same skills as `$sw:*`.
+command adapters; Codex discovers the same skills as `$sw:*`; OpenCode exposes
+them as `/sw-*` commands.
 
 ## Install
 
@@ -32,7 +33,18 @@ codex plugin marketplace add ribeirogab/specwright
 codex plugin add sw@specwright
 ```
 
-Both hosts install the same package and the same nine skills.
+### OpenCode
+
+Clone the repository, then add the skills path to `opencode.json` (project or
+`~/.config/opencode/opencode.json`):
+
+```json
+{"skills": {"paths": ["<checkout>/plugins/sw/skills"]}}
+```
+
+Restart OpenCode after adding the path.
+
+All three hosts install the same nine skills.
 
 ## Initialize a repository
 
@@ -41,20 +53,25 @@ Run the host surface available in the current session:
 ```text
 Claude Code: /sw:init
 Codex:       $sw:init
+OpenCode:    /sw-init
 ```
+
+In OpenCode, the `/sw-*` command surface does not exist until after the first
+`sw:init` — ask "set up specwright here" in natural language for the initial run.
 
 `sw:init` first asks for a mode and displays a read-only, deterministic plan.
 Only an explicit confirmation of that exact `plan_id` permits the apply step.
 Host permissions and sandbox approvals remain authoritative.
 
 - **shared** tracks `.specwright/`, `AGENTS.md`, the relative
-  `CLAUDE.md -> AGENTS.md` symlink, and four `.codex/agents/sw-*.toml` role
-  profiles. Only `.specwright/worktrees/` is ignored.
+  `CLAUDE.md -> AGENTS.md` symlink, four `.codex/agents/sw-*.toml` role
+  profiles, and the `.opencode/agent/sw-*.md` and `.opencode/command/sw-*.md`
+  files. Only `.specwright/worktrees/` is ignored.
 - **local** keeps specwright state private in the checkout. It uses
   `AGENTS.override.md`, the relative
-  `CLAUDE.local.md -> AGENTS.override.md` symlink, a local vault, and the same
-  four profiles. The vault, both local instruction paths, the `sw-*` profiles,
-  and worktrees are ignored.
+  `CLAUDE.local.md -> AGENTS.override.md` symlink, a local vault, the same
+  four profiles, and the OpenCode files. The vault, both local instruction
+  paths, the `sw-*` profiles, the OpenCode files, and worktrees are ignored.
 
 `AGENTS.md` or `AGENTS.override.md` is always the canonical instruction file.
 The corresponding `CLAUDE*.md` path is only a compatibility symlink. There is no
@@ -84,6 +101,7 @@ Then migrate each initialized repository:
 ```text
 Claude Code: /sw:update
 Codex:       $sw:update
+OpenCode:    /sw-update
 ```
 
 `sw:update` reads the target version from the already installed Codex manifest.
@@ -96,7 +114,9 @@ The updater owns only:
 
 - the bounded, digest-protected `sw:managed` block in the canonical AGENTS file;
 - the relative Claude adapter symlink;
-- the four `.codex/agents/sw-*.toml` profiles; and
+- the four `.codex/agents/sw-*.toml` profiles;
+- the four `.opencode/agent/sw-*.md` profiles;
+- the nine `.opencode/command/sw-*.md` redirects; and
 - the exact specwright `.gitignore` rules for the selected mode.
 
 Project text outside the managed block is preserved byte-for-byte. Unexpected
@@ -105,20 +125,21 @@ or unavailable symlinks fail noisily before apply; drift is never overwritten.
 
 ## Command parity
 
-| Workflow | Claude Code | Codex | Purpose |
-|---|---|---|---|
-| Initialize | `/sw:init` | `$sw:init` | Plan and create dual-host project state. |
-| Brainstorm | `/sw:brainstorm` | `$sw:brainstorm` | Explore intent and approve a design. |
-| Specify | `/sw:spec` | `$sw:spec` | Turn the current design into a change or delivery. |
-| Plan | `/sw:plan` | `$sw:plan` | Produce schema-2 tasks, implement, and validate a change. |
-| Conduct | `/sw:run` | `$sw:run` | Dispatch ready delivery changes and maintain the board. |
-| Review | `/sw:review` | `$sw:review` | Review a branch diff with read-only specialist roles. |
-| Review spec | `/sw:review-spec` | `$sw:review-spec` | Evaluate a change plan for clarity and conformance. |
-| Pull request | `/sw:pr` | `$sw:pr` | Push and open the change PR using repository conventions. |
-| Update | `/sw:update` | `$sw:update` | Plan and apply a versioned project migration. |
+| Workflow | Claude Code | Codex | OpenCode | Purpose |
+|---|---|---|---|---|
+| Initialize | `/sw:init` | `$sw:init` | `/sw-init` | Plan and create project state. |
+| Brainstorm | `/sw:brainstorm` | `$sw:brainstorm` | `/sw-brainstorm` | Explore intent and approve a design. |
+| Specify | `/sw:spec` | `$sw:spec` | `/sw-spec` | Turn the current design into a change or delivery. |
+| Plan | `/sw:plan` | `$sw:plan` | `/sw-plan` | Produce schema-2 tasks, implement, and validate a change. |
+| Conduct | `/sw:run` | `$sw:run` | `/sw-run` | Dispatch ready delivery changes and maintain the board. |
+| Review | `/sw:review` | `$sw:review` | `/sw-review` | Review a branch diff with read-only specialist roles. |
+| Review spec | `/sw:review-spec` | `$sw:review-spec` | `/sw-review-spec` | Evaluate a change plan for clarity and conformance. |
+| Pull request | `/sw:pr` | `$sw:pr` | `/sw-pr` | Push and open the change PR using repository conventions. |
+| Update | `/sw:update` | `$sw:update` | `/sw-update` | Plan and apply a versioned project migration. |
 
-Natural-language requests can trigger the same Codex skills. Explicit `$sw:*`
-invocation is useful when the desired entry point should be unambiguous.
+Natural-language requests can trigger the same skills in any host. Explicit
+`$sw:*` or `/sw-*` invocation is useful when the desired entry point should be
+unambiguous.
 
 ## Project state after initialization
 
@@ -131,6 +152,21 @@ invocation is useful when the desired entry point should be unambiguous.
 │   ├── sw-reviewer.toml
 │   ├── sw-spec-document-reviewer.toml
 │   └── sw-task-worker.toml
+├── .opencode/agent/
+│   ├── sw-change-owner.md
+│   ├── sw-reviewer.md
+│   ├── sw-spec-document-reviewer.md
+│   └── sw-task-worker.md
+├── .opencode/command/
+│   ├── sw-init.md
+│   ├── sw-brainstorm.md
+│   ├── sw-spec.md
+│   ├── sw-plan.md
+│   ├── sw-run.md
+│   ├── sw-review.md
+│   ├── sw-review-spec.md
+│   ├── sw-pr.md
+│   └── sw-update.md
 └── .specwright/
     ├── conventions/
     ├── changes/
@@ -145,7 +181,7 @@ Existing shared instructions may coexist and remain untouched.
 ## Change flow and worker integration
 
 Design approval authorizes continuation of the specwright workflow, but it never
-overrides either host's file, command, Git, network, or external-action approval
+overrides any host's file, command, Git, network, or external-action approval
 policy.
 
 Each active `tasks.md` uses `tasks_schema: 2`. Every task has:
@@ -178,9 +214,10 @@ replanning. Integrated validation after every wave gates dependent tasks.
 Worker worktrees are retained for inspection and are never removed automatically.
 
 In local mode, `sw:run` copies the canonical local instructions, their Claude
-symlink, the project-installed `sw-*` Codex profiles, and the change folder into a
-change worktree. On return it copies back only the change folder; instructions and
-profiles remain conductor-owned state.
+symlink, the project-installed `sw-*` Codex profiles, the `.opencode/agent/sw-*.md`
+and `.opencode/command/sw-*.md` files, and the change folder into a change
+worktree. On return it copies back only the change folder; instructions, profiles,
+and OpenCode files remain conductor-owned state.
 
 ## Repository layout
 
@@ -195,7 +232,9 @@ specwright/
 │   ├── agents/                      # Claude role adapters
 │   ├── commands/                    # thin Claude redirects
 │   ├── skills/                      # single workflow implementation
-│   ├── templates/                   # change/delivery and Codex role templates
+│   ├── templates/                   # change/delivery, Codex role, and OpenCode adapter templates
+│   │   ├── opencode-agents/         # OpenCode agent profile templates
+│   │   └── opencode-commands/       # OpenCode command redirect templates
 │   ├── scripts/                     # validators and deterministic updater
 │   └── references/
 ├── tests/
@@ -206,15 +245,18 @@ specwright/
 
 Project-specific review rules belong in `.specwright/conventions/`. Shared
 workflow behavior belongs in the relevant `plugins/sw/skills/<name>/SKILL.md`;
-do not add host-specific behavior to a command redirect. Claude role manifests
-and Codex TOML templates use the same role names:
+do not add host-specific behavior to a command redirect. Claude role manifests,
+Codex TOML templates, and OpenCode agent profiles use the same role names:
 
-| Role | Codex model/effort | Sandbox |
-|---|---|---|
-| `sw-change-owner` | `gpt-5.6-sol`, high | workspace write |
-| `sw-spec-document-reviewer` | `gpt-5.6-sol`, high | read-only |
-| `sw-reviewer` | `gpt-5.6-sol`, high | read-only |
-| `sw-task-worker` | `gpt-5.6-terra`, medium | workspace write |
+| Role | Codex model/effort | Codex sandbox | OpenCode model | OpenCode sandbox |
+|---|---|---|---|---|
+| `sw-change-owner` | `gpt-5.6-sol`, high | workspace write | inherits session model (no pin) | default |
+| `sw-spec-document-reviewer` | `gpt-5.6-sol`, high | read-only | inherits session model (no pin) | edit: deny |
+| `sw-reviewer` | `gpt-5.6-sol`, high | read-only | inherits session model (no pin) | edit: deny |
+| `sw-task-worker` | `gpt-5.6-terra`, medium | workspace write | inherits session model (no pin) | default |
+
+OpenCode does not namespace skills loaded via `skills.paths`; specwright's skill
+names (`plan`, `run`, …) may shadow same-named user skills.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the validation matrix and release
 gates. Security reports follow [`SECURITY.md`](SECURITY.md).

@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an improvement to the dual-host specwright workflow
+about: Suggest an improvement to the specwright workflow
 title: "[feature] "
 labels: ["enhancement"]
 ---
@@ -9,13 +9,13 @@ labels: ["enhancement"]
 
 Describe the improvement to one shared workflow (`init`, `brainstorm`, `spec`,
 `plan`, `run`, `review`, `review-spec`, `pr`, or `update`), a role, project
-migration, validation, or native Claude/Codex packaging. Two or three concrete
+migration, validation, or native host packaging. Two or three concrete
 example prompts beat one abstract description.
 
 ## Why does it belong in specwright?
 
 Explain how it improves the change-driven engineering workflow or preserves
-behavioral parity between Claude Code and Codex. Unrelated skills should live in
+behavioral parity across every supported host. Unrelated skills should live in
 their own repository.
 
 ## Sketch of the behavior

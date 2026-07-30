@@ -1,8 +1,8 @@
 # Audit Checklist
 
-Inventory for `sw:init` and `sw:update`. Both hosts share the same per-repository
-state. The updater, not ad-hoc edits, decides whether managed state can be created
-or migrated.
+Inventory for `sw:init` and `sw:update`. All supported hosts share the same
+per-repository state. The updater, not ad-hoc edits, decides whether managed
+state can be created or migrated.
 
 ## Status meanings
 
@@ -50,6 +50,19 @@ CLAUDE.md -> AGENTS.md                     relative symlink
 .codex/agents/sw-spec-document-reviewer.toml
 .codex/agents/sw-reviewer.toml
 .codex/agents/sw-task-worker.toml          byte-matched installed profiles
+.opencode/agent/sw-change-owner.md
+.opencode/agent/sw-spec-document-reviewer.md
+.opencode/agent/sw-reviewer.md
+.opencode/agent/sw-task-worker.md          byte-matched installed agent profiles
+.opencode/command/sw-init.md
+.opencode/command/sw-brainstorm.md
+.opencode/command/sw-spec.md
+.opencode/command/sw-plan.md
+.opencode/command/sw-run.md
+.opencode/command/sw-review.md
+.opencode/command/sw-review-spec.md
+.opencode/command/sw-pr.md
+.opencode/command/sw-update.md             byte-matched installed command redirects
 .specwright/conventions/                   existing conventions, or README.md signpost when initially empty
 .specwright/changes/.gitkeep
 .specwright/deliveries/.gitkeep
@@ -66,6 +79,8 @@ Project-owned text before and after the block is unconstrained and preserved.
 AGENTS.override.md                         regular canonical file
 CLAUDE.local.md -> AGENTS.override.md      relative symlink
 .codex/agents/sw-*.toml                    four byte-matched profiles
+.opencode/agent/sw-*.md                    four byte-matched agent profiles
+.opencode/command/sw-*.md                  nine byte-matched command redirects
 .specwright/                               same three vault directories
 .gitignore:
   .specwright/worktrees/
@@ -73,6 +88,8 @@ CLAUDE.local.md -> AGENTS.override.md      relative symlink
   AGENTS.override.md
   CLAUDE.local.md
   .codex/agents/sw-*.toml
+  .opencode/agent/sw-*.md
+  .opencode/command/sw-*.md
 ```
 
 Existing project-owned `AGENTS.md`, `CLAUDE.md`, and unrelated `.codex` files may
@@ -86,8 +103,9 @@ For every audit:
 2. Verify the Claude adapter is a relative symlink to that exact canonical
    filename.
 3. Verify one opening marker, one closing marker, and a valid body digest.
-4. Verify all four profile files are regular files and byte-match the installed
-   templates.
+4. Verify all four Codex profile files, four `.opencode/agent/sw-*.md` files, and
+   nine `.opencode/command/sw-*.md` files are regular files and byte-match the
+   installed templates.
 5. Verify exact ignore membership without deleting unrelated project rules.
 6. Verify the vault keep-files without overwriting existing conventions or change
    content.
@@ -112,6 +130,8 @@ Plan ID: <complete-plan-id>
 | OK | AGENTS.md | managed digest valid; project text preserved |
 | OK | CLAUDE.md | relative symlink to AGENTS.md |
 | OK | .codex/agents/sw-*.toml | four installed profiles match |
+| OK | .opencode/agent/sw-*.md | four installed agent profiles match |
+| OK | .opencode/command/sw-*.md | nine installed command redirects match |
 | OK | .specwright/ | three vault directories present |
 | OK | .gitignore | exact mode rules present once |
 ```

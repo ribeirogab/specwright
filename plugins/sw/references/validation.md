@@ -59,7 +59,7 @@ installation phrase.
 
 A regular-file copy is a failure even when bytes match.
 
-### 4. Codex role profiles match installed templates
+### 4. Codex role profiles and OpenCode managed files match installed templates
 
 ```bash
 for name in \
@@ -72,10 +72,38 @@ do
     "$SW_PLUGIN_ROOT/templates/codex-agents/$name.toml" \
     ".codex/agents/$name.toml"
 done
+
+for name in \
+  sw-change-owner \
+  sw-spec-document-reviewer \
+  sw-reviewer \
+  sw-task-worker
+do
+  cmp \
+    "$SW_PLUGIN_ROOT/templates/opencode-agents/$name.md" \
+    ".opencode/agent/$name.md"
+done
+
+for name in \
+  sw-init \
+  sw-brainstorm \
+  sw-spec \
+  sw-plan \
+  sw-run \
+  sw-review \
+  sw-review-spec \
+  sw-pr \
+  sw-update
+do
+  cmp \
+    "$SW_PLUGIN_ROOT/templates/opencode-commands/$name.md" \
+    ".opencode/command/$name.md"
+done
 ```
 
-All four destinations must be regular files. Unrelated `.codex` content must be
-unchanged.
+All four Codex destinations, four `.opencode/agent/sw-*.md` files, and nine
+`.opencode/command/sw-*.md` files must be regular files. Unrelated `.codex` and
+`.opencode` content must be unchanged.
 
 ### 5. Ignore rules match the selected mode
 
@@ -93,6 +121,8 @@ Local mode requires exactly:
 AGENTS.override.md
 CLAUDE.local.md
 .codex/agents/sw-*.toml
+.opencode/agent/sw-*.md
+.opencode/command/sw-*.md
 ```
 
 Each required line occurs once. Preserve unrelated project rules. Local mode may
@@ -122,8 +152,10 @@ bash tests/release/run.sh
 ```
 
 The source and installed inventories contain the same nine shared skills, and all
-nine Claude command files remain pure redirects. Native Codex ingestion runs only
-in an isolated environment with `CI_EPHEMERAL_RUNNER=1`.
+nine Claude command files remain pure redirects. The nine `.opencode/command/sw-*.md`
+files are equally pure redirects — no host-specific behavior beyond naming their
+skill. Native Codex ingestion runs only in an isolated environment with
+`CI_EPHEMERAL_RUNNER=1`.
 
 ### 8. Active task topology is schema 2
 

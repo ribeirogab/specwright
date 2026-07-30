@@ -1,7 +1,7 @@
 ---
 name: brainstorm
 user-invocable: false
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation, concludes whether the work is a single change or a delivery (a large outcome decomposed into changes), and writes the change/delivery artifacts."
+description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation, concludes whether the work is a single change or a delivery (a large outcome decomposed into changes), and writes the change/delivery artifacts. Trigger on '/sw:brainstorm', '$sw:brainstorm', '/sw-brainstorm', or before any creative work."
 ---
 
 # Brainstorm — Ideas Into Changes and Deliveries
@@ -135,11 +135,12 @@ Commit the delivery and change folders.
 brainstorm the context is full of exploration: dead ends, rejected decompositions,
 half-decisions. The orchestrator must be born clean, reading only the artifacts.
 Print a ```txt``` handoff with a one-paragraph summary, the delivery path, and
-both valid resume surfaces:
+every valid resume surface:
 
 ```text
 Claude Code: /sw:run <slug>
 Codex: $sw:run <slug>
+OpenCode: /sw-run <slug>
 ```
 
 Then **stop**. No exceptions, no "start now".
