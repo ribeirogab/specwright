@@ -1,13 +1,13 @@
 # specwright
 
 `specwright` (`sw`) is a dual-host plugin for Claude Code and Codex. It gives a
-repository one explicit, issue-driven engineering workflow:
+repository one explicit, change-driven engineering workflow:
 
-> brainstorm → issue → spec + tasks → implementation → integrated validation →
+> brainstorm → change → spec + tasks → implementation → integrated validation →
 > runtime verification → PR → review
 
-One issue owns one branch and one PR. Larger deliveries become milestones with a
-goal, a board, and multiple issues conducted by an orchestrator.
+One change owns one branch and one PR. Larger outcomes become deliveries with a
+durable goal, a board, and multiple changes conducted by an orchestrator.
 
 The implementation of every workflow lives once under
 [`plugins/sw/skills/`](plugins/sw/skills/). Claude Code exposes thin `/sw:*`
@@ -108,12 +108,12 @@ or unavailable symlinks fail noisily before apply; drift is never overwritten.
 |---|---|---|---|
 | Initialize | `/sw:init` | `$sw:init` | Plan and create dual-host project state. |
 | Brainstorm | `/sw:brainstorm` | `$sw:brainstorm` | Explore intent and approve a design. |
-| Specify | `/sw:spec` | `$sw:spec` | Turn the current design into an issue or milestone. |
-| Plan | `/sw:plan` | `$sw:plan` | Produce schema-2 tasks, implement, and validate an issue. |
-| Conduct | `/sw:run` | `$sw:run` | Dispatch ready milestone issues and maintain the board. |
+| Specify | `/sw:spec` | `$sw:spec` | Turn the current design into a change or delivery. |
+| Plan | `/sw:plan` | `$sw:plan` | Produce schema-2 tasks, implement, and validate a change. |
+| Conduct | `/sw:run` | `$sw:run` | Dispatch ready delivery changes and maintain the board. |
 | Review | `/sw:review` | `$sw:review` | Review a branch diff with read-only specialist roles. |
-| Review spec | `/sw:review-spec` | `$sw:review-spec` | Evaluate an issue plan for clarity and conformance. |
-| Pull request | `/sw:pr` | `$sw:pr` | Push and open the issue PR using repository conventions. |
+| Review spec | `/sw:review-spec` | `$sw:review-spec` | Evaluate a change plan for clarity and conformance. |
+| Pull request | `/sw:pr` | `$sw:pr` | Push and open the change PR using repository conventions. |
 | Update | `/sw:update` | `$sw:update` | Plan and apply a versioned project migration. |
 
 Natural-language requests can trigger the same Codex skills. Explicit `$sw:*`
@@ -126,22 +126,22 @@ invocation is useful when the desired entry point should be unambiguous.
 ├── AGENTS.md                         # shared canonical instructions
 ├── CLAUDE.md -> AGENTS.md            # shared Claude adapter
 ├── .codex/agents/
-│   ├── sw-issue-owner.toml
+│   ├── sw-change-owner.toml
 │   ├── sw-reviewer.toml
 │   ├── sw-spec-document-reviewer.toml
 │   └── sw-task-worker.toml
 └── .specwright/
     ├── conventions/
-    ├── issues/
-    ├── milestones/
-    └── worktrees/                    # ignored worker/issue checkouts
+    ├── changes/
+    ├── deliveries/
+    └── worktrees/                    # ignored worker/change checkouts
 ```
 
 Local mode substitutes `AGENTS.override.md` and
 `CLAUDE.local.md -> AGENTS.override.md`; all specwright-local state is ignored.
 Existing shared instructions may coexist and remain untouched.
 
-## Issue flow and worker integration
+## Change flow and worker integration
 
 Design approval authorizes continuation of the specwright workflow, but it never
 overrides either host's file, command, Git, network, or external-action approval
@@ -156,16 +156,18 @@ Each active `tasks.md` uses `tasks_schema: 2`. Every task has:
 
 The validator rejects missing metadata, unknown dependencies, cycles, and file
 overlap between independent isolated tasks in the same dependency wave. Historical
-shipped issues remain valid records; an active legacy task file must be explicitly
+shipped changes remain valid records; an active schema-1 task file must be explicitly
 replanned because the updater cannot infer ownership or dependencies safely.
 
-An **issue owner** is the sole editor and integrator of the issue branch,
-issue artifacts, learnings, and PR. It forms a **wave** from currently ready,
-pairwise non-overlapping isolated tasks. Every worker receives a branch at the
-wave's exact issue HEAD and a sibling worktree under `.specwright/worktrees/`.
+A **change owner** is the sole editor and integrator of the change branch,
+change artifacts, learnings, and PR. It forms a **wave** — a dependency-ready,
+file-disjoint set of isolated tasks that may run in parallel — from currently
+ready, pairwise non-overlapping isolated tasks. Waves are derived at dispatch
+time, never persisted. Every worker receives a branch at the wave's exact
+change HEAD and a sibling worktree under `.specwright/worktrees/`.
 
 A **task worker** may edit only its declared files in its own branch/worktree. It
-does not edit issue artifacts, create a PR, integrate branches, or write learnings.
+does not edit change artifacts, create a PR, integrate branches, or write learnings.
 It returns its base SHA, ordered commit SHAs, validations, touched files, and
 discoveries. The owner verifies ancestry and scope, reviews the diff, and
 cherry-picks accepted commits. Mechanical conflicts may be resolved by the owner;
@@ -175,8 +177,8 @@ replanning. Integrated validation after every wave gates dependent tasks.
 Worker worktrees are retained for inspection and are never removed automatically.
 
 In local mode, `sw:run` copies the canonical local instructions, their Claude
-symlink, the project-installed `sw-*` Codex profiles, and the issue folder into an
-issue worktree. On return it copies back only the issue folder; instructions and
+symlink, the project-installed `sw-*` Codex profiles, and the change folder into a
+change worktree. On return it copies back only the change folder; instructions and
 profiles remain conductor-owned state.
 
 ## Repository layout
@@ -191,7 +193,7 @@ specwright/
 │   ├── agents/                      # Claude role adapters
 │   ├── commands/                    # thin Claude redirects
 │   ├── skills/                      # single workflow implementation
-│   ├── templates/                   # issue and Codex role templates
+│   ├── templates/                   # change/delivery and Codex role templates
 │   ├── scripts/                     # validators and deterministic updater
 │   └── references/
 ├── tests/
@@ -207,7 +209,7 @@ and Codex TOML templates use the same role names:
 
 | Role | Codex model/effort | Sandbox |
 |---|---|---|
-| `sw-issue-owner` | `gpt-5.6-sol`, high | workspace write |
+| `sw-change-owner` | `gpt-5.6-sol`, high | workspace write |
 | `sw-spec-document-reviewer` | `gpt-5.6-sol`, high | read-only |
 | `sw-reviewer` | `gpt-5.6-sol`, high | read-only |
 | `sw-task-worker` | `gpt-5.6-terra`, medium | workspace write |
