@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a problem with specwright on Claude Code or Codex
+about: Report a problem with specwright on Claude Code, Codex, or OpenCode
 title: "[bug] "
 labels: ["bug"]
 ---
@@ -10,14 +10,14 @@ labels: ["bug"]
 Name the shared workflow (`init`, `brainstorm`, `spec`, `plan`, `run`, `review`,
 `review-spec`, `pr`, or `update`), a role profile, the updater/validator, or the
 package surface. Include whether you invoked `/sw:*` in Claude Code, `$sw:*` in
-Codex, or natural language.
+Codex, `/sw-*` in OpenCode, or natural language.
 
 ## Host and environment
 
-- Host: Claude Code | Codex
+- Host: Claude Code | Codex | OpenCode
 - Host version:
 - Operating system and filesystem:
-- Plugin version reported by `claude plugin list --json` or `codex plugin list --json`:
+- Plugin version reported by `claude plugin list --json`, `codex plugin list --json`, or the installed Codex manifest:
 - Project mode, when relevant: shared | local
 
 ## Reproduction steps
