@@ -1,25 +1,20 @@
 ---
-feature: {{kebab-slug-of-issue}}
+feature: {{kebab-slug-of-change}}
 created: {{YYYY-MM-DD}}
-tasks_schema: 2
 ---
-# {{Issue Name}} — Tasks
+# {{Change Name}} — Tasks
 
-**For this issue:** see the sibling `issue.md` (acceptance criteria) and `spec.md` (technical plan).
+**For this change:** see the sibling `change.md` (acceptance criteria) and `spec.md` (technical plan).
 
-> Every task has a stable `Tn` identifier and names the `AC:` criteria it satisfies. `Delegable:` begins with `yes` or `no` and may add a concise context after ` — `. `Delegable: yes` tasks use `Integration: isolated` and own explicit repository-relative files. `Delegable: no` tasks use `Integration: inline` and list exactly `- None` when they have no owned files. Workers report findings back to the issue owner; only the owner writes `learnings.md`.
+> Each task names the `AC:` (acceptance criteria from `change.md` it satisfies — every `AC-N` must be referenced by at least one task), **Files:** (the file-ownership set — two tasks that share a file never run in the same wave), and `Delegable:` (whether it suits an isolated task worker, and the one-line context that worker would receive). Waves are derived by `/sw:run` from these declarations plus task ordering; they are never persisted as folders. Workers report findings back to the change-owner; only the owner writes `learnings.md`.
 
 ## Phase 1: {{name}}
 
-### T1: {{name}}
+### Task 1: {{name}}
 
 **AC:** {{AC-N it satisfies, e.g. AC-1, AC-2}}
-**Delegable:** {{yes or no — concise context}}
-**Depends on:** none
-**Files:**
-- Create: `{{repository-relative-path}}`
-**Integration:** isolated
-**Validation:** {{command that verifies this task}}
+**Files:** {{files this task owns, e.g. `src/foo.ts`, `src/foo.test.ts`}}
+**Delegable:** {{yes/no + one-line isolated context the worker would receive}}
 
 - [ ] Step 1: {{action}}
 - [ ] Step 2: {{verification}}
