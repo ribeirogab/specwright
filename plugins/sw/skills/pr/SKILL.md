@@ -24,11 +24,13 @@ git branch --show-current
 
 If it is `main` or `master`, **stop** and tell the user to create a feature branch first. Do not proceed.
 
-## Resolve consent — find the issue
+## Resolve workflow authority — find the issue
 
 Find the issue driving this branch: the `spec.md` whose `branch:` matches the current branch, searched under `.specwright/issues/*/` and `.specwright/milestones/*/issues/*/` (else the most recently modified issue folder in either tree).
 
-- **Issue found** → the issue's approved design is the standing consent: open the PR now without asking.
+- **Issue found** → the approved design authorizes entering the PR step. Continue only
+  within the current host's Git, network, credential, and external-action approval
+  policy; ask when that policy requires explicit consent.
 - **No matching issue (ad-hoc PR)** → proceed only if the user explicitly invoked this skill.
 
 ## Push the branch if needed
@@ -37,7 +39,8 @@ Find the issue driving this branch: the `spec.md` whose `branch:` matches the cu
 git ls-remote --heads origin "$(git branch --show-current)"
 ```
 
-If the branch is **not** on origin, push it (covered by the standing consent — never push `main`/`master`):
+If the branch is **not** on origin, push it only when current host policy permits
+the Git/network action. Never push `main` or `master`:
 
 ```bash
 git push -u origin "$(git branch --show-current)"

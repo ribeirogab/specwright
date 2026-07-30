@@ -1,70 +1,139 @@
 # Contributing
 
-Thanks for considering a contribution to `specwright`. The repository accepts pull requests for the `sw` skill (and its bundled companions) and the documentation that supports them, with a small quality bar that this document explains.
-
-The maintenance model is **solo, best-effort, no SLA**. Pull requests are reviewed when the maintainer is available; complex changes may take time to land. Please do not interpret silence as rejection — a polite ping after a couple of weeks is welcome.
+Thanks for contributing to `specwright`. The maintenance model is solo,
+best-effort, and has no SLA; a polite follow-up after a couple of weeks is welcome.
 
 ## Scope
 
-### What is in scope
+In scope:
 
-- **Bug fixes and improvements to `sw`** — including bundled payloads (the companion skills under `plugins/sw/skills/*/`, the bundled role subagents under `plugins/sw/agents/*.md`, and the vendored validator scripts under `plugins/sw/scripts/`).
-- **Documentation fixes** to `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `NOTICE.md`.
-- **Vendored-content updates** when a skill bundles upstream code that was refreshed; update `NOTICE.md` accordingly.
+- shared workflow skills under `plugins/sw/skills/`;
+- thin Claude redirects under `plugins/sw/commands/`;
+- Claude and Codex manifests and marketplaces;
+- role manifests/templates, project templates, updater, validators, tests, and
+  documentation; and
+- dogfooded issue artifacts when they are part of the proposed workflow change.
 
-### What is out of scope
+Unrelated skills, broad governance proposals, personal host settings, generated
+evaluation workspaces, and edits to unrelated historical `.specwright/` artifacts
+are out of scope.
 
-- **Skills unrelated to specwright.** This repository is dedicated to specwright. The [skills CLI](https://github.com/vercel-labs/skills) makes any public GitHub repo installable, so publish unrelated skills from your own repo.
-- **`.specwright/`, `.claude/`, `evals/`** — these are the maintainer's local-only dirs (dogfooded specwright output, eval workspaces). They are not part of the published skill surface and PRs touching them will be closed without merge.
-- **Governance proposals**, maintainer hierarchies, decision-making frameworks, funding models, sponsorship, and similar process documents. The project is intentionally solo and lightweight.
+## Development rules
 
-## How to fix a bug or improve a skill
+1. File an issue before a non-trivial change.
+2. Implement workflow behavior once in
+   `plugins/sw/skills/<name>/SKILL.md`. A Claude command is a pure redirect to
+   that skill; Codex discovers the same directory from its manifest.
+3. Keep host adapters minimal and preserve the same nine-entry inventory.
+4. Keep project-managed instructions host-neutral. `AGENTS*.md` is canonical;
+   `CLAUDE*.md` is a relative symlink.
+5. Treat `.codex/agents/sw-*.toml` as generated project profiles. Change their
+   source templates and migration tests together.
+6. Never make update logic fetch a remote branch. The installed Codex manifest is
+   the version source.
+7. Never weaken exact-plan confirmation, digest checking, atomic preflight, or
+   the symlink requirement to make a migration pass.
 
-1. **File an issue first** for non-trivial changes so we can confirm scope before you spend time. Trivial fixes (typos, broken links, obvious bugs) can go straight to PR.
-2. **Make the change** under `plugins/sw/skills/<the-skill>/`.
-3. **Run the quality bar checks** (next section) on the modified skill.
-4. **Open the PR** with the template's checklist filled in.
+## Skill and package validation
 
-## Quality bar
-
-Mechanical checks must pass on the modified skill before the PR is opened. Both scripts are vendored copies of the canonical authoring validators (Apache-2.0, see [`NOTICE.md`](NOTICE.md)) and ship under `plugins/sw/scripts/`:
-
-```bash
-python plugins/sw/scripts/quick_validate.py plugins/sw/skills/<the-skill-you-changed>
-# expected output: "Skill is valid!"
-
-python plugins/sw/scripts/package_skill.py plugins/sw/skills/<the-skill-you-changed> /tmp
-# expected output: ends with "Successfully packaged skill to: /tmp/<skill-name>.skill"
-```
-
-`quick_validate.py` enforces the frontmatter contract (kebab-case `name`, `description` ≤ 1024 chars, no XML angle brackets, no reserved words, only canonical top-level keys). `package_skill.py` re-runs that validation and additionally confirms the skill packages cleanly into a `.skill` artifact (no broken file references, no excluded patterns left behind).
-
-For a change to a bundled **agent** (`plugins/sw/agents/*.md`) instead of a skill, validate the plugin manifest and its agent/command/skill frontmatter with:
+Run the authoring checks for every modified skill:
 
 ```bash
-claude plugin validate ./plugins/sw
-# expected: "Validation passed" — errors block, warnings are advisory
+UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
+  python3 plugins/sw/scripts/quick_validate.py plugins/sw/skills/<skill>
+UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
+  python3 plugins/sw/scripts/package_skill.py plugins/sw/skills/<skill> /tmp
+UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
+  python3 tests/skills/test_validation.py
 ```
+
+Then validate both package structures and the complete install/update matrix:
+
+```bash
+claude plugin validate --strict plugins/sw
+bash tests/install/run.sh package init
+bash tests/install/run.sh update worktree topology
+python3 tests/update/test_plan.py
+python3 tests/worktrees/test_local_copy.py
+python3 tests/task-topology/test_parser.py
+```
+
+`tests/install/run.sh` covers both manifests and marketplaces, exact skill and
+redirect inventories, shared/local initialization, symlinks, ignore rules,
+profile generation, migrations, drift, plan purity, and worktree transport.
+
+Changes to `tasks.md`, planning, or worker orchestration must keep schema 2
+coherent across the template, parser, mechanical validator, plan skill, owner
+role, and worker role. The validator must continue to reject duplicate IDs,
+missing/unknown/cyclic dependencies, missing isolated metadata, and ownership
+collisions within a dependency wave.
+
+## Dual-host release smoke test
+
+The local release gate validates the nine-skill inventory and Claude's native
+strict package parser without modifying Codex state:
+
+```bash
+bash tests/release/run.sh
+```
+
+The Codex ingestion test changes marketplace/plugin state, so run it only in a
+disposable environment:
+
+```bash
+CI_EPHEMERAL_RUNNER=1 bash tests/release/run.sh
+```
+
+CI installs the pinned host CLIs, adds a temporary Codex marketplace, installs
+`sw@specwright`, checks the installed nine-skill inventory and profile models
+against the native Codex catalog, and exercises negative fixtures for missing
+Claude/Codex manifests and a missing or malformed required skill. A host that
+cannot recognize the package blocks release.
+
+## Updater fixtures
+
+Updater tests must prove both safety and identity:
+
+- `--plan` performs no writes;
+- the same observed state produces the same ordered operations and `plan_id`;
+- `--apply` requires the displayed `--expect-plan`;
+- changes after planning invalidate that identity;
+- project text outside the managed block and unrelated `.codex` files survive;
+- recognized Claude-only legacy shapes migrate;
+- unrecognized or edited managed shapes are `drifted` and are not overwritten;
+- profiles byte-match the installed templates; and
+- unavailable symlinks fail before managed writes, with no copy fallback.
+
+Do not add a fixture that teaches the updater to guess ownership, dependencies, or
+task topology for an active legacy issue. Replanning is the required repair.
+
+## Owner/worker changes
+
+The issue owner is the only integrator. A worker branch must start at the recorded
+wave base, own only declared files, and return ordered commits and validation
+evidence. Any protocol change must test:
+
+- base ancestry and touched-path checks before integration;
+- owner review before cherry-pick;
+- rejection of semantic conflict, ownership overlap, and scope change;
+- integrated validation between waves; and
+- retention of task worktrees.
 
 ## Pull request checklist
 
-The PR template carries this checklist; the items below explain each entry.
+- [ ] The branch is descriptive and is not `main`.
+- [ ] Modified skills pass `quick_validate.py` and `package_skill.py`.
+- [ ] Claude strict validation and the relevant install/update tests pass.
+- [ ] The dual-host release smoke test passes when package surfaces change.
+- [ ] `NOTICE.md` is updated when vendored content changes.
+- [ ] Project artifacts and documentation agree with the implemented contract.
+- [ ] Commit messages follow Conventional Commits.
+- [ ] Commits and PR text contain no AI-attribution footers.
 
-- [ ] **Branch name** is descriptive and not `main`. Suggested prefixes: `feat/`, `fix/`, `docs/`.
-- [ ] **`quick_validate.py` and `package_skill.py` pass** on every modified skill (or N/A — your PR doesn't touch a skill).
-- [ ] **`NOTICE.md` updated** when vendored content is refreshed or modified.
-- [ ] **No edits under `.specwright/`, `.claude/`, or `evals/`** (maintainer-local dirs, out of scope).
-- [ ] **Commit messages** follow Conventional Commits style (`feat(<scope>): ...`, `fix(<scope>): ...`, `docs: ...`, `chore: ...`).
-- [ ] **No AI-attribution footers** in commits or PR description (e.g. `Co-Authored-By: Claude`, `Generated with Cursor`, `Co-authored-by: Codex`, etc.).
+## Reporting bugs and security issues
 
-## Reporting bugs
+Public bugs belong in the issue tracker with the host/version, reproduction, and
+expected versus actual result. Vulnerabilities must be reported privately using
+[`SECURITY.md`](SECURITY.md).
 
-Open an issue using the bug-report template. Please include the skill name, the agent and version (Claude Code, Codex, Cursor, etc.), exact reproduction steps, and what you expected to happen vs. what did happen. The smaller and more specific the report, the faster it can be addressed.
-
-## Code of conduct
-
-Participation in this project is governed by the [Contributor Covenant 2.1](CODE_OF_CONDUCT.md). By contributing — whether via issues, PRs, or discussion — you agree to those standards.
-
-## Security
-
-Security concerns go to [`SECURITY.md`](SECURITY.md), not the public issue tracker.
+Participation is governed by the [Contributor Covenant 2.1](CODE_OF_CONDUCT.md).

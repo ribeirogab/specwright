@@ -1,5 +1,5 @@
 ---
-description: Conduct a specwright milestone — dispatch every ready issue to an issue-owner sub-agent in parallel, track the board, apply circuit breakers, and close out. Resumable from a fresh session
+description: Conduct a specwright milestone — dispatch every ready issue to the sw-issue-owner role in parallel, track the board, apply circuit breakers, and close out. Resumable from a fresh session
 argument-hint: "<optional: path to milestone, or the active milestone if omitted>"
 ---
 

@@ -1,22 +1,29 @@
 ---
 name: Feature request
-about: Suggest an improvement to specwright or a new bundled companion skill
+about: Suggest an improvement to the dual-host specwright workflow
 title: "[feature] "
 labels: ["enhancement"]
 ---
 
 ## What should specwright do?
 
-Describe the improvement to the `sw` plugin, a bundled companion (`sw-init`, `sw-brainstorm`, `sw-plan`, `sw-pr`, `sw-review`, `sw-run`), or a `/sw:*` command. Two or three concrete example prompts beat one abstract description.
+Describe the improvement to one shared workflow (`init`, `brainstorm`, `spec`,
+`plan`, `run`, `review`, `review-spec`, `pr`, or `update`), a role, project
+migration, validation, or native Claude/Codex packaging. Two or three concrete
+example prompts beat one abstract description.
 
 ## Why does it belong in specwright?
 
-Explain how it serves the externalized-project-memory goal. Unrelated skills should be published from their own repo — the [skills CLI](https://github.com/vercel-labs/skills) makes any public GitHub repo installable.
+Explain how it improves the issue-driven engineering workflow or preserves
+behavioral parity between Claude Code and Codex. Unrelated skills should live in
+their own repository.
 
 ## Sketch of the behavior
 
-Two or three bullets describing what the agent would do. No need to draft the SKILL.md here — the goal is to confirm scope first.
+Describe the expected host-neutral behavior and any host-specific adapter surface.
+State project-state, migration, permission, and worker-authority implications when
+they apply.
 
 ## Are you willing to author it?
 
-Yes / No / Maybe. Either is fine — this issue is useful as a backlog signal even if no one has time today.
+Yes / No / Maybe.

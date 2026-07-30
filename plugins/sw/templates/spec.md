@@ -41,7 +41,7 @@ This is the **technical** spec — the *how*. The non-technical *why*, the accep
 
 ## Acceptance Criteria
 
-The acceptance criteria live in the sibling `issue.md` — the `AC-N` IDs defined there are the contract `tasks.md` references and `/sw:review` walks. Do not duplicate them here; if writing this spec exposed a missing or wrong criterion, fix `issue.md`.
+The acceptance criteria live in the sibling `issue.md` — the `AC-N` IDs defined there are the contract `tasks.md` references and `sw:review` walks. Do not duplicate them here; if writing this spec exposed a missing or wrong criterion, fix `issue.md`.
 
 ## Risks and Mitigations
 

@@ -2,10 +2,11 @@
 """
 Quick validation script for skills - minimal version.
 
-Vendored verbatim from https://github.com/anthropics/skills (Apache-2.0,
-skill-creator/scripts/quick_validate.py). Kept inline so specwright
-remains self-contained and does not depend on skill-creator being
-installed alongside it.
+Vendored from https://github.com/anthropics/skills (Apache-2.0,
+skill-creator/scripts/quick_validate.py). Modified only to accept and
+validate Claude's supported boolean ``user-invocable`` frontmatter key.
+Kept inline so specwright remains self-contained and does not depend on
+skill-creator being installed alongside it.
 """
 
 import sys
@@ -44,7 +45,15 @@ def validate_skill(skill_path):
         return False, f"Invalid YAML in frontmatter: {e}"
 
     # Define allowed properties
-    ALLOWED_PROPERTIES = {'name', 'description', 'license', 'allowed-tools', 'metadata', 'compatibility'}
+    ALLOWED_PROPERTIES = {
+        'name',
+        'description',
+        'license',
+        'allowed-tools',
+        'metadata',
+        'compatibility',
+        'user-invocable',
+    }
 
     # Check for unexpected properties (excluding nested keys under metadata)
     unexpected_keys = set(frontmatter.keys()) - ALLOWED_PROPERTIES
@@ -59,6 +68,9 @@ def validate_skill(skill_path):
         return False, "Missing 'name' in frontmatter"
     if 'description' not in frontmatter:
         return False, "Missing 'description' in frontmatter"
+
+    if 'user-invocable' in frontmatter and not isinstance(frontmatter['user-invocable'], bool):
+        return False, "User-invocable must be a boolean"
 
     # Extract name for validation
     name = frontmatter.get('name', '')

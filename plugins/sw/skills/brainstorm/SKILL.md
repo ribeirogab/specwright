@@ -6,7 +6,7 @@ description: "You MUST use this before any creative work - creating features, bu
 
 # Brainstorm — Ideas Into Issues and Milestones
 
-Help turn ideas into fully formed designs through natural collaborative dialogue, then write them down as **issues** — specwright's single unit of work (1 issue = 1 branch = 1 PR). Small work becomes one standalone issue; a large delivery becomes a **milestone**: a goal, a board, and several issues conducted later by `/sw:run`.
+Help turn ideas into fully formed designs through natural collaborative dialogue, then write them down as **issues** — specwright's single unit of work (1 issue = 1 branch = 1 PR). Small work becomes one standalone issue; a large delivery becomes a **milestone**: a goal, a board, and several issues conducted later by the `sw:run` workflow.
 
 <HARD-GATE>
 Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
@@ -32,7 +32,7 @@ You MUST create a task for each of these items and complete them in order:
 6. **Conclude the scope** — after approval: work that fits one issue concludes as a **single issue**, stated plainly, without presenting the milestone alternative. Suggest a **milestone** — with a preview of the decomposition: issue slugs, one-liners, dependencies — only when the scope signals point to one (see Judging the scope). The user decides. The shape of the work is a conclusion of the design, not a command choice.
 7. **Post-design batch** — one batch, per shape (see below).
 8. **Write the artifacts** — per shape (see below). Commit them.
-9. **Next step** — single issue: invoke the plan skill (`/sw:plan`). Milestone: print the mandatory handoff and stop.
+9. **Next step** — single issue: invoke the `sw:plan` workflow. Milestone: print the mandatory handoff and stop.
 
 ## Process Flow
 
@@ -49,7 +49,7 @@ digraph brainstorm {
     "Invoke the plan skill" [shape=doublecircle];
     "Batch: worktree" [shape=box];
     "Write goal.md + board.md + N issue.md" [shape=box];
-    "Print mandatory handoff, stop\n(resume with /sw:run)" [shape=doublecircle];
+    "Print mandatory handoff, stop\n(resume with sw:run)" [shape=doublecircle];
 
     "Explore project context" -> "Clarify through conversation";
     "Clarify through conversation" -> "Propose 2-3 approaches";
@@ -62,7 +62,7 @@ digraph brainstorm {
     "Write issues/<date>-<slug>/issue.md" -> "Invoke the plan skill";
     "Scope: single issue or milestone?\n(agent suggests, user decides)" -> "Batch: worktree" [label="milestone"];
     "Batch: worktree" -> "Write goal.md + board.md + N issue.md";
-    "Write goal.md + board.md + N issue.md" -> "Print mandatory handoff, stop\n(resume with /sw:run)";
+    "Write goal.md + board.md + N issue.md" -> "Print mandatory handoff, stop\n(resume with sw:run)";
 }
 ```
 
@@ -71,6 +71,21 @@ digraph brainstorm {
 While designing, keep asking: does this decompose into several independently shippable deliveries? Signals of a milestone: the solution spans multiple layers or areas (backend + admin + frontend + email), the decomposition has internal dependencies, no single PR could carry it reviewably. When you see it, **suggest** the milestone with a preview — never force it, and never mention it for work that fits one issue (a flag, a fix, one endpoint).
 
 If the user describes something too large even for one milestone, help decompose into milestones first; each gets its own brainstorm.
+
+## Resolve bundled resources
+
+Before reading a template or invoking the validator, resolve `SW_PLUGIN_ROOT`:
+
+1. use `PLUGIN_ROOT` when it contains `.codex-plugin/plugin.json`;
+2. otherwise use `CLAUDE_PLUGIN_ROOT` when it contains
+   `.claude-plugin/plugin.json`;
+3. otherwise derive the plugin root from this loaded `skills/brainstorm/SKILL.md`
+   real path (two parents above the `skills/brainstorm/` directory).
+
+Require `templates/issue.md`, `templates/goal.md`, `templates/board.md`, and
+`scripts/validate-spec.sh` beneath that root. Stop before writing when any required
+resource is missing. Never resolve bundled resources relative to the target
+repository.
 
 ## Single issue — batch and artifacts
 
@@ -87,25 +102,48 @@ If the user describes something too large even for one milestone, help decompose
 
 When worktree = no, create the branch in place: `git checkout -b <branch>`.
 
-**Artifact:** write `.specwright/issues/YYYY-MM-DD-<slug>/issue.md` from the bundled template (`plugins/sw/templates/issue.md`): Purpose, Motivation, Non-Goals, numbered `AC-N` acceptance criteria, frontmatter `status: pending`. This is the durable record of the approved design — not a second review gate. Run the mechanical validator on the issue folder before committing — same run and baseline as milestone tickets (see Milestone — batch and artifacts). Commit it.
+**Artifact:** write `.specwright/issues/YYYY-MM-DD-<slug>/issue.md` from
+`"$SW_PLUGIN_ROOT/templates/issue.md"`: Purpose, Motivation, Non-Goals, numbered
+`AC-N` acceptance criteria, frontmatter `status: pending`. This is the durable
+record of the approved design — not a second review gate. Run
+`"$SW_PLUGIN_ROOT/scripts/validate-spec.sh" <issue-folder>` before committing —
+same baseline as milestone tickets (see Milestone — batch and artifacts). Commit it.
 
-**Next:** handoff = yes → print a ```txt``` handoff (one-paragraph summary + the issue path; first line `cd .specwright/worktrees/<slug>` when one was created) and stop — the user resumes in a fresh context. Handoff = no → invoke the plan skill now. Approval of the design is the standing consent to commit, push the feature branch, open the PR, and run review to `lgtm` — the pipeline runs to the end without further asks.
+**Next:** handoff = yes → print a ```txt``` handoff (one-paragraph summary + the issue path; first line `cd .specwright/worktrees/<slug>` when one was created) and stop — the user resumes in a fresh context. Handoff = no → invoke the plan skill now. Approval of the design authorizes the specwright workflow to continue through delivery without another design review. It never overrides the current host's permission, sandbox, Git, network, credential, or external-action approval policy; obtain every approval that policy requires.
 
 ## Milestone — batch and artifacts
 
 **Batch (one message, exactly one thing):** whether issue owners run in **worktrees** under `.specwright/worktrees/` (default **yes**; answering no forces serial in-place conduction — parallel dispatch requires worktrees).
 
-**Artifacts:** write `.specwright/milestones/YYYY-MM-DD-<slug>/` from the bundled templates (`plugins/sw/templates/`):
+**Artifacts:** write `.specwright/milestones/YYYY-MM-DD-<slug>/` from
+`"$SW_PLUGIN_ROOT/templates/"`:
 
 - `goal.md` — the milestone's Purpose, Motivation, Success Criteria, Non-Goals. Phrase it in **behavior terms** — no file paths, function names, or storage formats; path-level constraints live in the issue tickets. Worked example: the technical hard constraint "`test/taskr.test.js` must pass byte-for-byte unmodified" becomes, at goal level, "the existing test suite passes without any test being edited" — the ticket that owns the constraint keeps the path. Stable; editing it later is a scope change no agent does alone.
 - `board.md` — the Issues table (order, slug, depends-on), empty Dispatch Log and Blockers. Order and dependencies live ONLY here.
-- `issues/<slug>/issue.md` — one per issue, plain kebab slugs (no number prefixes — order is board data), each with Purpose, Non-Goals, `AC-N`, `status: pending`. The approved decomposition IS the design approval for every issue: `/sw:run` goes straight to planning, with no brainstorm per issue.
+- `issues/<slug>/issue.md` — one per issue, plain kebab slugs (no number prefixes — order is board data), each with Purpose, Non-Goals, `AC-N`, `status: pending`. The approved decomposition IS the design approval for every issue: `sw:run` goes straight to planning, with no brainstorm per issue.
 
-Before committing, run the mechanical validator on **each** `issues/<slug>/` folder (`plugins/sw/scripts/validate-spec.sh`). The planning-stage baseline is **exactly one failure — check 2, `spec.md not found`** — the spec is written just-in-time later by the plan skill. Anything else (frontmatter defects, surviving placeholders, vague-verb criteria) is the planner's to fix before the commit: a ticket that trips the validator now detonates later in an issue owner's gate, on a file that owner must not edit.
+Before committing, run `"$SW_PLUGIN_ROOT/scripts/validate-spec.sh"` on **each**
+`issues/<slug>/` folder. The planning-stage baseline is **exactly one failure —
+check 2, `spec.md not found`** — the spec is written just-in-time later by the
+plan skill. Anything else (frontmatter defects, surviving placeholders, vague-verb
+criteria) is the planner's to fix before the commit: a ticket that trips the
+validator now detonates later in an issue owner's gate, on a file that owner must
+not edit.
 
 Commit the milestone folder.
 
-**Mandatory handoff — the planning session never conducts.** After a long brainstorm the context is full of exploration: dead ends, rejected decompositions, half-decisions. The orchestrator must be born clean, reading only the artifacts. Print a ```txt``` handoff (one-paragraph summary + the milestone path + `/sw:run <slug>` as the resume command) and **stop**. No exceptions, no "start now".
+**Mandatory handoff — the planning session never conducts.** After a long
+brainstorm the context is full of exploration: dead ends, rejected decompositions,
+half-decisions. The orchestrator must be born clean, reading only the artifacts.
+Print a ```txt``` handoff with a one-paragraph summary, the milestone path, and
+both valid resume surfaces:
+
+```text
+Claude Code: /sw:run <slug>
+Codex: $sw:run <slug>
+```
+
+Then **stop**. No exceptions, no "start now".
 
 ## The Process
 
@@ -129,7 +167,7 @@ Commit the milestone folder.
 
 **Writing acceptance criteria (the loop's exit condition):**
 
-- Every `AC-N` must be binary, observable, and checkable in under a minute — they are what runtime verification and `/sw:review` later prove. "Make the tests pass" is a good goal; "improve the code" never terminates.
+- Every `AC-N` must be binary, observable, and checkable in under a minute — they are what runtime verification and the `sw:review` workflow later prove. "Make the tests pass" is a good goal; "improve the code" never terminates.
 - State a hard constraint **once** — in the criterion (or Non-Goal) that owns it — and reference it from anywhere else that needs it. Every restatement is an amendment hazard: when scope changes, each copy is one more hunk that must be kept coherent.
 
 ## Key Principles

@@ -1,4 +1,8 @@
 {
   "name": "sw",
-  "description": "The specwright issue-driven workflow as a Claude Code plugin — every entry point namespaced: /sw:init, /sw:brainstorm, /sw:spec, /sw:plan, /sw:run, /sw:review, /sw:review-spec, /sw:pr."
+  "version": "2026.7.28",
+  "description": "The specwright issue-driven workflow for Claude Code and Codex: init, brainstorm, spec, plan, run, review, review-spec, pr, and update.",
+  "author": {
+    "name": "Gabriel Ribeiro"
+  }
 }

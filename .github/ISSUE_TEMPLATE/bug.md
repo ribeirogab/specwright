@@ -1,17 +1,24 @@
 ---
 name: Bug report
-about: Report a problem with specwright or a bundled companion
+about: Report a problem with specwright on Claude Code or Codex
 title: "[bug] "
 labels: ["bug"]
 ---
 
 ## Component affected
 
-The `sw` plugin, a bundled companion (`sw-init`, `sw-brainstorm`, `sw-plan`, `sw-pr`, `sw-review`, `sw-run`), or a `/sw:*` command.
+Name the shared workflow (`init`, `brainstorm`, `spec`, `plan`, `run`, `review`,
+`review-spec`, `pr`, or `update`), a role profile, the updater/validator, or the
+package surface. Include whether you invoked `/sw:*` in Claude Code, `$sw:*` in
+Codex, or natural language.
 
-## Claude Code version
+## Host and environment
 
-Which Claude Code version you used (e.g. 2.1.123) plus the operating system.
+- Host: Claude Code | Codex
+- Host version:
+- Operating system and filesystem:
+- Plugin version reported by `claude plugin list --json` or `codex plugin list --json`:
+- Project mode, when relevant: shared | local
 
 ## Reproduction steps
 
@@ -25,7 +32,8 @@ What should have happened.
 
 ## Actual behavior
 
-What did happen. Include any error message verbatim, the relevant tool calls if you can identify them, and a screenshot or log snippet if useful.
+What happened. Include the exact diagnostic, relevant plan state/`plan_id`, and a
+redacted log or screenshot when useful. Never include credentials.
 
 ## Anything else
 

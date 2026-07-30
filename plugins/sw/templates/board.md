@@ -4,11 +4,11 @@ created: {{YYYY-MM-DD}}
 ---
 # {{Milestone Name}} — Board
 
-> The milestone's live state: issue order, dependencies, dispatch log, and blocker reports. The orchestrator (`/sw:run`) reads and writes this file on every loop turn. Issue `status:` lives in each issue's own `issue.md` frontmatter — it is **never duplicated here**; the board holds only what has no other home.
+> The milestone's live state: issue order, dependencies, dispatch log, and blocker reports. The `sw:run` orchestrator reads and writes this file on every loop turn. Issue `status:` lives in each issue's own `issue.md` frontmatter — it is **never duplicated here**; the board holds only what has no other home.
 
 ## Issues
 
-An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md` — read from the dependency's own branch while its PR is unmerged (the `main` copy stays `pending` until merge).
+An issue is **ready** when its `issue.md` says `status: pending` and every dependency listed here says `status: shipped` in its own `issue.md`. In shared mode, read an unmerged dependency from its own branch or worktree because the `main` copy stays `pending` until merge. In local mode, read the canonical ignored vault in the orchestrator checkout; copied worktree vaults are transport snapshots, not milestone state.
 
 | Order | Issue | Depends on |
 |---|---|---|

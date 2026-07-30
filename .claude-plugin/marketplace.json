@@ -7,7 +7,7 @@
     {
       "name": "sw",
       "source": "./plugins/sw",
-      "description": "specwright for Claude Code — the issue-driven workflow: /sw:init, /sw:brainstorm, /sw:spec, /sw:plan, /sw:run, /sw:review, /sw:review-spec, /sw:pr."
+      "description": "specwright for Claude Code and Codex — the issue-driven workflow: init, brainstorm, spec, plan, run, review, review-spec, pr, and update."
     }
   ]
 }

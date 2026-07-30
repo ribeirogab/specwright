@@ -1,44 +1,10 @@
-# CLAUDE.md Template
+# specwright — Agent Instructions
 
-`CLAUDE.md` is the repo-root entry point Claude Code loads into every session. Load this reference when creating or repairing it.
-
-**Entry-point filename by mode.** In `shared` mode `/sw:init` writes this content to `CLAUDE.md` (committed). In `local` mode it writes the identical content to `CLAUDE.local.md` (git-ignored, auto-loaded by Claude Code) and never touches `CLAUDE.md`. The filling rules and the size cap below apply to whichever file the mode selected. One caveat specific to `local` mode: a git-ignored `CLAUDE.local.md` is not materialized inside the worktrees `/sw:run` creates (`git worktree add` carries only tracked content) — so `/sw:run`, conducted from the checkout where you ran `/sw:init local`, copies the contract and each issue folder into the worktree it dispatches an owner into and syncs the owner's folder back into the canonical vault on return.
-
-## Filling rules
-
-- The intro is exactly two lines: `Instructions for AI coding assistants and developers working on the {{project}} codebase.` followed by a blank line and `**Never give up on the right solution.**`. No repo-structure paragraph.
-- Fill `{{Project Name}}` and `{{project}}` from the project info `/sw:init` gathers (a manifest's declared name, falling back to the repository directory name, or asked of the user when neither resolves).
-- The `### Issue flow` is fixed — the same steps for every project (it encodes the specwright delivery pipeline, not project specifics).
-- The `## Skills and slash commands` section's plugin-requirement line and the two install commands are fixed text — copy them verbatim, no project-specific substitution.
-
-Do **not** leave `{{placeholders}}` in the final file — only the two tokens above exist in this template, and both must be filled before the file is written.
-
-## Size constraint
-
-The final `CLAUDE.md` must be **≤ 80 lines** (target 45–70). The file is loaded into every agent session as the entry-point contract; longer than that and it crowds out conversation context and starts rotting.
-
-When trimming to fit:
-
-- Tighten body prose rather than dropping a required section header.
-- Replace any longer narrative inside a section with a one-line pointer (e.g., a project convention in `.specwright/conventions/`).
-- Never drop a required section header.
-
-## Required section headers
-
-None of these may be missing:
-
-- `## Workflow Spec Driven`
-- `## Coding standard`
-- `## Skills and slash commands`
-
-## Template
-
-````markdown
-# {{Project Name}} — Agent Instructions
-
-Instructions for AI coding assistants and developers working on the {{project}} codebase.
+Instructions for AI coding assistants and developers working on the specwright codebase.
 
 **Never give up on the right solution.**
+
+This repo builds and ships specwright (a markdown + shell skill repo, no build pipeline) and dogfoods the issue-driven workflow on itself.
 
 ## Workflow Spec Driven
 
@@ -75,13 +41,8 @@ flowchart TD
 
 ## Skills and slash commands
 
-This repository requires the `sw` Claude Code plugin — every `/sw:*` command below comes from it, globally, with nothing copied into this repo. If these commands are unavailable, install the plugin once:
-
-```
-claude plugin marketplace add ribeirogab/specwright
-claude plugin install sw@specwright
-```
-
+Commands + companion skills ship through the `sw` Claude Code plugin (marketplace `specwright`), installed once, globally — nothing is copied into this repo.
+- **`/sw:init`** — set up this repo's `.specwright/` vault and entry point; asks a shared or local commit mode (local = git-ignored `CLAUDE.local.md` + git-ignored vault).
 - **`/sw:brainstorm`** — design exploration; concludes single issue vs milestone and writes the artifacts.
 - **`/sw:spec`** — enter the issue flow from the conversation.
 - **`/sw:plan`** — the issue pipeline: just-in-time spec + tasks, gates, delivery.
@@ -89,4 +50,7 @@ claude plugin install sw@specwright
 - **`/sw:review`** — bespoke, portable review cycle to `lgtm`.
 - **`/sw:review-spec`** — external evaluator pass over an issue's plan (agent self-review).
 - **`/sw:pr`** — open the issue's PR.
-````
+
+### Editing the bundled skills
+
+Every companion skill's `SKILL.md` lives exactly **once**, under `plugins/sw/skills/<name>/` — no copy to keep in sync. Each companion skill is `user-invocable: false` (hidden from the `/` menu) and paired with a thin command at `plugins/sw/commands/<name>.md` that only reads and runs the skill's `SKILL.md`; that pairing is what makes every entry point surface as `/sw:<name>` in the picker (never a bare `/<name>`). Edit the `SKILL.md` for behavior — the command is a pure redirect and rarely changes. The artifact templates live at `plugins/sw/templates/`, the mechanical validator at `plugins/sw/scripts/validate-spec.sh`, and the reference docs at `plugins/sw/references/`. The bundled role subagents — `issue-owner`, `task-worker`, `spec-document-reviewer`, `reviewer` — live at `plugins/sw/agents/`, each pinning its `model` + `effort` and preloading (via `skills:`) the skill it runs.
