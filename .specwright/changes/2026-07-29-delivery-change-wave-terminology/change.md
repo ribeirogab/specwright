@@ -1,8 +1,8 @@
 ---
 feature: delivery-change-wave-terminology
 created: 2026-07-29
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-07-29
 delivery: null
 ---
 # Delivery, Change, and Wave Terminology — Change

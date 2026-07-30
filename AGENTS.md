@@ -31,7 +31,8 @@ access external services.
 <!-- /sw:managed -->
 
 The dogfooded vault follows the canonical flat layout: changes live in
-`.specwright/changes/`, deliveries (goal + board) in `.specwright/deliveries/`.
+`.specwright/changes/`, deliveries (`delivery.md` + `board.md`) in
+`.specwright/deliveries/`.
 
 ### Editing the bundled skills
 

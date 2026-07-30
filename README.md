@@ -7,7 +7,8 @@ repository one explicit, change-driven engineering workflow:
 > runtime verification → PR → review
 
 One change owns one branch and one PR. Larger outcomes become deliveries with a
-durable goal, a board, and multiple changes conducted by an orchestrator.
+durable `delivery.md`, a live `board.md`, and multiple changes conducted by an
+orchestrator.
 
 The implementation of every workflow lives once under
 [`plugins/sw/skills/`](plugins/sw/skills/). Claude Code exposes thin `/sw:*`
