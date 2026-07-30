@@ -51,7 +51,7 @@ This is the **technical** spec — the *how*. The non-technical *why*, the accep
 
 1. **Vocabulary is final:** Delivery, Change, Task, Wave.
 2. **Immediate cut.** Post-migration, tooling (validators, skills, commands) reads and writes only the new vocabulary and layout. Legacy folders remain on disk as dead archive — never rewritten, never read.
-3. **Active legacy work moves automatically.** `/sw:init` — already the idempotent setup/repair entry point — detects legacy `.specwright/issues/` and `.specwright/milestones/`. For each legacy artifact whose `status:` is not `shipped`, it moves the folder into the new layout (renaming `issue.md` → `change.md`, `goal.md` → `delivery.md`, adding the `delivery:` key) and updates the parent's board references. Fully shipped legacy folders stay untouched.
+3. **Migration is a task of this change, not plugin logic** *(refines the earlier "init migrates automatically" decision, 2026-07-29).* The implementer migrates this repo's own vault inside this PR: `git mv` every `.specwright/issues/<slug>/` to `.specwright/changes/<slug>/` (renaming `issue.md` → `change.md`) and every `.specwright/milestones/<slug>/` to `.specwright/deliveries/<slug>/` (renaming `goal.md` → `delivery.md`, moving its `issues/` children up into `changes/`). Contents stay byte-identical. The plugin itself carries **no** migration logic and **no** legacy references — zero remnants. Other repos upgrading specwright repeat the same one-shot move; it is documented here, not encoded in any skill.
 4. **No public delivery-conductor.** Delivery orchestration stays inside `/sw:run`; `plugins/sw/agents/` gains no new definition.
 
 ### Rename mechanics
@@ -59,7 +59,7 @@ This is the **technical** spec — the *how*. The non-technical *why*, the accep
 The rename is a mechanical pass with one judgement pass on top:
 
 - **Mechanical:** file renames (`issue.md`→`change.md`, `goal.md`→`delivery.md`, `issue-owner.md`→`change-owner.md`), frontmatter key renames (`milestone:`→`delivery:`), path rewrites (`.specwright/issues/`→`.specwright/changes/`, `.specwright/milestones/`→`.specwright/deliveries/`), role-name rewrites in dispatch steps.
-- **Judgement:** every prose occurrence of `issue`/`milestone` is classified — specwright artifact (rewrite), external tracker object (keep, qualify as "GitHub issue"/"Linear issue" where ambiguous), or legacy-migration instruction (keep verbatim). `validate-spec.sh`'s own usage/errors/comments get the same treatment.
+- **Judgement:** every prose occurrence of `issue`/`milestone` is classified — specwright artifact (rewrite) or external tracker object (keep, qualified as "GitHub issue"/"Linear issue" where ambiguous). Zero legacy references survive in `plugins/sw/`. `validate-spec.sh`'s own usage/errors/comments get the same treatment.
 
 ## File Structure
 
@@ -72,7 +72,7 @@ The rename is a mechanical pass with one judgement pass on top:
 
 **`plugins/sw/agents/`** — `issue-owner.md` → `change-owner.md`; frontmatter values (`model`, `effort`, `skills:`) preserved; body references updated. No `delivery-conductor.md` added.
 
-**`plugins/sw/skills/`** — vocabulary + path rewrite in `brainstorm` (scope conclusion: standalone change vs delivery), `plan` (reads `change.md`, fan-out context), `run` (delivery conduction, `change-owner` dispatch, wave derivation from task dependency + file ownership), `review`, `review-spec` (reads `change.md`), `pr` (finds the change by `branch:`, writes `pr.md`), `spec`, `init` (scaffolds `changes/` + `deliveries/`; hosts the legacy-migration passage).
+**`plugins/sw/skills/`** — vocabulary + path rewrite in `brainstorm` (scope conclusion: standalone change vs delivery), `plan` (reads `change.md`, fan-out context), `run` (delivery conduction, `change-owner` dispatch, wave derivation from task dependency + file ownership), `review`, `review-spec` (reads `change.md`), `pr` (finds the change by `branch:`, writes `pr.md`), `spec`, `init` (scaffolds `changes/` + `deliveries/`). No skill carries migration logic or legacy references.
 
 **`plugins/sw/commands/`** — thin redirects; only descriptions mentioning issue/milestone are touched. Command names unchanged.
 
@@ -82,7 +82,11 @@ The rename is a mechanical pass with one judgement pass on top:
 
 **Repo root** — `CLAUDE.md` (workflow + layout + role names), `README.md` (workflow description). `CONTRIBUTING.md` checked and updated only if it names the old terms.
 
-**This vault** — this very folder is the first new-format specimen; legacy `.specwright/issues/` and `.specwright/milestones/` here are fully shipped and stay untouched.
+**`tests/`** — durable coverage, following the existing suite conventions (ephemeral fixtures, `run.sh` entry point):
+- `tests/validate-spec/run.sh` (new) + fixtures: `PASS` on a new-format change folder, failure when `change.md` is missing, status/scope enum checks.
+- `tests/install/run.sh` keeps passing unmodified — install behavior gains no migration logic.
+
+**This vault** — this very folder is the first new-format specimen. The legacy `.specwright/issues/` and `.specwright/milestones/` trees migrate **in this same PR** (paths renamed, contents byte-identical); after merge, `.specwright/` contains only `changes/`, `deliveries/`, `conventions/`, and `worktrees/`.
 
 ## Phase Ordering
 
@@ -98,13 +102,13 @@ Phases 1–3 are sequential edits on the same files' neighborhood; phase 4 gates
 - Committed artifacts and PR text in English; Conventional Commits; no AI attribution.
 - Slash-command names (`/sw:*`) and the four role identities other than `issue-owner` do not change.
 - PR #65 (dual-host plugin, safe worker orchestration) is merged; this branch cuts from current `main` and must not regress that behavior — the run-skill rewrite preserves the orchestration mechanics and changes only names.
-- This repo's own legacy `.specwright/` folders are fully shipped → nothing moves here; the migration path is verified on a fixture instead.
+- This repo's own legacy vault migrates in this same PR (paths renamed, contents byte-identical); zero legacy folders remain after merge.
 
 ## User Stories / Scenarios
 
 1. A maintainer says "create an issue for X" — the resulting artifacts land at `.specwright/changes/<date>-x/` and every generated document calls it a **change**; the GitHub issue, if any, is explicitly a "GitHub issue".
 2. A maintainer runs `/sw:run <delivery>` — the orchestrator reads the delivery's `board.md`, dispatches the `change-owner` per ready change, and groups each change's tasks into waves derived from declared dependencies and file ownership.
-3. A repo with pre-rename specwright artifacts runs `/sw:init` — its in-progress issues/milestones reappear under `changes/`/`deliveries/` with renamed files and a `delivery:` key; its shipped folders are byte-identical before and after.
+3. A maintainer opens this repo after the change ships — `.specwright/` contains no `issues/` or `milestones/` tree; every historical artifact is found at its new `changes/`/`deliveries/` path with identical content, and git history follows the renames.
 4. An agent runs `validate-spec.sh` on a new-format change folder — it PASSes; deleting `change.md` makes it FAIL.
 
 ## Acceptance Criteria
@@ -115,12 +119,12 @@ The acceptance criteria live in the sibling `change.md` — the `AC-N` IDs defin
 
 | Risk | Mitigation |
 |---|---|
-| A stray `issue`/`milestone` survives the rename and re-introduces ambiguity | AC-3 grep classification over `plugins/sw/`; the three plan self-review gates walk the diff |
+| A stray `issue`/`milestone` survives the rename and re-introduces ambiguity | AC-3 zero-tolerance grep classification over `plugins/sw/`; the three plan self-review gates walk the diff |
 | The run-skill rewrite accidentally changes orchestration behavior merged in PR #65 | Behavior-preserving rule stated as a Non-Goal; diff reviewed line-by-line against `main` for the run skill |
-| The legacy-migration passage moves a folder that should stay (or vice versa) | AC-5 fixture test with both active and shipped legacy folders; move predicate keys on `status: shipped` only |
-| External repos mid-flight on old vocabulary break on plugin update | Accepted by decision (immediate cut); `/sw:init` auto-moves their active work, which is the supported path |
+| The vault move accidentally edits artifact content | AC-5 requires byte-identical contents, verified by diffing each moved file against its pre-move blob (renames only) |
+| External repos mid-flight on old vocabulary break on plugin update | Accepted by decision (immediate cut); the one-shot move is documented in this spec for maintainers to repeat — it is not encoded in the plugin |
 | `issue` also means "GitHub issue" in legit contexts (pr skill, templates) and gets over-renamed | Judgement-pass classification: tracker references stay, qualified as "GitHub issue" where ambiguous |
 
 ## Open Questions
 
-None — the four design questions from issue #66 were settled before this spec: vocabulary confirmed; immediate cut; active legacy artifacts moved automatically; delivery-conductor stays internal to `/sw:run`.
+None — the design questions from issue #66 were settled before this spec: vocabulary confirmed; immediate cut; the legacy vault migrates as a task of this change (executed by the implementer, never encoded in the plugin — zero legacy remnants in `plugins/sw/`); delivery-conductor stays internal to `/sw:run`.

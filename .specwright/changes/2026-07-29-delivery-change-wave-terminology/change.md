@@ -13,7 +13,7 @@ delivery: null
 
 ## Purpose
 
-Rename specwright's workflow vocabulary and artifact layout to tracker-neutral terms — **Delivery** (was milestone), **Change** (was issue), **Task** (unchanged), **Wave** (new execution concept: a dependency-ready, file-disjoint set of isolated tasks that may run in parallel) — across the plugin's templates, skills, agents, scripts, references, and repo docs. Every change gets one canonical flat path under `.specwright/changes/`; delivery membership is frontmatter data, not directory nesting. Active legacy work is migrated automatically; after the migration the tooling speaks only the new vocabulary.
+Rename specwright's workflow vocabulary and artifact layout to tracker-neutral terms — **Delivery** (was milestone), **Change** (was issue), **Task** (unchanged), **Wave** (new execution concept: a dependency-ready, file-disjoint set of isolated tasks that may run in parallel) — across the plugin's templates, skills, agents, scripts, references, and repo docs. Every change gets one canonical flat path under `.specwright/changes/`; delivery membership is frontmatter data, not directory nesting. This repo's own legacy vault migrates in this same change (paths renamed, contents untouched); after it, the tooling speaks only the new vocabulary and the plugin carries zero legacy remnants.
 
 ## Motivation
 
@@ -21,8 +21,9 @@ Specwright currently uses `milestone` and `issue` for its local workflow artifac
 
 ## Non-Goals
 
-- **No rewriting shipped history.** Legacy `.specwright/issues/` and `.specwright/milestones/` folders whose work is fully shipped stay on disk, untouched, as archive. Only active (non-shipped) legacy artifacts are moved.
-- **No legacy read support.** The cut is immediate: after migration, validators, skills, and commands address only the new vocabulary and layout. Legacy folders are dead archive, not a compatibility surface.
+- **No content rewrites during migration.** The vault migration renames paths only (`git mv`, `issue.md` → `change.md`, `goal.md` → `delivery.md`); the content of every shipped artifact stays byte-identical. Git history is preserved by the move.
+- **No legacy remnant in the plugin.** After this change, `plugins/sw/` contains zero legacy vocabulary, zero legacy paths, and zero migration logic — no compatibility shims, no "also reads the old layout" branches, no migration passages in any skill, template, agent, command, script, or reference. The only permitted occurrences of `issue` name external tracker objects (e.g. GitHub issues).
+- **No legacy read support.** Validators, skills, and commands address only the new vocabulary and layout from the moment this change ships.
 - **No pipeline behavior change beyond names and layout.** The steps, gates, and contracts of brainstorm → spec → plan → run → review → pr stay as they are; only the vocabulary, paths, and wave formalization change.
 - **No public `delivery-conductor` role.** Delivery orchestration remains an internal responsibility of `/sw:run`; no new agent definition is added.
 - **No slash-command renames.** `/sw:brainstorm`, `/sw:spec`, `/sw:plan`, `/sw:run`, `/sw:review`, `/sw:review-spec`, `/sw:pr`, `/sw:init` keep their names.
@@ -34,12 +35,13 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 
 - [ ] **AC-1** `plugins/sw/templates/` contains exactly `change.md`, `delivery.md`, `board.md`, `spec.md`, and `tasks.md` — no `issue.md`, no `goal.md` — and the `change.md` template frontmatter carries a `delivery:` key.
 - [ ] **AC-2** `plugins/sw/agents/` contains `change-owner.md` and no `issue-owner.md`; `change-owner.md` preserves the old definition's frontmatter values (`model: opus`, `effort: xhigh`, `skills:` listing `plan`).
-- [ ] **AC-3** Grepping `plugins/sw/` for `milestone`, `issue-owner`, and specwright-artifact uses of `issue` yields hits only inside (a) the designated legacy-migration passage of the `init` skill and (b) references to external tracker objects (e.g. GitHub issues); every hit is classified during verification.
+- [ ] **AC-3** Grepping `plugins/sw/` for `milestone`, `issue-owner`, and specwright-artifact uses of `issue` yields **zero** hits; the only permitted `issue` occurrences name external tracker objects (e.g. "GitHub issue") — every hit is classified during verification.
 - [ ] **AC-4** `plugins/sw/scripts/validate-spec.sh` prints `PASS` on a new-format change folder (`change.md` + `spec.md` + `tasks.md` with valid frontmatter), fails when `change.md` is missing, and no longer requires `issue.md`.
-- [ ] **AC-5** Running `/sw:init` in a fixture repo containing legacy `.specwright/issues/` and `.specwright/milestones/` moves every non-shipped artifact into `.specwright/changes/` and `.specwright/deliveries/`, and leaves folders whose artifacts are all `status: shipped` untouched.
+- [ ] **AC-5** This repo's vault is fully migrated: `.specwright/issues/` and `.specwright/milestones/` no longer exist; every artifact they held lives under `.specwright/changes/` or `.specwright/deliveries/`, with `issue.md`/`goal.md` renamed to `change.md`/`delivery.md` and every moved file's content byte-identical to its pre-move blob (verified via `git diff` showing renames only).
 - [ ] **AC-6** No template or skill generates a per-delivery `issues/` subfolder: changes are written flat at `.specwright/changes/YYYY-MM-DD-<slug>/`, deliveries at `.specwright/deliveries/YYYY-MM-DD-<slug>/` with `delivery.md` + `board.md`.
 - [ ] **AC-7** `plugins/sw/skills/run/SKILL.md` derives waves from the task dependency and file-ownership graph (no persisted wave folders) and names `change-owner` as its dispatch target; `plugins/sw/agents/` contains no `delivery-conductor.md`.
 - [ ] **AC-8** `CLAUDE.md` and `README.md` describe the workflow using only Delivery/Change/Task/Wave vocabulary and the flat `.specwright/changes/` + `.specwright/deliveries/` layout.
 - [ ] **AC-9** The new-version `validate-spec.sh` prints `PASS` for this change's own folder, `.specwright/changes/2026-07-29-delivery-change-wave-terminology/` — the first new-format specimen.
+- [ ] **AC-10** Durable automated coverage ships with the change: a `tests/validate-spec/run.sh` suite (same conventions as `tests/install/` — ephemeral fixtures, `run.sh` entry point) asserts `PASS` on a new-format folder, failure when `change.md` is missing, and the status/scope enums; the suite exits 0 and `tests/install/run.sh` keeps passing unmodified.
 
 Tick each `[x]` when verified. Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.

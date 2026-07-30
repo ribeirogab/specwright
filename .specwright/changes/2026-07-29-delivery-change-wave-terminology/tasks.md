@@ -37,7 +37,7 @@ created: 2026-07-29
 **Delegable:** no — the judgement pass (classifying every `issue`/`milestone` hit as artifact / tracker / migration) is owner work.
 
 - [ ] Step 1: Rewrite paths and vocabulary in all eight skills; scope conclusion in `brainstorm` becomes standalone-change vs delivery; `run` derives waves from task dependencies + **Files:** ownership and never persists wave folders; `pr` finds the change by `branch:` and writes `pr.md`.
-- [ ] Step 2: Classify every remaining `issue`/`milestone` occurrence — tracker references stay (qualified "GitHub issue" where ambiguous); only the `init` migration passage keeps legacy terms deliberately.
+- [ ] Step 2: Classify every remaining `issue`/`milestone` occurrence — tracker references stay (qualified "GitHub issue" where ambiguous); zero legacy references survive in `plugins/sw/`.
 - [ ] Step 3: Diff `run/SKILL.md` against `main` to confirm the PR #65 orchestration mechanics are behavior-preserved; commit.
 
 ### Task 4: Update command descriptions and references
@@ -54,23 +54,24 @@ created: 2026-07-29
 
 ### Task 5: Port validate-spec.sh to the new format
 
-**AC:** AC-4, AC-9
-**Files:** `plugins/sw/scripts/validate-spec.sh`
-**Delegable:** yes — same five checks re-pointed: `change.md` (feature/created/status + enum), `spec.md` (feature/created/scope), placeholder sweep, vague-verb sweep, AC-reference coverage vs `tasks.md`; header comments rewritten.
+**AC:** AC-4, AC-9, AC-10
+**Files:** `plugins/sw/scripts/validate-spec.sh`, `tests/validate-spec/run.sh` (new), `tests/validate-spec/fixtures/` (new)
+**Delegable:** yes — same five checks re-pointed: `change.md` (feature/created/status + enum), `spec.md` (feature/created/scope), placeholder sweep, vague-verb sweep, AC-reference coverage vs `tasks.md`; header comments rewritten. Plus a durable suite mirroring the `tests/install/` convention.
 
 - [ ] Step 1: Re-point the five checks from `issue.md` to `change.md`; update usage and header comments.
 - [ ] Step 2: Negative test — folder without `change.md` FAILs; folder with valid `change.md`/`spec.md`/`tasks.md` PASSes.
-- [ ] Step 3: Run it on this change's own folder and capture the `PASS` line (AC-9); commit.
+- [ ] Step 3: Make it durable: add `tests/validate-spec/run.sh` (same conventions as `tests/install/run.sh` — ephemeral fixtures, pass/die assertions) covering the PASS case, the missing-`change.md` failure, and the status/scope enums.
+- [ ] Step 4: Run it on this change's own folder and capture the `PASS` line (AC-9); commit.
 
-### Task 6: Legacy migration in the init skill
+### Task 6: Migrate this repo's legacy vault
 
 **AC:** AC-5
-**Files:** `plugins/sw/skills/init/SKILL.md`
-**Delegable:** no — the move predicate (only `status: shipped` pins a folder in place) and board-reference rewriting need owner judgement.
+**Files:** `.specwright/issues/` (→ `.specwright/changes/`), `.specwright/milestones/` (→ `.specwright/deliveries/` + `.specwright/changes/`)
+**Delegable:** no — the owner runs and verifies the move itself. Migration is a task of this change, never plugin logic: no skill, template, script, or reference gains migration code or legacy references.
 
-- [ ] Step 1: Add the migration passage to `init/SKILL.md`: detect `.specwright/issues/` + `.specwright/milestones/`; move non-shipped artifacts to `changes/`/`deliveries/` (`issue.md`→`change.md`, `goal.md`→`delivery.md`, add `delivery:`); leave fully shipped folders untouched.
-- [ ] Step 2: Build a fixture repo with one active legacy issue, one shipped legacy issue, one milestone with mixed statuses; run init; assert the active artifacts moved and the shipped ones are byte-identical.
-- [ ] Step 3: Commit.
+- [ ] Step 1: `git mv` each `.specwright/issues/<slug>/` to `.specwright/changes/<slug>/`, renaming `issue.md` → `change.md`.
+- [ ] Step 2: `git mv` each `.specwright/milestones/<slug>/` to `.specwright/deliveries/<slug>/`, renaming `goal.md` → `delivery.md`; move each milestone's `issues/<slug>/` child up to `.specwright/changes/<slug>/`, renaming its `issue.md` → `change.md`.
+- [ ] Step 3: Verify the move is pure rename — `git diff --cached` shows only renames, and every moved file's content is byte-identical to its pre-move blob; commit.
 
 ## Phase 3: Repo docs
 
@@ -92,13 +93,13 @@ created: 2026-07-29
 **Files:** none (verification only)
 **Delegable:** no — gates run from the owning session.
 
-- [ ] Step 1: Run the install test suite (`tests/install`) and the per-skill `quick_validate.py` / `package_skill.py` checks the PR template requires.
+- [ ] Step 1: Run the durable suites (`tests/install/run.sh`, `tests/validate-spec/run.sh`) and the per-skill `quick_validate.py` / `package_skill.py` checks the PR template requires.
 - [ ] Step 2: Run the AC-3 grep classification over `plugins/sw/` and record the classified hits.
 - [ ] Step 3: Fix anything the gates surface; commit.
 
 ### Task 9: Runtime verification and AC walk
 
-**AC:** AC-4, AC-5, AC-9 (plus the full AC-1…AC-9 walk)
+**AC:** AC-4, AC-5, AC-9, AC-10 (plus the full AC-1…AC-10 walk)
 **Files:** `.specwright/changes/2026-07-29-delivery-change-wave-terminology/change.md` (ticking ACs)
 **Delegable:** no — the owner verifies by observed behavior and ticks each AC.
 
