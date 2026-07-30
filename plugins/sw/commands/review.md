@@ -1,5 +1,5 @@
 ---
-description: Review a branch diff (or pointed-at files) with find-only subagents across rubric+conventions, issue-conformance, and documentation-consistency, merged into one verdict that reaches lgtm only when every lane is clean
+description: Review a branch diff (or pointed-at files) with find-only subagents across rubric+conventions, change-conformance, and documentation-consistency, merged into one verdict that reaches lgtm only when every lane is clean
 argument-hint: "<optional: branch, diff, or files to review>"
 ---
 

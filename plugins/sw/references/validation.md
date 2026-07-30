@@ -63,7 +63,7 @@ A regular-file copy is a failure even when bytes match.
 
 ```bash
 for name in \
-  sw-issue-owner \
+  sw-change-owner \
   sw-spec-document-reviewer \
   sw-reviewer \
   sw-task-worker
@@ -103,13 +103,13 @@ coexist with project-owned shared instructions and must not alter them.
 ```bash
 test -d .specwright/conventions
 test -n "$(find .specwright/conventions -mindepth 1 -maxdepth 1 -type f -print -quit)"
-test -f .specwright/issues/.gitkeep
-test -f .specwright/milestones/.gitkeep
+test -f .specwright/changes/.gitkeep
+test -f .specwright/deliveries/.gitkeep
 ```
 
 An initially empty conventions directory receives the signpost; an existing
 directory keeps its own convention files instead. Never overwrite existing
-conventions, issues, milestones, or their artifacts.
+conventions, changes, deliveries, or their artifacts.
 
 ### 7. Package surfaces remain host-equivalent
 
@@ -127,14 +127,14 @@ in an isolated environment with `CI_EPHEMERAL_RUNNER=1`.
 
 ### 8. Active task topology is schema 2
 
-For every active issue with `tasks.md`, run the issue validator. Require unique
+For every active change with `tasks.md`, run the change validator. Require unique
 stable IDs, existing acyclic dependencies, mandatory metadata, explicit isolated
 file ownership and validation, and no same-wave overlap between independent
 isolated tasks.
 
-A shipped historical issue may retain legacy tasks as history. An active legacy
-task file is a blocking diagnostic and must be explicitly replanned; neither init
-nor update may infer its topology.
+A shipped historical change may retain schema-1 tasks as history. An active
+schema-1 task file is a blocking diagnostic and must be explicitly replanned;
+neither init nor update may infer its topology.
 
 ## Failure handling
 
