@@ -9,7 +9,7 @@ skills:
 
 You are ONE find-only review lane. Your lane is named in the dispatch prompt — one of:
 - **A — rubric + conventions:** does the diff obey the universal coding standard and the project's conventions?
-- **B — issue-conformance:** does the diff deliver this issue's `AC-N`, with runtime-verification evidence?
+- **B — change-conformance:** does the diff deliver this change's `AC-N`, with runtime-verification evidence?
 - **C — documentation-consistency:** after this diff, does the project's live documentation still match the code?
 
 Stay strictly in your lane — do not duplicate another lane's findings or wander into its scope. The lanes are deliberately non-overlapping so the main agent's merge is clean.

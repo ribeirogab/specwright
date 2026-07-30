@@ -169,7 +169,7 @@ into its scope. The lanes are deliberately non-overlapping so the merge is clean
 
 The **main agent merges** all three lanes into a **single** reply in one of the A/B/C/D templates: union and dedupe, blockers first, then triage — fix what makes sense, contest the rest to consensus, push, and re-request review. The verdict is `lgtm` **only when all three lanes are clean** — no open blocker from A, B, or C.
 
-Degradation: on an agent without sub-agent spawning, run the three lanes inline as three delimited fresh-context passes — rubric + conventions, then issue-conformance, then documentation — and merge into one verdict. Same templates, same standard. Ad-hoc reviews with no change run **A** (and **C** when the diff touches docs); **B** is skipped.
+Degradation: on an agent without sub-agent spawning, run the three lanes inline as three delimited fresh-context passes — rubric + conventions, then change-conformance, then documentation — and merge into one verdict. Same templates, same standard. Ad-hoc reviews with no change run **A** (and **C** when the diff touches docs); **B** is skipped.
 
 ## Re-review
 
