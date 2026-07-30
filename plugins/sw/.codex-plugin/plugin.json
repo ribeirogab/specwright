@@ -8,7 +8,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "specwright",
-    "shortDescription": "Run an change-driven engineering workflow",
+    "shortDescription": "Run a change-driven engineering workflow",
     "longDescription": "Plan, implement, validate, and review changes through specwright's change-driven engineering workflow.",
     "developerName": "Gabriel Ribeiro",
     "category": "Productivity",

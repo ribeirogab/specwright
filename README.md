@@ -187,6 +187,7 @@ profiles remain conductor-owned state.
 specwright/
 ├── .agents/plugins/                 # Codex marketplace
 ├── .claude-plugin/                  # Claude marketplace
+├── .codex/agents/                   # dogfooded Codex role profiles (tracked, shared mode)
 ├── plugins/sw/
 │   ├── .claude-plugin/              # Claude package manifest
 │   ├── .codex-plugin/               # Codex package manifest + calendar version

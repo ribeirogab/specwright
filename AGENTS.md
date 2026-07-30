@@ -4,18 +4,18 @@ Instructions for AI coding assistants and developers working on the specwright c
 
 **Never give up on the right solution.**
 
-This repo builds and ships specwright (a markdown + shell skill repo, no build pipeline) and dogfoods the issue-driven workflow on itself.
+This repo builds and ships specwright (a markdown + shell skill repo, no build pipeline) and dogfoods the change-driven workflow on itself.
 
-<!-- sw:managed version=2026.7.28 digest=817541586297fe96f9514fa0ac988fcd97650e6a4681717f89eb7774f5697549 -->
+<!-- sw:managed version=2026.7.29 digest=7258e63478a9ee574890baa9287257ad76cea4c4e9f5f21e27c1e307385e9f5b -->
 # specwright
 
-This repository uses specwright's issue-driven engineering workflow.
+This repository uses specwright's change-driven engineering workflow.
 
 ## Workflow
 
 Use the shared workflow skills to explore, specify, plan, implement, validate, and
-review changes. Work that needs a durable design follows the issue flow in
-`.specwright/`; issue artifacts are owned by the issue owner.
+review changes. Work that needs a durable design follows the change flow in
+`.specwright/`; change artifacts are owned by the change owner.
 
 ## Command surfaces
 
@@ -30,6 +30,9 @@ grant permission to write files, run commands, create branches, commit, push, or
 access external services.
 <!-- /sw:managed -->
 
+The dogfooded vault follows the canonical flat layout: changes live in
+`.specwright/changes/`, deliveries (goal + board) in `.specwright/deliveries/`.
+
 ### Editing the bundled skills
 
 Every companion skill's `SKILL.md` lives exactly **once**, under
@@ -37,7 +40,7 @@ Every companion skill's `SKILL.md` lives exactly **once**, under
 paired with a thin redirect under `plugins/sw/commands/`. Edit the `SKILL.md` for
 behavior; the command rarely changes. Templates live under `plugins/sw/templates/`,
 the mechanical validator under `plugins/sw/scripts/`, and references under
-`plugins/sw/references/`. The stable role identities are `sw-issue-owner`,
+`plugins/sw/references/`. The stable role identities are `sw-change-owner`,
 `sw-task-worker`, `sw-spec-document-reviewer`, and `sw-reviewer`. Their Claude
 manifests live under `plugins/sw/agents/`; only the owner and branch reviewer
 preload their workflow skill.

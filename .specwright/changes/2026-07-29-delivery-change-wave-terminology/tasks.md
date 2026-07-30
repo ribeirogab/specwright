@@ -190,6 +190,6 @@ tasks_schema: 2
 **Integration:** inline
 **Validation:** `bash plugins/sw/scripts/validate-spec.sh .specwright/changes/2026-07-29-delivery-change-wave-terminology` prints PASS
 
-- [ ] Step 1: Verify each AC by observed behavior (file inspection, validator runs, migration diff, grep classification); tick or mark `needs-human-verification` with the reason.
-- [ ] Step 2: Run the plan self-review gates (mechanical validator — PASS; spec-document-reviewer and review-spec recorded in the PR body).
-- [ ] Step 3: Commit the ticked artifacts; refresh the PR via `sw:pr`.
+- [x] Step 1: Verify each AC by observed behavior (file inspection, validator runs, migration diff, grep classification); tick or mark `needs-human-verification` with the reason.
+- [x] Step 2: Run the plan self-review gates (mechanical validator — PASS; spec-document-reviewer and review-spec recorded in the PR body) and the three-lane `sw:review` (findings merged and fixed: dogfooded `.codex/agents/` profiles replaced, SECURITY/NOTICE/GitHub-template docs swept, AC-10 amended).
+- [x] Step 3: Commit the ticked artifacts; refresh the PR via `sw:pr`.

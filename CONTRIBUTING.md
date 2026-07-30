@@ -45,6 +45,7 @@ UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
   python3 plugins/sw/scripts/package_skill.py plugins/sw/skills/<skill> /tmp
 UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML \
   python3 tests/skills/test_validation.py
+bash tests/validate-spec/run.sh
 ```
 
 Then validate both package structures and the complete install/update matrix:

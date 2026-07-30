@@ -62,7 +62,8 @@ expect_fail_with "validator fails when change.md is missing" "$missing_change" \
 bad_scope="$temporary_root/bad-scope"
 mkdir -p "$bad_scope"
 cp "$FIXTURES/good/change.md" "$FIXTURES/good/spec.md" "$FIXTURES/good/tasks.md" "$bad_scope/"
-sed -i '' 's/^scope: low$/scope: enormous/' "$bad_scope/spec.md"
+sed 's/^scope: low$/scope: enormous/' "$bad_scope/spec.md" >"$bad_scope/spec.md.tmp"
+mv "$bad_scope/spec.md.tmp" "$bad_scope/spec.md"
 expect_fail_with "validator enforces the scope enum" "$bad_scope" \
   "spec.md scope must be one of low|medium|high|complex"
 

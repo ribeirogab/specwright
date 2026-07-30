@@ -42,7 +42,7 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 - [x] **AC-7** `plugins/sw/skills/run/SKILL.md` derives waves from the task dependency and file-ownership graph (no persisted wave folders) and names `change-owner` as its dispatch target; `plugins/sw/agents/` contains no `delivery-conductor.md`.
 - [x] **AC-8** `CLAUDE.md` and `README.md` describe the workflow using only Delivery/Change/Task/Wave vocabulary and the flat `.specwright/changes/` + `.specwright/deliveries/` layout.
 - [x] **AC-9** The new-version `validate-spec.sh` prints `PASS` for this change's own folder, `.specwright/changes/2026-07-29-delivery-change-wave-terminology/` — the first new-format specimen.
-- [x] **AC-10** Durable automated coverage ships with the change: a `tests/validate-spec/run.sh` suite (same conventions as `tests/install/` — ephemeral fixtures, `run.sh` entry point) asserts `PASS` on a new-format folder, failure when `change.md` is missing, and the status/scope enums; the suite exits 0 and `tests/install/run.sh` keeps passing unmodified.
+- [x] **AC-10** Durable automated coverage ships with the change: a `tests/validate-spec/run.sh` suite (same conventions as `tests/install/` — ephemeral fixtures, `run.sh` entry point) asserts `PASS` on a new-format folder, failure when `change.md` is missing, and the status/scope enums; the suite exits 0 and `tests/install/run.sh` keeps passing. *(Amended 2026-07-29 during implementation: dropped “unmodified” — this change necessarily edits `tests/install/run.sh` cases and fixtures to the new vocabulary; the durable guarantee is that the suite keeps passing.)*
 
 Tick each `[x]` when verified. Runtime verification checks each criterion by observed behavior before the PR opens; a criterion the agent cannot verify at runtime is marked `needs-human-verification` with the reason — never silently ticked.
 
@@ -55,6 +55,6 @@ Tick each `[x]` when verified. Runtime verification checks each criterion by obs
 - AC-5 — `test ! -d .specwright/issues && test ! -d .specwright/milestones` holds; the migration commit shows 185 files changed, 0 insertions, 0 deletions (renames only).
 - AC-6 — the brainstorm skill writes `deliveries/<slug>/delivery.md` + `board.md` and flat `changes/<slug>/change.md` with a `delivery:` key; no template or skill generates a per-delivery `issues/` subfolder.
 - AC-7 — `run/SKILL.md` documents waves derived from the schema-2 graph (`Depends on:` + `Files:`) at dispatch time, never persisted, and dispatches the `sw-change-owner` subagent; no `delivery-conductor.md` exists.
-- AC-8 — `grep -niE 'milestone|issue-owner|issue\.md|goal\.md' CLAUDE.md README.md` exits 1; both describe only Delivery/Change/Task/Wave and the flat layout.
+- AC-8 — `grep -niE 'milestone|issue-owner|issue\.md|goal\.md' CLAUDE.md README.md` exits 1; both describe only Delivery/Change/Task/Wave, and both name the flat layout (README's state tree + role table; CLAUDE.md's dogfooded-vault note, via its AGENTS.md canonical).
 - AC-9 — `bash plugins/sw/scripts/validate-spec.sh .specwright/changes/2026-07-29-delivery-change-wave-terminology` prints `PASS`.
-- AC-10 — `bash tests/validate-spec/run.sh` exits 0 with 8 cases; `bash tests/install/run.sh` (unmodified entry point, updated fixtures/cases) exits 0 with ALL PASS.
+- AC-10 — `bash tests/validate-spec/run.sh` exits 0 with 8 cases; `bash tests/install/run.sh` exits 0 with ALL PASS (criterion amended — see AC-10's note).
