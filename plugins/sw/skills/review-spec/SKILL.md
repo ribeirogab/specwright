@@ -1,14 +1,14 @@
 ---
 name: review-spec
 user-invocable: false
-description: "Review an issue plan against project conventions and the approved issue, flagging vagueness, scope creep, and unresolved questions."
+description: "Review a change plan against project conventions and the approved change, flagging vagueness, scope creep, and unresolved questions."
 ---
 
 # Review Spec — External Evaluator Pass
 
-Run an **independent** review of an issue's technical plan written by the agent. It runs inside the `sw:plan` workflow after `spec.md` + `tasks.md` are written — the external pass between the author's own self-review and implementation. The point is to catch the things the author rationalized past.
+Run an **independent** review of a change's technical plan written by the agent. It runs inside the `sw:plan` workflow after `spec.md` + `tasks.md` are written — the external pass between the author's own self-review and implementation. The point is to catch the things the author rationalized past.
 
-**Announce at start:** "Reviewing the plan against conventions and the issue..."
+**Announce at start:** "Reviewing the plan against conventions and the change..."
 
 ## Resolve the validator
 
@@ -26,22 +26,22 @@ Require `scripts/validate-spec.sh` beneath that root. A missing resource is
 
 ## Inputs
 
-1. **Target issue folder.** If `$ARGUMENTS` is a path under `.specwright/issues/` or `.specwright/milestones/*/issues/`, read that folder. Otherwise scan both trees for the most recently modified issue folder and confirm with the user before proceeding. Read `issue.md` (the approved why + acceptance criteria), `spec.md`, and `tasks.md`.
+1. **Target change folder.** If `$ARGUMENTS` is a path under `.specwright/changes/`, read that folder. Otherwise scan that tree for the most recently modified change folder and confirm with the user before proceeding. Read `change.md` (the approved why + acceptance criteria), `spec.md`, and `tasks.md`.
 2. **Project conventions.** Skim `.specwright/conventions/` — the project-specific standards this plan must respect and must not duplicate or contradict.
 
 ## Step 0 — mechanical pre-check (run first)
 
-Before the prose review, run the mechanical validator over the issue folder. It ships with the `sw` skill:
+Before the prose review, run the mechanical validator over the change folder. It ships with the `sw` skill:
 
 ```bash
-"$SW_PLUGIN_ROOT/scripts/validate-spec.sh" <issue-folder>
+"$SW_PLUGIN_ROOT/scripts/validate-spec.sh" <change-folder>
 ```
 
-It deterministically checks `issue.md` frontmatter (`feature`/`created`/`status` + the status enum), `spec.md` frontmatter (`feature`/`created`/`scope` + the scope enum), surviving double-brace placeholders, vague-verb acceptance criteria, and `AC-N` task coverage. When `tasks.md` exists, check 6 also enforces `tasks_schema: 2`, required task metadata, valid acyclic dependencies, explicit isolated ownership, and no same-wave file collision; a shipped legacy issue remains readable while an active legacy issue requires replanning. A **non-zero exit is a blocking FAIL** — record it as the `0. Mechanical validator` row, and the verdict is `Block` regardless of the prose findings. Still complete the prose review below so the author fixes everything in one pass. If the script is absent (older install), note `validator missing` and proceed with the prose review only.
+It deterministically checks `change.md` frontmatter (`feature`/`created`/`status` + the status enum), `spec.md` frontmatter (`feature`/`created`/`scope` + the scope enum), surviving double-brace placeholders, vague-verb acceptance criteria, and `AC-N` task coverage. When `tasks.md` exists, check 6 also enforces `tasks_schema: 2`, required task metadata, valid acyclic dependencies, explicit isolated ownership, and no same-wave file collision; a shipped schema-1 change remains readable while an active schema-1 change requires replanning. A **non-zero exit is a blocking FAIL** — record it as the `0. Mechanical validator` row, and the verdict is `Block` regardless of the prose findings. Still complete the prose review below so the author fixes everything in one pass. If the script is absent (older install), note `validator missing` and proceed with the prose review only.
 
 ## What to evaluate
 
-Return a finding for each category below — `PASS`, `WARN`, or `FAIL`. Reserve `FAIL` for issues that should block implementation.
+Return a finding for each category below — `PASS`, `WARN`, or `FAIL`. Reserve `FAIL` for findings that should block implementation.
 
 ### 1. Conventions compliance
 
@@ -51,7 +51,7 @@ Read the project conventions under `.specwright/conventions/`. For each, ask: do
 
 ### 2. Acceptance Criteria — concrete and testable
 
-Locate the `## Acceptance Criteria` section **in `issue.md`**. Evaluate every bullet:
+Locate the `## Acceptance Criteria` section **in `change.md`**. Evaluate every bullet:
 
 - Is it **binary** (yes/no, not "good enough")?
 - Is it **observable** by someone other than the implementer?
@@ -63,9 +63,9 @@ Locate the `## Acceptance Criteria` section **in `issue.md`**. Evaluate every bu
 
 ### 3. Required sections present and non-empty
 
-`issue.md` defines: Purpose, Motivation, Non-Goals, Acceptance Criteria. `spec.md` defines: Architecture, File Structure, Phase Ordering, Constraints, User Stories / Scenarios, Acceptance Criteria (a pointer to `issue.md`, never a duplicate), Risks and Mitigations, Open Questions. Check **both** files. For each heading:
+`change.md` defines: Purpose, Motivation, Non-Goals, Acceptance Criteria. `spec.md` defines: Architecture, File Structure, Phase Ordering, Constraints, User Stories / Scenarios, Acceptance Criteria (a pointer to `change.md`, never a duplicate), Risks and Mitigations, Open Questions. Check **both** files. For each heading:
 
-- `FAIL` if the heading is missing (or `issue.md` itself is absent).
+- `FAIL` if the heading is missing (or `change.md` itself is absent).
 - `WARN` if the section exists but is empty or only placeholder text.
 - `PASS` if there is real content, or the author wrote `N/A — <reason>`.
 
@@ -73,11 +73,11 @@ Locate the `## Acceptance Criteria` section **in `issue.md`**. Evaluate every bu
 
 ### 4. Scope discipline
 
-Compare `issue.md`'s **Purpose** and **Non-Goals** with its **Acceptance Criteria** and the spec's plan. Look for:
+Compare `change.md`'s **Purpose** and **Non-Goals** with its **Acceptance Criteria** and the spec's plan. Look for:
 
 - Acceptance criteria or tasks that go beyond the stated purpose (scope creep).
 - Non-goals that are actually implied by the acceptance criteria (lying to ourselves).
-- A purpose so broad that no single issue could close it (it should have been a milestone).
+- A purpose so broad that no single change could close it (it should have been a delivery).
 
 `FAIL` only on the third case. `WARN` on the first two.
 
@@ -87,16 +87,16 @@ Every `[NEEDS CLARIFICATION: ...]` marker is a blocker. Same for any acceptance 
 
 `FAIL` if any clarification marker survived. `PASS` if `Open Questions` lists `None.` or every question has a documented resolution.
 
-### 6. Learnings respected (milestone issues)
+### 6. Learnings respected (delivery changes)
 
-When the issue belongs to a milestone and sibling shipped issues carry `learnings.md` files, check the spec against each recorded learning.
+When the change belongs to a delivery and sibling shipped changes carry `learnings.md` files, check the spec against each recorded learning.
 
-`FAIL` if the plan contradicts a recorded learning. `PASS` otherwise (including standalone issues and milestones with no learnings yet).
+`FAIL` if the plan contradicts a recorded learning. `PASS` otherwise (including standalone changes and deliveries with no learnings yet).
 
 ## Output format
 
 ```
-## Spec Review — <issue-slug>
+## Spec Review — <change-slug>
 
 | # | Category                                | Status | Note |
 |---|-----------------------------------------|--------|------|
@@ -114,7 +114,7 @@ When the issue belongs to a milestone and sibling shipped issues carry `learning
 
 ### Suggested edits
 
-1. Rewrite acceptance criterion AC-3 in issue.md:
+1. Rewrite acceptance criterion AC-3 in change.md:
    - Was: "Handles errors gracefully"
    - Suggested: "On a 5xx upstream response, the endpoint returns 502 with body `{\"code\":\"UPSTREAM_ERROR\"}` and emits a `upstream_error` log line"
 2. Resolve [NEEDS CLARIFICATION: which auth provider?] before continuing — propose a concrete default consistent with the project conventions.
@@ -129,4 +129,4 @@ When the issue belongs to a milestone and sibling shipped issues carry `learning
 
 ## Key rule
 
-This command is a **second opinion**, not a rubber stamp. If the author already self-reviewed and approved, that is exactly when the external pass is most valuable — the failure mode is the author rationalizing past their own gaps. Be specific, quote line numbers, and never say "looks good" without checking against the conventions and the issue.
+This command is a **second opinion**, not a rubber stamp. If the author already self-reviewed and approved, that is exactly when the external pass is most valuable — the failure mode is the author rationalizing past their own gaps. Be specific, quote line numbers, and never say "looks good" without checking against the conventions and the change.

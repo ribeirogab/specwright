@@ -36,7 +36,7 @@ Require these files beneath the result:
 ```text
 .codex-plugin/plugin.json
 scripts/sw_update.py
-templates/codex-agents/sw-issue-owner.toml
+templates/codex-agents/sw-change-owner.toml
 templates/codex-agents/sw-spec-document-reviewer.toml
 templates/codex-agents/sw-reviewer.toml
 templates/codex-agents/sw-task-worker.toml
@@ -128,11 +128,11 @@ Only after the managed-state plan is accepted or already up to date, ensure:
 ```text
 .specwright/
 ├── conventions/
-├── issues/
-└── milestones/
+├── changes/
+└── deliveries/
 ```
 
-Create `.gitkeep` in empty `issues/` and `milestones/`. When `conventions/` has no
+Create `.gitkeep` in empty `changes/` and `deliveries/`. When `conventions/` has no
 files, create `README.md` with this signpost:
 
 ```markdown

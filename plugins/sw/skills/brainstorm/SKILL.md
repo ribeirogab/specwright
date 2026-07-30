@@ -1,12 +1,12 @@
 ---
 name: brainstorm
 user-invocable: false
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation, concludes whether the work is a single issue or a milestone (a large delivery decomposed into issues), and writes the issue/milestone artifacts."
+description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation, concludes whether the work is a single change or a delivery (a large outcome decomposed into changes), and writes the change/delivery artifacts."
 ---
 
-# Brainstorm — Ideas Into Issues and Milestones
+# Brainstorm — Ideas Into Changes and Deliveries
 
-Help turn ideas into fully formed designs through natural collaborative dialogue, then write them down as **issues** — specwright's single unit of work (1 issue = 1 branch = 1 PR). Small work becomes one standalone issue; a large delivery becomes a **milestone**: a goal, a board, and several issues conducted later by the `sw:run` workflow.
+Help turn ideas into fully formed designs through natural collaborative dialogue, then write them down as **changes** — specwright's single unit of work (1 change = 1 branch = 1 PR). Small work becomes one standalone change; a large outcome becomes a **delivery**: a durable goal, a board, and several changes conducted later by the `sw:run` workflow.
 
 <HARD-GATE>
 Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
@@ -29,10 +29,10 @@ You MUST create a task for each of these items and complete them in order:
 3. **Clarify through conversation** — understand purpose, constraints, success criteria; decisions come at the end
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval
-6. **Conclude the scope** — after approval: work that fits one issue concludes as a **single issue**, stated plainly, without presenting the milestone alternative. Suggest a **milestone** — with a preview of the decomposition: issue slugs, one-liners, dependencies — only when the scope signals point to one (see Judging the scope). The user decides. The shape of the work is a conclusion of the design, not a command choice.
+6. **Conclude the scope** — after approval: work that fits one change concludes as a **single change**, stated plainly, without presenting the delivery alternative. Suggest a **delivery** — with a preview of the decomposition: change slugs, one-liners, dependencies — only when the scope signals point to one (see Judging the scope). The user decides. The shape of the work is a conclusion of the design, not a command choice.
 7. **Post-design batch** — one batch, per shape (see below).
 8. **Write the artifacts** — per shape (see below). Commit them.
-9. **Next step** — single issue: invoke the `sw:plan` workflow. Milestone: print the mandatory handoff and stop.
+9. **Next step** — single change: invoke the `sw:plan` workflow. Delivery: print the mandatory handoff and stop.
 
 ## Process Flow
 
@@ -43,12 +43,12 @@ digraph brainstorm {
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
-    "Scope: single issue or milestone?\n(agent suggests, user decides)" [shape=diamond];
+    "Scope: single change or delivery?\n(agent suggests, user decides)" [shape=diamond];
     "Batch: branch + worktree + handoff" [shape=box];
-    "Write issues/<date>-<slug>/issue.md" [shape=box];
+    "Write changes/<date>-<slug>/change.md" [shape=box];
     "Invoke the plan skill" [shape=doublecircle];
     "Batch: worktree" [shape=box];
-    "Write goal.md + board.md + N issue.md" [shape=box];
+    "Write delivery.md + board.md + N change.md" [shape=box];
     "Print mandatory handoff, stop\n(resume with sw:run)" [shape=doublecircle];
 
     "Explore project context" -> "Clarify through conversation";
@@ -56,21 +56,21 @@ digraph brainstorm {
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Scope: single issue or milestone?\n(agent suggests, user decides)" [label="yes"];
-    "Scope: single issue or milestone?\n(agent suggests, user decides)" -> "Batch: branch + worktree + handoff" [label="single issue"];
-    "Batch: branch + worktree + handoff" -> "Write issues/<date>-<slug>/issue.md";
-    "Write issues/<date>-<slug>/issue.md" -> "Invoke the plan skill";
-    "Scope: single issue or milestone?\n(agent suggests, user decides)" -> "Batch: worktree" [label="milestone"];
-    "Batch: worktree" -> "Write goal.md + board.md + N issue.md";
-    "Write goal.md + board.md + N issue.md" -> "Print mandatory handoff, stop\n(resume with sw:run)";
+    "User approves design?" -> "Scope: single change or delivery?\n(agent suggests, user decides)" [label="yes"];
+    "Scope: single change or delivery?\n(agent suggests, user decides)" -> "Batch: branch + worktree + handoff" [label="single change"];
+    "Batch: branch + worktree + handoff" -> "Write changes/<date>-<slug>/change.md";
+    "Write changes/<date>-<slug>/change.md" -> "Invoke the plan skill";
+    "Scope: single change or delivery?\n(agent suggests, user decides)" -> "Batch: worktree" [label="delivery"];
+    "Batch: worktree" -> "Write delivery.md + board.md + N change.md";
+    "Write delivery.md + board.md + N change.md" -> "Print mandatory handoff, stop\n(resume with sw:run)";
 }
 ```
 
 ## Judging the scope
 
-While designing, keep asking: does this decompose into several independently shippable deliveries? Signals of a milestone: the solution spans multiple layers or areas (backend + admin + frontend + email), the decomposition has internal dependencies, no single PR could carry it reviewably. When you see it, **suggest** the milestone with a preview — never force it, and never mention it for work that fits one issue (a flag, a fix, one endpoint).
+While designing, keep asking: does this decompose into several independently shippable changes? Signals of a delivery: the solution spans multiple layers or areas (backend + admin + frontend + email), the decomposition has internal dependencies, no single PR could carry it reviewably. When you see it, **suggest** the delivery with a preview — never force it, and never mention it for work that fits one change (a flag, a fix, one endpoint).
 
-If the user describes something too large even for one milestone, help decompose into milestones first; each gets its own brainstorm.
+If the user describes something too large even for one delivery, help decompose into deliveries first; each gets its own brainstorm.
 
 ## Resolve bundled resources
 
@@ -82,12 +82,12 @@ Before reading a template or invoking the validator, resolve `SW_PLUGIN_ROOT`:
 3. otherwise derive the plugin root from this loaded `skills/brainstorm/SKILL.md`
    real path (two parents above the `skills/brainstorm/` directory).
 
-Require `templates/issue.md`, `templates/goal.md`, `templates/board.md`, and
+Require `templates/change.md`, `templates/delivery.md`, `templates/board.md`, and
 `scripts/validate-spec.sh` beneath that root. Stop before writing when any required
 resource is missing. Never resolve bundled resources relative to the target
 repository.
 
-## Single issue — batch and artifacts
+## Single change — batch and artifacts
 
 **Batch (one message, exactly three things):** confirm the **branch name**, choose whether to use a **worktree**, and whether to **hand off** before implementing.
 
@@ -98,44 +98,43 @@ repository.
 ```
 
 - **Already in a linked worktree** → warn the user (name the path) and recommend **no** — work in place.
-- **Not in a worktree** → the default is **yes**: `git worktree add .specwright/worktrees/<slug> -b <branch>` and `cd` in before writing the issue. specwright only ever **creates** worktrees — never removes one; cleanup is the maintainer's after merge.
+- **Not in a worktree** → the default is **yes**: `git worktree add .specwright/worktrees/<slug> -b <branch>` and `cd` in before writing the change. specwright only ever **creates** worktrees — never removes one; cleanup is the maintainer's after merge.
 
 When worktree = no, create the branch in place: `git checkout -b <branch>`.
 
-**Artifact:** write `.specwright/issues/YYYY-MM-DD-<slug>/issue.md` from
-`"$SW_PLUGIN_ROOT/templates/issue.md"`: Purpose, Motivation, Non-Goals, numbered
-`AC-N` acceptance criteria, frontmatter `status: pending`. This is the durable
-record of the approved design — not a second review gate. Run
-`"$SW_PLUGIN_ROOT/scripts/validate-spec.sh" <issue-folder>` before committing —
-same baseline as milestone tickets (see Milestone — batch and artifacts). Commit it.
+**Artifact:** write `.specwright/changes/YYYY-MM-DD-<slug>/change.md` from
+`"$SW_PLUGIN_ROOT/templates/change.md"`: Purpose, Motivation, Non-Goals, numbered
+`AC-N` acceptance criteria, frontmatter `status: pending` and `delivery: null`.
+This is the durable record of the approved design — not a second review gate. Run
+`"$SW_PLUGIN_ROOT/scripts/validate-spec.sh" <change-folder>` before committing —
+same baseline as delivery tickets (see Delivery — batch and artifacts). Commit it.
 
-**Next:** handoff = yes → print a ```txt``` handoff (one-paragraph summary + the issue path; first line `cd .specwright/worktrees/<slug>` when one was created) and stop — the user resumes in a fresh context. Handoff = no → invoke the plan skill now. Approval of the design authorizes the specwright workflow to continue through delivery without another design review. It never overrides the current host's permission, sandbox, Git, network, credential, or external-action approval policy; obtain every approval that policy requires.
+**Next:** handoff = yes → print a ```txt``` handoff (one-paragraph summary + the change path; first line `cd .specwright/worktrees/<slug>` when one was created) and stop — the user resumes in a fresh context. Handoff = no → invoke the plan skill now. Approval of the design authorizes the specwright workflow to continue through delivery without another design review. It never overrides the current host's permission, sandbox, Git, network, credential, or external-action approval policy; obtain every approval that policy requires.
 
-## Milestone — batch and artifacts
+## Delivery — batch and artifacts
 
-**Batch (one message, exactly one thing):** whether issue owners run in **worktrees** under `.specwright/worktrees/` (default **yes**; answering no forces serial in-place conduction — parallel dispatch requires worktrees).
+**Batch (one message, exactly one thing):** whether change owners run in **worktrees** under `.specwright/worktrees/` (default **yes**; answering no forces serial in-place conduction — parallel dispatch requires worktrees).
 
-**Artifacts:** write `.specwright/milestones/YYYY-MM-DD-<slug>/` from
-`"$SW_PLUGIN_ROOT/templates/"`:
+**Artifacts:** write the delivery folder plus one flat change folder per change:
 
-- `goal.md` — the milestone's Purpose, Motivation, Success Criteria, Non-Goals. Phrase it in **behavior terms** — no file paths, function names, or storage formats; path-level constraints live in the issue tickets. Worked example: the technical hard constraint "`test/taskr.test.js` must pass byte-for-byte unmodified" becomes, at goal level, "the existing test suite passes without any test being edited" — the ticket that owns the constraint keeps the path. Stable; editing it later is a scope change no agent does alone.
-- `board.md` — the Issues table (order, slug, depends-on), empty Dispatch Log and Blockers. Order and dependencies live ONLY here.
-- `issues/<slug>/issue.md` — one per issue, plain kebab slugs (no number prefixes — order is board data), each with Purpose, Non-Goals, `AC-N`, `status: pending`. The approved decomposition IS the design approval for every issue: `sw:run` goes straight to planning, with no brainstorm per issue.
+- `.specwright/deliveries/YYYY-MM-DD-<slug>/delivery.md` — the delivery's Purpose, Motivation, Success Criteria, Non-Goals. Phrase it in **behavior terms** — no file paths, function names, or storage formats; path-level constraints live in the change tickets. Worked example: the technical hard constraint "`test/taskr.test.js` must pass byte-for-byte unmodified" becomes, at delivery level, "the existing test suite passes without any test being edited" — the ticket that owns the constraint keeps the path. Stable; editing it later is a scope change no agent does alone.
+- `.specwright/deliveries/YYYY-MM-DD-<slug>/board.md` — the Changes table (order, slug, depends-on), empty Dispatch Log and Blockers. Order and dependencies live ONLY here.
+- `.specwright/changes/YYYY-MM-DD-<slug>/change.md` — one per change, plain kebab slugs (no number prefixes — order is board data), each with Purpose, Non-Goals, `AC-N`, `status: pending`, and `delivery:` set to the delivery folder. Membership is data, not directory nesting: changes live flat under `.specwright/changes/` whether they belong to a delivery or not. The approved decomposition IS the design approval for every change: `sw:run` goes straight to planning, with no brainstorm per change.
 
 Before committing, run `"$SW_PLUGIN_ROOT/scripts/validate-spec.sh"` on **each**
-`issues/<slug>/` folder. The planning-stage baseline is **exactly one failure —
+change folder. The planning-stage baseline is **exactly one failure —
 check 2, `spec.md not found`** — the spec is written just-in-time later by the
 plan skill. Anything else (frontmatter defects, surviving placeholders, vague-verb
 criteria) is the planner's to fix before the commit: a ticket that trips the
-validator now detonates later in an issue owner's gate, on a file that owner must
+validator now detonates later in a change owner's gate, on a file that owner must
 not edit.
 
-Commit the milestone folder.
+Commit the delivery and change folders.
 
 **Mandatory handoff — the planning session never conducts.** After a long
 brainstorm the context is full of exploration: dead ends, rejected decompositions,
 half-decisions. The orchestrator must be born clean, reading only the artifacts.
-Print a ```txt``` handoff with a one-paragraph summary, the milestone path, and
+Print a ```txt``` handoff with a one-paragraph summary, the delivery path, and
 both valid resume surfaces:
 
 ```text
