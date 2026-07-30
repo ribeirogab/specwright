@@ -56,6 +56,9 @@ Codex:       $sw:init
 OpenCode:    /sw-init
 ```
 
+In OpenCode, the `/sw-*` command surface does not exist until after the first
+`sw:init` — ask "set up specwright here" in natural language for the initial run.
+
 `sw:init` first asks for a mode and displays a read-only, deterministic plan.
 Only an explicit confirmation of that exact `plan_id` permits the apply step.
 Host permissions and sandbox approvals remain authoritative.

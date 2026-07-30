@@ -1,7 +1,7 @@
 {
   "name": "sw",
   "version": "2026.7.30",
-  "description": "The specwright change-driven workflow for Claude Code and Codex: init, brainstorm, spec, plan, run, review, review-spec, pr, and update.",
+  "description": "The specwright change-driven workflow for Claude Code, Codex, and OpenCode: init, brainstorm, spec, plan, run, review, review-spec, pr, and update.",
   "author": {
     "name": "Gabriel Ribeiro"
   }
