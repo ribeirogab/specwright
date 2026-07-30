@@ -1,7 +1,7 @@
 ---
 feature: opencode-host-support
 created: 2026-07-29
-status: pending
+status: in-progress
 shipped: null
 delivery: null
 ---
