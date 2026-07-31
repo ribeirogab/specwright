@@ -30,14 +30,10 @@ command adapters; Codex discovers the same skills as `$sw:*`.
 
 Because the state lives in files, not in the conversation. Two things follow.
 
-**You can change model between steps.** Plan with a strong model, implement with
-a cheap one, review with a strong one again:
-
-```bash
-/model opus    # /sw:change, /sw:plan
-/model sonnet  # /sw:implement
-/model opus    # /sw:review
-```
+**You can change model between steps.** Each step stops, so switching is just
+`/model` before the next command — a stronger model where judgment pays off
+(`change`, `plan`, `review`), a cheaper one for the bulk of the execution
+(`implement`).
 
 **You can hand a plan to an agent that has no context at all.** `plan.md` is
 written for a stranger: exact paths, runnable commands, real code in every code
