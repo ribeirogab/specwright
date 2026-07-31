@@ -27,8 +27,8 @@ are out of scope.
 3. Keep host adapters minimal and preserve the eight-entry inventory.
 4. Keep project-managed instructions host-neutral. `AGENTS*.md` is canonical;
    `CLAUDE*.md` is a relative symlink, never a copy.
-5. Treat `.codex/agents/sw-*.toml` as generated project files. Change their
-   source templates and the install tests together.
+5. Role profiles are machine-wide, never project files. `sw:init` must not write
+   one into a repository; the Codex install is its own explicit mode.
 6. A skill description states **when the skill is invoked**. It never instructs
    the model to run the workflow on its own initiative.
 7. Each ladder step stops and names its successor. A step that runs the next one
@@ -59,8 +59,8 @@ bash tests/install/run.sh
 
 `tests/install/run.sh` covers both manifests and marketplaces, the exact skill
 and redirect inventories, the ladder's successor links, the two role identities
-with their models and sandboxes, shared and local initialization, symlinks,
-ignore rules, profile installation, scaffolder idempotency, and the conflict
+with their sandboxes, shared and local initialization, symlinks, ignore rules,
+the machine-wide Codex role install, scaffolder idempotency, and the conflict
 path that writes nothing.
 
 Changes to the change or plan artifacts must keep `templates/`,
@@ -104,6 +104,8 @@ to it must keep these true, and the install tests must prove them:
   existing ignore rules — are byte-identical afterwards;
 - a path in an unusable shape is reported as a conflict **before** any write, and
   nothing is written at all;
+- scaffolding a repository writes nothing outside it — the machine-wide Codex
+  role install is a separate mode and never a side effect;
 - the Claude adapter is a relative symlink; there is no regular-file fallback.
 
 Do not reintroduce digest-protected blocks, plan identities, or drift

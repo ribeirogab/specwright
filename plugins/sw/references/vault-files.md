@@ -24,17 +24,19 @@ Existing vault content is never overwritten.
 
 **shared** — the vault is tracked; only `.specwright/worktrees/` is ignored.
 Canonical instructions are `AGENTS.md`, with `CLAUDE.md` as its relative symlink.
-The two Codex role profiles are tracked.
 
-**local** — the whole vault, `AGENTS.override.md`, its `CLAUDE.local.md` symlink,
-and the profiles are ignored. Existing shared instructions and unrelated `.codex`
-configuration are left untouched.
+**local** — the whole vault, `AGENTS.override.md`, and its `CLAUDE.local.md`
+symlink are ignored. Existing shared instructions are left untouched.
+
+Role profiles are **not** vault content and never land in a repository. Claude
+Code resolves them from the installed plugin; Codex resolves them from
+`${CODEX_HOME:-~/.codex}/agents/`, installed once per machine with
+`sw_init.py --install-codex-roles`.
 
 For a local-mode delivery dispatch, `sw:delivery` copies into each change
-worktree: `AGENTS.override.md`, its `CLAUDE.local.md` symlink, the
-`.codex/agents/sw-*.toml` profiles, and the change folder. On return it copies
-back **only** the change folder — instructions and profiles are conductor-owned
-state and never sync back from an owner's worktree.
+worktree: `AGENTS.override.md`, its `CLAUDE.local.md` symlink, and the change
+folder. On return it copies back **only** the change folder — instructions are
+conductor-owned state and never sync back from an owner's worktree.
 
 ## Changes — flat, always
 

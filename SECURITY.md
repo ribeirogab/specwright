@@ -19,8 +19,8 @@ In scope:
 - both plugin manifests and marketplace catalogs;
 - shared skills and Claude command adapters;
 - project templates, role manifests and profiles, validators, and the scaffolder;
-- `sw:init` behavior affecting `AGENTS*.md`, `CLAUDE*.md`,
-  `.codex/agents/sw-*.toml`, `.gitignore`, or `.specwright/`;
+- `sw:init` behavior affecting `AGENTS*.md`, `CLAUDE*.md`, `.gitignore`, or
+  `.specwright/`, and its separate machine-wide Codex role install;
 - change-owner branch and worktree isolation during a delivery; and
 - release tests that claim a host recognizes the package.
 
@@ -60,9 +60,12 @@ paths, invalid template sources, or an unsupported symlink operation must fail
 before any write. There is no regular-file fallback for Claude adapters, because
 a copy would silently diverge from its canonical file.
 
-Profile files are project configuration and may grant write capability to an
-agent. Their names and sandbox mode are therefore part of the reviewed security
-surface. `sw-reviewer` must remain read-only; `sw-change-owner` remains
+Profile files may grant write capability to an agent, so their names and sandbox
+mode are part of the reviewed security surface. They live outside the project —
+Claude Code resolves them from the installed plugin, Codex from
+`${CODEX_HOME:-~/.codex}/agents/` — so installing them writes to the maintainer's
+machine and must never happen as a side effect of scaffolding a repository. It is
+a separate, explicitly requested mode that creates but never overwrites. `sw-reviewer` must remain read-only; `sw-change-owner` remains
 constrained by its protocol and host policy. Roles pin no model — they inherit
 the session's — so a model choice is never a permission decision.
 

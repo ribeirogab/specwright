@@ -176,22 +176,40 @@ run_package() {
   run_dogfood
 }
 
-# This repository dogfoods specwright in shared mode, so its own tracked project
-# state is part of the package surface: a role retired from the templates but
-# left installed here would ship a profile for a role that no longer exists.
+# This repository dogfoods specwright in shared mode, so its own tracked state is
+# part of the package surface — and it must demonstrate the same clean footprint
+# the scaffolder produces.
 run_dogfood() {
-  local profiles_dir="$ROOT/plugins/sw/templates/codex-agents" name
-
-  assert_eq "dogfooded Codex profiles match the template inventory" \
-    "$(find "$profiles_dir" -maxdepth 1 -type f -name '*.toml' -exec basename {} \; | sort)" \
-    "$(find "$ROOT/.codex/agents" -maxdepth 1 -type f -name '*.toml' -exec basename {} \; | sort)"
-  for name in sw-change-owner sw-reviewer; do
-    assert_eq "dogfooded profile $name matches its template" 0 \
-      "$(cmp -s "$profiles_dir/$name.toml" "$ROOT/.codex/agents/$name.toml"; echo $?)"
-  done
+  assert_absent "this repository carries no role profiles" "$ROOT/.codex"
   assert_symlink "dogfooded Claude adapter" "$ROOT/CLAUDE.md" AGENTS.md
   assert_eq "dogfooded AGENTS.md carries one specwright section" 1 \
     "$(grep -cx '## specwright' "$ROOT/AGENTS.md")"
+}
+
+# Codex resolves roles from its own home, so the install is machine-wide and must
+# never be a side effect of scaffolding a repository.
+run_codex_roles() {
+  local home before after name
+  ensure_temporary_root
+  home="$temporary_root/codex-home"
+
+  python3 "$INIT" --install-codex-roles --codex-home "$home" >"$temporary_root/roles-first.out" 2>&1
+  assert_eq "codex role install exits 0" 0 $?
+  for name in sw-change-owner sw-reviewer; do
+    assert_file "codex role $name installed" "$home/agents/$name.toml"
+    assert_eq "codex role $name matches its template" 0 \
+      "$(cmp -s "$ROOT/plugins/sw/templates/codex-agents/$name.toml" "$home/agents/$name.toml"; echo $?)"
+  done
+
+  before="$(tree_digest "$home")"
+  python3 "$INIT" --install-codex-roles --codex-home "$home" >"$temporary_root/roles-second.out" 2>&1
+  after="$(tree_digest "$home")"
+  assert_eq "second codex role install writes nothing" "$before" "$after"
+  assert_eq "second codex role install reports both present" 2 \
+    "$(grep -c '^  present' "$temporary_root/roles-second.out" || true)"
+
+  CODEX_HOME="$temporary_root/env-home" python3 "$INIT" --install-codex-roles >/dev/null 2>&1
+  assert_file "codex role install honors CODEX_HOME" "$temporary_root/env-home/agents/sw-reviewer.toml"
 }
 
 run_role_agents() {
@@ -262,13 +280,10 @@ run_init_shared() {
   assert_symlink "shared Claude adapter" "$project/CLAUDE.md" AGENTS.md
   assert_eq "shared AGENTS.md carries one specwright section" 1 \
     "$(grep -cx '## specwright' "$project/AGENTS.md")"
-  assert_file "shared profile sw-change-owner installed" "$project/.codex/agents/sw-change-owner.toml"
-  assert_file "shared profile sw-reviewer installed" "$project/.codex/agents/sw-reviewer.toml"
+  assert_absent "shared scaffold writes no .codex" "$project/.codex"
   assert_eq "shared ignore line present once" 1 "$(ignore_line_count "$project" '.specwright/worktrees/')"
   assert_eq "shared mode does not ignore the vault" 1 \
     "$(git -C "$project" check-ignore -q -- .specwright/changes/.gitkeep; echo $?)"
-  assert_eq "shared mode does not ignore the profiles" 1 \
-    "$(git -C "$project" check-ignore -q -- .codex/agents/sw-reviewer.toml; echo $?)"
 
   before="$(tree_digest "$project")"
   run_init "$project" shared "$temporary_root/shared-second.out"
@@ -276,7 +291,7 @@ run_init_shared() {
   assert_eq "second shared run writes nothing" "$before" "$after"
   assert_eq "second shared run creates nothing" 0 \
     "$(grep -c '^  created' "$temporary_root/shared-second.out" || true)"
-  assert_eq "second shared run reports every path present" 8 \
+  assert_eq "second shared run reports every path present" 6 \
     "$(grep -c '^  present' "$temporary_root/shared-second.out" || true)"
 }
 
@@ -303,15 +318,16 @@ run_init_local() {
     '.specwright/worktrees/' \
     '.specwright/' \
     'AGENTS.override.md' \
-    'CLAUDE.local.md' \
-    '.codex/agents/sw-*.toml'
+    'CLAUDE.local.md'
   do
     assert_eq "local ignore rule [$line] present once" 1 "$(ignore_line_count "$project" "$line")"
   done
+  assert_eq "local .gitignore is the pre-existing rule plus exactly four" 5 \
+    "$(grep -c . "$project/.gitignore")"
 
   assert_eq "local vault is ignored" 0 "$(git -C "$project" check-ignore -q -- .specwright/changes/.gitkeep; echo $?)"
   assert_eq "local instructions are ignored" 0 "$(git -C "$project" check-ignore -q -- AGENTS.override.md; echo $?)"
-  assert_eq "local profile is ignored" 0 "$(git -C "$project" check-ignore -q -- .codex/agents/sw-reviewer.toml; echo $?)"
+  assert_absent "local scaffold writes no profile" "$project/.codex/agents"
   assert_eq "unrelated .codex/project.toml stays unignored" 1 "$(git -C "$project" check-ignore -q -- .codex/project.toml; echo $?)"
 }
 
@@ -346,7 +362,7 @@ fi
 for group in "$@"; do
   case "$group" in
     package) run_package ;;
-    init) run_init_shared; run_init_local; run_init_conflict; run_init_existing_section ;;
+    init) run_init_shared; run_init_local; run_init_conflict; run_init_existing_section; run_codex_roles ;;
     *) die "unknown test group: $group" ;;
   esac
 done

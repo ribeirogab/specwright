@@ -65,7 +65,22 @@ codex plugin marketplace add ribeirogab/specwright
 codex plugin add sw@specwright
 ```
 
-Both hosts install the same eight skills.
+Codex ships subagents disabled, so enable them once:
+
+```bash
+codex features enable multi_agent_v2
+```
+
+It also reads subagent roles from its own home rather than from a plugin, so
+those install once per machine too. `$sw:init` checks for them and prints the
+exact command for your install path — it never writes outside a project unless
+you ask it to.
+
+Neither step is required: without them `$sw:delivery` and `$sw:review` run their
+passes inline instead of spawning.
+
+Both hosts install the same eight skills, and neither writes anything into your
+repositories at install time.
 
 ## Set up a repository
 
@@ -77,13 +92,16 @@ Codex:       $sw:init
 `sw:init` asks for a mode, then creates only what is missing. It is idempotent:
 re-running it is the upgrade path, and a second run writes nothing.
 
-- **shared** — specwright state is versioned with the project: `.specwright/`,
-  `AGENTS.md` with its `CLAUDE.md -> AGENTS.md` symlink, and the two
-  `.codex/agents/sw-*.toml` role profiles. Only `.specwright/worktrees/` is
-  ignored.
-- **local** — specwright state stays private to the checkout: `AGENTS.override.md`,
-  `CLAUDE.local.md -> AGENTS.override.md`, and the vault, both instruction paths,
-  and the profiles are all git-ignored.
+- **shared** — specwright state is versioned with the project: `.specwright/` and
+  `AGENTS.md` with its `CLAUDE.md -> AGENTS.md` symlink. Only
+  `.specwright/worktrees/` is ignored.
+- **local** — specwright state stays private to the checkout:
+  `AGENTS.override.md`, `CLAUDE.local.md -> AGENTS.override.md`, and the vault
+  and both instruction paths are git-ignored.
+
+Either way that is the whole footprint: a vault, one instruction file, its
+symlink, and the ignore lines. Role profiles are not project state — both hosts
+resolve them outside the repository.
 
 The `AGENTS*` file is always canonical; the `CLAUDE*` path is only a
 compatibility symlink. Init appends one `## specwright` section to the canonical
@@ -192,20 +210,9 @@ between ladder steps, applied to the roles. The Codex sandbox is pinned, because
 that is a permission boundary rather than a preference: the reviewer must not be
 able to write, whatever model runs it.
 
-The two hosts deliver the roles differently. Claude Code finds them inside the
-installed plugin, so they work as soon as it is installed. Codex reads role
-profiles from the **project**, which is why `sw:init` writes
-`.codex/agents/sw-*.toml` — a plugin cannot supply them. Codex also gates
-subagents behind a feature flag that ships disabled, so its roles stay inert
-until you turn it on:
-
-```bash
-codex features enable multi_agent_v2
-```
-
-Without it, `$sw:delivery` and `$sw:review` still work — they fall back to
-running the same pass inline, in the main session, exactly as they do on any
-agent that cannot spawn subagents.
+Both hosts resolve the roles outside your repository — Claude Code from the
+installed plugin, Codex from `${CODEX_HOME:-~/.codex}/agents/` after the one-time
+install above. Nothing role-related is ever written into a project.
 
 The reviewer covers three dimensions in one pass — rubric and conventions, change
 conformance against the `AC-N` and their verification evidence, and documentation
@@ -217,7 +224,6 @@ consistency. A branch reaches `lgtm` only when no dimension has an open blocker.
 specwright/
 ├── .agents/plugins/                 Codex marketplace
 ├── .claude-plugin/                  Claude marketplace
-├── .codex/agents/                   dogfooded Codex role profiles
 ├── plugins/sw/
 │   ├── .claude-plugin/              Claude package manifest
 │   ├── .codex-plugin/               Codex package manifest + calendar version

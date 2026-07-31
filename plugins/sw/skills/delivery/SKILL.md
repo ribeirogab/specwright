@@ -88,17 +88,16 @@ concurrency cap. For each:
   ```
 
 - **In local mode, copy the conductor state in** right after creating the
-  worktree — otherwise the owner starts with no instructions, no role profiles,
-  and no change. Every copied path lands git-ignored there, so the owner never
-  commits it. `$CHANGE_REL` is the change folder's repository-relative path:
+  worktree — otherwise the owner starts with no instructions and no change. Role
+  profiles are not copied: both hosts resolve those outside the project. Every
+  copied path lands git-ignored there, so the owner never commits it.
+  `$CHANGE_REL` is the change folder's repository-relative path:
 
   ```bash
   if [ "$mode" = local ]; then
     WORKTREE=".specwright/worktrees/<slug>"
     cp AGENTS.override.md "$WORKTREE/AGENTS.override.md"
     ln -s AGENTS.override.md "$WORKTREE/CLAUDE.local.md"
-    mkdir -p "$WORKTREE/.codex/agents"
-    cp .codex/agents/sw-*.toml "$WORKTREE/.codex/agents/"
     mkdir -p "$WORKTREE/$CHANGE_REL"
     cp -R "$CHANGE_REL/." "$WORKTREE/$CHANGE_REL/"
   fi
@@ -108,7 +107,9 @@ concurrency cap. For each:
   and inherits this session's model, so pick that before conducting. Its prompt
   is only the coordinates: the change folder, the delivery folder, the branch,
   and the worktree. The pipeline it runs and its return contract live in the role
-  definition, not in your prompt.
+  definition, not in your prompt. In Codex the role exists only once the
+  machine-wide profiles are installed and `multi_agent_v2` is enabled; without
+  either, conduct serially per the degradation section rather than failing.
 - Append `dispatched` to the delivery's dispatch log and commit.
 - Keep the **agent id** from the spawn result. Name aliases expire; address every
   resume or relay by that id.
@@ -131,7 +132,8 @@ status; the orchestrator never edits one.
   ```
 
   This is transport, not authorship: it moves the owner's own files to the
-  canonical location and never edits their content. Also in local mode the
+  canonical location and never edits their content. Never sync instructions back
+  out of a worktree — they are conductor-owned state. Also in local mode the
   delivery file is git-ignored, so the per-append commit is a no-op and the file
   persists by write alone.
 - Completion notifications reach only the top-level session — never wait on them.

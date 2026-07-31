@@ -10,8 +10,15 @@ Claude adapter that is a regular file instead of the required symlink — is
 reported before any write happens, and nothing is written at all. The scaffolder
 never overwrites, never repairs, and never decides on the maintainer's behalf.
 
+Codex role profiles are NOT project state. Codex reads them from its own home,
+so they install once per machine and then serve every repository, the way Claude
+Code's bundled roles already do. That install writes outside the project, so it
+never happens as a side effect of scaffolding a repository — it is its own
+explicitly requested mode.
+
 Usage:
     sw_init.py --project PATH --mode {shared,local} [--format {text,json}]
+    sw_init.py --install-codex-roles [--codex-home PATH] [--format {text,json}]
 """
 
 from __future__ import annotations
@@ -33,7 +40,6 @@ LOCAL_IGNORE_LINES = (
     ".specwright/",
     "AGENTS.override.md",
     "CLAUDE.local.md",
-    ".codex/agents/sw-*.toml",
 )
 
 CANONICAL_BY_MODE = {"shared": "AGENTS.md", "local": "AGENTS.override.md"}
@@ -133,10 +139,6 @@ def find_conflicts(project: Path, mode: str) -> list[str]:
             f"a relative symlink to {CANONICAL_BY_MODE[mode]}. Move or delete it, then re-run."
         )
 
-    for name in PROFILE_NAMES:
-        if not (PLUGIN_ROOT / "templates" / "codex-agents" / name).is_file():
-            conflicts.append(f"bundled template missing: templates/codex-agents/{name}")
-
     gitignore = project / ".gitignore"
     if gitignore.exists() and not gitignore.is_file():
         conflicts.append(".gitignore exists but is not a regular file")
@@ -199,23 +201,6 @@ def write_adapter(project: Path, mode: str, report: Report) -> None:
     report.record(ADAPTER_BY_MODE[mode], "created")
 
 
-def write_profiles(project: Path, report: Report) -> None:
-    destination = project / ".codex" / "agents"
-    destination.mkdir(parents=True, exist_ok=True)
-    for name in PROFILE_NAMES:
-        template = PLUGIN_ROOT / "templates" / "codex-agents" / name
-        installed = destination / name
-        relative = f".codex/agents/{name}"
-        if not installed.exists():
-            shutil.copyfile(template, installed)
-            report.record(relative, "created")
-            continue
-        # A profile the maintainer edited stays theirs; say so instead of
-        # overwriting it or calling it drift.
-        same = installed.read_bytes() == template.read_bytes()
-        report.record(relative, "present" if same else "present (differs from template)")
-
-
 def write_ignore_rules(project: Path, mode: str, report: Report) -> None:
     gitignore = project / ".gitignore"
     existing = gitignore.read_text(encoding="utf-8") if gitignore.exists() else ""
@@ -244,8 +229,45 @@ def initialize(project: Path, mode: str) -> Report:
     scaffold_vault(project, report)
     write_section(project, mode, report)
     write_adapter(project, mode, report)
-    write_profiles(project, report)
     write_ignore_rules(project, mode, report)
+    return report
+
+
+def codex_home(explicit: Path | None = None) -> Path:
+    if explicit is not None:
+        return explicit
+    from_environment = os.environ.get("CODEX_HOME")
+    return Path(from_environment) if from_environment else Path.home() / ".codex"
+
+
+def codex_roles_installed(explicit: Path | None = None) -> bool:
+    agents = codex_home(explicit) / "agents"
+    return all((agents / name).is_file() for name in PROFILE_NAMES)
+
+
+def install_codex_roles(explicit: Path | None = None) -> Report:
+    """Install the role profiles into Codex's home, once per machine."""
+    agents = codex_home(explicit) / "agents"
+    report = Report(mode="codex-roles", project=str(agents))
+
+    for name in PROFILE_NAMES:
+        template = PLUGIN_ROOT / "templates" / "codex-agents" / name
+        if not template.is_file():
+            report.conflicts.append(f"bundled template missing: templates/codex-agents/{name}")
+    if report.conflicts:
+        return report
+
+    agents.mkdir(parents=True, exist_ok=True)
+    for name in PROFILE_NAMES:
+        template = PLUGIN_ROOT / "templates" / "codex-agents" / name
+        installed = agents / name
+        if not installed.exists():
+            shutil.copyfile(template, installed)
+            report.record(name, "created")
+            continue
+        # A profile the maintainer edited stays theirs.
+        same = installed.read_bytes() == template.read_bytes()
+        report.record(name, "present" if same else "present (differs from template)")
     return report
 
 
@@ -265,16 +287,23 @@ def render_text(report: Report) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Scaffold specwright project state.")
-    parser.add_argument("--project", required=True, type=Path)
-    parser.add_argument("--mode", required=True, choices=("shared", "local"))
+    parser.add_argument("--project", type=Path)
+    parser.add_argument("--mode", choices=("shared", "local"))
+    parser.add_argument("--install-codex-roles", action="store_true")
+    parser.add_argument("--codex-home", type=Path)
     parser.add_argument("--format", default="text", choices=("text", "json"))
     arguments = parser.parse_args(argv)
 
-    try:
-        report = initialize(arguments.project.resolve(), arguments.mode)
-    except InitError as error:
-        print(f"FAIL: {error}", file=sys.stderr)
-        return 1
+    if arguments.install_codex_roles:
+        report = install_codex_roles(arguments.codex_home)
+    else:
+        if arguments.project is None or arguments.mode is None:
+            parser.error("--project and --mode are required unless --install-codex-roles is given")
+        try:
+            report = initialize(arguments.project.resolve(), arguments.mode)
+        except InitError as error:
+            print(f"FAIL: {error}", file=sys.stderr)
+            return 1
 
     if arguments.format == "json":
         print(json.dumps(report.as_dict(), indent=2))

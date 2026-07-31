@@ -12,8 +12,9 @@ project-scoped content, and only what is missing:
 - the `.specwright/` vault;
 - a `## specwright` section in the canonical AGENTS instructions, plus the Claude
   adapter symlink;
-- the two `.codex/agents/sw-*.toml` role profiles;
 - the ignore rules for the chosen mode.
+
+That is the whole list. Role profiles are **not** project state — see step 5.
 
 It never installs or enables a plugin, edits personal host configuration, copies
 skill bodies, or creates `.claude/settings.json`.
@@ -79,18 +80,39 @@ A second run must report every path as `present` and create nothing. Then confir
 - in local mode, `git check-ignore` reports the vault, both instruction paths, and
   the profiles as ignored, while unrelated project files are not.
 
+## 5. Check the Codex roles — never install them silently
+
+Claude Code finds its roles inside the installed plugin, so nothing is needed.
+Codex reads role profiles from **its own home**, not from the project, so they
+install once per machine and then serve every repository. They are not written
+into the repo, and this command never installs them on its own: writing outside
+the project is the maintainer's call.
+
+Only when the machine has Codex, check and report:
+
+```bash
+python3 "$SW_PLUGIN_ROOT/scripts/sw_init.py" --install-codex-roles --format json
+```
+
+Run that **only if the maintainer asks for it**. To check without writing, test
+for `sw-change-owner.toml` and `sw-reviewer.toml` under `${CODEX_HOME:-~/.codex}/agents/`.
+If either is missing, print the command above and say it is a one-time,
+machine-wide step — like installing the plugin itself, not part of this repo.
+
+Codex also gates subagents behind a feature that ships **disabled**, so the
+roles stay inert until it is on:
+
+```bash
+codex features enable multi_agent_v2
+```
+
+Without it, `sw:delivery` and `sw:review` still work — they run their passes
+inline instead of spawning, exactly as on any agent without subagents.
+
 ## Then
 
 Report the mode and the paths created. Do not stage or commit them unless the
 maintainer separately authorizes Git actions.
-
-The two `.codex/agents/sw-*.toml` profiles are the only way to give Codex its
-roles — a plugin cannot supply them, so they are written per repository even
-though their content never varies. In Codex, they also stay inert until the
-maintainer enables the subagent feature, which ships disabled: mention
-`codex features enable multi_agent_v2` when reporting on a machine that has
-Codex. Without it the roles simply never spawn, and `sw:delivery` and
-`sw:review` run their passes inline instead.
 
 Say what comes next: **`/sw:change`** (`$sw:change` in Codex) turns a conversation
 into a change. The `## specwright` section now tells this repository's agents to

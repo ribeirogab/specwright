@@ -39,6 +39,12 @@ changed. `sw_init.py` replaces it with idempotent creation: create what is
 missing, never touch what exists, report both. Detection is by path and by
 heading, never by digest, so the maintainer owns every byte after the first run.
 
+Role profiles are not project state in either host. Claude Code resolves them
+from the installed plugin; Codex resolves them from `${CODEX_HOME:-~/.codex}/agents/`.
+`sw_init.py --install-codex-roles` installs the Codex pair once per machine, as a
+separate explicitly requested mode — scaffolding a repository never writes
+outside it.
+
 The validator narrows to one question — *can a stranger implement this?* — and is
 renamed `validate-change.sh` for the pair it now checks. Schema-2 topology
 (`Delegable`, `Integration`, `Depends on`, ownership disjointness) existed to feed
@@ -120,14 +126,15 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 
 ### T3: Idempotent scaffolder
 
-**AC:** AC-6, AC-7
+**AC:** AC-6, AC-7, AC-12, AC-13
 **Files:**
 - Create: `plugins/sw/scripts/sw_init.py`
 - Delete: `plugins/sw/scripts/sw_update.py`
 **Validation:** `bash tests/install/run.sh init`
 
-- [x] Implement create-if-absent for vault, AGENTS section, symlink, profiles, ignore lines
+- [x] Implement create-if-absent for vault, AGENTS section, symlink, ignore lines
 - [x] Report every path as `created` or `present`; write nothing on a second run
+- [x] Keep role profiles out of the repository; install them machine-wide with `--install-codex-roles`
 - [x] Delete the updater
 
 ### T4: The eight skills

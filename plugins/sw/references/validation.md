@@ -56,18 +56,24 @@ to verify and no drift to detect.
 
 A regular-file copy is a failure even when the bytes match.
 
-### 4. Codex role profiles are installed
+### 4. No role profile is written into the project
 
 ```bash
-for name in sw-change-owner sw-reviewer; do
-  test -f ".codex/agents/$name.toml"
-done
+test ! -e .codex/agents/sw-change-owner.toml
+test ! -e .codex/agents/sw-reviewer.toml
 ```
 
-Both must be regular files. A profile whose content differs from the bundled
-template is reported as `present (differs from template)` and left alone — an
-edited profile is the maintainer's, not drift. Unrelated `.codex` content must be
-unchanged.
+Roles are machine-wide, not project state. Codex resolves them from
+`${CODEX_HOME:-~/.codex}/agents/`; verify that install separately:
+
+```bash
+python3 "$SW_PLUGIN_ROOT/scripts/sw_init.py" --install-codex-roles
+```
+
+A second run reports both as `present` and writes nothing. A profile whose
+content differs from the bundled template is reported as
+`present (differs from template)` and left alone — an edited profile is the
+maintainer's, not drift.
 
 ### 5. Ignore rules match the mode
 
@@ -77,14 +83,13 @@ Shared mode requires exactly one specwright line:
 .specwright/worktrees/
 ```
 
-Local mode requires exactly five:
+Local mode requires exactly four:
 
 ```text
 .specwright/worktrees/
 .specwright/
 AGENTS.override.md
 CLAUDE.local.md
-.codex/agents/sw-*.toml
 ```
 
 Each occurs once; unrelated project rules are preserved. Local mode may coexist
