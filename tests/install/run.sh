@@ -173,6 +173,25 @@ run_package() {
   assert_absent "OpenCode project directory" "$ROOT/.opencode"
 
   run_role_agents
+  run_dogfood
+}
+
+# This repository dogfoods specwright in shared mode, so its own tracked project
+# state is part of the package surface: a role retired from the templates but
+# left installed here would ship a profile for a role that no longer exists.
+run_dogfood() {
+  local profiles_dir="$ROOT/plugins/sw/templates/codex-agents" name
+
+  assert_eq "dogfooded Codex profiles match the template inventory" \
+    "$(find "$profiles_dir" -maxdepth 1 -type f -name '*.toml' -exec basename {} \; | sort)" \
+    "$(find "$ROOT/.codex/agents" -maxdepth 1 -type f -name '*.toml' -exec basename {} \; | sort)"
+  for name in sw-change-owner sw-reviewer; do
+    assert_eq "dogfooded profile $name matches its template" 0 \
+      "$(cmp -s "$profiles_dir/$name.toml" "$ROOT/.codex/agents/$name.toml"; echo $?)"
+  done
+  assert_symlink "dogfooded Claude adapter" "$ROOT/CLAUDE.md" AGENTS.md
+  assert_eq "dogfooded AGENTS.md carries one specwright section" 1 \
+    "$(grep -cx '## specwright' "$ROOT/AGENTS.md")"
 }
 
 run_role_agents() {
