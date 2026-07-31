@@ -132,7 +132,7 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 
 ### T4: The eight skills
 
-**AC:** AC-1, AC-8, AC-9
+**AC:** AC-1, AC-8, AC-9, AC-11
 **Files:**
 - Create: `plugins/sw/skills/{change,implement,ship,delivery}/SKILL.md`
 - Modify: `plugins/sw/skills/{init,plan,pr,review}/SKILL.md`
