@@ -1,7 +1,7 @@
-# Validation — Project State
+# Validation — project state
 
-Run after `sw:init` or `sw:update`. Validation is evidence, not an independent
-repair engine: do not mutate managed state outside the updater.
+Run after `sw:init`. Validation is evidence, not a repair engine: it reports, it
+does not fix.
 
 ## Output format
 
@@ -10,27 +10,25 @@ repair engine: do not mutate managed state outside the updater.
 
 | # | Check | Status |
 |---|---|---|
-| 1 | updater classification | PASS — up-to-date |
+| 1 | scaffolder is idempotent | PASS |
 | ... | ... | ... |
 
-Result: 8/8 PASS
+Result: 6/6 PASS
 ```
 
 ## Checks
 
-### 1. Read-only plan is stable
+### 1. The scaffolder is idempotent
 
 ```bash
-python3 "$SW_PLUGIN_ROOT/scripts/sw_update.py" \
-  --plan --project "$PWD" --mode "$MODE" --format json
+python3 "$SW_PLUGIN_ROOT/scripts/sw_init.py" --project "$PWD" --mode "$MODE"
 ```
 
-Require `state: up-to-date`, zero operations, and no diagnostics. Run it twice and
-require the same `plan_id`. Any other state is a failure; do not auto-repair drift.
+A second run must report every path as `present`, create nothing, and exit 0. A
+`CONFLICT` line means a path exists in a shape specwright cannot use; nothing was
+written, and resolving it is the maintainer's call.
 
-### 2. Canonical instructions and managed digest are valid
-
-Resolve:
+### 2. Canonical instructions carry the section
 
 ```bash
 if [ "$MODE" = local ]; then
@@ -40,80 +38,46 @@ else
   CANONICAL=AGENTS.md
   ADAPTER=CLAUDE.md
 fi
+
+grep -c '^## specwright$' "$CANONICAL"
 ```
 
-The canonical path must be a regular file with exactly one opening
-`<!-- sw:managed version=... digest=... -->` marker and one
-`<!-- /sw:managed -->` marker. The updater's `up-to-date` classification proves
-that the digest matches the body and the installed version.
+The canonical path is a regular file containing exactly one `## specwright`
+heading. Everything else in that file belongs to the project — the scaffolder
+appends the section once and never touches the file again, so there is no digest
+to verify and no drift to detect.
 
-Project-authored text outside the block has no required heading, size, or host
-installation phrase.
-
-### 3. Claude adapter is the exact relative symlink
+### 3. The Claude adapter is the exact relative symlink
 
 ```bash
 [ -L "$ADAPTER" ] || exit 1
 [ "$(readlink "$ADAPTER")" = "$CANONICAL" ] || exit 1
 ```
 
-A regular-file copy is a failure even when bytes match.
+A regular-file copy is a failure even when the bytes match.
 
-### 4. Codex role profiles and OpenCode managed files match installed templates
+### 4. Codex role profiles are installed
 
 ```bash
-for name in \
-  sw-change-owner \
-  sw-spec-document-reviewer \
-  sw-reviewer \
-  sw-task-worker
-do
-  cmp \
-    "$SW_PLUGIN_ROOT/templates/codex-agents/$name.toml" \
-    ".codex/agents/$name.toml"
-done
-
-for name in \
-  sw-change-owner \
-  sw-spec-document-reviewer \
-  sw-reviewer \
-  sw-task-worker
-do
-  cmp \
-    "$SW_PLUGIN_ROOT/templates/opencode-agents/$name.md" \
-    ".opencode/agent/$name.md"
-done
-
-for name in \
-  sw-init \
-  sw-brainstorm \
-  sw-spec \
-  sw-plan \
-  sw-run \
-  sw-review \
-  sw-review-spec \
-  sw-pr \
-  sw-update
-do
-  cmp \
-    "$SW_PLUGIN_ROOT/templates/opencode-commands/$name.md" \
-    ".opencode/command/$name.md"
+for name in sw-change-owner sw-reviewer; do
+  test -f ".codex/agents/$name.toml"
 done
 ```
 
-All four Codex destinations, four `.opencode/agent/sw-*.md` files, and nine
-`.opencode/command/sw-*.md` files must be regular files. Unrelated `.codex` and
-`.opencode` content must be unchanged.
+Both must be regular files. A profile whose content differs from the bundled
+template is reported as `present (differs from template)` and left alone — an
+edited profile is the maintainer's, not drift. Unrelated `.codex` content must be
+unchanged.
 
-### 5. Ignore rules match the selected mode
+### 5. Ignore rules match the mode
 
-Shared mode requires exactly:
+Shared mode requires exactly one specwright line:
 
 ```text
 .specwright/worktrees/
 ```
 
-Local mode requires exactly:
+Local mode requires exactly five:
 
 ```text
 .specwright/worktrees/
@@ -121,60 +85,46 @@ Local mode requires exactly:
 AGENTS.override.md
 CLAUDE.local.md
 .codex/agents/sw-*.toml
-.opencode/agent/sw-*.md
-.opencode/command/sw-*.md
 ```
 
-Each required line occurs once. Preserve unrelated project rules. Local mode may
-coexist with project-owned shared instructions and must not alter them.
+Each occurs once; unrelated project rules are preserved. Local mode may coexist
+with project-owned shared instructions and must not alter them.
 
-### 6. Vault directories survive the selected mode
+### 6. The vault survives
 
 ```bash
 test -d .specwright/conventions
-test -n "$(find .specwright/conventions -mindepth 1 -maxdepth 1 -type f -print -quit)"
 test -f .specwright/changes/.gitkeep
 test -f .specwright/deliveries/.gitkeep
 ```
 
-An initially empty conventions directory receives the signpost; an existing
-directory keeps its own convention files instead. Never overwrite existing
-conventions, changes, deliveries, or their artifacts.
+An initially empty `conventions/` receives the signpost; a directory that already
+holds conventions keeps them.
 
-### 7. Package surfaces remain host-equivalent
+## Package surfaces
 
 From the plugin repository:
 
 ```bash
 claude plugin validate --strict plugins/sw
-bash tests/install/run.sh package init
+bash tests/install/run.sh
+bash tests/validate-change/run.sh
 bash tests/release/run.sh
 ```
 
-The source and installed inventories contain the same nine shared skills, and all
-nine Claude command files remain pure redirects. The nine `.opencode/command/sw-*.md`
-files are equally pure redirects — no host-specific behavior beyond naming their
-skill. Native Codex ingestion runs only in an isolated environment with
-`CI_EPHEMERAL_RUNNER=1`.
+The source and installed inventories contain the same eight skills, and all eight
+Claude command files remain pure redirects. Native Codex ingestion runs only in an
+isolated environment with `CI_EPHEMERAL_RUNNER=1`.
 
-### 8. Active task topology is schema 2
+## Change artifacts
 
-For every active change with `tasks.md`, run the change validator. Require unique
-stable IDs, existing acyclic dependencies, mandatory metadata, explicit isolated
-file ownership and validation, and no same-wave overlap between independent
-isolated tasks.
+For any change with a plan, run the handoff gate:
 
-A shipped historical change may retain schema-1 tasks as history. An active
-schema-1 task file is a blocking diagnostic and must be explicitly replanned;
-neither init nor update may infer its topology.
+```bash
+"$SW_PLUGIN_ROOT/scripts/validate-change.sh" .specwright/changes/<folder>
+```
 
-## Failure handling
-
-- `new` or `legacy-migratable`: show the ordered plan and complete `plan_id`, then
-  ask for explicit apply confirmation.
-- `drifted`: show all diagnostics and stop without writes.
-- identity mismatch: produce a new read-only plan and obtain new confirmation.
-- unsupported symlink, invalid parent, or changed profile source: stop; there is
-  no copy or overwrite fallback.
-- vault-only missing keep-file: `sw:init` may create it without overwriting
-  existing vault content after managed state is accepted or already healthy.
+It answers one question — can an agent with no conversation context implement
+this? — across six checks: `change.md` frontmatter and status enum, `plan.md`
+frontmatter with a named branch, surviving placeholders, vague acceptance-criteria
+verbs, `AC-N` traceability in both directions, and task metadata.

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-SKILLS=(brainstorm init plan pr review review-spec run spec update)
+SKILLS=(change delivery implement init plan pr review ship)
 
 fail() {
   printf 'FAIL: %s\n' "$1" >&2
@@ -209,7 +209,7 @@ run_codex_malformed_skill() {
 }
 
 assert_source_inventory
-pass "static nine-skill inventory"
+pass "static eight-skill inventory"
 claude plugin validate --strict "$ROOT/plugins/sw"
 pass "Claude strict validation"
 
