@@ -84,6 +84,14 @@ A second run must report every path as `present` and create nothing. Then confir
 Report the mode and the paths created. Do not stage or commit them unless the
 maintainer separately authorizes Git actions.
 
+The two `.codex/agents/sw-*.toml` profiles are the only way to give Codex its
+roles — a plugin cannot supply them, so they are written per repository even
+though their content never varies. In Codex, they also stay inert until the
+maintainer enables the subagent feature, which ships disabled: mention
+`codex features enable multi_agent_v2` when reporting on a machine that has
+Codex. Without it the roles simply never spawn, and `sw:delivery` and
+`sw:review` run their passes inline instead.
+
 Say what comes next: **`/sw:change`** (`$sw:change` in Codex) turns a conversation
 into a change. The `## specwright` section now tells this repository's agents to
 offer that command rather than starting the workflow on their own.

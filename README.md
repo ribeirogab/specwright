@@ -192,6 +192,21 @@ between ladder steps, applied to the roles. The Codex sandbox is pinned, because
 that is a permission boundary rather than a preference: the reviewer must not be
 able to write, whatever model runs it.
 
+The two hosts deliver the roles differently. Claude Code finds them inside the
+installed plugin, so they work as soon as it is installed. Codex reads role
+profiles from the **project**, which is why `sw:init` writes
+`.codex/agents/sw-*.toml` — a plugin cannot supply them. Codex also gates
+subagents behind a feature flag that ships disabled, so its roles stay inert
+until you turn it on:
+
+```bash
+codex features enable multi_agent_v2
+```
+
+Without it, `$sw:delivery` and `$sw:review` still work — they fall back to
+running the same pass inline, in the main session, exactly as they do on any
+agent that cannot spawn subagents.
+
 The reviewer covers three dimensions in one pass — rubric and conventions, change
 conformance against the `AC-N` and their verification evidence, and documentation
 consistency. A branch reaches `lgtm` only when no dimension has an open blocker.
