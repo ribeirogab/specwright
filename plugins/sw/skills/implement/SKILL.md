@@ -1,0 +1,112 @@
+---
+name: implement
+user-invocable: false
+description: "Use when explicitly invoked to execute a change's plan.md from the first unticked step: implement each task, run its validation, commit, then run the quality gate and verify every acceptance criterion by observed behavior. Needs no conversation context — the two artifacts are the whole input. Trigger on '/sw:implement', '$sw:implement', or a direct request to implement an existing plan."
+---
+
+# implement — execute the plan
+
+Take a change's `change.md` and `plan.md` and build what they describe. This
+skill is designed to run **cold**: a fresh session, a different model, a
+different host, with no memory of the conversation that produced the plan. The
+two artifacts are the entire input.
+
+**Announce at start:** "Implementing the plan."
+
+## Locate the change
+
+`$ARGUMENTS` names a change folder or slug → use it. Otherwise list the changes
+in `.specwright/changes/*/` whose `change.md` says `status: pending` or
+`in-progress` and ask which one; a single candidate may be used directly.
+
+Read both files completely before touching code. Check out the branch named in
+`plan.md`'s `branch:` frontmatter, creating it from the default branch if it does
+not exist yet, and set `status: in-progress` in `change.md`.
+
+If `plan.md` is missing, stop: the change has no plan yet, and writing one is
+`/sw:plan`'s job, not this skill's.
+
+## Resume from the checkboxes
+
+The checkboxes in `plan.md` are the state. Find the **first unticked step** and
+start there — everything above it is done, whoever did it. Never restart a task
+whose boxes are ticked, and never re-derive progress from the git log; the file
+is the record.
+
+Before starting, confirm the working tree is clean. Uncommitted work from a
+previous run is ambiguous: report it and let the maintainer resolve it rather
+than committing or discarding on their behalf.
+
+## Work the list
+
+Tasks run in document order, top to bottom. For each task:
+
+1. Read its `Files:` — those are the paths it owns. Touching a path no task
+   declares is a signal the plan was wrong; see below.
+2. Work its steps in order, ticking each box as it completes.
+3. Run its exact `Validation:` command and require it to pass.
+4. Commit, then move to the next task.
+
+Commit per task, not per session. A run that stops mid-list must leave the
+repository in a state the next run can continue from.
+
+## When the plan is wrong
+
+Plans meet reality and reality wins sometimes. Two cases, two responses:
+
+**A gap you can close** — a missing step, a wrong path, an import the plan did
+not anticipate. Fix it, keep going, and record it under `## Decisions and
+discoveries` in `change.md` as a `[decision]` or `[discovery]`.
+
+**A gap you cannot close** — the approach does not work, a task contradicts
+another, or the change needs work outside every declared path. Stop. Do not
+improvise a different design: report what broke, what you tried, and what you
+need. For a delivery change that is a `blocked` return.
+
+Never edit an approved `AC-N` to make it match what you built. That is the one
+edit this skill may not make.
+
+## Circuit breaker
+
+The same command or criterion failing **three times identically** means stop. Not
+a fourth variation of the same idea. Report why, what you tried, and what you
+need — to the maintainer for a standalone change, or as `status: blocked` in
+`change.md` plus a blocked return for a delivery change.
+
+## Quality gate
+
+After the last task, detect the code-quality processes the touched modules
+actually use — test, lint, typecheck, build, from the Makefile, the
+`package.json` scripts, or the area's CI — and run them all. Nothing you did may
+break them.
+
+Logic added or changed in an area that has tests, without a test → write the
+missing test first. **Test integrity:** the touched area's test count must not
+silently drop, and no assertion may be weakened, skipped, or deleted to get the
+gate green without a justification recorded in the plan.
+
+## Runtime verification
+
+Before the PR, execute what you built and check **every** `AC-N` by observed
+behavior: run the CLI, start the server and call the endpoint, run the script
+against a fixture. Reading the code is not verification.
+
+- Stream-sensitive checks use per-stream redirection (`>out 2>err`); a merged
+  pipe cannot attribute output to stdout versus stderr.
+- A **UI criterion** — one about rendered appearance or interaction, not an HTTP
+  response or text output — is verified through a browser when the session has
+  one. A session that degrades a UI check to `curl` records the capability gap
+  alongside the result.
+- A criterion you cannot verify — no browser, no reachable environment — is
+  marked `needs-human-verification` in `change.md` with one line of reason.
+
+**Never tick a criterion you did not observe, and never write a verification you
+did not run.** Record what was verified and how; it goes in the PR body.
+
+## Then
+
+Report what was built, the gate results, and the per-criterion verification
+record. Stop there.
+
+Say what comes next: **`/sw:pr`** (`$sw:pr` in Codex) opens the pull request with
+this verification record in its body.

@@ -1,6 +1,6 @@
 ---
-description: Open the current change's pull request following specwright conventions — branch/base resolution, repo PR template, Conventional-Commit title, runtime-verification results, no AI attribution
-argument-hint: "<optional: path to change folder, or current change if omitted>"
+description: Open the current change's pull request following specwright conventions — branch and base resolution, the repository PR template, a Conventional-Commit title, the runtime-verification record, no AI attribution
+argument-hint: "<optional: base branch or extra instructions>"
 ---
 
 # pr — open the change's pull request

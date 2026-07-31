@@ -1,7 +1,7 @@
 ---
 name: review
 user-invocable: false
-description: "Review a branch diff (or any diff/files pointed at) with specialized find-only subagents — rubric+conventions (the universal coding standard plus the project's conventions), change-conformance (the change's AC-N and its runtime-verification results), and documentation-consistency (stale or missing docs after the change) — merged into one plain-text verdict that reaches lgtm only when every lane is clean. Classify findings (blocker/suggestion/nitpick/question). Portable: no dependency on a native review tool. Trigger on 'review this branch', 'code review', 'review the diff', 'review again', or the delivery step of the change pipeline."
+description: "Use when explicitly invoked to review a branch diff (or any diff or files pointed at) with a find-only subagent covering rubric and conventions, change conformance against the AC-N and their runtime-verification evidence, and documentation consistency — one plain-text verdict that reaches lgtm only when no dimension has an open blocker. Classifies findings as blocker, suggestion, nitpick, or question. Trigger on '/sw:review', '$sw:review', 'review this branch', 'code review', or 'review again'."
 ---
 
 # review — review against the universal standard and the project's conventions
@@ -121,13 +121,13 @@ A blocker MUST change before merge. Real blockers here:
 - a violation of a project convention in `.specwright/conventions/` relevant to the changed files.
 - a `SKILL.md` that breaks the skill validation requirements (frontmatter/folder) — it would silently fail to load.
 - a committed artifact not in English; chat may be PT-BR, files may not.
-- a malformed specwright managed instruction block or a Claude adapter that is not
-  the required relative symlink to its canonical AGENTS file.
+- a Claude adapter that is not the required relative symlink to its canonical
+  AGENTS file.
 - new logic with zero tests in an area that has tests.
-- an acceptance criterion (`AC-N`) in the change satisfied by no change in the diff — the change-conformance pass flags it by ID (Completeness miss).
+- an acceptance criterion (`AC-N`) in the change satisfied by nothing in the diff — flag it by ID.
 - an `AC-N` ticked as verified with no runtime-verification evidence in the PR body, or a criterion silently skipped instead of marked `needs-human-verification`.
-- a silent test-integrity regression in a tested area (installed repos with a test suite): the touched area's test count drops, or an assertion is weakened/`skip`ped/deleted, with no in-spec justification.
-- a live doc left contradicting the behavior this diff introduces — a stale flow/step/count/artifact reference in `README`, canonical AGENTS instructions, a command/skill doc, or a convention (the documentation pass flags it). Shipped changes and deliveries under `.specwright/changes/` and `.specwright/deliveries/` are historical record and exempt.
+- a silent test-integrity regression in a tested area (installed repos with a test suite): the touched area's test count drops, or an assertion is weakened/`skip`ped/deleted, with no justification recorded in the plan.
+- a live doc left contradicting the behavior this diff introduces — a stale flow/step/count/artifact reference in `README`, canonical AGENTS instructions, a command/skill doc, or a convention. Shipped changes and deliveries under `.specwright/changes/` and `.specwright/deliveries/` are historical record and exempt.
 
 NOT blockers — these are nits or suggestions, never request-changes:
 
@@ -150,26 +150,47 @@ Scan your draft for: any emoji; the strings `## Review` / `### Blocker` / `### S
 4. Review in order: correctness/bugs → security → tests → rubric/conventions compliance → readability → DRY/SOLID. Classify each finding per the calibration list.
 5. Run the pre-reply gate, then send exactly one template.
 
-## Three-subagent review (change pipeline) and degradation
+## The three dimensions
 
-In the change pipeline's delivery step, review runs as **three** dispatches of the
-`sw-reviewer` subagent over the open branch, one per lane — it pins the reviewer's
-model + effort and routes into this shared skill; none edits code. Each owns **one
-lane** and must stay in it — do not duplicate another lane's findings or wander
-into its scope. The lanes are deliberately non-overlapping so the merge is clean.
+Every review covers these three, in this order. They are different questions
+about the same diff, not different reviewers — one pass answers all three and
+returns one verdict.
 
-- **Subagent A — rubric + conventions.** *Question it answers:* does the diff obey the universal coding standard and the project's conventions? Reviews against the universal standard above, applicable canonical AGENTS instructions, and `.specwright/conventions/` — correctness/bugs, security, tests, rubric/conventions compliance, readability, DRY/SOLID (the calibration above). **Not A's job:** whether the change's acceptance criteria were delivered (that's B); whether docs went stale (that's C).
-- **Subagent B — change-conformance.** *Question it answers:* does the diff deliver **this change**? Walks the change's Acceptance Criteria (the `AC-N` in `change.md`) against the diff and reports three dimensions, citing each `AC-N` by ID:
-  - **Completeness** — every `AC-N` is satisfied by a concrete change; an `AC-N` with no satisfying change is a **blocker**.
-  - **Correctness** — the change actually meets the criterion (and its edge cases), not just gestures at it.
-  - **Verification** — the PR body's runtime-verification record covers each `AC-N`: verified by observed behavior, or explicitly marked `needs-human-verification` with a reason. A ticked criterion with neither is a **blocker**.
-  - **Coherence** — the spec's architecture / file-structure decisions appear in the code as written.
-  **Not B's job:** general rubric/style/security (that's A); documentation staleness beyond what an `AC-N` explicitly requires (that's C). If there is no change behind the branch (ad-hoc review), B does not run.
-- **Subagent C — documentation consistency.** *Question it answers:* after this diff, does the project's **live documentation** still match the code? Audits the docs the change touches or implies — `README.md`, canonical AGENTS instruction files, their Claude adapter links, convention docs, plugin command docs, and bundled templates — looking for: references to something the diff renamed/removed/changed, counts or lists that no longer match (step counts, check counts, file lists), and a new artifact/flag/step/command left undocumented. **Decisive rule:** flag only **live** docs; **never** flag shipped changes or deliveries under `.specwright/changes/` or `.specwright/deliveries/` — those are historical record and legitimately keep their ship-time wording. **Not C's job:** code correctness (A) or AC delivery (B) — C judges only whether the docs match the shipped behavior.
+- **1 — rubric and conventions.** Does the diff obey the universal coding
+  standard above, the applicable canonical AGENTS instructions, and
+  `.specwright/conventions/`? Correctness and bugs, security, tests,
+  readability, DRY/SOLID, per the calibration above.
+- **2 — change conformance.** Does the diff deliver **this change**? Walk the
+  `AC-N` in `change.md` against the diff, citing each by ID:
+  - **Completeness** — every `AC-N` is satisfied by a concrete change; one that
+    is not is a **blocker**.
+  - **Correctness** — the change meets the criterion and its edge cases rather
+    than gesturing at it.
+  - **Verification** — the PR body's runtime-verification record covers each
+    `AC-N`: verified by observed behavior, or explicitly marked
+    `needs-human-verification` with a reason. A ticked criterion with neither is
+    a **blocker**.
+  - **Coherence** — the plan's architecture decisions appear in the code as
+    written.
 
-The **main agent merges** all three lanes into a **single** reply in one of the A/B/C/D templates: union and dedupe, blockers first, then triage — fix what makes sense, contest the rest to consensus, push, and re-request review. The verdict is `lgtm` **only when all three lanes are clean** — no open blocker from A, B, or C.
+  Skip this dimension only for an ad-hoc review with no change behind the branch.
+- **3 — documentation consistency.** After this diff, does the project's **live**
+  documentation still match the code? Audit what the change touches or implies —
+  `README.md`, canonical AGENTS instructions, their Claude adapter links,
+  conventions, command and skill docs, bundled templates — for references to
+  something the diff renamed or removed, counts and lists that no longer match,
+  and a new artifact, flag, step, or command left undocumented. **Flag only live
+  docs**: shipped records under `.specwright/changes/` and
+  `.specwright/deliveries/` keep their ship-time wording by design.
 
-Degradation: on an agent without sub-agent spawning, run the three lanes inline as three delimited fresh-context passes — rubric + conventions, then change-conformance, then documentation — and merge into one verdict. Same templates, same standard. Ad-hoc reviews with no change run **A** (and **C** when the diff touches docs); **B** is skipped.
+## Dispatch
+
+When the session can spawn subagents, dispatch **one** `sw-reviewer` — it pins
+the reviewer's model and effort and routes into this skill. It returns findings;
+the main agent triages them: fix what makes sense, contest the rest to consensus,
+push, and re-request review. Without subagent support, run the same pass inline.
+
+Either way the verdict is `lgtm` **only when no dimension has an open blocker**.
 
 ## Re-review
 

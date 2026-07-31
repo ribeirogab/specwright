@@ -1,37 +1,40 @@
 ---
 name: pr
 user-invocable: false
-description: "Open the pull request for the current change, following specwright PR conventions — resolves branch/base, pushes if needed, fills the repo PR template, English Conventional-Commit title and body, records the runtime-verification results, no AI attribution. Use as the delivery step of the change pipeline, or whenever the user asks to open a PR."
+description: "Use when explicitly invoked to open the current change's pull request following specwright conventions — branch and base resolution, the repository's PR template, an English Conventional-Commit title, the runtime-verification record, and no AI attribution. Trigger on '/sw:pr', '$sw:pr', or a direct request to open the PR."
 ---
 
-# pr — Open the change's pull request
+# pr — open the change's pull request
 
-The single sanctioned way to open a PR in a specwright repo — PR via this command. Never open a PR any other way.
+The sanctioned way to open a PR in a specwright repository.
 
-**Announce at start:** "Opening the pull request..."
+**Announce at start:** "Opening the pull request."
 
 ## Inputs
 
-`$ARGUMENTS` (optional): target base branch and/or extra instructions — e.g. "to main", "label bug", "draft". Empty → base defaults to `main`.
+`$ARGUMENTS` (optional): a target base branch and/or extra instructions — "to
+main", "label bug", "draft". Empty → the base defaults to `main`.
 
-## Safety gate — never from main
-
-Check the current branch first:
+## Safety gate — never from the default branch
 
 ```bash
 git branch --show-current
 ```
 
-If it is `main` or `master`, **stop** and tell the user to create a feature branch first. Do not proceed.
+If it is `main` or `master`, **stop** and tell the maintainer to create a feature
+branch first. Do not proceed.
 
-## Resolve workflow authority — find the change
+## Find the change
 
-Find the change driving this branch: the `spec.md` whose `branch:` matches the current branch, searched under `.specwright/changes/*/` (else the most recently modified change folder in that tree).
+Locate the change driving this branch: the `plan.md` under `.specwright/changes/*/`
+whose `branch:` matches the current branch, else the most recently modified change
+folder there.
 
-- **Change found** → the approved design authorizes entering the PR step. Continue only
-  within the current host's Git, network, credential, and external-action approval
-  policy; ask when that policy requires explicit consent.
-- **No matching change (ad-hoc PR)** → proceed only if the user explicitly invoked this skill.
+- **Found** — the approved ticket authorizes this step. Continue within the
+  host's Git, network, credential, and external-action policy; ask when that
+  policy requires explicit consent.
+- **Not found** — an ad-hoc PR. Proceed only if the maintainer invoked this skill
+  explicitly.
 
 ## Push the branch if needed
 
@@ -39,8 +42,8 @@ Find the change driving this branch: the `spec.md` whose `branch:` matches the c
 git ls-remote --heads origin "$(git branch --show-current)"
 ```
 
-If the branch is **not** on origin, push it only when current host policy permits
-the Git/network action. Never push `main` or `master`:
+If the branch is not on origin, push it — only when host policy permits the
+Git/network action, and never `main` or `master`:
 
 ```bash
 git push -u origin "$(git branch --show-current)"
@@ -48,30 +51,52 @@ git push -u origin "$(git branch --show-current)"
 
 ## Resolve the PR template
 
-Use the repo's template as the body skeleton:
-
 ```bash
 cat .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null || cat .github/pull_request_template.md 2>/dev/null
 ```
 
-If present, fill its sections (do not drop required checklist items — answer them honestly; for a maintainer dogfood PR that edits `.specwright/`, annotate rather than silently tick). If absent, print one line — `PR template not found; using embedded fallback` — and use the **Embedded fallback** at the bottom of this file.
+Fill its sections and do not drop required checklist items — answer them
+honestly. For a maintainer dogfood PR that edits `.specwright/`, annotate rather
+than silently tick. If no template exists, print one line — `PR template not
+found; using embedded fallback` — and use the fallback at the bottom of this file.
 
 ## Title and body
 
-- **Title** — English, Conventional Commits: `<type>(<scope>): <concise summary>`. Types: `feat`, `fix`, `docs`, `refactor`, `chore`, `test`, `ci`. Derive the scope from the area the diff touches.
-- **Body** — English (committed artifacts are English). Top: ONE product-level sentence (no filenames, no pipeline mechanics) describing WHAT the PR does, then 2–5 concrete bullets (resource + action). For a change-driven PR, fill `## Summary` with context/decisions and link the change artifacts as absolute GitHub URLs on the branch: `change.md`, `spec.md`, `tasks.md`. **Exception — `local` commit mode** (`git check-ignore -q .specwright/deliveries` succeeds): those files are git-ignored and never pushed, so a GitHub URL would 404 — omit the links and inline one line instead: the artifacts live only in the local (un-pushed) `.specwright/` vault.
-  Record in the template's test-plan/quality section: the quality-gate results (what ran, what passed) **and** the runtime-verification record — each `AC-N` with how it was verified by observed behavior, or `needs-human-verification` + reason. For a change-driven PR, the same section also names the three plan self-review gates (mechanical validator, spec-document-reviewer, review-spec) and their outcomes.
-- **No AI attribution** anywhere — no "Co-Authored-By: Claude", "Generated by …".
+- **Title** — English, Conventional Commits: `<type>(<scope>): <concise summary>`.
+  Types: `feat`, `fix`, `docs`, `refactor`, `chore`, `test`, `ci`. Derive the
+  scope from the area the diff touches.
+- **Body** — English; committed artifacts are English even when the conversation
+  is not. Open with ONE product-level sentence — what this PR does, no filenames,
+  no pipeline mechanics — then two to five concrete bullets (resource + action).
+  Link the change artifacts as absolute GitHub URLs on the branch: `change.md`
+  and `plan.md`.
 
-## Degradation — ordered pre-flight
+  **Exception — local mode** (`git check-ignore -q .specwright/changes` succeeds):
+  those files are git-ignored and never pushed, so a GitHub URL would 404. Omit
+  the links and write one line instead: the artifacts live only in the local,
+  un-pushed `.specwright/` vault.
 
-Run these checks in this order, **before** `gh pr create`. `gh pr create` is never invoked as a probe, and never with a placeholder title or body — it runs once, with the real, fully-filled title and body from the previous step.
+  The template's test-plan section carries two things: the **quality-gate
+  results** (what ran, what passed) and the **runtime-verification record** —
+  each `AC-N` with how it was verified by observed behavior, or
+  `needs-human-verification` with its reason. A repository-only auditor must be
+  able to tell what was actually executed.
+- **No AI attribution** anywhere — no "Co-Authored-By: Claude", no "Generated
+  by …", in the body or in any commit.
 
-1. **Remote** — inspect `git remote -v` first. Empty, or no GitHub remote → **stop before anything else**: explain; do not fabricate a PR.
-2. **`gh`** — no `gh` on PATH, or `gh auth status` fails → **stop**: print the exact `git push` + manual PR-creation steps for the user to finish.
-3. Only when both pass, run `gh pr create` (next section).
+## Degradation — ordered preflight
 
-**Durable record on either stop branch:** write the fully-filled PR body — template or embedded fallback, including the quality-gate results and the per-criterion runtime-verification record — to `<change-folder>/pr.md`, and say in the stop explanation that the record was written there. The delivery record must survive the session.
+Run these **before** `gh pr create`, which is never invoked as a probe and never
+with a placeholder title or body. It runs once, with the real content.
+
+1. **Remote** — inspect `git remote -v`. Empty, or no GitHub remote → **stop**:
+   explain, and do not fabricate a PR.
+2. **`gh`** — not on PATH, or `gh auth status` fails → **stop**: print the exact
+   `git push` and manual PR-creation steps for the maintainer to finish.
+
+**On either stop, write the fully-filled body — including the quality-gate
+results and the per-criterion verification record — to `<change-folder>/pr.md`**
+and say so. The delivery record must survive the session.
 
 ## Create the PR
 
@@ -79,15 +104,26 @@ Run these checks in this order, **before** `gh pr create`. `gh pr create` is nev
 gh pr create --base <BASE> --title "<TITLE>" --body "<BODY>" --assignee @me
 ```
 
-Keep `--assignee @me` unless `$ARGUMENTS` says otherwise. Add `--draft` only if asked. After creation, print the PR URL.
+Keep `--assignee @me` unless `$ARGUMENTS` says otherwise. Add `--draft` only if
+asked. Print the PR URL afterwards.
 
 ## Stacked base (delivery changes)
 
-When the change's board dependency is not yet merged, the branch was cut from the dependency's branch — pass that branch as `--base` and say so in the body ("stacked on #<PR>"). Re-target to `main` after the dependency merges.
+When this change's delivery dependency is not yet merged, the branch was cut from
+the dependency's branch: pass that branch as `--base` and say so in the body
+("stacked on #<PR>"). Re-target to `main` after the dependency merges.
 
-## Embedded fallback (when the repo has no PR template)
+## Then
 
-In `local` mode, replace the `## Change` block's GitHub URLs with a single line: the artifacts live in the local (un-pushed) `.specwright/` vault.
+Print the PR URL and stop.
+
+Say what comes next: **`/sw:review`** (`$sw:review` in Codex) reviews the branch
+to `lgtm`. Merging is the maintainer's call, never this skill's.
+
+## Embedded fallback (repository has no PR template)
+
+In local mode, replace the `## Change` block's URLs with the single line
+described above.
 
 ```markdown
 <one product-level sentence — what this PR does>
@@ -99,11 +135,10 @@ In `local` mode, replace the `## Change` block's GitHub URLs with a single line:
 
 ## Change
 - change: <github-url>
-- spec: <github-url>
-- tasks: <github-url>
+- plan: <github-url>
 
 ## Quality gate
-<tests/validators run, manual checks, CI output>
+<tests, validators, and checks run, with their results>
 
 ## Runtime verification
 <AC-N: verified how — or needs-human-verification + reason>

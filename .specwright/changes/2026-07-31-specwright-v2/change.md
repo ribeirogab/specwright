@@ -53,9 +53,9 @@ survives. The per-task parallelism inside a single change does not.
 - [ ] **AC-6** `python3 plugins/sw/scripts/sw_init.py --project <empty-git-repo> --mode shared` creates the vault, the `## specwright` section in `AGENTS.md`, the `CLAUDE.md -> AGENTS.md` relative symlink, both `.codex/agents/sw-*.toml` profiles, and the `.specwright/worktrees/` ignore line. A second run reports every path as `present`, performs zero writes, and leaves the directory tree byte-identical.
 - [ ] **AC-7** With `--mode local`, `sw_init.py` writes `AGENTS.override.md`, the `CLAUDE.local.md -> AGENTS.override.md` relative symlink, and exactly five ignore lines: `.specwright/worktrees/`, `.specwright/`, `AGENTS.override.md`, `CLAUDE.local.md`, `.codex/agents/sw-*.toml`. A pre-existing `AGENTS.md` and an unrelated `.codex/project.toml` remain byte-identical.
 - [ ] **AC-8** No `SKILL.md` frontmatter description contains `You MUST`, and the text `sw:managed` appears in no tracked file outside `.specwright/changes/` and `.specwright/deliveries/`.
-- [ ] **AC-9** Every `SKILL.md` other than `review`, `pr`, and `delivery` names its successor command: `change` names `/sw:plan`, `plan` names `/sw:implement`, `implement` names `/sw:pr`, `pr` names `/sw:review`, `init` names `/sw:change`.
+- [ ] **AC-9** Each ladder skill names its successor command in its own `SKILL.md`: `init` names `/sw:change`, `change` names `/sw:plan`, `plan` names `/sw:implement`, `implement` names `/sw:pr`, and `pr` names `/sw:review`.
 - [ ] **AC-10** `bash tests/install/run.sh`, `bash tests/validate-change/run.sh`, `bash tests/release/run.sh`, and `python3 tests/skills/test_validation.py` each exit 0. `claude plugin validate --strict plugins/sw` exits 0.
-- [ ] **AC-11** `python3 plugins/sw/scripts/quick_validate.py <dir>` prints `Skill is valid!` and exits 0 for all eight skill directories.
+- [ ] **AC-11** The repository's canonical skill check — `UV_CACHE_DIR=/tmp/specwright-uv-cache uv run --offline --with PyYAML python3 plugins/sw/scripts/quick_validate.py <dir>` — prints `Skill is valid!` for all eight skill directories.
 
 Tick each `[x]` when verified.
 

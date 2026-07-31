@@ -1,315 +1,161 @@
 ---
 name: plan
 user-invocable: false
-description: "Use when an approved change (change.md) needs its technical plan — produces the fused spec.md + tasks.md just-in-time, self-reviews them, then drives the change pipeline: implement, quality gate, runtime verification, PR, review to lgtm, learnings. The change owner's skill."
+description: "Use when explicitly invoked to turn an approved change.md into plan.md — the architecture plus the task checklist — written so an agent with no memory of the conversation can implement it, then checked by the handoff-readiness validator. Trigger on '/sw:plan', '$sw:plan', or a direct request to plan an existing change."
 ---
 
-# Plan — the change pipeline, from ticket to shipped
+# plan — the technical plan, written for a stranger
 
-Turn an approved change (`change.md`) into the **fused technical `spec.md`** (architecture, file structure, phase ordering) plus the **`tasks.md`** breakdown, then drive the pipeline to delivery. Whoever runs this skill is the **change owner**: one owner per change, owning the branch, the artifacts, the gates, and the change's `learnings.md`.
+Turn an approved `change.md` into its `plan.md`: the architecture on top, the
+task checklist below. One rule governs every choice in this skill —
 
-Assume the implementing engineer has zero context for our codebase and questionable taste: document which files to touch for each task, the code, the docs they might need, and how to test it. DRY. YAGNI. TDD. Frequent commits.
+> **The implementer has no memory of the conversation that produced this plan.**
 
-**Announce at start:** "I'm using the plan skill to write the technical spec and tasks."
+That is not a hypothetical. The plan may be handed to a fresh session, a
+different model, a different host, or picked up next week. Anything that lives
+only in this conversation is lost the moment this skill ends. If it matters, it
+goes in the file.
 
-**Context:** runs after the change exists — written by the brainstorm (standalone) or
-by the delivery decomposition (dispatched by the `sw:run` workflow). Work in the
-change's branch — or its worktree under `.specwright/worktrees/<slug>`, if one was
-created.
+**Announce at start:** "Writing the technical plan."
 
 ## Resolve bundled resources
 
 Resolve `SW_PLUGIN_ROOT` before reading a template or invoking the validator:
 
 1. use `PLUGIN_ROOT` when it contains `.codex-plugin/plugin.json`;
-2. otherwise use `CLAUDE_PLUGIN_ROOT` when it contains
-   `.claude-plugin/plugin.json`;
+2. otherwise use `CLAUDE_PLUGIN_ROOT` when it contains `.claude-plugin/plugin.json`;
 3. otherwise derive the root from this loaded `skills/plan/SKILL.md` real path
    (two parents above the `skills/plan/` directory).
 
-Require `templates/spec.md`, `templates/tasks.md`, and
-`scripts/validate-spec.sh` beneath that root. Stop before writing if resolution
-fails. Never look for bundled resources under the target repository.
+Require `templates/plan.md` and `scripts/validate-change.sh` beneath that root.
+Stop before writing if resolution fails. Never look for bundled resources inside
+the target repository.
 
-## Locate the change folder
+## Locate the change
 
-Every change lives flat at `.specwright/changes/YYYY-MM-DD-<slug>/` — standalone or
-delivery-linked alike; delivery membership is the `delivery:` frontmatter key in
-`change.md`/`spec.md` (`null` when standalone), never directory nesting.
+`$ARGUMENTS` names a change folder or slug → use it. Otherwise find the change in
+`.specwright/changes/*/` whose `change.md` says `status: pending` or
+`in-progress`; several → ask which. Set `status: in-progress` when you start.
 
-`spec.md` and `tasks.md` are written **just-in-time** into that folder, next to `change.md`. Set `status: in-progress` in `change.md` when you start.
+Every change lives flat at `.specwright/changes/YYYY-MM-DD-<slug>/`, standalone
+or delivery-linked alike.
 
-## Inherit the learnings (delivery changes)
+## Read what came before
 
-Before writing the spec for a change that belongs to a delivery, read every **sibling** change's `learnings.md` — the other changes whose `delivery:` points to the same delivery folder — whose own `change.md` says `status: shipped`. These are curated, non-obvious facts earlier changes paid to discover — data formats, surprising API behavior, cross-cutting decisions, required workarounds. Fold every applicable one into the spec's Architecture/Constraints. A spec that trips over a recorded learning is a review blocker.
+For a change that belongs to a delivery, read the `## Decisions and discoveries`
+section of every **sibling** change already `shipped` — the changes whose
+`delivery:` points at the same delivery folder. Those are facts an earlier change
+paid to discover: data formats, surprising behaviors, required workarounds,
+constraints that only appear at runtime. Fold every applicable one into this
+plan's Architecture or Constraints. A plan that trips over a recorded discovery
+is a review blocker.
 
 ## Scope check
 
-If the change covers multiple independent subsystems, it should have been decomposed during the brainstorm (or on the delivery board). If it wasn't, stop and suggest splitting — for a delivery change, that is a **blocked** report, not a unilateral board edit.
+If the change spans several independent subsystems, it should have been
+decomposed at the ticket stage. If it was not, stop and say so — for a delivery
+change that is a **blocked** report, never a unilateral edit of the delivery.
 
-## Writing the technical spec (`spec.md`)
+## Architecture
 
-Copy `"$SW_PLUGIN_ROOT/templates/spec.md"` into the change folder and fill it:
+Copy `"$SW_PLUGIN_ROOT/templates/plan.md"` into the change folder and fill it.
 
-- **Frontmatter** — `feature`, `created`, `scope:` (your honest sizing: one of `low | medium | high | complex`; recorded only), the change's `branch:`, `worktree:` (path or `null`), and `delivery:` (the delivery folder or `null`).
-- **Architecture / File Structure / Phase Ordering** — the technical *how*. Map which files will be created or modified and what each is responsible for. Units with clear boundaries and one responsibility; smaller focused files over large ones; files that change together live together; follow the existing patterns of the codebase.
-- **Acceptance criteria stay in `change.md`** — the `AC-N` there are the approved contract. Do not duplicate them into the spec. If planning exposes a wrong or missing criterion: for a standalone change, fix `change.md` with the user; for a delivery change, report it — changing approved ACs is a scope change, never a unilateral edit.
+- **Frontmatter** — `feature`, `created`, `scope` (honest sizing, recorded only),
+  `branch` (**required**: it is how a fresh session knows where to work),
+  `worktree`, and `delivery`.
+- **Architecture** — the approach and why it beat the alternatives. Map every
+  file that will be created or modified and what each is responsible for. Units
+  with one responsibility and clean boundaries; smaller focused files over large
+  ones; files that change together live together; follow the patterns this
+  codebase already uses.
+- **Acceptance criteria stay in `change.md`.** They are the approved contract. Do
+  not copy them here. If planning exposes a criterion that is wrong or missing,
+  fix `change.md` with the maintainer for a standalone change, or report it for a
+  delivery change — an approved criterion is never reworded unilaterally, and any
+  ticket edit is its own commit naming the criterion it changed.
 
-## Bite-sized task granularity (`tasks.md`)
+## Tasks
 
-**Each step is one action (2-5 minutes):** "Write the failing test" — step. "Run it to make sure it fails" — step. "Implement the minimal code to make the test pass" — step. "Run the tests" — step. "Commit" — step.
+**Each step is one action, two to five minutes.** "Write the failing test" is a
+step. "Run it and watch it fail" is a step. "Write the minimal implementation" is
+a step. "Run the tests" is a step. "Commit" is a step.
 
-**Start `tasks.md` from `"$SW_PLUGIN_ROOT/templates/tasks.md"`** — keep its
-frontmatter and header note verbatim; the template is the single source of truth
-for the artifact's shape.
+Each task block carries exactly three pieces of metadata:
 
-**Schema-2 task structure:**
+```markdown
+### T1: Component name
 
-````markdown
-### T1: [Component Name]
-
-**AC:** [AC-N it satisfies, e.g. AC-1, AC-3]
-**Delegable:** [yes/no — one-line execution context]
-**Depends on:** [none or comma-separated stable IDs such as T1, T2]
+**AC:** AC-1, AC-3
 **Files:**
 - Create: `exact/repository-relative/path.py`
 - Modify: `exact/repository-relative/path.py`
-**Integration:** [isolated or inline]
-**Validation:** [one exact command that verifies this task]
-
-- [ ] **Step 1: Write the failing test**
-
-```python
-def test_specific_behavior():
-    result = function(input)
-    assert result == expected
+**Validation:** `pytest tests/path/test.py::test_name -q`
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+`AC:` names the criteria the task satisfies — every `AC-N` in `change.md` must be
+claimed by at least one task, and no task may name a criterion that does not
+exist. `Files:` lists at least one exact repository-relative path. `Validation:`
+is one runnable command that proves the task landed.
 
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
+Task order in the document is execution order. There is no dependency graph and
+no parallel dispatch: one agent works the list top to bottom.
 
-- [ ] **Step 3: Write minimal implementation**
-- [ ] **Step 4: Run test to verify it passes**
-- [ ] **Step 5: Commit**
-````
+**The checkboxes are the resume state.** `sw:implement` continues at the first
+unticked box, which is what lets a run stop and be picked up by another session
+or another model. Write them so that is true.
 
-Every heading has a unique, stable `Tn` ID. Dependencies must name existing IDs
-and be acyclic. `Delegable: yes` pairs only with `Integration: isolated`, explicit
-owned paths, and a non-empty validation command. `Delegable: no` pairs only with
-`Integration: inline`; when it owns no path, `Files:` contains exactly `- None`.
-Two independent isolated tasks eligible for the same dependency wave may not own
-the same normalized path. A direct or transitive dependency permits sequential
-ownership in a later wave.
+## No placeholders — the handoff rule
 
-Every `AC-N` defined in `change.md` must be named by at least one task's `AC:` field
-— the traceability contract the validator and the host's `sw:review` workflow
-enforce.
+The implementer cannot ask you anything. Every one of these breaks the handoff:
 
-**No placeholders.** Never write: "TBD", "TODO", "implement later", "add appropriate error handling", "write tests for the above" (without actual test code), "similar to Task N" (repeat the code), steps that describe without showing, or references to types/functions no task defines. Exact file paths, complete code in code steps, exact commands with expected output.
+- "TBD", "TODO", "implement later", "figure out the right approach";
+- "add appropriate error handling" — say which errors and what happens;
+- "write tests for the above" without the test code;
+- "similar to T1" — repeat the code;
+- a step that describes an action instead of showing it;
+- a reference to a type, function, or file no task defines;
+- an open question left anywhere in the document.
 
-## Self-review the spec — no human gate
+An unresolved question is a defect, not a note. Resolve it with the maintainer,
+or take the decision yourself and record it under `## Decisions and discoveries`
+in `change.md` with the alternative you rejected.
 
-After `spec.md` + `tasks.md` are written, review them before implementation. The
-user is not asked for another design/content review — the change's approval already
-gated the workflow. That approval never overrides the current host's sandbox,
-permission, command-approval, Git, or external-action policy.
+## Self-review, then the gate
 
-**Author pass (inline, you):**
+Read the plan once as if you had never seen the conversation, and fix what you
+could not act on. Then check, in order:
 
-1. **Coverage** — every requirement in `change.md` maps to a task; list and close gaps.
-2. **AC coverage** — every `AC-N` in `change.md` is referenced by at least one task's `AC:` field; no task cites a nonexistent `AC-N`.
-3. **Placeholder scan** — no double-brace survivors, no "TBD"/"TODO".
-4. **Type consistency** — names and signatures match across tasks.
+1. **Coverage** — every requirement in `change.md` maps to a task.
+2. **Traceability** — every `AC-N` is claimed by a task; no task invents one.
+3. **Placeholders** — no double-brace survivors, no "TBD", no "TODO".
+4. **Consistency** — names and signatures agree across tasks.
 
-**Gates (run in order):**
-
-1. **Mechanical** — `"$SW_PLUGIN_ROOT/scripts/validate-spec.sh" <change-folder>`;
-   non-zero exit names the structural defect. Fix and re-run until it exits 0 —
-   with one exception: a failure caused by the approved ticket itself (`change.md`)
-   means **stop and report it with the exact validator `FAIL` line** — to the user
-   (standalone) or in a blocked report to the orchestrator (delivery) — and
-   proceed only after an acknowledged resolution. The owner never rewords an
-   approved criterion; any ticket edit is its own commit naming the changed
-   criterion.
-2. **Spec-document-reviewer subagent** — dispatch the `sw-spec-document-reviewer` subagent over `change.md` + `spec.md` + `tasks.md` (pass the three paths; its rubric and its model + effort live in the agent definition). Fix, re-dispatch until Approved (max 3 iterations, then surface to the human).
-3. **`sw:review-spec`** — invoke the host's `sw:review-spec` surface
-   (`/sw:review-spec` in Claude Code, `$sw:review-spec` in Codex,
-   `/sw-review-spec` in OpenCode). Fix every external-evaluator `FAIL`.
-
-**Commit the plan** — when the three gates pass, commit `spec.md` + `tasks.md` (including any gate fixes) before the first implementation commit. The PR body's quality-gate section must name these three gates and their outcomes — a repo-only auditor must be able to verify the gates ran.
-
-## Implement — owner-controlled task integration
-
-The change owner is the only agent that may edit the change branch, change artifacts,
-`learnings.md`, or the pull request. Never give a worker the change worktree. Inline
-tasks run only in this owner session. Isolated tasks run only in task-specific
-branches and worktrees and reach the change branch only through owner-reviewed
-cherry-picks.
-
-### Build the execution graph
-
-After the plan commit:
-
-1. Parse the validated schema-2 task document and keep document order as the stable
-   tie-breaker.
-2. Track completed task IDs. A task is ready only when every `Depends on` ID is
-   completed.
-3. Execute ready `Integration: inline` tasks on the change branch, one at a time;
-   run their `Validation:` command and commit before marking them completed.
-4. From the remaining ready `Integration: isolated` tasks, form one **wave**
-   containing only tasks with pairwise-disjoint normalized `Files:` ownership —
-   a dependency-ready, file-disjoint set that may run in parallel. Waves are
-   derived at dispatch time, never persisted. Check 6 already enforces this
-   invariant; any disagreement means stop and replan.
-5. Do not release a dependent task until its prior wave has been integrated and
-   passed integrated validation.
-
-No number-of-tasks heuristic overrides `Integration:`. One isolated task still gets
-its own branch/worktree; ten inline tasks still stay with the owner.
-
-### Create every task branch from one recorded change HEAD
-
-Immediately before dispatching a wave:
-
-1. Require a clean change worktree.
-2. Record `base SHA` as the exact current change `HEAD`. Every task in that wave
-   starts from this same SHA.
-3. Inspect each declared path and every existing ancestor with `lstat`. Resolve
-   every existing entry and require it to remain inside the task worktree. A
-   symlink in the path is a blocker because a worker write could escape Git's
-   touched-path evidence. The only exception is a task whose exact operation is
-   `Delete` or `Replace with symlink` for the symlink leaf itself; that task must
-   operate on the link without dereferencing it.
-4. Derive a task branch name from the repository's established convention and the
-   task ID. Never reuse or reset an unrelated branch.
-5. Resolve the shared repository root from the absolute Git common directory, so a
-   task worktree is a sibling even when the change itself already runs in a
-   worktree:
-
-   ```bash
-   COMMON_GIT_DIR="$(git rev-parse --path-format=absolute --git-common-dir)"
-   REPOSITORY_ROOT="$(dirname "$COMMON_GIT_DIR")"
-   TASK_WORKTREE="$REPOSITORY_ROOT/.specwright/worktrees/<change-slug>-<lowercase-task-id>"
-   ```
-
-6. Create the task worktree from that exact base:
-
-   ```bash
-   git worktree add \
-     -b "<task-branch>" \
-     "$TASK_WORKTREE" \
-     "<base-sha>"
-   ```
-
-On resume, inspect an existing branch/worktree and verify its base and task identity;
-never overwrite it. Worker worktrees remain after integration for human inspection.
-Specwright never removes them automatically.
-
-### Dispatch `sw-task-worker`
-
-Send one worker this complete payload:
-
-- change slug, task ID, and the exact task block;
-- task branch and absolute worktree path;
-- the wave's `base SHA`;
-- the normalized allowed file paths from `Files:`;
-- the exact `Validation:` command;
-- project conventions relevant to those paths;
-- the successful symlink/containment preflight for every allowed path;
-- these prohibitions: no path outside the allowed list, no `.specwright/` artifact,
-  no change branch, no PR, no `learnings.md`, no integration of another branch, and
-  no worktree removal.
-
-The worker must stop as `blocked` when the allowed ownership is insufficient. It
-never expands scope itself.
-
-Require this return contract:
-
-```text
-status: completed | blocked
-base SHA: <sha>
-ordered commit SHAs:
-- <sha>
-touched paths:
-- <repository-relative path>
-validation:
-- command: <exact command>
-  result: <exit status and material output>
-raw discoveries:
-- <unfiltered fact, surprise, constraint, or workaround>
-blocker: <why / tried / needs, only when blocked>
-```
-
-### Review before integration
-
-For each completed worker, before changing the change branch:
-
-1. Confirm the returned `base SHA` equals the recorded wave base.
-2. Verify every returned commit descends from that base, the ordered commit SHAs
-   form the task branch's exact non-merge sequence, and the final SHA is its HEAD.
-3. Require a clean worker worktree.
-4. Repeat the allowed-path `lstat` and resolved-containment check before accepting
-   the result. Reject a new or changed symlink that could escape the worktree.
-5. Compute `git diff --name-only <base-sha>..<final-sha>` and compare it with both
-   the returned touched paths and the task's normalized allowed paths. Any
-   undeclared path, `.specwright/` path, or ownership overlap rejects the result.
-6. Read the complete diff, not only its path list. Confirm it implements only the
-   task and that the exact validation command ran successfully with credible
-   evidence.
-7. Record the worker's raw discoveries for later owner curation; workers never edit
-   `learnings.md`.
-
-Reject an unverifiable SHA, merge commit, dirty worktree, path mismatch, missing
-evidence, or scope change. Replan or redelegate instead of repairing an unsafe
-worker result on the change branch.
-
-### Cherry-pick accepted commits
-
-On the change branch, cherry-pick only accepted commits, in the returned order:
+Then run the mechanical gate:
 
 ```bash
-git cherry-pick <first-sha> <next-sha>
+"$SW_PLUGIN_ROOT/scripts/validate-change.sh" <change-folder>
 ```
 
-A **mechanical conflict** has one behaviorally predetermined resolution, limited to
-formatting, import order, generated lockfile reconciliation, or adjacent-line
-placement. The owner may resolve it, inspect the resulting diff, continue the
-cherry-pick, and rerun validation.
+A non-zero exit names the structural defect. Fix and re-run until it exits 0 —
+with one exception: a failure caused by the approved ticket itself means **stop
+and report it with the exact `FAIL` line**, to the maintainer for a standalone
+change or in a blocked report for a delivery change. Proceed only after an
+acknowledged resolution.
 
-A **semantic conflict** requires a behavior choice, changes ownership, overlaps
-another task, expands scope, or contradicts the task/spec. Abort that integration
-attempt and replan or redelegate; never guess. The same rule applies even when Git
-reports no textual conflict but review exposes semantic overlap.
+Commit `plan.md` when the gate passes, before any implementation commit.
 
-### Gate each wave
+## Then
 
-After all accepted commits in a wave are present, run every task's validation plus
-the integrated validation for the combined touched area. Do not release dependents
-until all pass. If integrated validation exposes an interaction, keep dependents
-blocked and replan the affected task ownership or implementation. Retain every task
-branch/worktree regardless of acceptance so the human can inspect it.
+Confirm the plan is handoff-ready and say so plainly:
 
-## Quality gate
+```text
+plan ready — <change-folder>/plan.md
+another agent can implement it with: /sw:implement <slug>
+```
 
-Detect the touched modules' code-quality processes (test, lint, typecheck, build — Makefile, `package.json` scripts, the area's CI) and run them all; nothing you did may break them. Logic added or changed in a tested area without a test → write the missing tests first. **Test integrity:** the touched area's test count must not silently drop, and assertions must not be weakened, skipped, or deleted to pass the gate without an in-spec justification.
+Stop there.
 
-## Runtime verification
-
-After the quality gate and **before the PR**, execute what you built and check every `AC-N` by **observed behavior** — run the CLI, start the server and hit the endpoint, run the script against a fixture. Stream-sensitive checks must use per-stream file redirection (e.g. `>out 2>err`) — piping merged streams cannot attribute output to stdout vs stderr. For UI criteria — a **UI criterion** is one about rendered appearance or interaction, not HTTP responses or text output — verify through a browser when the agent has that capability; an unattended session that degrades browser verification to curl must record the capability gap alongside the result. When a criterion cannot be runtime-verified (no browser, no reachable environment), mark it `needs-human-verification` in `change.md` with one line of reason — **never silently tick it, never fake a verification**. Record what was verified and how; it goes in the PR body.
-
-**Circuit breaker:** the same gate or criterion failing **three times identically** means stop — do not thrash. Standalone change: report to the user (why / what you tried / what you need). Delivery change: write that report, set `status: blocked` in `change.md`, and return it to the orchestrator.
-
-## Deliver
-
-Invoke the host's `sw:pr` workflow (`/sw:pr` in Claude Code, `$sw:pr` in Codex,
-`/sw-pr` in OpenCode) and then `sw:review` (`/sw:review` in Claude Code,
-`$sw:review` in Codex, `/sw-review` in OpenCode) to `lgtm`. The change approval
-is standing workflow
-consent, not a permission bypass: obtain any approval the current host requires for
-Git, network, or external actions. Then:
-
-1. **Curate learnings** — write the change folder's `learnings.md`: only non-obvious facts **future changes need** (data formats, surprising behaviors, cross-cutting constraints, required workarounds). Not narration of what you did, not internals only this change touches. No qualifying fact → no file.
-2. **Ship** — set `change.md` `status: shipped` + `shipped:` date, tick the verified `AC-N` checkboxes. On the change's own branch, part of its PR.
-3. Delivery change: report back one line per learning + the PR URL — the orchestrator logs them on the board.
+Say what comes next: **`/sw:implement`** (`$sw:implement` in Codex) executes the
+plan. It is a separate command on purpose — the plan is now a self-contained
+document, so implementation can run with a cheaper model, in a new session, or on
+another host, and none of this conversation is needed.
