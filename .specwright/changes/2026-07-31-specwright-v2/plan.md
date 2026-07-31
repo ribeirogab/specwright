@@ -61,7 +61,7 @@ plugins/sw/
 │   ├── quick_validate.py       (unchanged, vendored)
 │   ├── package_skill.py        (unchanged, vendored)
 │   └── fixtures/               ready + 5 bad fixtures
-└── references/                 agents-section.md, validation.md, vault-files.md
+└── references/                 validation.md, vault-files.md
 tests/
 ├── install/run.sh              package + init groups
 ├── validate-change/run.sh      validator cases
@@ -101,10 +101,10 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 - Delete: `plugins/sw/templates/spec.md`, `plugins/sw/templates/tasks.md`, `plugins/sw/templates/board.md`
 **Validation:** `ls plugins/sw/templates`
 
-- [ ] Fuse `spec.md` + `tasks.md` into `plan.md` (architecture above, tasks below)
-- [ ] Add the `## Decisions and discoveries` section to `change.md`
-- [ ] Fold the board's change table, dispatch log, and blockers into `delivery.md`
-- [ ] Delete the three superseded templates
+- [x] Fuse `spec.md` + `tasks.md` into `plan.md` (architecture above, tasks below)
+- [x] Add the `## Decisions and discoveries` section to `change.md`
+- [x] Fold the board's change table, dispatch log, and blockers into `delivery.md`
+- [x] Delete the three superseded templates
 
 ### T2: Handoff-readiness validator
 
@@ -114,9 +114,9 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 - Delete: `plugins/sw/scripts/validate-spec.sh`, `plugins/sw/scripts/validate_task_topology.py`
 **Validation:** `bash tests/validate-change/run.sh`
 
-- [ ] Write the five checks (frontmatter+status, placeholders, vague verbs, AC coverage, task metadata)
-- [ ] Rebuild the fixtures as `change.md` + `plan.md` pairs
-- [ ] Delete the schema-2 validator and its fixtures
+- [x] Write the six checks (change frontmatter+status, plan frontmatter+branch, placeholders, vague verbs, AC traceability, task metadata)
+- [x] Rebuild the fixtures as `change.md` + `plan.md` pairs
+- [x] Delete the schema-2 validator and its fixtures
 
 ### T3: Idempotent scaffolder
 
@@ -126,9 +126,9 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 - Delete: `plugins/sw/scripts/sw_update.py`
 **Validation:** `bash tests/install/run.sh init`
 
-- [ ] Implement create-if-absent for vault, AGENTS section, symlink, profiles, ignore lines
-- [ ] Report every path as `created` or `present`; write nothing on a second run
-- [ ] Delete the updater
+- [x] Implement create-if-absent for vault, AGENTS section, symlink, profiles, ignore lines
+- [x] Report every path as `created` or `present`; write nothing on a second run
+- [x] Delete the updater
 
 ### T4: The eight skills
 
@@ -139,9 +139,9 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 - Delete: `plugins/sw/skills/{brainstorm,spec,run,update,review-spec}/`
 **Validation:** `python3 plugins/sw/scripts/quick_validate.py plugins/sw/skills/change`
 
-- [ ] Write the five step skills, each ending by naming its successor command
-- [ ] Write `ship` and `delivery` as wrappers over those steps
-- [ ] Neutralize every description; remove `You MUST` and the auto-trigger language
+- [x] Write the five step skills, each ending by naming its successor command
+- [x] Write `ship` and `delivery` as wrappers over those steps
+- [x] Neutralize every description; remove `You MUST` and the auto-trigger language
 
 ### T5: Two roles per host
 
@@ -151,9 +151,9 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 - Delete: `plugins/sw/agents/task-worker.md`, `plugins/sw/agents/spec-document-reviewer.md`, and their Codex profiles
 **Validation:** `ls plugins/sw/agents plugins/sw/templates/codex-agents`
 
-- [ ] Rewrite `change-owner` to run `ship` on one change, no waves or workers
-- [ ] Rewrite `reviewer` to cover the three dimensions in one pass
-- [ ] Delete the two retired roles from both hosts
+- [x] Rewrite `change-owner` to run `ship` on one change, no waves or workers
+- [x] Rewrite `reviewer` to cover the three dimensions in one pass
+- [x] Delete the two retired roles from both hosts
 
 ### T6: Command redirects
 
@@ -163,19 +163,18 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 - Delete: `plugins/sw/commands/{brainstorm,spec,run,update,review-spec}.md`
 **Validation:** `claude plugin validate --strict plugins/sw`
 
-- [ ] One pure redirect per skill, description matching the skill's purpose
+- [x] One pure redirect per skill, description matching the skill's purpose
 
 ### T7: Remove OpenCode and rewrite the references
 
 **AC:** AC-2
 **Files:**
-- Delete: `.opencode/`, `plugins/sw/templates/opencode-agents/`, `plugins/sw/templates/opencode-commands/`, `plugins/sw/references/audit-checklist.md`
-- Create: `plugins/sw/references/agents-section.md`
+- Delete: `.opencode/`, `plugins/sw/templates/opencode-agents/`, `plugins/sw/templates/opencode-commands/`, `plugins/sw/references/audit-checklist.md`, `plugins/sw/references/agents-md-template.md`
 - Modify: `plugins/sw/references/validation.md`, `plugins/sw/references/vault-files.md`, `.specwright/conventions/skill-validation-requirements.md`
 **Validation:** `grep -ril opencode --exclude-dir=.git .` outside the historical vault
 
-- [ ] Delete every OpenCode file and reference
-- [ ] Rewrite the references for the two-host, two-artifact shape
+- [x] Delete every OpenCode file and reference
+- [x] Rewrite the references for the two-host, two-artifact shape
 
 ### T8: Test suite
 
@@ -186,9 +185,9 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 - Delete: `tests/update/`, `tests/task-topology/`, `tests/worktrees/`, `tests/validate-spec/`
 **Validation:** `bash tests/install/run.sh && bash tests/validate-change/run.sh && bash tests/release/run.sh`
 
-- [ ] Rewrite the package group for eight skills and two roles
-- [ ] Rewrite the init group against `sw_init.py`, including the idempotency assertion
-- [ ] Delete the suites whose subjects no longer exist
+- [x] Rewrite the package group for eight skills and two roles
+- [x] Rewrite the init group against `sw_init.py`, including the idempotency assertion
+- [x] Delete the suites whose subjects no longer exist
 
 ### T9: Documentation
 
@@ -197,6 +196,6 @@ and the `brainstorm`, `spec`, `run`, `update`, `review-spec` skills and commands
 - Modify: `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/*`, `.github/workflows/release-smoke.yml`, `plugins/sw/.claude-plugin/plugin.json`, `plugins/sw/.codex-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`
 **Validation:** `bash tests/install/run.sh package`
 
-- [ ] Rewrite the README around the ladder, the two wrappers, and the handoff
-- [ ] Replace this repo's managed block with a plain `## specwright` section
-- [ ] Bump both manifests to the release date and update every description
+- [x] Rewrite the README around the ladder, the two wrappers, and the handoff
+- [x] Replace this repo's managed block with a plain `## specwright` section
+- [x] Bump both manifests to the release date and update every description
