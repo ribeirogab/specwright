@@ -1,8 +1,6 @@
 ---
 name: sw-reviewer
 description: "The specwright review pass — dispatched by the shared sw:review workflow as a find-only reviewer of a branch diff, covering rubric and conventions, change conformance, and documentation consistency in one pass."
-model: opus
-effort: xhigh
 skills:
   - review
 ---

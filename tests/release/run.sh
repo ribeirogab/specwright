@@ -100,7 +100,10 @@ profiles = [
     tomllib.loads(path.read_text(encoding="utf-8"))
     for path in pathlib.Path(sys.argv[2]).glob("sw-*.toml")
 ]
-missing = sorted({profile["model"] for profile in profiles} - available)
+# Roles inherit the session's model by default, so most profiles pin none.
+# Any profile that does pin one must still name a model the host offers.
+pinned = {profile["model"] for profile in profiles if "model" in profile}
+missing = sorted(pinned - available)
 if missing:
     raise SystemExit(f"Codex profiles select unavailable models: {missing}")
 PY

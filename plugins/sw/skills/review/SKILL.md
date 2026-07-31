@@ -185,10 +185,11 @@ returns one verdict.
 
 ## Dispatch
 
-When the session can spawn subagents, dispatch **one** `sw-reviewer` — it pins
-the reviewer's model and effort and routes into this skill. It returns findings;
-the main agent triages them: fix what makes sense, contest the rest to consensus,
-push, and re-request review. Without subagent support, run the same pass inline.
+When the session can spawn subagents, dispatch **one** `sw-reviewer` — it routes
+into this skill and inherits the session's model, so pick that before reviewing.
+It returns findings; the main agent triages them: fix what makes sense, contest
+the rest to consensus, push, and re-request review. Without subagent support, run
+the same pass inline.
 
 Either way the verdict is `lgtm` **only when no dimension has an open blocker**.
 

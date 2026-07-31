@@ -196,8 +196,7 @@ run_dogfood() {
 
 run_role_agents() {
   local agents_dir="$ROOT/plugins/sw/agents" profiles_dir="$ROOT/plugins/sw/templates/codex-agents"
-  local agent key
-  agent_field() { grep -E "^$2:" "$agents_dir/$1.md" 2>/dev/null | head -n 1 | sed -E "s/^$2:[[:space:]]*//; s/[[:space:]]*$//"; }
+  local agent key name
 
   assert_eq "Claude role inventory is canonical" "$(printf 'change-owner.md\nreviewer.md\n')" \
     "$(find "$agents_dir" -maxdepth 1 -type f -name '*.md' -exec basename {} \; | sort)"
@@ -205,13 +204,17 @@ run_role_agents() {
     "$(find "$profiles_dir" -maxdepth 1 -type f -name '*.toml' -exec basename {} \; | sort)"
 
   for agent in change-owner reviewer; do
-    for key in name description model effort; do
+    for key in name description; do
       assert_yes "agent $agent.md frontmatter has $key" \
         "$(grep -Eq "^$key:" "$agents_dir/$agent.md" 2>/dev/null && echo yes || echo no)"
     done
+    # Roles inherit the session's model: the maintainer picks it with /model
+    # before dispatching, and a pin here would silently override that choice.
+    for key in model effort; do
+      assert_eq "agent $agent.md pins no $key" no \
+        "$(grep -Eq "^$key:" "$agents_dir/$agent.md" 2>/dev/null && echo yes || echo no)"
+    done
   done
-  assert_eq "agent change-owner model and effort" opus/xhigh "$(agent_field change-owner model)/$(agent_field change-owner effort)"
-  assert_eq "agent reviewer model and effort" opus/xhigh "$(agent_field reviewer model)/$(agent_field reviewer effort)"
   assert_yes "agent change-owner preloads ship" \
     "$(grep -Eq '^[[:space:]]*-[[:space:]]*ship$' "$agents_dir/change-owner.md" && echo yes || echo no)"
   assert_yes "agent reviewer preloads review" \
@@ -221,10 +224,16 @@ run_role_agents() {
   assert_yes "review dispatches the stable sw-reviewer role" \
     "$(grep -Fq 'sw-reviewer' "$ROOT/plugins/sw/skills/review/SKILL.md" && echo yes || echo no)"
 
-  assert_eq "profile sw-change-owner model" gpt-5.6-sol "$(toml_value "$profiles_dir/sw-change-owner.toml" model)"
+  # sandbox_mode stays pinned: it is a permission boundary, not a preference.
+  # The reviewer must never be able to write, whatever model runs it.
   assert_eq "profile sw-change-owner sandbox" workspace-write "$(toml_value "$profiles_dir/sw-change-owner.toml" sandbox_mode)"
-  assert_eq "profile sw-reviewer model" gpt-5.6-sol "$(toml_value "$profiles_dir/sw-reviewer.toml" model)"
   assert_eq "profile sw-reviewer sandbox" read-only "$(toml_value "$profiles_dir/sw-reviewer.toml" sandbox_mode)"
+  for name in sw-change-owner sw-reviewer; do
+    assert_eq "profile $name pins no model" no \
+      "$(grep -Eq '^model[[:space:]]*=' "$profiles_dir/$name.toml" && echo yes || echo no)"
+    assert_eq "profile $name pins no reasoning effort" no \
+      "$(grep -Eq '^model_reasoning_effort[[:space:]]*=' "$profiles_dir/$name.toml" && echo yes || echo no)"
+  done
   assert_yes "profile sw-change-owner routes into the ship workflow" \
     "$(grep -Fq '$sw:ship' "$profiles_dir/sw-change-owner.toml" && echo yes || echo no)"
   assert_yes "profile sw-reviewer routes into the review workflow" \

@@ -181,10 +181,16 @@ frontmatter.
 
 Two, shared by both hosts:
 
-| Role | When | Claude | Codex |
-|---|---|---|---|
-| `sw-change-owner` | one change inside a delivery | `opus`, xhigh | `gpt-5.6-sol`, high, workspace-write |
-| `sw-reviewer` | `/sw:review` | `opus`, xhigh | `gpt-5.6-sol`, high, read-only |
+| Role | Dispatched by | Codex sandbox |
+|---|---|---|
+| `sw-change-owner` | `/sw:delivery`, one per change | workspace write |
+| `sw-reviewer` | `/sw:review` | read-only |
+
+Neither pins a model. They inherit the session's, so the model you pick with
+`/model` before dispatching is the one that runs — the same choice you make
+between ladder steps, applied to the roles. The Codex sandbox is pinned, because
+that is a permission boundary rather than a preference: the reviewer must not be
+able to write, whatever model runs it.
 
 The reviewer covers three dimensions in one pass — rubric and conventions, change
 conformance against the `AC-N` and their verification evidence, and documentation

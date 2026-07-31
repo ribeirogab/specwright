@@ -1,8 +1,6 @@
 ---
 name: sw-change-owner
 description: "The sole owner of one specwright change dispatched by a delivery: runs the change ladder end to end in its own branch and worktree, records the decisions it took, and reports shipped or blocked back to the delivery orchestrator."
-model: opus
-effort: xhigh
 skills:
   - ship
 ---

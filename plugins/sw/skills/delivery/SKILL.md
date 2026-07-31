@@ -104,11 +104,11 @@ concurrency cap. For each:
   fi
   ```
 
-- **Dispatch the `sw-change-owner` subagent.** It pins the owner's model and
-  effort and routes into the `ship` workflow. Its prompt is only the coordinates:
-  the change folder, the delivery folder, the branch, and the worktree. The
-  pipeline it runs and its return contract live in the role definition, not in
-  your prompt.
+- **Dispatch the `sw-change-owner` subagent.** It routes into the `ship` workflow
+  and inherits this session's model, so pick that before conducting. Its prompt
+  is only the coordinates: the change folder, the delivery folder, the branch,
+  and the worktree. The pipeline it runs and its return contract live in the role
+  definition, not in your prompt.
 - Append `dispatched` to the delivery's dispatch log and commit.
 - Keep the **agent id** from the spawn result. Name aliases expire; address every
   resume or relay by that id.

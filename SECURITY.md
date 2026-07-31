@@ -61,9 +61,10 @@ before any write. There is no regular-file fallback for Claude adapters, because
 a copy would silently diverge from its canonical file.
 
 Profile files are project configuration and may grant write capability to an
-agent. Their names, models, reasoning effort, and sandbox mode are therefore part
-of the reviewed security surface. `sw-reviewer` must remain read-only;
-`sw-change-owner` remains constrained by its protocol and host policy.
+agent. Their names and sandbox mode are therefore part of the reviewed security
+surface. `sw-reviewer` must remain read-only; `sw-change-owner` remains
+constrained by its protocol and host policy. Roles pin no model — they inherit
+the session's — so a model choice is never a permission decision.
 
 ### Delivery dispatch isolation
 
