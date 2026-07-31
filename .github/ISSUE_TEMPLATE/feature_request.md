@@ -7,22 +7,20 @@ labels: ["enhancement"]
 
 ## What should specwright do?
 
-Describe the improvement to one shared workflow (`init`, `brainstorm`, `spec`,
-`plan`, `run`, `review`, `review-spec`, `pr`, or `update`), a role, project
-migration, validation, or native host packaging. Two or three concrete
-example prompts beat one abstract description.
+Describe the improvement to one shared workflow (`init`, `change`, `plan`,
+`implement`, `pr`, `review`, `ship`, or `delivery`), a role, project state,
+validation, or native host packaging. Two or three concrete example prompts beat
+one abstract description.
 
 ## Why does it belong in specwright?
 
-Explain how it improves the change-driven engineering workflow or preserves
-behavioral parity across every supported host. Unrelated skills should live in
-their own repository.
+Explain how it improves the change ladder or preserves behavioral parity across
+both supported hosts. Unrelated skills should live in their own repository.
 
 ## Sketch of the behavior
 
 Describe the expected host-neutral behavior and any host-specific adapter surface.
-State project-state, migration, permission, and worker-authority implications when
-they apply.
+State project-state, permission, and role-authority implications when they apply.
 
 ## Are you willing to author it?
 

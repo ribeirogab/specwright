@@ -1,19 +1,55 @@
 # specwright
 
-`specwright` (`sw`) is a multi-host plugin for Claude Code, Codex, and OpenCode. It gives a
-repository one explicit, change-driven engineering workflow:
+`specwright` (`sw`) is a plugin for Claude Code and Codex. It gives a repository
+a **ladder** you climb one command at a time:
 
-> brainstorm → change → spec + tasks → implementation → integrated validation →
-> runtime verification → PR → review
+```text
+/sw:change  →  /sw:plan  →  /sw:implement  →  /sw:pr  →  /sw:review
+ change.md      plan.md         code             PR         lgtm
+```
 
-One change owns one branch and one PR. Larger outcomes become deliveries with a
-durable `delivery.md`, a live `board.md`, and multiple changes conducted by an
-orchestrator.
+Each step produces one artifact, stops, and names the next command. Nothing runs
+until you ask for it — the model may *suggest* a step, never dispatch the whole
+flow on its own.
+
+Two wrappers cover the cases where you do not want to climb:
+
+- **`/sw:ship`** runs the whole ladder without stopping, deciding every open
+  question itself and recording each decision in `change.md`.
+- **`/sw:delivery`** takes an outcome too large for one PR — often a PRD or a
+  design document — decomposes it into changes, and conducts them in parallel,
+  one owner and one PR each.
+
+A trivial change needs none of this. Edit the code.
 
 The implementation of every workflow lives once under
 [`plugins/sw/skills/`](plugins/sw/skills/). Claude Code exposes thin `/sw:*`
-command adapters; Codex discovers the same skills as `$sw:*`; OpenCode exposes
-them as `/sw-*` commands.
+command adapters; Codex discovers the same skills as `$sw:*`.
+
+## Why the steps are separate commands
+
+Because the state lives in files, not in the conversation. Two things follow.
+
+**You can change model between steps.** Plan with a strong model, implement with
+a cheap one, review with a strong one again:
+
+```bash
+/model opus    # /sw:change, /sw:plan
+/model sonnet  # /sw:implement
+/model opus    # /sw:review
+```
+
+**You can hand a plan to an agent that has no context at all.** `plan.md` is
+written for a stranger: exact paths, runnable commands, real code in every code
+step, and no open questions. A fresh session — another model, another host, next
+week — implements it with one command:
+
+```bash
+/sw:implement 2026-07-31-cursor-pagination
+```
+
+`/sw:plan` checks that before it finishes. If the plan is not self-sufficient,
+you find out while you can still fix it.
 
 ## Install
 
@@ -24,7 +60,7 @@ claude plugin marketplace add ribeirogab/specwright
 claude plugin install sw@specwright
 ```
 
-Reload plugins or restart Claude Code after installation.
+Reload plugins or restart Claude Code afterwards.
 
 ### Codex
 
@@ -33,230 +69,157 @@ codex plugin marketplace add ribeirogab/specwright
 codex plugin add sw@specwright
 ```
 
-### OpenCode
+Both hosts install the same eight skills.
 
-Clone the repository, then add the skills path to `opencode.json` (project or
-`~/.config/opencode/opencode.json`):
-
-```json
-{"skills": {"paths": ["<checkout>/plugins/sw/skills"]}}
-```
-
-Restart OpenCode after adding the path.
-
-All three hosts install the same nine skills.
-
-## Initialize a repository
-
-Run the host surface available in the current session:
+## Set up a repository
 
 ```text
 Claude Code: /sw:init
 Codex:       $sw:init
-OpenCode:    /sw-init
 ```
 
-In OpenCode, the `/sw-*` command surface does not exist until after the first
-`sw:init` — ask "set up specwright here" in natural language for the initial run.
+`sw:init` asks for a mode, then creates only what is missing. It is idempotent:
+re-running it is the upgrade path, and a second run writes nothing.
 
-`sw:init` first asks for a mode and displays a read-only, deterministic plan.
-Only an explicit confirmation of that exact `plan_id` permits the apply step.
-Host permissions and sandbox approvals remain authoritative.
+- **shared** — specwright state is versioned with the project: `.specwright/`,
+  `AGENTS.md` with its `CLAUDE.md -> AGENTS.md` symlink, and the two
+  `.codex/agents/sw-*.toml` role profiles. Only `.specwright/worktrees/` is
+  ignored.
+- **local** — specwright state stays private to the checkout: `AGENTS.override.md`,
+  `CLAUDE.local.md -> AGENTS.override.md`, and the vault, both instruction paths,
+  and the profiles are all git-ignored.
 
-- **shared** tracks `.specwright/`, `AGENTS.md`, the relative
-  `CLAUDE.md -> AGENTS.md` symlink, four `.codex/agents/sw-*.toml` role
-  profiles, and the `.opencode/agent/sw-*.md` and `.opencode/command/sw-*.md`
-  files. Only `.specwright/worktrees/` is ignored.
-- **local** keeps specwright state private in the checkout. It uses
-  `AGENTS.override.md`, the relative
-  `CLAUDE.local.md -> AGENTS.override.md` symlink, a local vault, the same
-  four profiles, and the OpenCode files. The vault, both local instruction
-  paths, the `sw-*` profiles, the OpenCode files, and worktrees are ignored.
+The `AGENTS*` file is always canonical; the `CLAUDE*` path is only a
+compatibility symlink. Init appends one `## specwright` section to the canonical
+file and never touches it again — no digest, no drift check, no managed block.
+The text is yours to edit from the moment it lands.
 
-`AGENTS.md` or `AGENTS.override.md` is always the canonical instruction file.
-The corresponding `CLAUDE*.md` path is only a compatibility symlink. There is no
-regular-file fallback: a filesystem that cannot create symlinks is rejected
-before managed state is changed.
+Init never installs a plugin, edits personal host configuration, copies skill
+bodies, or creates `.claude/settings.json`. A path that exists in a shape it
+cannot use — a `CLAUDE.md` that is a regular file, say — is reported as a
+conflict, and nothing is written at all.
 
-Initialization never edits personal host configuration, installs plugins, copies
-skill implementations, or creates `.claude/settings.json`. It preserves
-project-authored instructions outside the versioned `sw:managed` block and
-unrelated `.codex` configuration.
+## Commands
 
-## Update
+| Command | Claude Code | Codex | Produces |
+|---|---|---|---|
+| Set up | `/sw:init` | `$sw:init` | the vault and project instructions |
+| Ticket | `/sw:change` | `$sw:change` | `change.md` — purpose, boundaries, `AC-N` |
+| Plan | `/sw:plan` | `$sw:plan` | `plan.md` — architecture and tasks |
+| Build | `/sw:implement` | `$sw:implement` | code, quality gate, runtime verification |
+| Ship it | `/sw:pr` | `$sw:pr` | the pull request |
+| Review | `/sw:review` | `$sw:review` | one verdict, to `lgtm` |
+| Autonomous | `/sw:ship` | `$sw:ship` | all of the above, no stops |
+| Large outcome | `/sw:delivery` | `$sw:delivery` | many changes, conducted in parallel |
 
-Update the installed plugin with the native host mechanism first:
+`/sw:change` absorbs the design conversation. After a discussion it harvests what
+was settled and asks only about what is still open; from a cold start it opens
+the exploration itself. Either way it writes the ticket at the end.
+
+## Artifacts
+
+Two files per change, always:
+
+```text
+.specwright/
+├── conventions/                     project standards the reviewer enforces
+├── changes/2026-07-31-<slug>/
+│   ├── change.md                    why, AC-N, decisions and discoveries
+│   └── plan.md                      architecture + task checklist
+├── deliveries/2026-07-31-<slug>/
+│   └── delivery.md                  why + change table + dispatch log + blockers
+└── worktrees/                       ignored; one per change during a delivery
+```
+
+`change.md` carries the acceptance criteria — binary, observable checks someone
+else can verify in under a minute — plus a **Decisions and discoveries** section:
+the choices the ticket did not settle and the non-obvious facts the work found.
+That section is what makes an autonomous `/sw:ship` run auditable after the fact.
+
+`plan.md` carries the architecture on top and the task checklist below. Each task
+names the criteria it satisfies, the files it touches, and one command that
+proves it. The checkboxes are the resume state — `/sw:implement` continues at the
+first unticked box, which is what lets a run stop and be picked up elsewhere.
+
+The handoff gate enforces the pair:
 
 ```bash
-# Claude Code
-claude plugin update sw@specwright
-
-# Codex
-codex plugin marketplace upgrade specwright
-codex plugin add sw@specwright
+plugins/sw/scripts/validate-change.sh .specwright/changes/<folder>
 ```
 
-Then migrate each initialized repository:
+Six checks: frontmatter and status enum, a named branch, no surviving
+placeholders, no vague criteria verbs, `AC-N` traceability in both directions,
+and task metadata. Any of them failing means an agent with no context could not
+run the plan.
 
-```text
-Claude Code: /sw:update
-Codex:       $sw:update
-OpenCode:    /sw-update
-```
+## Verification
 
-`sw:update` reads the target version from the already installed Codex manifest.
-It never fetches or compares remote `main`. Its `--plan` phase is read-only and
-classifies the checkout as `new`, `legacy-migratable`, `up-to-date`, or
-`drifted`. For a migration, it shows every operation and the complete `plan_id`,
-requires explicit confirmation, then applies only that unchanged identity.
+Two rules survive from every earlier version, because they are what make the
+workflow worth its overhead:
 
-The updater owns only:
+**Every `AC-N` is verified by observed behavior before the PR opens.** Run the
+CLI, call the endpoint, execute the script. Reading the code is not verification.
+A criterion that cannot be checked — no browser, no reachable environment — is
+marked `needs-human-verification` with its reason, never silently ticked.
 
-- the bounded, digest-protected `sw:managed` block in the canonical AGENTS file;
-- the relative Claude adapter symlink;
-- the four `.codex/agents/sw-*.toml` profiles;
-- the four `.opencode/agent/sw-*.md` profiles;
-- the nine `.opencode/command/sw-*.md` redirects; and
-- the exact specwright `.gitignore` rules for the selected mode.
+**Verification happens at a known step, not on every edit.** The quality gate
+runs at `implement` or `ship`, or when you ask for it. After a direct edit
+outside the workflow, the agent reports what changed and what it did not verify,
+and leaves the decision to you.
 
-Project text outside the managed block is preserved byte-for-byte. Unexpected
-shapes, modified managed digests, plan identity changes, invalid profile sources,
-or unavailable symlinks fail noisily before apply; drift is never overwritten.
+## Delivery
 
-## Command parity
+`/sw:delivery` handles the case a single PR cannot: a PRD, a design document, a
+body of requirements that clearly contains many pieces. It decomposes the
+document into changes — shallow on purpose, since each change's own plan is
+written later with the benefit of what shipped before it — and dispatches one
+`sw-change-owner` per ready change, in parallel, each in its own worktree,
+branch, and PR.
 
-| Workflow | Claude Code | Codex | OpenCode | Purpose |
-|---|---|---|---|---|
-| Initialize | `/sw:init` | `$sw:init` | `/sw-init` | Plan and create project state. |
-| Brainstorm | `/sw:brainstorm` | `$sw:brainstorm` | `/sw-brainstorm` | Explore intent and approve a design. |
-| Specify | `/sw:spec` | `$sw:spec` | `/sw-spec` | Turn the current design into a change or delivery. |
-| Plan | `/sw:plan` | `$sw:plan` | `/sw-plan` | Produce schema-2 tasks, implement, and validate a change. |
-| Conduct | `/sw:run` | `$sw:run` | `/sw-run` | Dispatch ready delivery changes and maintain the board. |
-| Review | `/sw:review` | `$sw:review` | `/sw-review` | Review a branch diff with read-only specialist roles. |
-| Review spec | `/sw:review-spec` | `$sw:review-spec` | `/sw-review-spec` | Evaluate a change plan for clarity and conformance. |
-| Pull request | `/sw:pr` | `$sw:pr` | `/sw-pr` | Push and open the change PR using repository conventions. |
-| Update | `/sw:update` | `$sw:update` | `/sw-update` | Plan and apply a versioned project migration. |
+Owners report `shipped` with a PR URL, or `blocked` with a paste-ready Why /
+Tried / Needs. A blocked change never blocks the loop. The delivery is resumable
+from a fresh session: all state lives in `delivery.md` and the changes'
+frontmatter.
 
-Natural-language requests can trigger the same skills in any host. Explicit
-`$sw:*` or `/sw-*` invocation is useful when the desired entry point should be
-unambiguous.
+## Roles
 
-## Project state after initialization
+Two, shared by both hosts:
 
-```text
-.
-├── AGENTS.md                         # shared canonical instructions
-├── CLAUDE.md -> AGENTS.md            # shared Claude adapter
-├── .codex/agents/
-│   ├── sw-change-owner.toml
-│   ├── sw-reviewer.toml
-│   ├── sw-spec-document-reviewer.toml
-│   └── sw-task-worker.toml
-├── .opencode/agent/
-│   ├── sw-change-owner.md
-│   ├── sw-reviewer.md
-│   ├── sw-spec-document-reviewer.md
-│   └── sw-task-worker.md
-├── .opencode/command/
-│   ├── sw-init.md
-│   ├── sw-brainstorm.md
-│   ├── sw-spec.md
-│   ├── sw-plan.md
-│   ├── sw-run.md
-│   ├── sw-review.md
-│   ├── sw-review-spec.md
-│   ├── sw-pr.md
-│   └── sw-update.md
-└── .specwright/
-    ├── conventions/
-    ├── changes/
-    ├── deliveries/
-    └── worktrees/                    # ignored worker/change checkouts
-```
+| Role | When | Claude | Codex |
+|---|---|---|---|
+| `sw-change-owner` | one change inside a delivery | `opus`, xhigh | `gpt-5.6-sol`, high, workspace-write |
+| `sw-reviewer` | `/sw:review` | `opus`, xhigh | `gpt-5.6-sol`, high, read-only |
 
-Local mode substitutes `AGENTS.override.md` and
-`CLAUDE.local.md -> AGENTS.override.md`; all specwright-local state is ignored.
-Existing shared instructions may coexist and remain untouched.
-
-## Change flow and worker integration
-
-Design approval authorizes continuation of the specwright workflow, but it never
-overrides any host's file, command, Git, network, or external-action approval
-policy.
-
-Each active `tasks.md` uses `tasks_schema: 2`. Every task has:
-
-- a stable `Tn` ID;
-- `Delegable`, `Depends on`, `Files`, `Integration`, and `Validation`;
-- explicit repository-relative ownership for `Integration: isolated`; and
-- valid, acyclic dependencies.
-
-The validator rejects missing metadata, unknown dependencies, cycles, and file
-overlap between independent isolated tasks in the same dependency wave. Historical
-shipped changes remain valid records; an active schema-1 task file must be explicitly
-replanned because the updater cannot infer ownership or dependencies safely.
-
-A **change owner** is the sole editor and integrator of the change branch,
-change artifacts, learnings, and PR. It forms a **wave** — a dependency-ready,
-file-disjoint set of isolated tasks that may run in parallel — from currently
-ready, pairwise non-overlapping isolated tasks. Waves are derived at dispatch
-time, never persisted. Every worker receives a branch at the wave's exact
-change HEAD and a sibling worktree under `.specwright/worktrees/`.
-
-A **task worker** may edit only its declared files in its own branch/worktree. It
-does not edit change artifacts, create a PR, integrate branches, or write learnings.
-It returns its base SHA, ordered commit SHAs, validations, touched files, and
-discoveries. The owner verifies ancestry and scope, reviews the diff, and
-cherry-picks accepted commits. Mechanical conflicts may be resolved by the owner;
-semantic conflicts, ownership overlap, and scope changes require rejection and
-replanning. Integrated validation after every wave gates dependent tasks.
-
-Worker worktrees are retained for inspection and are never removed automatically.
-
-In local mode, `sw:run` copies the canonical local instructions, their Claude
-symlink, the project-installed `sw-*` Codex profiles, the `.opencode/agent/sw-*.md`
-and `.opencode/command/sw-*.md` files, and the change folder into a change
-worktree. On return it copies back only the change folder; instructions, profiles,
-and OpenCode files remain conductor-owned state.
+The reviewer covers three dimensions in one pass — rubric and conventions, change
+conformance against the `AC-N` and their verification evidence, and documentation
+consistency. A branch reaches `lgtm` only when no dimension has an open blocker.
 
 ## Repository layout
 
 ```text
 specwright/
-├── .agents/plugins/                 # Codex marketplace
-├── .claude-plugin/                  # Claude marketplace
-├── .codex/agents/                   # dogfooded Codex role profiles (tracked, shared mode)
+├── .agents/plugins/                 Codex marketplace
+├── .claude-plugin/                  Claude marketplace
+├── .codex/agents/                   dogfooded Codex role profiles
 ├── plugins/sw/
-│   ├── .claude-plugin/              # Claude package manifest
-│   ├── .codex-plugin/               # Codex package manifest + calendar version
-│   ├── agents/                      # Claude role adapters
-│   ├── commands/                    # thin Claude redirects
-│   ├── skills/                      # single workflow implementation
-│   ├── templates/                   # change/delivery, Codex role, and OpenCode adapter templates
-│   │   ├── opencode-agents/         # OpenCode agent profile templates
-│   │   └── opencode-commands/       # OpenCode command redirect templates
-│   ├── scripts/                     # validators and deterministic updater
+│   ├── .claude-plugin/              Claude package manifest
+│   ├── .codex-plugin/               Codex package manifest + calendar version
+│   ├── agents/                      Claude role manifests
+│   ├── commands/                    eight thin Claude redirects
+│   ├── skills/                      the single workflow implementation
+│   ├── templates/                   change, plan, delivery, Codex roles
+│   ├── scripts/                     scaffolder and validators
 │   └── references/
 ├── tests/
-└── .specwright/                     # dogfooded project vault
+└── .specwright/                     dogfooded vault
 ```
 
 ## Customize and contribute
 
-Project-specific review rules belong in `.specwright/conventions/`. Shared
-workflow behavior belongs in the relevant `plugins/sw/skills/<name>/SKILL.md`;
-do not add host-specific behavior to a command redirect. Claude role manifests,
-Codex TOML templates, and OpenCode agent profiles use the same role names:
-
-| Role | Codex model/effort | Codex sandbox | OpenCode model | OpenCode sandbox |
-|---|---|---|---|---|
-| `sw-change-owner` | `gpt-5.6-sol`, high | workspace write | inherits session model (no pin) | default |
-| `sw-spec-document-reviewer` | `gpt-5.6-sol`, high | read-only | inherits session model (no pin) | edit: deny |
-| `sw-reviewer` | `gpt-5.6-sol`, high | read-only | inherits session model (no pin) | edit: deny |
-| `sw-task-worker` | `gpt-5.6-terra`, medium | workspace write | inherits session model (no pin) | default |
-
-OpenCode does not namespace skills loaded via `skills.paths`; specwright's skill
-names (`plan`, `run`, …) may shadow same-named user skills.
+Project-specific review rules go in `.specwright/conventions/` — one standard per
+file. Shared workflow behavior goes in the relevant
+`plugins/sw/skills/<name>/SKILL.md`; never add host-specific behavior to a
+command redirect.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the validation matrix and release
 gates. Security reports follow [`SECURITY.md`](SECURITY.md).
