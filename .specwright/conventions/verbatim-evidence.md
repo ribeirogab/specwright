@@ -1,6 +1,6 @@
 # Verbatim evidence quotes
 
-**Applies to:** any issue artifact that captures transcripts or command output as evidence (`evidence/`, `findings.md`, `learnings.md`).
+**Applies to:** any change artifact that captures transcripts or command output as evidence — a change folder's `evidence/`, its `## Decisions and discoveries` entries, or any findings file beside them.
 
 Verbatim quotes are exempt from the English-only rule for authored artifacts. A captured transcript excerpt, command output, or session turn must be preserved byte-for-byte — translating or paraphrasing it falsifies the evidence the verdict depends on (e.g. a pt-BR reply from a driven session, an emoji inside a quoted turn, machine-local paths in captured output).
 

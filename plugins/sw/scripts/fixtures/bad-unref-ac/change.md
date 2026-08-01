@@ -1,25 +1,33 @@
 ---
-feature: sample-feature
-created: 2026-06-14
+feature: sample-change
+created: 2026-07-31
 status: pending
 shipped: null
+delivery: null
 ---
-# Sample Feature — Change
+# Sample Change — Change
+
+Fixture: the shape `validate-change.sh` accepts. Every bad fixture beside it
+differs from this file in exactly one way.
 
 ## Purpose
 
-Demonstrate a well-formed change folder for validator testing.
+Give the validator a change that is ready to hand to an agent with no context.
 
 ## Motivation
 
-The validator needs a passing fixture to prove its happy path exits zero.
+A gate with no passing example cannot prove it accepts anything.
 
 ## Non-Goals
 
-Not a real feature; it exists only to exercise the validator.
+Does not exercise the host adapters or the plugin package surface.
 
 ## Acceptance Criteria
 
-- [ ] **AC-1** `greet("world")` returns the exact string `Hello, world`.
-- [ ] **AC-2** `greet("")` returns HTTP 400 with body `{"code":"EMPTY_NAME"}`.
-- [ ] **AC-3** The config flag `verbose` defaults to false.
+- [ ] **AC-1** `sample --version` prints `1.2.0` and exits 0.
+- [ ] **AC-2** `sample --parse fixtures/empty.json` exits 2 and prints `empty input` on stderr.
+- [ ] **AC-3** `sample --parse fixtures/big.json` completes within 200 ms.
+
+## Decisions and discoveries
+
+- **[decision]** Exit code 2 signals malformed input, keeping 1 for runtime failure.

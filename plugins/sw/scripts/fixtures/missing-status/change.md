@@ -1,24 +1,31 @@
 ---
-feature: sample-feature
-created: 2026-06-14
+feature: sample-change
+created: 2026-07-31
 shipped: null
+delivery: null
 ---
-# Sample Feature — Change
+# Sample Change — Change
+
+Fixture: the shape `validate-change.sh` accepts. Every bad fixture beside it
+differs from this file in exactly one way.
 
 ## Purpose
 
-Exercise the validator's check-1 behavior when `status:` is absent.
+Give the validator a change that is ready to hand to an agent with no context.
 
 ## Motivation
 
-A single defect — the missing `status:` key — must count as exactly one failed
-check (exit 1), not two, and must not collide with the usage/error exit 2.
+A gate with no passing example cannot prove it accepts anything.
 
 ## Non-Goals
 
-Not a real feature; it exists only to exercise the validator.
+Does not exercise the host adapters or the plugin package surface.
 
 ## Acceptance Criteria
 
-- [ ] **AC-1** `greet("world")` returns the exact string `Hello, world`.
-- [ ] **AC-2** `greet("")` returns HTTP 400 with body `{"code":"EMPTY_NAME"}`.
+- [ ] **AC-1** `sample --version` prints `1.2.0` and exits 0.
+- [ ] **AC-2** `sample --parse fixtures/empty.json` exits 2 and prints `empty input` on stderr.
+
+## Decisions and discoveries
+
+- **[decision]** Exit code 2 signals malformed input, keeping 1 for runtime failure.

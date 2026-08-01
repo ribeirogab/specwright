@@ -16,15 +16,17 @@ specwright bundles two scripts vendored from `anthropics/skills` so the skill is
 | Copyright holder | Anthropic |
 | Modifications | `quick_validate.py` accepts Claude's supported boolean `user-invocable` frontmatter key and rejects non-boolean values; unknown-key rejection remains strict. `package_skill.py` has one change vs upstream: the `from scripts.quick_validate import validate_skill` line is replaced with `sys.path.insert(0, str(Path(__file__).parent))` followed by `from quick_validate import validate_skill`, so the file works whether invoked as `python -m scripts.package_skill`, `python scripts/package_skill.py`, or by absolute path. The change is documented inline in the file's module docstring. |
 
-## Adapted under the `sw` skills (`brainstorm`, `plan`)
+## Adapted under the `sw` skills (`change`, `plan`)
 
-The `brainstorm` and `plan` skills are adapted from the **superpowers** project by Jesse Vincent (obra). The brainstorming visual companion (its HTML/CSS/scripts) and the plan-writing flow originate there; specwright has rebranded the user-facing surfaces, removed the dependencies on superpowers-only sub-skills, and rewired runtime paths to `.specwright/`.
+The `change` and `plan` skills descend from the **superpowers** project by Jesse Vincent (obra): the design-exploration flow that `change` absorbed and the plan-writing flow that `plan` still follows originate there. specwright rebranded the user-facing surfaces, removed the dependencies on superpowers-only sub-skills, and rewired runtime paths to `.specwright/`.
 
 | Field | Value |
 |---|---|
 | Source | [https://github.com/obra/superpowers](https://github.com/obra/superpowers) |
 | Original license | MIT |
-| Modifications | Rebranded the brainstorm UI ("Superpowers Brainstorming" → "specwright Brainstorming"); moved the runtime mockup path `.superpowers/brainstorm/` → `.specwright/brainstorm/`; removed the `superpowers:*` sub-skill dependencies by inlining the execution-approach guidance; integrated both skills into the specwright change-driven flow. |
+| Modifications | Removed the `superpowers:*` sub-skill dependencies by inlining the execution-approach guidance; folded the standalone brainstorm flow into `change`; rewrote the plan flow around a single fused `plan.md` executable without conversation context; integrated both into the specwright change ladder. |
+
+The brainstorming visual companion (its HTML, CSS, and scripts) was also adapted from superpowers and was **removed** in the v2 ladder refactor, together with the standalone `brainstorm` skill and its `.specwright/brainstorm/` runtime path. No file derived from it remains in this repository; the attribution above covers only the workflow prose that survives.
 
 ## License compatibility
 

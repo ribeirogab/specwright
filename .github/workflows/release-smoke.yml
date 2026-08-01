@@ -1,4 +1,4 @@
-name: Release smoke
+name: Checks
 
 on:
   pull_request:
@@ -11,6 +11,40 @@ permissions:
   contents: read
 
 jobs:
+  portable-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PyYAML
+        run: pip install PyYAML
+
+      - name: Package and scaffolder checks
+        run: bash tests/install/run.sh
+
+      - name: Handoff-readiness validator
+        run: bash tests/validate-change/run.sh
+
+      - name: Skill authoring checks
+        run: python3 tests/skills/test_validation.py
+
+      - name: Every skill validates
+        run: |
+          for skill in plugins/sw/skills/*/; do
+            python3 plugins/sw/scripts/quick_validate.py "$skill"
+          done
+
+      - name: Every change artifact is handoff-ready
+        run: |
+          for change in .specwright/changes/*/; do
+            [ -f "$change/plan.md" ] || continue
+            plugins/sw/scripts/validate-change.sh "$change"
+          done
+
   host-native-ingestion:
     runs-on: ubuntu-latest
     steps:

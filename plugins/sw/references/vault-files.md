@@ -1,88 +1,59 @@
-# Vault Files — File Specifications
+# Vault files — specifications
 
 `.specwright/` is the per-repository change vault. It has three durable content
-directories; ignored worktrees are runtime transport, not vault records.
+directories; worktrees are runtime transport, not records.
 
-## Vault shape
+## Shape
 
 ```text
 .specwright/
 ├── conventions/
-│   └── README.md
+│   └── README.md          signpost, created only into an empty directory
 ├── changes/
 │   └── .gitkeep
 ├── deliveries/
 │   └── .gitkeep
-└── worktrees/             ignored; created as work is dispatched
+└── worktrees/             ignored; created as delivery work is dispatched
 ```
 
-The scaffolder creates no artifact templates or validators inside the vault.
-Resolve the installed plugin root as `SW_PLUGIN_ROOT`; bundled resources stay
-under `$SW_PLUGIN_ROOT/templates/` and `$SW_PLUGIN_ROOT/scripts/`.
-
-`conventions/README.md` is an inert signpost created only when the directory is
-empty. Existing conventions are never overwritten. Empty `changes/` and
-`deliveries/` receive `.gitkeep`.
+The scaffolder creates no templates or scripts inside the vault. Bundled
+resources stay under `$SW_PLUGIN_ROOT/templates/` and `$SW_PLUGIN_ROOT/scripts/`.
+Existing vault content is never overwritten.
 
 ## Commit modes
 
-In **shared** mode the vault is tracked and only `.specwright/worktrees/` is
-ignored. Canonical instructions are `AGENTS.md`; `CLAUDE.md` is its relative
-symlink. The four project Codex profiles and the thirteen `.opencode/` files
-(four `.opencode/agent/sw-*.md` profiles and nine `.opencode/command/sw-*.md`
-redirects) are tracked.
+**shared** — the vault is tracked; only `.specwright/worktrees/` is ignored.
+Canonical instructions are `AGENTS.md`, with `CLAUDE.md` as its relative symlink.
 
-In **local** mode the whole vault, `AGENTS.override.md`, its
-`CLAUDE.local.md` relative symlink, the four `.codex/agents/sw-*.toml` profiles,
-the `.opencode/agent/sw-*.md` and `.opencode/command/sw-*.md` files, and worktrees
-are ignored. Existing shared instructions and unrelated Codex configuration remain
-untouched.
+**local** — the whole vault, `AGENTS.override.md`, and its `CLAUDE.local.md`
+symlink are ignored. Existing shared instructions are left untouched.
 
-For a local-mode delivery dispatch, `sw:run` copies into each change worktree:
+Role profiles are **not** vault content and never land in a repository. Claude
+Code resolves them from the installed plugin; Codex resolves them from
+`${CODEX_HOME:-~/.codex}/agents/`, installed once per machine with
+`sw_init.py --install-codex-roles`.
 
-- `AGENTS.override.md`;
-- `CLAUDE.local.md -> AGENTS.override.md`;
-- the project-installed `.codex/agents/sw-*.toml` files;
-- the `.opencode/agent/sw-*.md` and `.opencode/command/sw-*.md` files; and
-- the change folder.
+For a local-mode delivery dispatch, `sw:delivery` copies into each change
+worktree: `AGENTS.override.md`, its `CLAUDE.local.md` symlink, and the change
+folder. On return it copies back **only** the change folder — instructions are
+conductor-owned state and never sync back from an owner's worktree.
 
-On return it copies back only that change folder. Instructions, profiles, and
-OpenCode files are canonical conductor state and never sync back from a
-worker/owner worktree.
+## Changes — flat, always
 
-## Changes (flat, always)
-
-Every change lives flat under `.specwright/changes/`, whether it is standalone or
-belongs to a delivery — membership is the `delivery:` frontmatter key, never
-directory nesting:
+Every change lives flat under `.specwright/changes/`, whether standalone or part
+of a delivery. Membership is the `delivery:` frontmatter key, never directory
+nesting:
 
 ```text
 .specwright/changes/YYYY-MM-DD-<slug>/
 ├── change.md
-├── spec.md
-├── tasks.md
-├── learnings.md          optional
-└── ...                   change-specific evidence/artifacts
+├── plan.md
+├── pr.md                  only when sw:pr could not reach GitHub
+└── ...                    change-specific evidence
 ```
 
 Each change is self-contained. Files refer to siblings by bare filename in prose,
-not links. An evidence-consuming change may name a sibling change path as plain text
-when verifiability requires it; link syntax remains disallowed.
-
-## Deliveries
-
-```text
-.specwright/deliveries/YYYY-MM-DD-<slug>/
-├── delivery.md
-└── board.md
-```
-
-A delivery is only its durable goal plus its live board; its changes are the flat
-`.specwright/changes/` folders whose `delivery:` points here. The board references
-change slugs and holds order and dependencies; it does not duplicate each change's
-`status:` or `shipped:`.
-
-## Frontmatter
+not links.
 
 ### `change.md`
 
@@ -96,11 +67,16 @@ delivery: null
 ---
 ```
 
-`status` is `pending`, `in-progress`, `shipped`, or `blocked`. `shipped` is the
-ship date only when status is `shipped`. `delivery` is the parent delivery folder
-path or `null` for a standalone change.
+`status` is `pending`, `in-progress`, `shipped`, or `blocked`, and lives **only**
+here. `shipped` carries the ship date once status is `shipped`. `delivery` is the
+parent delivery folder or `null`.
 
-### `spec.md`
+Sections: Purpose, Motivation, Non-Goals, Acceptance Criteria, and **Decisions and
+discoveries** — the record of choices the ticket did not settle and non-obvious
+facts the work found. That last section is what makes an autonomous `sw:ship` run
+auditable.
+
+### `plan.md`
 
 ```yaml
 ---
@@ -113,48 +89,38 @@ delivery: null
 ---
 ```
 
-`scope` is `low`, `medium`, `high`, or `complex`.
+`scope` is `low`, `medium`, `high`, or `complex`, and is recorded only. `branch`
+is **required**: it is how a session with no conversation context knows where to
+work.
 
-### `tasks.md`
-
-```yaml
----
-feature: <kebab-slug>
-created: YYYY-MM-DD
-tasks_schema: 2
----
-```
-
-Every active schema-2 task uses:
+Architecture on top, tasks below. Every task block carries exactly three fields:
 
 ```markdown
 ### T1: Task name
 
 **AC:** AC-1, AC-2
-**Delegable:** yes — bounded independent implementation
-**Depends on:** none
 **Files:**
 - Create: `path/to/file`
-**Integration:** isolated
-**Validation:** command that verifies the task
+**Validation:** command that verifies this task
 ```
 
-Rules:
+Rules the validator enforces:
 
-- IDs are unique stable `Tn` values.
-- Dependencies name existing task IDs or `none` and form an acyclic graph.
-- `Delegable: yes` pairs with `Integration: isolated`, explicit
-  repository-relative files, and a concrete validation command.
-- `Delegable: no` pairs with `Integration: inline`; no ownership is written as
-  exactly `- None`.
-- Independent isolated tasks eligible in the same dependency wave may not own
-  overlapping paths. A **wave** — a dependency-ready, file-disjoint set of
-  isolated tasks that may run in parallel — is derived from this graph at
-  dispatch time and never persisted.
-- Historical shipped changes may retain schema-1 tasks. Active schema-1 tasks
-  block planning until explicitly rewritten; no updater guesses their topology.
+- every `AC-N` in `change.md` is claimed by at least one task, and no task names
+  a criterion that does not exist;
+- `Files:` lists at least one exact repository-relative path;
+- `Validation:` is a non-empty command;
+- no surviving `{{placeholder}}` in either file.
 
-### `delivery.md` and `board.md`
+Task order in the document is execution order. The checkboxes are the resume
+state: `sw:implement` continues at the first unticked box.
+
+## Deliveries
+
+```text
+.specwright/deliveries/YYYY-MM-DD-<slug>/
+└── delivery.md
+```
 
 ```yaml
 ---
@@ -163,16 +129,8 @@ created: YYYY-MM-DD
 ---
 ```
 
-## Change ownership and worktrees
-
-The change owner alone edits change artifacts and integrates the change branch.
-Ready, independent, non-overlapping isolated tasks form a wave. Every worker
-branch starts from the same recorded change HEAD and gets a sibling worktree under
-`.specwright/worktrees/`.
-
-A worker changes only declared files and returns the recorded base SHA, ordered
-commit SHAs, touched files, validation results, and discoveries. The owner checks
-ancestry and scope, reviews the diff, then cherry-picks accepted commits. After a
-wave, integrated validation must pass before dependent tasks are released.
-
-Worktrees are retained for inspection and never removed automatically.
+One file holds both the durable *why* (Purpose, Motivation, Success Criteria,
+Non-Goals) and the live state (the change table with its dependency order, the
+append-only dispatch log, and the blockers). A delivery's changes are the flat
+`.specwright/changes/` folders whose `delivery:` points at it. The change table
+holds order and dependencies; it never duplicates a change's `status:`.

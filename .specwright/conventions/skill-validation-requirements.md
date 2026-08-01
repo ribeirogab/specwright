@@ -21,8 +21,7 @@ accept the file.
 - A skill folder contains no `README.md`; supporting material belongs in
   `references/` or another explicitly bundled resource.
 - Workflow behavior lives only in `SKILL.md`. The homonymous Claude command is a
-  pure redirect, the Codex manifest points at the shared skills root, and OpenCode
-  commands in `templates/opencode-commands/` are equally pure redirects.
+  pure redirect, and the Codex manifest points at the shared skills root.
 
 ## Frontmatter
 
@@ -46,12 +45,14 @@ Any other top-level key is rejected. Nested custom data belongs under `metadata`
 ## Host-surface behavior
 
 - User-facing syntax in a shared skill is host-neutral or names every valid
-  surface: `/sw:*` for Claude Code, `$sw:*` for Codex, `/sw-*` for OpenCode.
+  surface: `/sw:*` for Claude Code, `$sw:*` for Codex.
 - Bundled templates and scripts resolve from the installed plugin root, never from
   a presumed `plugins/sw/` directory in the consumer repository.
-- Operational role dispatch uses the stable `sw-*` names shared by Claude agent
-  manifests, Codex project profiles, and OpenCode agent templates.
-- Design approval never overrides host permission or approval policy.
+- Operational role dispatch uses the stable `sw-*` names shared by the Claude
+  agent manifests and the Codex project profiles.
+- A skill description states when the skill is invoked; it never instructs the
+  model to run the workflow on its own initiative.
+- Ticket approval never overrides host permission or approval policy.
 
 ## Required checks
 

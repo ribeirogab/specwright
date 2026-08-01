@@ -1,15 +1,15 @@
 {
   "name": "sw",
-  "version": "2026.7.30",
-  "description": "The specwright change-driven workflow for Claude Code, Codex, and OpenCode.",
+  "version": "2026.7.31",
+  "description": "The specwright change ladder for Claude Code and Codex.",
   "author": {
     "name": "Gabriel Ribeiro"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "specwright",
-    "shortDescription": "Run a change-driven engineering workflow",
-    "longDescription": "Plan, implement, validate, and review changes through specwright's change-driven engineering workflow.",
+    "shortDescription": "Climb a change from ticket to reviewed PR",
+    "longDescription": "One command per step: write the ticket, plan it, implement it, open the PR, review it. Or run the whole ladder autonomously with ship, or decompose a large outcome with delivery.",
     "developerName": "Gabriel Ribeiro",
     "category": "Productivity",
     "capabilities": [
@@ -18,8 +18,8 @@
     ],
     "defaultPrompt": [
       "Set up specwright for this repository",
-      "Turn this change into a specwright change",
-      "Plan and validate the next specwright task"
+      "Turn this conversation into a change",
+      "Implement the plan for the current change"
     ]
   }
 }

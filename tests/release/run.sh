@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-SKILLS=(brainstorm init plan pr review review-spec run spec update)
+SKILLS=(change delivery implement init plan pr review ship)
 
 fail() {
   printf 'FAIL: %s\n' "$1" >&2
@@ -100,7 +100,10 @@ profiles = [
     tomllib.loads(path.read_text(encoding="utf-8"))
     for path in pathlib.Path(sys.argv[2]).glob("sw-*.toml")
 ]
-missing = sorted({profile["model"] for profile in profiles} - available)
+# Roles inherit the session's model by default, so most profiles pin none.
+# Any profile that does pin one must still name a model the host offers.
+pinned = {profile["model"] for profile in profiles if "model" in profile}
+missing = sorted(pinned - available)
 if missing:
     raise SystemExit(f"Codex profiles select unavailable models: {missing}")
 PY
@@ -209,7 +212,7 @@ run_codex_malformed_skill() {
 }
 
 assert_source_inventory
-pass "static nine-skill inventory"
+pass "static eight-skill inventory"
 claude plugin validate --strict "$ROOT/plugins/sw"
 pass "Claude strict validation"
 

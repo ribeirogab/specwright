@@ -1,48 +1,63 @@
 # specwright — Agent Instructions
 
-Instructions for AI coding assistants and developers working on the specwright codebase.
+Instructions for AI coding assistants and developers working on the specwright
+codebase.
 
 **Never give up on the right solution.**
 
-This repo builds and ships specwright (a markdown + shell skill repo, no build pipeline) and dogfoods the change-driven workflow on itself.
+This repo builds and ships specwright (a markdown + shell skill repo, no build
+pipeline) and dogfoods its own workflow.
 
-<!-- sw:managed version=2026.7.30 digest=bd7eb5084ec236be5ba58363717d12ecc7a3e6b2148cf51ab103907bd54edfb5 -->
-# specwright
+## specwright
 
-This repository uses specwright's change-driven engineering workflow.
+This repository uses specwright for change-driven work. The vault is
+`.specwright/`: changes in `changes/`, deliveries in `deliveries/`, project
+conventions in `conventions/`.
 
-## Workflow
+- For feature work, suggest `/sw:change` to the user instead of starting the
+  workflow yourself. Do not implement a feature without offering it first.
+- While a change is in progress, read its `change.md` and `plan.md` before
+  touching the code it covers.
+- A trivial change needs no artifacts. Edit the code directly.
+- Verification — tests, lint, typecheck, build — runs at the `implement` or
+  `ship` step, or when the user asks for it. After a direct edit outside the
+  workflow, stop and report what changed and what was left unverified; do not
+  run gates on your own initiative.
 
-Use the shared workflow skills to explore, specify, plan, implement, validate, and
-review changes. Work that needs a durable design follows the change flow in
-`.specwright/`; change artifacts are owned by the change owner.
+Host surfaces: `/sw:*` in Claude Code, `$sw:*` in Codex. Host permissions and
+sandbox policy remain authoritative; nothing here grants permission to write
+files, run commands, create branches, commit, push, or reach a network service.
 
-## Command surfaces
+## The ladder
 
-Claude Code exposes the workflow as `/sw:*` commands. Codex exposes the same shared
-workflow as `$sw:*` skills. OpenCode exposes the same workflow as `/sw-*` commands.
-These are host adapters for the same workflow; use the surface available in the
-current host.
+Five steps, each its own command, each stopping and naming the next:
 
-## Permissions
+```text
+change → plan → implement → pr → review
+```
 
-Host permissions and sandbox policy remain authoritative. Design approval does not
-grant permission to write files, run commands, create branches, commit, push, or
-access external services.
-<!-- /sw:managed -->
+`ship` runs all five without stopping and records its decisions in `change.md`.
+`delivery` decomposes a large outcome and conducts one owner per change.
 
-The dogfooded vault follows the canonical flat layout: changes live in
-`.specwright/changes/`, deliveries (`delivery.md` + `board.md`) in
-`.specwright/deliveries/`.
+Each change carries exactly two artifacts: `change.md` (why, `AC-N`, decisions)
+and `plan.md` (architecture, tasks). `plan.md` is written to be executed by an
+agent with no memory of the conversation that produced it — that constraint is
+what makes model-switching and cross-session handoff work, and it is enforced by
+`plugins/sw/scripts/validate-change.sh`.
 
-### Editing the bundled skills
+## Editing the bundled skills
 
-Every companion skill's `SKILL.md` lives exactly **once**, under
-`plugins/sw/skills/<name>/` — no copy to keep in sync. Each companion skill is
-paired with a thin redirect under `plugins/sw/commands/`. Edit the `SKILL.md` for
-behavior; the command rarely changes. Templates live under `plugins/sw/templates/`,
-the mechanical validator under `plugins/sw/scripts/`, and references under
-`plugins/sw/references/`. The stable role identities are `sw-change-owner`,
-`sw-task-worker`, `sw-spec-document-reviewer`, and `sw-reviewer`. Their Claude
-manifests live under `plugins/sw/agents/`; only the owner and branch reviewer
-preload their workflow skill.
+Every skill's `SKILL.md` lives exactly **once**, under
+`plugins/sw/skills/<name>/` — no copy to keep in sync. Each is paired with a thin
+redirect under `plugins/sw/commands/`. Edit the `SKILL.md` for behavior; the
+command rarely changes. Templates live under `plugins/sw/templates/`, the
+scaffolder and validators under `plugins/sw/scripts/`, and references under
+`plugins/sw/references/`.
+
+A skill description says **when the skill is invoked**. It never instructs the
+model to run the workflow on its own initiative — that auto-dispatch is precisely
+what this design removed.
+
+The stable role identities are `sw-change-owner` and `sw-reviewer`. Their Claude
+manifests live under `plugins/sw/agents/` and their Codex profiles under
+`plugins/sw/templates/codex-agents/`; both preload their workflow skill.

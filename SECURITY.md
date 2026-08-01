@@ -18,10 +18,10 @@ In scope:
 
 - both plugin manifests and marketplace catalogs;
 - shared skills and Claude command adapters;
-- project templates, role manifests/profiles, validators, and updater;
-- init/update behavior affecting `AGENTS*.md`, `CLAUDE*.md`,
-  `.codex/agents/sw-*.toml`, `.gitignore`, or `.specwright/`;
-- change-owner/task-worker branch and worktree isolation; and
+- project templates, role manifests and profiles, validators, and the scaffolder;
+- `sw:init` behavior affecting `AGENTS*.md`, `CLAUDE*.md`, `.gitignore`, or
+  `.specwright/`, and its separate machine-wide Codex role install;
+- change-owner branch and worktree isolation during a delivery; and
 - release tests that claim a host recognizes the package.
 
 Out of scope:
@@ -34,55 +34,60 @@ Out of scope:
 
 ## Threat model
 
-specwright is an instruction-driven plugin. Its updater and task-topology engines
-use only the Python standard library; skill authoring validation and packaging use
-PyYAML in an ephemeral `uv` environment. Shell helpers connect those checks. The
-plugin can guide agents that have repository write, Git, and external-service
-capabilities, so the main trust boundaries are host permissions, managed project
-state, filesystem paths, and worker integration.
+specwright is an instruction-driven plugin. Its scaffolder uses only the Python
+standard library; skill authoring validation and packaging use PyYAML in an
+ephemeral `uv` environment. Shell helpers connect those checks. The plugin can
+guide agents that have repository write, Git, and external-service capabilities,
+so the main trust boundaries are host permissions, project state written by the
+scaffolder, filesystem paths, and delivery dispatch.
 
 ### Host authority
 
-Design approval and specwright plan confirmation do not bypass host sandbox,
+Ticket approval and an autonomous `sw:ship` run do not bypass host sandbox,
 command, Git, network, credential, or external-action approval policy. A skill
 that implies broader authority than the host granted is a security defect.
 
-### Project migration
+### Project scaffolding
 
-The updater treats the installed Codex manifest as the target version and performs
-no network access or remote-branch lookup. A read-only plan includes observed
-state, ordered operations, and a deterministic `plan_id`; apply requires that
-exact identity.
+`sw_init.py` performs no network access. It creates only what is missing and
+never overwrites, repairs, or deletes existing content: a path that exists in an
+unusable shape is reported as a conflict **before** any write, and the run writes
+nothing at all.
 
-The managed AGENTS block carries a SHA-256 digest. Text outside it belongs to the
-project and must be preserved. Unexpected file kinds, modified digests, stale
-plan identity, invalid template sources, unsafe parent paths, or an unsupported
-symlink operation must fail before managed writes. There is no regular-file
-fallback for Claude adapters.
+Text the project owns must survive byte-for-byte — the `## specwright` section is
+appended at most once and never rewritten. Unexpected file kinds, unsafe parent
+paths, invalid template sources, or an unsupported symlink operation must fail
+before any write. There is no regular-file fallback for Claude adapters, because
+a copy would silently diverge from its canonical file.
 
-Profile files are project configuration and may grant write capability to an
-agent. Their names, models, reasoning effort, and sandbox mode are therefore part
-of the reviewed security surface. The two reviewer roles must remain read-only;
-owner and worker write roles remain constrained by their protocol and host policy.
+Profile files may grant write capability to an agent, so their names and sandbox
+mode are part of the reviewed security surface. They live outside the project —
+Claude Code resolves them from the installed plugin, Codex from
+`${CODEX_HOME:-~/.codex}/agents/` — so installing them writes to the maintainer's
+machine and must never happen as a side effect of scaffolding a repository. It is
+a separate, explicitly requested mode that creates but never overwrites. `sw-reviewer` must remain read-only; `sw-change-owner` remains
+constrained by its protocol and host policy. Roles pin no model — they inherit
+the session's — so a model choice is never a permission decision.
 
-### Worker isolation
+### Delivery dispatch isolation
 
-The change owner records the exact base SHA, declared paths, and validation command
-before dispatch. A returned worker branch is untrusted integration input until the
-owner verifies ancestry, commit order, touched paths, and the full diff. Workers
-must never write change artifacts, integrate branches, create PRs, or alter files
-outside their assignment.
+Each change owner works in its own branch and worktree and may edit only its own
+change's artifacts, branch, and pull request. An owner that writes another
+change's folder, edits the delivery's *why* sections, approves its own review, or
+merges a pull request is a security defect.
 
-Mechanical conflicts may be resolved and revalidated by the owner. Semantic
-conflicts, scope changes, or ownership overlap require rejection and replanning.
-Path traversal, symlink escape, common-Git-root confusion, or accepting commits
-outside the recorded base are security defects.
+The orchestrator is a pure conductor: it never edits code, and it pastes a
+blocked report unmodified rather than composing one. In local mode it copies
+conductor state into a worktree and copies only the change folder back; a sync
+that carried instructions or profiles back from a worktree would let dispatched
+work rewrite the conductor's own authority, and is a defect.
 
 ### Package recognition
 
 Structural checks alone do not prove that a host can ingest the package. Release
 CI uses the native Claude strict validator and a disposable Codex marketplace and
-plugin home. It also rejects role profiles whose model is absent from the native
+plugin home; a green local run of the release suite skips Codex ingestion and is
+not evidence of it. It also rejects role profiles whose model is absent from the native
 Codex model catalog. Positive installation and negative manifest/skill fixtures
 must fail the release if either host no longer recognizes the expected package.
 
