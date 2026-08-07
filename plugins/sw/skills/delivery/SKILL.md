@@ -28,10 +28,10 @@ directory — and require `templates/delivery.md` beneath it when decomposing.
 external ticket) and no delivery exists yet → decompose it first. Read the whole
 document, then write `.specwright/deliveries/YYYY-MM-DD-<slug>/delivery.md` from
 the template: the outcome's *why*, its success criteria, and the change table
-with its dependency order. Write one shallow `change.md` per decomposed change,
+with its dependency order. Write one shallow `proposal.md` per decomposed change,
 each with `delivery:` pointing at the delivery folder.
 
-Keep the decomposition **shallow on purpose**. Each change's own `plan.md` is
+Keep the decomposition **shallow on purpose**. Each change's own plan is
 written later by its owner, which lets it use what the earlier changes
 discovered. Planning everything up front spends effort on plans that the first
 shipped change will invalidate.
@@ -40,7 +40,7 @@ Show the decomposition and get approval before dispatching anything.
 
 **Otherwise** → locate the delivery: `$ARGUMENTS` names a slug, or exactly one
 delivery has unshipped changes (found through their `delivery:` frontmatter). Ask
-which when several match. Read `delivery.md` and every member change's `change.md`
+which when several match. Read `delivery.md` and every member change's `proposal.md`
 frontmatter.
 
 All state lives in those files. That is what makes a fresh session able to resume
@@ -69,9 +69,9 @@ fi
 
 Repeat until no change is ready and none is running.
 
-**1. Find ready changes.** A change is ready when its `change.md` says
+**1. Find ready changes.** A change is ready when its `proposal.md` says
 `status: pending` and every dependency in the delivery's change table says
-`status: shipped` in its own `change.md`. In shared mode read an unmerged
+`status: shipped` in its own `proposal.md`. In shared mode read an unmerged
 dependency from its own branch or worktree — the copy on `main` still says
 `pending` until merge. In local mode read it from this checkout's canonical
 vault, kept current by the sync-back below.
@@ -118,11 +118,11 @@ concurrency cap. For each:
 **commit after every append** — an uncommitted line is lost to a crash. On
 `shipped`, record the PR URL and any decision that affects another change. On
 `blocked`, paste the owner's report into the Blockers section **unmodified**; the
-conductor never composes or restructures it. Owners flip their own `change.md`
+conductor never composes or restructures it. Owners flip their own `proposal.md`
 status; the orchestrator never edits one.
 
 - **In local mode, sync the returned owner's change folder back first** — that is
-  how its flipped `status:` and its `plan.md` reach the canonical vault, since
+  how its flipped `status:` and its plan reach the canonical vault, since
   git-ignored artifacts have no branch to travel on:
 
   ```bash
@@ -187,7 +187,7 @@ the update is never silently dropped.
   - **All shipped** → closeout, below.
   - **Only blocked left** → print a consolidated report: every blocker with what
     it needs from the maintainer. Each recovery line must be executable by
-    someone who does not know the branch mechanics. Name the exact `change.md` to
+    someone who does not know the branch mechanics. Name the exact `proposal.md` to
     set back to `pending` — inside the change's own checkout in shared mode, in
     the canonical vault in local mode — then re-run this skill.
 - **Scope guard:** while the loop runs, never create or remove a change, never

@@ -1,5 +1,5 @@
 ---
-description: Turn an approved change.md into plan.md — architecture plus the task checklist — written so an agent with no conversation context can implement it, then checked by the handoff validator
+description: Turn an approved proposal.md into its plan — tasks.md always, design.md when the scope calls for one — written so an agent with no conversation context can implement it, then checked by the handoff validator
 argument-hint: "<optional: change folder or slug, or the current change if omitted>"
 ---
 

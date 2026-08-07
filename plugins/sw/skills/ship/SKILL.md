@@ -1,7 +1,7 @@
 ---
 name: ship
 user-invocable: false
-description: "Use when explicitly invoked to run the whole change ladder without stopping — ticket, plan, implementation, quality gate, runtime verification, review to lgtm — deciding every open question autonomously and recording each decision in change.md. Trigger on '/sw:ship', '$sw:ship', or a request to take something from idea to a reviewed branch without being asked anything."
+description: "Use when explicitly invoked to run the whole change ladder without stopping — ticket, plan, implementation, quality gate, runtime verification, review to lgtm — deciding every open question autonomously and recording each decision in proposal.md. Trigger on '/sw:ship', '$sw:ship', or a request to take something from idea to a reviewed branch without being asked anything."
 ---
 
 # ship — the ladder, without stops
@@ -19,14 +19,15 @@ record each one."
 Run these in order, each per its own skill. Follow that skill's instructions
 exactly; the only difference is that you never stop to ask.
 
-1. **`change`** — write `change.md` with acceptance criteria. If a change folder
-   already exists for this work, start from it instead of writing a new one.
-2. **`plan`** — write `plan.md` and pass the handoff-readiness validator.
+1. **`propose`** — write `proposal.md` with acceptance criteria. If a change
+   folder already exists for this work, start from it instead of writing a new one.
+2. **`plan`** — decide the scope, write `tasks.md` and, above `low`, `design.md`,
+   then pass the handoff-readiness validator.
 3. **`implement`** — work the task list, quality gate, runtime verification.
 4. **`review`** — review the branch, fix what the findings justify, iterate to
    `lgtm`.
 
-Then set `status: shipped` and the `shipped:` date in `change.md`, tick the
+Then set `status: shipped` and the `shipped:` date in `proposal.md`, tick the
 criteria that were verified, and commit on the change's own branch.
 
 ## Decide, then record
@@ -37,7 +38,7 @@ Every question the interactive ladder would have asked, you answer. Two rules:
 that is cheaper to undo. An autonomous run is not the place to make an expensive
 bet on the maintainer's behalf.
 
-**Record every decision in `change.md`.** Under `## Decisions and discoveries`,
+**Record every decision in `proposal.md`.** Under `## Decisions and discoveries`,
 one bullet each, saying what was chosen, why, and what was rejected:
 
 ```markdown
@@ -63,14 +64,14 @@ Autonomy covers design choices. It does not cover these:
 - **The circuit breaker.** The same gate or criterion failing **three times
   identically** stops the run. Do not try a fourth variation of the same idea.
 - **Verification you cannot perform.** A criterion you cannot execute is marked
-  `needs-human-verification` in `change.md` with its reason. Never tick a
+  `needs-human-verification` in `proposal.md` with its reason. Never tick a
   criterion you did not observe, and never write a verification you did not run —
   autonomy makes this rule more important, not less, because nobody is watching.
 - **An approved criterion.** Never edit an `AC-N` to match what you built.
 
 On a stop, report: what failed, what you tried, and what you need. For a change
 dispatched by a delivery, that is a `blocked` return with `status: blocked` set
-in `change.md`.
+in `proposal.md`.
 
 ## Then
 

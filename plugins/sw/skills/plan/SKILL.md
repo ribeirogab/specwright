@@ -1,13 +1,14 @@
 ---
 name: plan
 user-invocable: false
-description: "Use when explicitly invoked to turn an approved change.md into plan.md — the architecture plus the task checklist — written so an agent with no memory of the conversation can implement it, then checked by the handoff-readiness validator. Trigger on '/sw:plan', '$sw:plan', or a direct request to plan an existing change."
+description: "Use when explicitly invoked to turn an approved proposal.md into its plan — tasks.md always, and design.md when the scope calls for one — written so an agent with no memory of the conversation can implement it, then checked by the handoff-readiness validator. Trigger on '/sw:plan', '$sw:plan', or a direct request to plan an existing change."
 ---
 
 # plan — the technical plan, written for a stranger
 
-Turn an approved `change.md` into its `plan.md`: the architecture on top, the
-task checklist below. One rule governs every choice in this skill —
+Turn an approved `proposal.md` into the plan an implementer executes: `tasks.md`
+always, and `design.md` when the change is large enough to have an architecture.
+One rule governs every choice in this skill —
 
 > **The implementer has no memory of the conversation that produced this plan.**
 
@@ -27,14 +28,14 @@ Resolve `SW_PLUGIN_ROOT` before reading a template or invoking the validator:
 3. otherwise derive the root from this loaded `skills/plan/SKILL.md` real path
    (two parents above the `skills/plan/` directory).
 
-Require `templates/plan.md` and `scripts/validate-change.sh` beneath that root.
-Stop before writing if resolution fails. Never look for bundled resources inside
-the target repository.
+Require `templates/design.md`, `templates/tasks.md`, and
+`scripts/validate-change.sh` beneath that root. Stop before writing if resolution
+fails. Never look for bundled resources inside the target repository.
 
 ## Locate the change
 
 `$ARGUMENTS` names a change folder or slug → use it. Otherwise find the change in
-`.specwright/changes/*/` whose `change.md` says `status: pending` or
+`.specwright/changes/*/` whose `proposal.md` says `status: pending` or
 `in-progress`; several → ask which. Set `status: in-progress` when you start.
 
 Every change lives flat at `.specwright/changes/YYYY-MM-DD-<slug>/`, standalone
@@ -56,25 +57,49 @@ If the change spans several independent subsystems, it should have been
 decomposed at the ticket stage. If it was not, stop and say so — for a delivery
 change that is a **blocked** report, never a unilateral edit of the delivery.
 
-## Architecture
+## Decide the scope first
 
-Copy `"$SW_PLUGIN_ROOT/templates/plan.md"` into the change folder and fill it.
+`scope:` is the first decision, because it decides how many files you write:
 
-- **Frontmatter** — `feature`, `created`, `scope` (honest sizing, recorded only),
-  `branch` (**required**: it is how a fresh session knows where to work),
-  `worktree`, and `delivery`.
+- **`low`** — no architecture worth documenting. Write `tasks.md` only, and put
+  the few constraints the implementer must respect in its `## Constraints`
+  section. Most changes are this.
+- **`medium`, `high`, `complex`** — the change has a shape someone could get
+  wrong. Write `design.md` too.
+
+Size honestly, in both directions. Skipping a design document for work that has
+real architecture leaves the implementer guessing; writing one for a two-file
+edit is ceremony. The validator holds you to the answer: any value above `low`
+without a sibling `design.md` fails check 7.
+
+## Architecture — `design.md`
+
+Skip this section entirely at `low` scope. Otherwise copy
+`"$SW_PLUGIN_ROOT/templates/design.md"` into the change folder and fill it.
+
+- **Frontmatter** — `feature` only. Execution state belongs to `tasks.md`.
 - **Architecture** — the approach and why it beat the alternatives. Map every
   file that will be created or modified and what each is responsible for. Units
   with one responsibility and clean boundaries; smaller focused files over large
   ones; files that change together live together; follow the patterns this
   codebase already uses.
-- **Acceptance criteria stay in `change.md`.** They are the approved contract. Do
-  not copy them here. If planning exposes a criterion that is wrong or missing,
-  fix `change.md` with the maintainer for a standalone change, or report it for a
-  delivery change — an approved criterion is never reworded unilaterally, and any
-  ticket edit is its own commit naming the criterion it changed.
 
-## Tasks
+This file is written once and read many times. Everything that changes while the
+work runs lives in `tasks.md`, so an edit here after implementation starts reads
+as what it is: an architecture change.
+
+**Acceptance criteria stay in `proposal.md`.** They are the approved contract. Do
+not copy them into either file. If planning exposes a criterion that is wrong or
+missing, fix `proposal.md` with the maintainer for a standalone change, or report
+it for a delivery change — an approved criterion is never reworded unilaterally,
+and any ticket edit is its own commit naming the criterion it changed.
+
+## Tasks — `tasks.md`
+
+Copy `"$SW_PLUGIN_ROOT/templates/tasks.md"` into the change folder and fill it.
+Its frontmatter carries `feature`, `created`, `scope` (the decision above),
+`branch` (**required**: it is how a fresh session knows where to work),
+`worktree`, and `delivery`.
 
 **Each step is one action, two to five minutes.** "Write the failing test" is a
 step. "Run it and watch it fail" is a step. "Write the minimal implementation" is
@@ -92,7 +117,7 @@ Each task block carries exactly three pieces of metadata:
 **Validation:** `pytest tests/path/test.py::test_name -q`
 ```
 
-`AC:` names the criteria the task satisfies — every `AC-N` in `change.md` must be
+`AC:` names the criteria the task satisfies — every `AC-N` in `proposal.md` must be
 claimed by at least one task, and no task may name a criterion that does not
 exist. `Files:` lists at least one exact repository-relative path. `Validation:`
 is one runnable command that proves the task landed.
@@ -118,14 +143,14 @@ The implementer cannot ask you anything. Every one of these breaks the handoff:
 
 An unresolved question is a defect, not a note. Resolve it with the maintainer,
 or take the decision yourself and record it under `## Decisions and discoveries`
-in `change.md` with the alternative you rejected.
+in `proposal.md` with the alternative you rejected.
 
 ## Self-review, then the gate
 
 Read the plan once as if you had never seen the conversation, and fix what you
 could not act on. Then check, in order:
 
-1. **Coverage** — every requirement in `change.md` maps to a task.
+1. **Coverage** — every requirement in `proposal.md` maps to a task.
 2. **Traceability** — every `AC-N` is claimed by a task; no task invents one.
 3. **Placeholders** — no double-brace survivors, no "TBD", no "TODO".
 4. **Consistency** — names and signatures agree across tasks.
@@ -142,14 +167,14 @@ and report it with the exact `FAIL` line**, to the maintainer for a standalone
 change or in a blocked report for a delivery change. Proceed only after an
 acknowledged resolution.
 
-Commit `plan.md` when the gate passes, before any implementation commit.
+Commit the plan when the gate passes, before any implementation commit.
 
 ## Then
 
 Confirm the plan is handoff-ready and say so plainly:
 
 ```text
-plan ready — <change-folder>/plan.md
+plan ready — <change-folder>/tasks.md
 another agent can implement it with: /sw:implement <slug>
 ```
 

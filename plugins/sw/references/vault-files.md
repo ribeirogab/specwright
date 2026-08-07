@@ -46,15 +46,19 @@ nesting:
 
 ```text
 .specwright/changes/YYYY-MM-DD-<slug>/
-├── change.md
-├── plan.md
+├── proposal.md            why, AC-N, decisions and discoveries
+├── design.md              architecture; absent at scope: low
+├── tasks.md               the checklist and the execution state
 └── ...                    change-specific evidence
 ```
+
+Archived changes move under `.specwright/changes/archive/YYYY-MM-DD-<slug>/`
+once their branch has merged. Nothing edits a folder on the way in.
 
 Each change is self-contained. Files refer to siblings by bare filename in prose,
 not links.
 
-### `change.md`
+### `proposal.md`
 
 ```yaml
 ---
@@ -75,7 +79,19 @@ discoveries** — the record of choices the ticket did not settle and non-obviou
 facts the work found. That last section is what makes an autonomous `sw:ship` run
 auditable.
 
-### `plan.md`
+### `design.md`
+
+```yaml
+---
+feature: <kebab-slug>
+---
+```
+
+The architecture and the file map, written once. It exists only when `tasks.md`
+declares a `scope:` above `low`; a `low`-scope change states its constraints in
+`tasks.md` and carries no design document.
+
+### `tasks.md`
 
 ```yaml
 ---
@@ -88,11 +104,11 @@ delivery: null
 ---
 ```
 
-`scope` is `low`, `medium`, `high`, or `complex`, and is recorded only. `branch`
-is **required**: it is how a session with no conversation context knows where to
-work.
+`scope` is `low`, `medium`, `high`, or `complex`. It is **load-bearing**: any
+value above `low` requires the sibling `design.md`. `branch` is **required**: it
+is how a session with no conversation context knows where to work.
 
-Architecture on top, tasks below. Every task block carries exactly three fields:
+Every task block carries exactly three fields:
 
 ```markdown
 ### T1: Task name
@@ -105,11 +121,12 @@ Architecture on top, tasks below. Every task block carries exactly three fields:
 
 Rules the validator enforces:
 
-- every `AC-N` in `change.md` is claimed by at least one task, and no task names
+- every `AC-N` in `proposal.md` is claimed by at least one task, and no task names
   a criterion that does not exist;
 - `Files:` lists at least one exact repository-relative path;
 - `Validation:` is a non-empty command;
-- no surviving `{{placeholder}}` in either file.
+- no surviving `{{placeholder}}` in either file;
+- a `scope:` above `low` has its `design.md`.
 
 Task order in the document is execution order. The checkboxes are the resume
 state: `sw:implement` continues at the first unticked box.

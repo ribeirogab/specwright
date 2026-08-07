@@ -53,9 +53,9 @@ This repository uses specwright for change-driven work. The vault is
 conventions stay where this repository keeps them; list them under a
 `## Conventions` heading here so `sw:review` can find and enforce them.
 
-- For feature work, suggest `/sw:change` to the user instead of starting the
+- For feature work, suggest `/sw:propose` to the user instead of starting the
   workflow yourself. Do not implement a feature without offering it first.
-- While a change is in progress, read its `change.md` and `plan.md` before
+- While a change is in progress, read its `proposal.md` and `tasks.md` before
   touching the code it covers.
 - A trivial change needs no artifacts. Edit the code directly.
 - Verification — tests, lint, typecheck, build — runs at the `implement` or

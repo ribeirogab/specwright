@@ -161,7 +161,7 @@ returns one verdict.
   conventions those instructions link? Correctness and bugs, security, tests,
   readability, DRY/SOLID, per the calibration above.
 - **2 — change conformance.** Does the diff deliver **this change**? Walk the
-  `AC-N` in `change.md` against the diff, citing each by ID:
+  `AC-N` in `proposal.md` against the diff, citing each by ID:
   - **Completeness** — every `AC-N` is satisfied by a concrete change; one that
     is not is a **blocker**.
   - **Correctness** — the change meets the criterion and its edge cases rather

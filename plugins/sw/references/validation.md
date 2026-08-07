@@ -129,6 +129,7 @@ For any change with a plan, run the handoff gate:
 ```
 
 It answers one question — can an agent with no conversation context implement
-this? — across six checks: `change.md` frontmatter and status enum, `plan.md`
-frontmatter with a named branch, surviving placeholders, vague acceptance-criteria
-verbs, `AC-N` traceability in both directions, and task metadata.
+this? — across seven checks: `proposal.md` frontmatter and status enum,
+`tasks.md` frontmatter with a named branch, surviving placeholders, vague
+acceptance-criteria verbs, `AC-N` traceability in both directions, task metadata,
+and the `design.md` that any scope above `low` promises.
