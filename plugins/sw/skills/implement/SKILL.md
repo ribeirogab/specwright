@@ -26,6 +26,22 @@ not exist yet, and set `status: in-progress` in `change.md`.
 If `plan.md` is missing, stop: the change has no plan yet, and writing one is
 `/sw:plan`'s job, not this skill's.
 
+## Never work on the default branch
+
+After the checkout and **before the first commit**:
+
+```bash
+git branch --show-current
+```
+
+If it is `main` or `master` — because `branch:` names it, because the checkout
+did not happen, or because the frontmatter is blank — **stop**. Report the branch
+this change should be on and let the maintainer create it. Do not commit, and do
+not pick a branch name on their behalf.
+
+This gate runs once, here, and it is the only thing standing between an
+unattended run and a series of commits on the default branch.
+
 ## Resume from the checkboxes
 
 The checkboxes in `plan.md` are the state. Find the **first unticked step** and
@@ -101,12 +117,16 @@ against a fixture. Reading the code is not verification.
   marked `needs-human-verification` in `change.md` with one line of reason.
 
 **Never tick a criterion you did not observe, and never write a verification you
-did not run.** Record what was verified and how; it goes in the PR body.
+did not run.** Record what was verified and how, in `change.md` beside the
+criteria — that record is the change's durable evidence, and whoever opens the
+pull request copies it from there.
 
 ## Then
 
 Report what was built, the gate results, and the per-criterion verification
-record. Stop there.
+record. Print the record in full: it is what the pull request body needs, and
+this is the last step that has it in hand. Stop there.
 
-Say what comes next: **`/sw:pr`** (`$sw:pr` in Codex) opens the pull request with
-this verification record in its body.
+Say what comes next: **`/sw:review`** (`$sw:review` in Codex) reviews the branch
+to `lgtm`. Opening the pull request is the maintainer's, in whatever shape this
+repository's conventions ask for.
