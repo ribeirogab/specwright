@@ -1,8 +1,8 @@
 ---
 feature: command-surface-and-artifacts
 created: 2026-08-07
-status: in-progress
-shipped: null
+status: shipped
+shipped: 2026-08-07
 delivery: null
 ---
 # Command Surface and Artifacts — Proposal
@@ -69,16 +69,16 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 `tasks.md` references and that `sw:review` walks to prove every criterion was
 delivered.
 
-- [ ] **AC-1** `plugins/sw/skills/pr/` and `plugins/sw/commands/pr.md` are absent, and `grep -rniE 'sw:pr\b|skills/pr/|(^|[^a-z-])pr\.md' plugins tests README.md AGENTS.md CLAUDE.md SECURITY.md CONTRIBUTING.md` exits 1.
-- [ ] **AC-2** `plugins/sw/skills/implement/SKILL.md` contains a `git branch --show-current` gate that stops the run before the first commit when the branch is `main` or `master`.
-- [ ] **AC-3** `.specwright/conventions/` is absent; `docs/conventions/` holds `skill-validation-requirements.md` and `verbatim-evidence.md`; `AGENTS.md` contains exactly one `## Conventions` heading that links both files; `grep -rn '\.specwright/conventions' plugins tests README.md AGENTS.md CLAUDE.md` exits 1.
-- [ ] **AC-4** `python3 plugins/sw/scripts/sw_init.py --project <empty-dir> --mode shared --format json` reports no action path containing `conventions`, and creates no `.specwright/conventions` directory.
-- [ ] **AC-5** `ls plugins/sw/templates/` prints exactly `codex-agents`, `delivery.md`, `design.md`, `proposal.md`, `tasks.md`.
-- [ ] **AC-6** `ls plugins/sw/commands/` and the directory names under `plugins/sw/skills/` both list exactly `archive`, `delivery`, `implement`, `init`, `plan`, `propose`, `review`, `ship` (commands with a `.md` suffix), and each command file references its own skill path.
-- [ ] **AC-7** `bash plugins/sw/scripts/validate-change.sh plugins/sw/scripts/fixtures/ready` prints a `PASS:` line and exits 0, where that fixture holds `proposal.md` and `tasks.md` and no `change.md` or `plan.md`.
-- [ ] **AC-8** `validate-change.sh` prints a `FAIL (check 7)` line naming `design.md` for a change folder whose `tasks.md` declares `scope: medium` with no sibling `design.md`, and exits 0 for the same folder once `scope:` is `low`.
-- [ ] **AC-9** `plugins/sw/skills/archive/SKILL.md` detects the merge with git alone: it contains `merge-base --is-ancestor`, and `grep -nE '\bgh ' plugins/sw/skills/archive/SKILL.md` exits 1.
-- [ ] **AC-10** `bash tests/validate-change/run.sh` prints `ALL PASS`, `bash tests/install/run.sh` prints `ALL PASS`, and `bash tests/release/run.sh` prints `PASS: static eight-skill inventory`.
+- [x] **AC-1** `plugins/sw/skills/pr/` and `plugins/sw/commands/pr.md` are absent, and `grep -rniE 'sw:pr\b|skills/pr/|(^|[^a-z-])pr\.md' plugins tests README.md AGENTS.md CLAUDE.md SECURITY.md CONTRIBUTING.md` exits 1.
+- [x] **AC-2** `plugins/sw/skills/implement/SKILL.md` contains a `git branch --show-current` gate that stops the run before the first commit when the branch is `main` or `master`.
+- [x] **AC-3** `.specwright/conventions/` is absent; `docs/conventions/` holds `skill-validation-requirements.md` and `verbatim-evidence.md`; `AGENTS.md` contains exactly one `## Conventions` heading that links both files; `grep -rn '\.specwright/conventions' plugins tests README.md AGENTS.md CLAUDE.md` exits 1.
+- [x] **AC-4** `python3 plugins/sw/scripts/sw_init.py --project <empty-dir> --mode shared --format json` reports no action path containing `conventions`, and creates no `.specwright/conventions` directory.
+- [x] **AC-5** `ls plugins/sw/templates/` prints exactly `codex-agents`, `delivery.md`, `design.md`, `proposal.md`, `tasks.md`.
+- [x] **AC-6** `ls plugins/sw/commands/` and the directory names under `plugins/sw/skills/` both list exactly `archive`, `delivery`, `implement`, `init`, `plan`, `propose`, `review`, `ship` (commands with a `.md` suffix), and each command file references its own skill path.
+- [x] **AC-7** `bash plugins/sw/scripts/validate-change.sh plugins/sw/scripts/fixtures/ready` prints a `PASS:` line and exits 0, where that fixture holds `proposal.md` and `tasks.md` and no `change.md` or `plan.md`.
+- [x] **AC-8** `validate-change.sh` prints a `FAIL (check 7)` line naming `design.md` for a change folder whose `tasks.md` declares `scope: medium` with no sibling `design.md`, and exits 0 for the same folder once `scope:` is `low`.
+- [x] **AC-9** `plugins/sw/skills/archive/SKILL.md` detects the merge with git alone: it contains `merge-base --is-ancestor`, and `grep -nE '\bgh ' plugins/sw/skills/archive/SKILL.md` exits 1.
+- [x] **AC-10** `bash tests/validate-change/run.sh` prints `ALL PASS`, `bash tests/install/run.sh` prints `ALL PASS`, and `bash tests/release/run.sh` prints `PASS: static eight-skill inventory`.
 
 Tick each `[x]` when verified by observed behavior.
 

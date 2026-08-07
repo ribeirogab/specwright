@@ -25,10 +25,10 @@ state: `sw:implement` continues at the first unticked box.
 - Modify: `plugins/sw/references/vault-files.md`
 **Validation:** `test ! -e plugins/sw/skills/pr && test ! -e plugins/sw/commands/pr.md`
 
-- [ ] Remove both paths with `git rm -r`
-- [ ] In `ship/SKILL.md`, drop step 4, renumber `review` to 4, and change the opening promise from a pull request to a reviewed branch
-- [ ] In `vault-files.md`, drop the `pr.md` line from the change-folder listing
-- [ ] Commit
+- [x] Remove both paths with `git rm -r`
+- [x] In `ship/SKILL.md`, drop step 4, renumber `review` to 4, and change the opening promise from a pull request to a reviewed branch
+- [x] In `vault-files.md`, drop the `pr.md` line from the change-folder listing
+- [x] Commit
 
 ### T2: Move the branch-safety gate into implement
 
@@ -37,9 +37,9 @@ state: `sw:implement` continues at the first unticked box.
 - Modify: `plugins/sw/skills/implement/SKILL.md`
 **Validation:** `grep -q 'branch --show-current' plugins/sw/skills/implement/SKILL.md`
 
-- [ ] Add a gate section that runs `git branch --show-current` before the first commit and stops when the branch is `main` or `master`
-- [ ] Replace the two `sw:pr` references: the verification record goes in the change ticket, and the next command is `/sw:review`
-- [ ] Commit
+- [x] Add a gate section that runs `git branch --show-current` before the first commit and stops when the branch is `main` or `master`
+- [x] Replace the two `sw:pr` references: the verification record goes in the change ticket, and the next command is `/sw:review`
+- [x] Commit
 
 ## Phase 2: Remove the conventions directory
 
@@ -53,9 +53,9 @@ state: `sw:implement` continues at the first unticked box.
 - Modify: `AGENTS.md`
 **Validation:** `test -f docs/conventions/verbatim-evidence.md && test ! -e .specwright/conventions`
 
-- [ ] `git mv` both convention files into `docs/conventions/`, delete the signpost, remove the empty directory
-- [ ] Add one `## Conventions` section to `AGENTS.md` linking both files
-- [ ] Commit
+- [x] `git mv` both convention files into `docs/conventions/`, delete the signpost, remove the empty directory
+- [x] Add one `## Conventions` section to `AGENTS.md` linking both files
+- [x] Commit
 
 ### T4: Stop scaffolding and reading the vault conventions directory
 
@@ -72,11 +72,11 @@ state: `sw:implement` continues at the first unticked box.
 - Modify: `tests/install/run.sh`
 **Validation:** `! grep -rqn '\.specwright/conventions' plugins tests README.md AGENTS.md`
 
-- [ ] Drop `CONVENTIONS_SIGNPOST` and its scaffolding branch from `sw_init.py`, and update `SECTION` to stop naming `conventions/`
-- [ ] Point every reviewer-facing reference at the canonical AGENTS `## Conventions` section and its links
-- [ ] Drop the conventions assertions from `assert_vault` in `tests/install/run.sh`
-- [ ] Run `python3 plugins/sw/scripts/sw_init.py --project "$(mktemp -d)" --mode shared --format json` and confirm no `conventions` path appears
-- [ ] Commit
+- [x] Drop `CONVENTIONS_SIGNPOST` and its scaffolding branch from `sw_init.py`, and update `SECTION` to stop naming `conventions/`
+- [x] Point every reviewer-facing reference at the canonical AGENTS `## Conventions` section and its links
+- [x] Drop the conventions assertions from `assert_vault` in `tests/install/run.sh`
+- [x] Run `python3 plugins/sw/scripts/sw_init.py --project "$(mktemp -d)" --mode shared --format json` and confirm no `conventions` path appears
+- [x] Commit
 
 ## Phase 3: Add sw:archive
 
@@ -88,9 +88,9 @@ state: `sw:implement` continues at the first unticked box.
 - Create: `plugins/sw/commands/archive.md`
 **Validation:** `grep -q 'merge-base --is-ancestor' plugins/sw/skills/archive/SKILL.md && ! grep -qE '\bgh ' plugins/sw/skills/archive/SKILL.md`
 
-- [ ] Write `SKILL.md` with `name: archive`, `user-invocable: false`, a description that states when it is invoked, and the two steps: confirm the merge with `git merge-base --is-ancestor` on a folder already at `status: shipped`, then `git mv` it under `changes/archive/YYYY-MM-DD-<slug>/`
-- [ ] Write the thin command redirect matching the other seven
-- [ ] Commit
+- [x] Write `SKILL.md` with `name: archive`, `user-invocable: false`, a description that states when it is invoked, and the two steps: confirm the merge with `git merge-base --is-ancestor` on a folder already at `status: shipped`, then `git mv` it under `changes/archive/YYYY-MM-DD-<slug>/`
+- [x] Write the thin command redirect matching the other seven
+- [x] Commit
 
 ## Phase 4: Rename and split the artifacts
 
@@ -105,10 +105,10 @@ state: `sw:implement` continues at the first unticked box.
 - Create: `plugins/sw/templates/tasks.md`
 **Validation:** `ls plugins/sw/templates | tr '\n' ' ' | grep -qx 'codex-agents delivery.md design.md proposal.md tasks.md '`
 
-- [ ] `git mv templates/change.md templates/proposal.md` and retitle it
-- [ ] Split `templates/plan.md`: architecture sections into `design.md` (frontmatter `feature` only), the task checklist into `tasks.md` (frontmatter `feature`, `created`, `scope`, `branch`, `worktree`, `delivery`)
-- [ ] State in `tasks.md` that `scope: low` means no `design.md`, and any other value requires one
-- [ ] Commit
+- [x] `git mv templates/change.md templates/proposal.md` and retitle it
+- [x] Split `templates/plan.md`: architecture sections into `design.md` (frontmatter `feature` only), the task checklist into `tasks.md` (frontmatter `feature`, `created`, `scope`, `branch`, `worktree`, `delivery`)
+- [x] State in `tasks.md` that `scope: low` means no `design.md`, and any other value requires one
+- [x] Commit
 
 ### T7: Rename the change skill and command to propose
 
@@ -120,8 +120,8 @@ state: `sw:implement` continues at the first unticked box.
 - Create: `plugins/sw/commands/propose.md`
 **Validation:** `test -f plugins/sw/skills/propose/SKILL.md && test ! -e plugins/sw/skills/change`
 
-- [ ] `git mv` both paths, set `name: propose`, and update every trigger phrase and template reference in the body
-- [ ] Commit
+- [x] `git mv` both paths, set `name: propose`, and update every trigger phrase and template reference in the body
+- [x] Commit
 
 ### T8: Teach the validator the new names and enforce scope
 
@@ -130,10 +130,10 @@ state: `sw:implement` continues at the first unticked box.
 - Modify: `plugins/sw/scripts/validate-change.sh`
 **Validation:** `bash plugins/sw/scripts/validate-change.sh plugins/sw/scripts/fixtures/ready`
 
-- [ ] Rename the `change`/`plan` path variables to `proposal.md` and `tasks.md` throughout, keeping checks 1–6 and their messages otherwise intact
-- [ ] Add check 7: a `scope:` other than `low` requires a sibling `design.md`, reported as `FAIL (check 7)` naming `design.md`
-- [ ] Update the header comment block to describe seven checks
-- [ ] Commit
+- [x] Rename the `change`/`plan` path variables to `proposal.md` and `tasks.md` throughout, keeping checks 1–6 and their messages otherwise intact
+- [x] Add check 7: a `scope:` other than `low` requires a sibling `design.md`, reported as `FAIL (check 7)` naming `design.md`
+- [x] Update the header comment block to describe seven checks
+- [x] Commit
 
 ### T9: Migrate the validator fixtures
 
@@ -148,11 +148,11 @@ state: `sw:implement` continues at the first unticked box.
 - Modify: `tests/validate-change/run.sh`
 **Validation:** `bash tests/validate-change/run.sh`
 
-- [ ] `git mv` every fixture's `change.md` to `proposal.md` and `plan.md` to `tasks.md`
-- [ ] Set every fixture's `scope:` to `low` so no fixture needs a `design.md`
-- [ ] Update the file names, the `sed` targets, and the expected messages in `tests/validate-change/run.sh`
-- [ ] Add a case asserting check 7 fires for `scope: medium` with no `design.md`
-- [ ] Commit
+- [x] `git mv` every fixture's `change.md` to `proposal.md` and `plan.md` to `tasks.md`
+- [x] Set every fixture's `scope:` to `low` so no fixture needs a `design.md`
+- [x] Update the file names, the `sed` targets, and the expected messages in `tests/validate-change/run.sh`
+- [x] Add a case asserting check 7 fires for `scope: medium` with no `design.md`
+- [x] Commit
 
 ### T10: Sweep the remaining skills, roles, and references
 
@@ -170,10 +170,10 @@ state: `sw:implement` continues at the first unticked box.
 - Modify: `plugins/sw/references/validation.md`
 **Validation:** `! grep -rqnE 'change\.md|plan\.md|/sw:change' plugins`
 
-- [ ] Replace every `change.md` with `proposal.md` and every `plan.md` with `design.md` or `tasks.md` as the sentence requires
-- [ ] In `plan/SKILL.md`, write both files and make the `scope:` decision explicit, skipping `design.md` at `low`
-- [ ] Replace every `/sw:change` and `$sw:change` with the propose form
-- [ ] Commit
+- [x] Replace every `change.md` with `proposal.md` and every `plan.md` with `design.md` or `tasks.md` as the sentence requires
+- [x] In `plan/SKILL.md`, write both files and make the `scope:` decision explicit, skipping `design.md` at `low`
+- [x] Replace every `/sw:change` and `$sw:change` with the propose form
+- [x] Commit
 
 ## Phase 5: Documentation and the gate
 
@@ -187,10 +187,10 @@ state: `sw:implement` continues at the first unticked box.
 - Modify: `plugins/sw/.codex-plugin/plugin.json`
 **Validation:** `! grep -rqniE 'sw:pr|\.specwright/conventions' README.md AGENTS.md plugins`
 
-- [ ] Update the ladder diagram, the command table, the artifact tree, the layout tree, and the customize section in `README.md`
-- [ ] Update the ladder step count, the artifact sentence, and the vault description in `AGENTS.md`
-- [ ] Update both manifest descriptions to list the current commands
-- [ ] Commit
+- [x] Update the ladder diagram, the command table, the artifact tree, the layout tree, and the customize section in `README.md`
+- [x] Update the ladder step count, the artifact sentence, and the vault description in `AGENTS.md`
+- [x] Update both manifest descriptions to list the current commands
+- [x] Commit
 
 ### T12: Run the full gate and verify every criterion
 
@@ -199,10 +199,10 @@ state: `sw:implement` continues at the first unticked box.
 - Modify: `.specwright/changes/2026-08-07-command-surface-and-artifacts/proposal.md`
 **Validation:** `bash tests/validate-change/run.sh && bash tests/install/run.sh`
 
-- [ ] Run `bash tests/validate-change/run.sh` and require `ALL PASS`
-- [ ] Run `bash tests/install/run.sh` and require `ALL PASS`
-- [ ] Run `bash tests/release/run.sh` and require the eight-skill inventory line
-- [ ] Run `claude plugin validate --strict plugins/sw`
-- [ ] Run `bash plugins/sw/scripts/validate-change.sh` on this change folder
-- [ ] Tick every verified `AC-N` in `proposal.md` and set `status: shipped`
-- [ ] Commit
+- [x] Run `bash tests/validate-change/run.sh` and require `ALL PASS`
+- [x] Run `bash tests/install/run.sh` and require `ALL PASS`
+- [x] Run `bash tests/release/run.sh` and require the eight-skill inventory line
+- [x] Run `claude plugin validate --strict plugins/sw`
+- [x] Run `bash plugins/sw/scripts/validate-change.sh` on this change folder
+- [x] Tick every verified `AC-N` in `proposal.md` and set `status: shipped`
+- [x] Commit
