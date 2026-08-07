@@ -260,8 +260,8 @@ run_role_agents() {
 
 assert_vault() {
   local label="$1" project="$2" directory
-  assert_eq "$label vault conventions exists" yes "$([ -d "$project/.specwright/conventions" ] && echo yes || echo no)"
-  assert_file "$label vault conventions signpost" "$project/.specwright/conventions/README.md"
+  assert_eq "$label vault holds only the two record directories" "changes deliveries" \
+    "$(ls "$project/.specwright" | tr '\n' ' ' | sed 's/ $//')"
   for directory in changes deliveries; do
     assert_file "$label vault marker $directory" "$project/.specwright/$directory/.gitkeep"
   done
@@ -291,7 +291,7 @@ run_init_shared() {
   assert_eq "second shared run writes nothing" "$before" "$after"
   assert_eq "second shared run creates nothing" 0 \
     "$(grep -c '^  created' "$temporary_root/shared-second.out" || true)"
-  assert_eq "second shared run reports every path present" 6 \
+  assert_eq "second shared run reports every path present" 5 \
     "$(grep -c '^  present' "$temporary_root/shared-second.out" || true)"
 }
 

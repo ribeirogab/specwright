@@ -1,14 +1,14 @@
 # Vault files — specifications
 
-`.specwright/` is the per-repository change vault. It has three durable content
-directories; worktrees are runtime transport, not records.
+`.specwright/` is the per-repository change vault. It has two durable content
+directories; worktrees are runtime transport, not records. Project conventions
+are not vault content: they stay wherever the repository keeps them and are
+indexed from the canonical AGENTS instructions.
 
 ## Shape
 
 ```text
 .specwright/
-├── conventions/
-│   └── README.md          signpost, created only into an empty directory
 ├── changes/
 │   └── .gitkeep
 ├── deliveries/

@@ -12,11 +12,11 @@ findings only.
 Cover all three dimensions in one pass, in this order:
 
 1. **Rubric and conventions** — does the diff obey the universal coding standard
-   and the project's conventions in `.specwright/conventions/`, plus the
-   canonical AGENTS instructions for the areas it touches?
+   and the canonical AGENTS instructions for the areas it touches, including
+   every document their `## Conventions` section links?
 2. **Change conformance** — does the diff deliver this change's `AC-N`? Cite each
    criterion by ID. An `AC-N` that no change satisfies is a blocker; an `AC-N`
-   ticked with no runtime-verification evidence in the PR body is a blocker. Skip
+   ticked with no runtime-verification evidence in the ticket is a blocker. Skip
    this dimension only when no change sits behind the branch.
 3. **Documentation consistency** — after this diff, does the project's **live**
    documentation still match the code? Shipped records under

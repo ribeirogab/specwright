@@ -201,7 +201,7 @@ the update is never silently dropped.
    approval. Nothing superseded → say so.
 2. **Promote what outlives the delivery** — read every change's `## Decisions and
    discoveries`; propose the facts that belong in the canonical AGENTS
-   instructions or `.specwright/conventions/`. Apply only what the maintainer
+   instructions or the conventions they link. Apply only what the maintainer
    approves. The rest stays in the change folders as history. Never edit a Claude
    adapter symlink as if it were the source.
 3. Append a final summary to the dispatch log: changes shipped, PR URLs, blockers

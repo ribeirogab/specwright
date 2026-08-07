@@ -136,7 +136,6 @@ Two files per change, always:
 
 ```text
 .specwright/
-├── conventions/                     project standards the reviewer enforces
 ├── changes/2026-07-31-<slug>/
 │   ├── change.md                    why, AC-N, decisions and discoveries
 │   └── plan.md                      architecture + task checklist
@@ -239,8 +238,9 @@ specwright/
 
 ## Customize and contribute
 
-Project-specific review rules go in `.specwright/conventions/` — one standard per
-file. Shared workflow behavior goes in the relevant
+Project-specific review rules live wherever your repository keeps them; list them
+under a `## Conventions` heading in the canonical AGENTS instructions and the
+reviewer follows the links. Shared workflow behavior goes in the relevant
 `plugins/sw/skills/<name>/SKILL.md`; never add host-specific behavior to a
 command redirect.
 

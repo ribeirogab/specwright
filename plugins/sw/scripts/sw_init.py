@@ -49,8 +49,9 @@ SECTION_HEADING = "## specwright"
 SECTION = """## specwright
 
 This repository uses specwright for change-driven work. The vault is
-`.specwright/`: changes in `changes/`, deliveries in `deliveries/`, project
-conventions in `conventions/`.
+`.specwright/`: changes in `changes/`, deliveries in `deliveries/`. Project
+conventions stay where this repository keeps them; list them under a
+`## Conventions` heading here so `sw:review` can find and enforce them.
 
 - For feature work, suggest `/sw:change` to the user instead of starting the
   workflow yourself. Do not implement a feature without offering it first.
@@ -65,16 +66,6 @@ conventions in `conventions/`.
 Host surfaces: `/sw:*` in Claude Code, `$sw:*` in Codex. Host permissions and
 sandbox policy remain authoritative; nothing here grants permission to write
 files, run commands, create branches, commit, push, or reach a network service.
-"""
-
-CONVENTIONS_SIGNPOST = """# About this folder — signpost, not a convention
-
-`sw:review` reads every other file in `.specwright/conventions/` as a project
-standard it must enforce. This file states no rule. Delete it when the project
-adds its first convention.
-
-Keep one project-specific convention per file: code style, naming, architecture,
-testing, domain rules, review preferences, or any other durable standard.
 """
 
 
@@ -147,16 +138,6 @@ def find_conflicts(project: Path, mode: str) -> list[str]:
 
 
 def scaffold_vault(project: Path, report: Report) -> None:
-    conventions = project / ".specwright" / "conventions"
-    conventions.mkdir(parents=True, exist_ok=True)
-    # An existing conventions directory keeps its own files; the signpost is
-    # only for a directory that would otherwise be empty and unexplained.
-    if any(conventions.iterdir()):
-        report.record(".specwright/conventions/", "present")
-    else:
-        (conventions / "README.md").write_text(CONVENTIONS_SIGNPOST, encoding="utf-8")
-        report.record(".specwright/conventions/README.md", "created")
-
     for name in ("changes", "deliveries"):
         directory = project / ".specwright" / name
         directory.mkdir(parents=True, exist_ok=True)

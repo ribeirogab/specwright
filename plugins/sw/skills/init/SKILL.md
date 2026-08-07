@@ -76,7 +76,7 @@ A second run must report every path as `present` and create nothing. Then confir
 
 - the canonical AGENTS file is a regular file containing one `## specwright` section;
 - the Claude adapter is a relative symlink to it (`readlink` returns the bare filename);
-- `.specwright/` holds `conventions/`, `changes/`, and `deliveries/`;
+- `.specwright/` holds `changes/` and `deliveries/`;
 - in local mode, `git check-ignore` reports the vault, both instruction paths, and
   the profiles as ignored, while unrelated project files are not.
 
