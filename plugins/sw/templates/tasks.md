@@ -6,29 +6,17 @@ branch: {{feat/kebab-slug-of-change}}
 worktree: {{.specwright/worktrees/<slug> | null}}
 delivery: {{.specwright/deliveries/YYYY-MM-DD-<slug> | null}}
 ---
-# {{Change Name}} — Plan
+# {{Change Name}} — Tasks
 
-**Change:** see the sibling `change.md` for the *why*, the acceptance criteria, and the change `status:`.
+**Proposal:** `proposal.md` holds the *why* and the `AC-N`. **Design:** `design.md` holds the architecture, when the scope calls for one.
 
-> The technical *how*: architecture on top, the task checklist below. Written to be executed by **an agent with no memory of the conversation that produced it** — a fresh session, another model, another host. Every path is exact, every command is runnable, every code step shows the code. An open question here is a defect: resolve it in `change.md`, or record the chosen default under `## Decisions and discoveries` there.
+> The executable half of the plan, written to be run by **an agent with no memory of the conversation that produced it** — a fresh session, another model, another host. Every path is exact, every command is runnable, every code step shows the code. An open question here is a defect: resolve it in `proposal.md`, or record the chosen default under its `## Decisions and discoveries`.
 >
-> `scope:` is recorded only. `worktree:` is this change's worktree path, or `null` when the work runs in place. `delivery:` is the parent delivery folder, or `null` when standalone.
-
-## Architecture
-
-{{the technical approach and why it beat the alternatives; component breakdown, data flow, the patterns of this codebase it follows}}
-
-## File Structure
-
-{{every file created, modified, or deleted, with a one-line responsibility each}}
-
-## Phase Ordering
-
-{{natural phases with their dependencies, or "Single phase."}}
+> `scope:` decides whether a sibling `design.md` exists: `low` means no design document, and every other value requires one. `branch:` is **required** — it is how a fresh session knows where to work. `worktree:` is this change's worktree path, or `null` when the work runs in place. `delivery:` is the parent delivery folder, or `null` when standalone.
 
 ## Constraints
 
-{{technical, organizational, or timing constraints that shape the solution — including any recorded in a sibling change's decisions}}
+{{technical or timing constraints the implementer must respect — at `low` scope this is the only place they are stated; at any other scope they live in `design.md` and this section is omitted}}
 
 ## Tasks
 
