@@ -11,8 +11,8 @@ pipeline) and dogfoods its own workflow.
 ## specwright
 
 This repository uses specwright for change-driven work. The vault is
-`.specwright/`: changes in `changes/`, deliveries in `deliveries/`, project
-conventions in `conventions/`.
+`.specwright/`: changes in `changes/`, deliveries in `deliveries/`. Project
+conventions are the repository's own — see `## Conventions` below.
 
 - For feature work, suggest `/sw:change` to the user instead of starting the
   workflow yourself. Do not implement a feature without offering it first.
@@ -44,6 +44,17 @@ and `plan.md` (architecture, tasks). `plan.md` is written to be executed by an
 agent with no memory of the conversation that produced it — that constraint is
 what makes model-switching and cross-session handoff work, and it is enforced by
 `plugins/sw/scripts/validate-change.sh`.
+
+## Conventions
+
+Project standards `sw:review` enforces on the files a diff touches. One standard
+per file; this section is the index the reviewer follows.
+
+- [Skill validation requirements](docs/conventions/skill-validation-requirements.md)
+  — folder, file, and frontmatter rules every bundled `SKILL.md` must satisfy.
+- [Verbatim evidence quotes](docs/conventions/verbatim-evidence.md) — captured
+  transcripts and command output are preserved byte-for-byte and exempt from the
+  English-only rule that governs authored prose.
 
 ## Editing the bundled skills
 
