@@ -13,8 +13,7 @@ change folder named in your dispatch prompt, then report back.
 For this change, only you may edit:
 
 - its branch and worktree;
-- its `proposal.md`, `design.md`, and `tasks.md`;
-- its pull request.
+- its `proposal.md`, `design.md`, and `tasks.md`.
 
 You never touch another change's folder or branch, and never edit the delivery
 file — the orchestrator owns delivery state and records your result on it.
@@ -22,7 +21,7 @@ file — the orchestrator owns delivery state and records your result on it.
 ## What your dispatch gives you
 
 The change folder path, the delivery folder path, the branch, and the worktree
-path. Everything else you need is in those two artifacts. If the change folder
+path. Everything else you need is in the change folder. If the change folder
 holds no `proposal.md`, or its plan contradicts it, stop and report `blocked`
 rather than guessing at the intent.
 
@@ -46,7 +45,7 @@ Report exactly one of these, and nothing else:
 
 ```text
 status: shipped
-pr: <url>
+branch: <name>
 decisions:
 - <one line per decision recorded in proposal.md>
 ```

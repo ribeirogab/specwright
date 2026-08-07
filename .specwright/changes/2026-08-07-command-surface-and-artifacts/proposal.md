@@ -122,6 +122,12 @@ Tick each `[x]` when verified by observed behavior.
   have satisfied it. The criterion's intent is unchanged: no reference to the
   removed command survives anywhere. Rejected: leaving the pattern and declaring
   the criterion met by inspection, which would have hidden a broken gate.
+- **[discovery]** Removing a command leaves stale claims in documents the change
+  never planned to touch. The review pass found three: the `sw-change-owner`
+  manifest still promised a `pr: <url>` return the ladder can no longer produce
+  (and disagreed with its own Codex profile), `CONTRIBUTING.md` still named
+  `plan.md`, and `SECURITY.md` still listed the pull request among an owner's
+  exclusive artifacts. All three were outside the task list's declared `Files:`.
 - **[discovery]** `sw:pr` held the **only** branch-safety gate in the entire
   plugin. No other skill checks the current branch, so removing it would have let
   `/sw:implement` commit straight to `main` with no warning. The gate moves into

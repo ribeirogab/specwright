@@ -33,7 +33,7 @@ are out of scope.
    the model to run the workflow on its own initiative.
 7. Each ladder step stops and names its successor. A step that runs the next one
    silently defeats the design.
-8. `plan.md` must stay executable by an agent with no conversation context. Any
+8. `tasks.md` must stay executable by an agent with no conversation context. Any
    change to planning keeps that property and the validator that enforces it.
 
 ## Skill and package validation
