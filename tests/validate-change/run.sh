@@ -46,66 +46,79 @@ new_case() {
   ensure_temporary_root
   directory="$temporary_root/$name"
   mkdir -p "$directory"
-  cp "$FIXTURES/ready/change.md" "$FIXTURES/ready/plan.md" "$directory/"
+  cp "$FIXTURES/ready/proposal.md" "$FIXTURES/ready/tasks.md" "$directory/"
   printf '%s\n' "$directory"
 }
 
 expect_pass "validator accepts the ready fixture" "$FIXTURES/ready"
 
-expect_fail_with "validator requires change.md status" "$FIXTURES/missing-status" \
-  "change.md frontmatter missing required key: status"
+expect_fail_with "validator requires proposal.md status" "$FIXTURES/missing-status" \
+  "proposal.md frontmatter missing required key: status"
 expect_fail_with "validator rejects surviving placeholders" "$FIXTURES/bad-placeholder" \
   "surviving {{placeholder}}"
 expect_fail_with "validator rejects vague-verb criteria" "$FIXTURES/bad-vague-verb" \
   "vague verb in acceptance criterion"
 expect_fail_with "validator requires AC task coverage" "$FIXTURES/bad-unref-ac" \
-  "AC defined in change.md but referenced by no task: AC-3"
+  "AC defined in proposal.md but referenced by no task: AC-3"
 expect_fail_with "validator requires a task validation command" "$FIXTURES/bad-task-metadata" \
   "T2: missing or empty **Validation:**"
 
 undefined_ac="$(new_case undefined-ac)"
-sed 's/^\*\*AC:\*\* AC-2$/**AC:** AC-2, AC-9/' "$undefined_ac/plan.md" >"$undefined_ac/plan.tmp"
-mv "$undefined_ac/plan.tmp" "$undefined_ac/plan.md"
+sed 's/^\*\*AC:\*\* AC-2$/**AC:** AC-2, AC-9/' "$undefined_ac/tasks.md" >"$undefined_ac/tasks.tmp"
+mv "$undefined_ac/tasks.tmp" "$undefined_ac/tasks.md"
 expect_fail_with "validator rejects a task naming an undefined AC" "$undefined_ac" \
-  "task references an AC that change.md does not define: AC-9"
+  "task references an AC that proposal.md does not define: AC-9"
 
-missing_plan="$temporary_root/missing-plan"
-mkdir -p "$missing_plan"
-cp "$FIXTURES/ready/change.md" "$missing_plan/"
-expect_fail_with "validator fails before the plan exists" "$missing_plan" \
-  "plan.md not found"
+missing_tasks="$temporary_root/missing-tasks"
+mkdir -p "$missing_tasks"
+cp "$FIXTURES/ready/proposal.md" "$missing_tasks/"
+expect_fail_with "validator fails before the task list exists" "$missing_tasks" \
+  "tasks.md not found"
 
-missing_change="$temporary_root/missing-change"
-mkdir -p "$missing_change"
-cp "$FIXTURES/ready/plan.md" "$missing_change/"
-expect_fail_with "validator fails when change.md is missing" "$missing_change" \
-  "change.md not found"
+missing_proposal="$temporary_root/missing-proposal"
+mkdir -p "$missing_proposal"
+cp "$FIXTURES/ready/tasks.md" "$missing_proposal/"
+expect_fail_with "validator fails when proposal.md is missing" "$missing_proposal" \
+  "proposal.md not found"
 
 no_tasks="$(new_case no-tasks)"
-sed '/^## Tasks/,$d' "$FIXTURES/ready/plan.md" >"$no_tasks/plan.md"
-expect_fail_with "validator rejects a plan with no task" "$no_tasks" \
-  "plan.md defines no task"
+sed '/^## Tasks/,$d' "$FIXTURES/ready/tasks.md" >"$no_tasks/tasks.md"
+expect_fail_with "validator rejects a task list with no task" "$no_tasks" \
+  "tasks.md defines no task"
 
 blank_branch="$(new_case blank-branch)"
-sed 's|^branch: feat/sample-change$|branch:|' "$blank_branch/plan.md" >"$blank_branch/plan.tmp"
-mv "$blank_branch/plan.tmp" "$blank_branch/plan.md"
+sed 's|^branch: feat/sample-change$|branch:|' "$blank_branch/tasks.md" >"$blank_branch/tasks.tmp"
+mv "$blank_branch/tasks.tmp" "$blank_branch/tasks.md"
 expect_fail_with "validator requires a named branch" "$blank_branch" \
-  "plan.md branch must name the change's branch"
+  "tasks.md branch must name the change's branch"
 
 bad_scope="$(new_case bad-scope)"
-sed 's/^scope: low$/scope: enormous/' "$bad_scope/plan.md" >"$bad_scope/plan.tmp"
-mv "$bad_scope/plan.tmp" "$bad_scope/plan.md"
+sed 's/^scope: low$/scope: enormous/' "$bad_scope/tasks.md" >"$bad_scope/tasks.tmp"
+mv "$bad_scope/tasks.tmp" "$bad_scope/tasks.md"
 expect_fail_with "validator enforces the scope enum" "$bad_scope" \
-  "plan.md scope must be one of low|medium|high|complex"
+  "tasks.md scope must be one of low|medium|high|complex"
+
+# scope: is load-bearing — anything above low promises a design document.
+scoped_no_design="$(new_case scoped-no-design)"
+sed 's/^scope: low$/scope: medium/' "$scoped_no_design/tasks.md" >"$scoped_no_design/tasks.tmp"
+mv "$scoped_no_design/tasks.tmp" "$scoped_no_design/tasks.md"
+expect_fail_with "validator requires design.md above low scope" "$scoped_no_design" \
+  "tasks.md declares scope: medium, which requires a sibling design.md"
+
+scoped_with_design="$(new_case scoped-with-design)"
+sed 's/^scope: low$/scope: high/' "$scoped_with_design/tasks.md" >"$scoped_with_design/tasks.tmp"
+mv "$scoped_with_design/tasks.tmp" "$scoped_with_design/tasks.md"
+printf -- '---\nfeature: sample-change\n---\n# Sample Change — Design\n' >"$scoped_with_design/design.md"
+expect_pass "validator accepts a scoped change with its design" "$scoped_with_design"
 
 bad_status="$(new_case bad-status)"
-sed 's/^status: pending$/status: almost/' "$bad_status/change.md" >"$bad_status/change.tmp"
-mv "$bad_status/change.tmp" "$bad_status/change.md"
+sed 's/^status: pending$/status: almost/' "$bad_status/proposal.md" >"$bad_status/proposal.tmp"
+mv "$bad_status/proposal.tmp" "$bad_status/proposal.md"
 expect_fail_with "validator enforces the status enum" "$bad_status" \
-  "change.md status must be one of pending|in-progress|shipped|blocked"
+  "proposal.md status must be one of pending|in-progress|shipped|blocked"
 
 missing_files="$(new_case missing-files)"
-python3 - "$missing_files/plan.md" <<'PY'
+python3 - "$missing_files/tasks.md" <<'PY'
 import pathlib
 import sys
 

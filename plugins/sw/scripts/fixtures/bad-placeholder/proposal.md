@@ -5,7 +5,7 @@ status: pending
 shipped: null
 delivery: null
 ---
-# Sample Change — Change
+# Sample Change — Proposal
 
 Fixture: the shape `validate-change.sh` accepts. Every bad fixture beside it
 differs from this file in exactly one way.
@@ -26,7 +26,6 @@ Does not exercise the host adapters or the plugin package surface.
 
 - [ ] **AC-1** `sample --version` prints `1.2.0` and exits 0.
 - [ ] **AC-2** `sample --parse fixtures/empty.json` exits 2 and prints `empty input` on stderr.
-- [ ] **AC-3** `sample --parse fixtures/big.json` completes within 200 ms.
 
 ## Decisions and discoveries
 

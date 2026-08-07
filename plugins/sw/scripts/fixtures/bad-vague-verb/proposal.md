@@ -5,7 +5,7 @@ status: pending
 shipped: null
 delivery: null
 ---
-# Sample Change — Change
+# Sample Change — Proposal
 
 Fixture: the shape `validate-change.sh` accepts. Every bad fixture beside it
 differs from this file in exactly one way.

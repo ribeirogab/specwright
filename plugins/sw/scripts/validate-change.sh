@@ -2,13 +2,13 @@
 # validate-change.sh — handoff-readiness gate for a specwright change folder.
 #
 # One question: can an agent with no memory of the conversation implement this
-# from the two files alone? Every check below is a way that handoff breaks.
+# from the change folder alone? Every check below is a way that handoff breaks.
 #
 # Usage: validate-change.sh <change-folder>
 #
 # Exit codes:
 #   0     every check passed (prints "PASS: <dir>").
-#   1-6   the number of DISTINCT checks that failed (prints one
+#   1-7   the number of DISTINCT checks that failed (prints one
 #         "FAIL (check N): <reason>" line per failing condition — a single
 #         check may emit several lines but counts once).
 #   2     ALSO used for operational errors (bad invocation, path not a
@@ -17,18 +17,21 @@
 #         Callers treat any non-zero exit as "not ready".
 #
 # Checks (fixed set — never counted more than once each):
-#   1. change.md frontmatter has feature/created/status; status is one of
+#   1. proposal.md frontmatter has feature/created/status; status is one of
 #      pending|in-progress|shipped|blocked. status: is load-bearing, so an empty
-#      or missing value fails — unlike scope: (check 2), which is recorded-only.
-#   2. plan.md frontmatter has feature/created/scope/branch; scope is one of
+#      or missing value fails.
+#   2. tasks.md frontmatter has feature/created/scope/branch; scope is one of
 #      low|medium|high|complex, or empty. branch: is what tells a fresh session
 #      where to work, so it must be present and non-empty.
-#   3. no surviving {{placeholder}} in change.md or plan.md.
-#   4. no banned vague verb in an acceptance-criteria bullet of change.md.
-#   5. AC traceability both ways: every AC-N in change.md is named by a task, and
-#      no task names an AC-N that change.md does not define.
+#   3. no surviving {{placeholder}} in proposal.md or tasks.md.
+#   4. no banned vague verb in an acceptance-criteria bullet of proposal.md.
+#   5. AC traceability both ways: every AC-N in proposal.md is named by a task,
+#      and no task names an AC-N that proposal.md does not define.
 #   6. every task block declares **AC:**, **Files:** with at least one path, and
 #      a non-empty **Validation:** command.
+#   7. scope: implies the design document — any value other than low requires a
+#      sibling design.md, which is what makes the field load-bearing rather than
+#      recorded-only.
 set -euo pipefail
 
 usage() { echo "usage: validate-change.sh <change-folder>" >&2; exit 2; }
@@ -37,8 +40,9 @@ usage() { echo "usage: validate-change.sh <change-folder>" >&2; exit 2; }
 dir="${1%/}"
 [ -d "$dir" ] || { echo "FAIL: not a directory: $dir" >&2; exit 2; }
 
-change="$dir/change.md"
-plan="$dir/plan.md"
+proposal="$dir/proposal.md"
+tasks="$dir/tasks.md"
+design="$dir/design.md"
 
 # fail() prints every diagnostic line (Rule of Transparency) but counts each
 # check at most once, so the exit code is the number of distinct failed checks
@@ -61,15 +65,15 @@ frontmatter_value() {
     | sed -E "s/^$2:[[:space:]]*//; s/[[:space:]]*$//"
 }
 
-# --- Check 1: change.md frontmatter keys + status enum ----------------------
-if [ ! -f "$change" ]; then
-  fail 1 "change.md not found in $dir"
+# --- Check 1: proposal.md frontmatter keys + status enum --------------------
+if [ ! -f "$proposal" ]; then
+  fail 1 "proposal.md not found in $dir"
 else
-  fm=$(frontmatter "$change")
+  fm=$(frontmatter "$proposal")
   status_present=1
   for key in feature created status; do
     if ! printf '%s\n' "$fm" | grep -Eq "^${key}:"; then
-      fail 1 "change.md frontmatter missing required key: ${key}"
+      fail 1 "proposal.md frontmatter missing required key: ${key}"
       [ "$key" = status ] && status_present=0
     fi
   done
@@ -79,35 +83,35 @@ else
     status_val=$(frontmatter_value "$fm" status)
     case "$status_val" in
       pending|in-progress|shipped|blocked) : ;;
-      *) fail 1 "change.md status must be one of pending|in-progress|shipped|blocked (got: '${status_val}')" ;;
+      *) fail 1 "proposal.md status must be one of pending|in-progress|shipped|blocked (got: '${status_val}')" ;;
     esac
   fi
 fi
 
-# --- Check 2: plan.md frontmatter keys + scope enum + branch ---------------
-if [ ! -f "$plan" ]; then
-  fail 2 "plan.md not found in $dir"
+# --- Check 2: tasks.md frontmatter keys + scope enum + branch --------------
+if [ ! -f "$tasks" ]; then
+  fail 2 "tasks.md not found in $dir"
 else
-  fm=$(frontmatter "$plan")
+  fm=$(frontmatter "$tasks")
   for key in feature created scope branch; do
     if ! printf '%s\n' "$fm" | grep -Eq "^${key}:"; then
-      fail 2 "plan.md frontmatter missing required key: ${key}"
+      fail 2 "tasks.md frontmatter missing required key: ${key}"
     fi
   done
   scope_val=$(frontmatter_value "$fm" scope)
   case "$scope_val" in
     low|medium|high|complex|"") : ;;
-    *) fail 2 "plan.md scope must be one of low|medium|high|complex (got: '${scope_val}')" ;;
+    *) fail 2 "tasks.md scope must be one of low|medium|high|complex (got: '${scope_val}')" ;;
   esac
   # A fresh session reads branch: to know where to work; blank defeats handoff.
   if printf '%s\n' "$fm" | grep -Eq '^branch:'; then
     [ -n "$(frontmatter_value "$fm" branch)" ] \
-      || fail 2 "plan.md branch must name the change's branch"
+      || fail 2 "tasks.md branch must name the change's branch"
   fi
 fi
 
 # --- Check 3: no surviving {{placeholder}} --------------------------------
-for f in "$change" "$plan"; do
+for f in "$proposal" "$tasks"; do
   [ -f "$f" ] || continue
   hit=$({ grep -nF '{{' "$f" || true; } | head -n1)
   if [ -n "$hit" ]; then
@@ -116,12 +120,12 @@ for f in "$change" "$plan"; do
 done
 
 # --- Check 4: no banned vague verb in an acceptance-criteria bullet -------
-if [ -f "$change" ]; then
+if [ -f "$proposal" ]; then
   ac=$(awk '
     /^## Acceptance Criteria[[:space:]]*$/ {cap=1; next}
     cap && /^## / {cap=0}
     cap {print}
-  ' "$change")
+  ' "$proposal")
   ac_bullets=$(printf '%s\n' "$ac" | { grep -E '^[[:space:]]*- \[[ xX]\]' || true; })
   vague=$(printf '%s\n' "$ac_bullets" | { grep -Ewin 'works|robust|simple|gracefully' || true; } | head -n1)
   if [ -n "$vague" ]; then
@@ -137,13 +141,13 @@ if [ -f "$change" ]; then
 fi
 
 # --- Check 5: AC traceability, both directions ----------------------------
-if [ -f "$change" ] && [ -f "$plan" ]; then
+if [ -f "$proposal" ] && [ -f "$tasks" ]; then
   ac_ids=$(awk '
     /^## Acceptance Criteria[[:space:]]*$/ {cap=1; next}
     cap && /^## / {cap=0}
     cap && /^[[:space:]]*- \[[ xX]\][[:space:]]+\*\*AC-[0-9]+\*\*/ {print}
-  ' "$change" | { grep -Eoh 'AC-[0-9]+' || true; } | sort -u)
-  task_ac_ids=$({ grep -E '^\*\*AC:\*\*' "$plan" || true; } \
+  ' "$proposal" | { grep -Eoh 'AC-[0-9]+' || true; } | sort -u)
+  task_ac_ids=$({ grep -E '^\*\*AC:\*\*' "$tasks" || true; } \
     | { grep -Eoh 'AC-[0-9]+' || true; } \
     | sort -u)
 
@@ -156,7 +160,7 @@ if [ -f "$change" ] && [ -f "$plan" ]; then
 $ac_ids
 EOF
   [ -z "$uncovered" ] \
-    || fail 5 "AC defined in change.md but referenced by no task: ${uncovered}"
+    || fail 5 "AC defined in proposal.md but referenced by no task: ${uncovered}"
 
   undefined=""
   while IFS= read -r id; do
@@ -167,11 +171,11 @@ EOF
 $task_ac_ids
 EOF
   [ -z "$undefined" ] \
-    || fail 5 "task references an AC that change.md does not define: ${undefined}"
+    || fail 5 "task references an AC that proposal.md does not define: ${undefined}"
 fi
 
 # --- Check 6: every task declares AC, Files with a path, and Validation ----
-if [ -f "$plan" ]; then
+if [ -f "$tasks" ]; then
   task_defects=$(awk '
     function flush() {
       if (id == "") return
@@ -193,7 +197,7 @@ if [ -f "$plan" ]; then
     /^\*\*/ { in_files = 0; next }
     in_files && /^-[[:space:]]+[^[:space:]]/ { files = 1; next }
     END { flush() }
-  ' "$plan")
+  ' "$tasks")
   if [ -n "$task_defects" ]; then
     while IFS= read -r defect; do
       [ -n "$defect" ] || continue
@@ -202,9 +206,24 @@ if [ -f "$plan" ]; then
 $task_defects
 EOF
   fi
-  if ! grep -Eq '^### T[0-9]+:' "$plan"; then
-    fail 6 "plan.md defines no task (expected at least one '### Tn:' heading)"
+  if ! grep -Eq '^### T[0-9]+:' "$tasks"; then
+    fail 6 "tasks.md defines no task (expected at least one '### Tn:' heading)"
   fi
+fi
+
+# --- Check 7: scope implies the design document ---------------------------
+# scope: is the switch that decides whether this change needs an architecture
+# document. Only `low` may go without one; every other value promises a
+# design.md the implementer can read, so a missing file is a broken promise.
+if [ -f "$tasks" ]; then
+  scope_val=$(frontmatter_value "$(frontmatter "$tasks")" scope)
+  case "$scope_val" in
+    low|"") : ;;
+    medium|high|complex)
+      [ -f "$design" ] \
+        || fail 7 "tasks.md declares scope: ${scope_val}, which requires a sibling design.md" ;;
+    *) : ;;
+  esac
 fi
 
 # --- Verdict --------------------------------------------------------------
