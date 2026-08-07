@@ -14,9 +14,9 @@ This repository uses specwright for change-driven work. The vault is
 `.specwright/`: changes in `changes/`, deliveries in `deliveries/`. Project
 conventions are the repository's own — see `## Conventions` below.
 
-- For feature work, suggest `/sw:change` to the user instead of starting the
+- For feature work, suggest `/sw:propose` to the user instead of starting the
   workflow yourself. Do not implement a feature without offering it first.
-- While a change is in progress, read its `change.md` and `plan.md` before
+- While a change is in progress, read its `proposal.md` and `tasks.md` before
   touching the code it covers.
 - A trivial change needs no artifacts. Edit the code directly.
 - Verification — tests, lint, typecheck, build — runs at the `implement` or
@@ -30,20 +30,23 @@ files, run commands, create branches, commit, push, or reach a network service.
 
 ## The ladder
 
-Five steps, each its own command, each stopping and naming the next:
+Four steps, each its own command, each stopping and naming the next:
 
 ```text
-change → plan → implement → pr → review
+propose → plan → implement → review
 ```
 
-`ship` runs all five without stopping and records its decisions in `change.md`.
+`ship` runs all four without stopping and records its decisions in `proposal.md`.
 `delivery` decomposes a large outcome and conducts one owner per change.
+`archive` runs after you merge — the one step no ladder command can reach,
+because merging is never the agent's call.
 
-Each change carries exactly two artifacts: `change.md` (why, `AC-N`, decisions)
-and `plan.md` (architecture, tasks). `plan.md` is written to be executed by an
-agent with no memory of the conversation that produced it — that constraint is
-what makes model-switching and cross-session handoff work, and it is enforced by
-`plugins/sw/scripts/validate-change.sh`.
+A change carries `proposal.md` (why, `AC-N`, decisions) and `tasks.md` (the
+checklist and the execution state), plus `design.md` (architecture) whenever
+`tasks.md` declares a `scope:` above `low`. Those files are written to be
+executed by an agent with no memory of the conversation that produced them —
+that constraint is what makes model-switching and cross-session handoff work,
+and it is enforced by `plugins/sw/scripts/validate-change.sh`.
 
 ## Conventions
 

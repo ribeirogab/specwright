@@ -4,18 +4,24 @@
 a **ladder** you climb one command at a time:
 
 ```text
-/sw:change  →  /sw:plan  →  /sw:implement  →  /sw:pr  →  /sw:review
- change.md      plan.md         code             PR         lgtm
+/sw:propose  →  /sw:plan   →  /sw:implement  →  /sw:review
+ proposal.md    tasks.md          code             lgtm
+                design.md
 ```
 
-Each step produces one artifact, stops, and names the next command. Nothing runs
+Each step produces its artifact, stops, and names the next command. Nothing runs
 until you ask for it — the model may *suggest* a step, never dispatch the whole
 flow on its own.
+
+Once you merge, **`/sw:archive`** closes the change out: it confirms the merge
+from git alone and files the folder under `changes/archive/`. Opening the pull
+request is yours, in whatever shape your repository's conventions ask for —
+specwright deliberately has no opinion about it.
 
 Two wrappers cover the cases where you do not want to climb:
 
 - **`/sw:ship`** runs the whole ladder without stopping, deciding every open
-  question itself and recording each decision in `change.md`.
+  question itself and recording each decision in `proposal.md`.
 - **`/sw:delivery`** takes an outcome too large for one PR — often a PRD or a
   design document — decomposes it into changes, and conducts them in parallel,
   one owner and one PR each.
@@ -32,10 +38,10 @@ Because the state lives in files, not in the conversation. Two things follow.
 
 **You can change model between steps.** Each step stops, so switching is just
 `/model` before the next command — a stronger model where judgment pays off
-(`change`, `plan`, `review`), a cheaper one for the bulk of the execution
+(`propose`, `plan`, `review`), a cheaper one for the bulk of the execution
 (`implement`).
 
-**You can hand a plan to an agent that has no context at all.** `plan.md` is
+**You can hand a plan to an agent that has no context at all.** `tasks.md` is
 written for a stranger: exact paths, runnable commands, real code in every code
 step, and no open questions. A fresh session — another model, another host, next
 week — implements it with one command:
@@ -118,41 +124,48 @@ conflict, and nothing is written at all.
 | Command | Claude Code | Codex | Produces |
 |---|---|---|---|
 | Set up | `/sw:init` | `$sw:init` | the vault and project instructions |
-| Ticket | `/sw:change` | `$sw:change` | `change.md` — purpose, boundaries, `AC-N` |
-| Plan | `/sw:plan` | `$sw:plan` | `plan.md` — architecture and tasks |
+| Ticket | `/sw:propose` | `$sw:propose` | `proposal.md` — purpose, boundaries, `AC-N` |
+| Plan | `/sw:plan` | `$sw:plan` | `tasks.md`, plus `design.md` above `low` scope |
 | Build | `/sw:implement` | `$sw:implement` | code, quality gate, runtime verification |
-| Ship it | `/sw:pr` | `$sw:pr` | the pull request |
 | Review | `/sw:review` | `$sw:review` | one verdict, to `lgtm` |
-| Autonomous | `/sw:ship` | `$sw:ship` | all of the above, no stops |
+| Close out | `/sw:archive` | `$sw:archive` | the merged change, filed |
+| Autonomous | `/sw:ship` | `$sw:ship` | the four ladder steps, no stops |
 | Large outcome | `/sw:delivery` | `$sw:delivery` | many changes, conducted in parallel |
 
-`/sw:change` absorbs the design conversation. After a discussion it harvests what
+`/sw:propose` absorbs the design conversation. After a discussion it harvests what
 was settled and asks only about what is still open; from a cold start it opens
 the exploration itself. Either way it writes the ticket at the end.
 
 ## Artifacts
 
-Two files per change, always:
+Two files per change, or three when the work has an architecture:
 
 ```text
 .specwright/
 ├── changes/2026-07-31-<slug>/
-│   ├── change.md                    why, AC-N, decisions and discoveries
-│   └── plan.md                      architecture + task checklist
+│   ├── proposal.md                  why, AC-N, decisions and discoveries
+│   ├── design.md                    architecture; absent at scope: low
+│   └── tasks.md                     the checklist and the execution state
+├── changes/archive/                 merged changes, filed by /sw:archive
 ├── deliveries/2026-07-31-<slug>/
 │   └── delivery.md                  why + change table + dispatch log + blockers
 └── worktrees/                       ignored; one per change during a delivery
 ```
 
-`change.md` carries the acceptance criteria — binary, observable checks someone
+`proposal.md` carries the acceptance criteria — binary, observable checks someone
 else can verify in under a minute — plus a **Decisions and discoveries** section:
 the choices the ticket did not settle and the non-obvious facts the work found.
 That section is what makes an autonomous `/sw:ship` run auditable after the fact.
 
-`plan.md` carries the architecture on top and the task checklist below. Each task
-names the criteria it satisfies, the files it touches, and one command that
-proves it. The checkboxes are the resume state — `/sw:implement` continues at the
-first unticked box, which is what lets a run stop and be picked up elsewhere.
+`tasks.md` carries the checklist. Each task names the criteria it satisfies, the
+files it touches, and one command that proves it. The checkboxes are the resume
+state — `/sw:implement` continues at the first unticked box, which is what lets a
+run stop and be picked up elsewhere.
+
+`design.md` carries the architecture, and only exists when `tasks.md` declares a
+`scope:` above `low`. Splitting it from the checklist keeps the write-once half
+still: while a run churns checkboxes, an edit to the architecture shows up as
+exactly what it is.
 
 The handoff gate enforces the pair:
 
@@ -160,17 +173,17 @@ The handoff gate enforces the pair:
 plugins/sw/scripts/validate-change.sh .specwright/changes/<folder>
 ```
 
-Six checks: frontmatter and status enum, a named branch, no surviving
+Seven checks: frontmatter and status enum, a named branch, no surviving
 placeholders, no vague criteria verbs, `AC-N` traceability in both directions,
-and task metadata. Any of them failing means an agent with no context could not
-run the plan.
+task metadata, and the `design.md` that any scope above `low` promises. Any of
+them failing means an agent with no context could not run the plan.
 
 ## Verification
 
 Two rules survive from every earlier version, because they are what make the
 workflow worth its overhead:
 
-**Every `AC-N` is verified by observed behavior before the PR opens.** Run the
+**Every `AC-N` is verified by observed behavior before the review.** Run the
 CLI, call the endpoint, execute the script. Reading the code is not verification.
 A criterion that cannot be checked — no browser, no reachable environment — is
 marked `needs-human-verification` with its reason, never silently ticked.
@@ -186,10 +199,10 @@ and leaves the decision to you.
 body of requirements that clearly contains many pieces. It decomposes the
 document into changes — shallow on purpose, since each change's own plan is
 written later with the benefit of what shipped before it — and dispatches one
-`sw-change-owner` per ready change, in parallel, each in its own worktree,
-branch, and PR.
+`sw-change-owner` per ready change, in parallel, each in its own worktree and
+branch.
 
-Owners report `shipped` with a PR URL, or `blocked` with a paste-ready Why /
+Owners report `shipped` with a branch, or `blocked` with a paste-ready Why /
 Tried / Needs. A blocked change never blocks the loop. The delivery is resumable
 from a fresh session: all state lives in `delivery.md` and the changes'
 frontmatter.
@@ -229,7 +242,7 @@ specwright/
 │   ├── agents/                      Claude role manifests
 │   ├── commands/                    eight thin Claude redirects
 │   ├── skills/                      the single workflow implementation
-│   ├── templates/                   change, plan, delivery, Codex roles
+│   ├── templates/                   proposal, design, tasks, delivery, Codex roles
 │   ├── scripts/                     scaffolder and validators
 │   └── references/
 ├── tests/

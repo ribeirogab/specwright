@@ -69,7 +69,7 @@ Number each criterion sequentially as `AC-N` — the IDs are stable handles that
 `tasks.md` references and that `sw:review` walks to prove every criterion was
 delivered.
 
-- [ ] **AC-1** `plugins/sw/skills/pr/` and `plugins/sw/commands/pr.md` are absent, and `grep -rniE 'sw:pr|skills/pr/|pr\.md' plugins tests README.md AGENTS.md CLAUDE.md SECURITY.md CONTRIBUTING.md` exits 1.
+- [ ] **AC-1** `plugins/sw/skills/pr/` and `plugins/sw/commands/pr.md` are absent, and `grep -rniE 'sw:pr\b|skills/pr/|(^|[^a-z-])pr\.md' plugins tests README.md AGENTS.md CLAUDE.md SECURITY.md CONTRIBUTING.md` exits 1.
 - [ ] **AC-2** `plugins/sw/skills/implement/SKILL.md` contains a `git branch --show-current` gate that stops the run before the first commit when the branch is `main` or `master`.
 - [ ] **AC-3** `.specwright/conventions/` is absent; `docs/conventions/` holds `skill-validation-requirements.md` and `verbatim-evidence.md`; `AGENTS.md` contains exactly one `## Conventions` heading that links both files; `grep -rn '\.specwright/conventions' plugins tests README.md AGENTS.md CLAUDE.md` exits 1.
 - [ ] **AC-4** `python3 plugins/sw/scripts/sw_init.py --project <empty-dir> --mode shared --format json` reports no action path containing `conventions`, and creates no `.specwright/conventions` directory.
@@ -115,6 +115,13 @@ Tick each `[x]` when verified by observed behavior.
   change ladder" — while the command becomes `sw:propose`. The proposal is one
   artifact of a change, not a replacement for the concept. Rejected: renaming the
   unit to "proposal" everywhere.
+- **[decision]** `AC-1`'s pattern was corrected mid-run from `sw:pr` to
+  `sw:pr\b`, and from `pr\.md` to a form that will not match inside a longer
+  word. As first written it matched `sw:propose` and `proposal.md` — the very
+  command and artifact this same change introduces — so no implementation could
+  have satisfied it. The criterion's intent is unchanged: no reference to the
+  removed command survives anywhere. Rejected: leaving the pattern and declaring
+  the criterion met by inspection, which would have hidden a broken gate.
 - **[discovery]** `sw:pr` held the **only** branch-safety gate in the entire
   plugin. No other skill checks the current branch, so removing it would have let
   `/sw:implement` commit straight to `main` with no warning. The gate moves into
