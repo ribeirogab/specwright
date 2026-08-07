@@ -1,13 +1,13 @@
 ---
 name: ship
 user-invocable: false
-description: "Use when explicitly invoked to run the whole change ladder without stopping — ticket, plan, implementation, quality gate, runtime verification, PR, review to lgtm — deciding every open question autonomously and recording each decision in change.md. Trigger on '/sw:ship', '$sw:ship', or a request to take something from idea to PR without being asked anything."
+description: "Use when explicitly invoked to run the whole change ladder without stopping — ticket, plan, implementation, quality gate, runtime verification, review to lgtm — deciding every open question autonomously and recording each decision in change.md. Trigger on '/sw:ship', '$sw:ship', or a request to take something from idea to a reviewed branch without being asked anything."
 ---
 
 # ship — the ladder, without stops
 
-Run every step from intent to a reviewed pull request in one go, asking nothing
-along the way. This is the same ladder as the individual commands — it does not
+Run every step from intent to a reviewed branch in one go, asking nothing along
+the way. This is the same ladder as the individual commands — it does not
 reimplement any step, it runs them back to back and takes on itself every
 decision the interactive path would have handed to the maintainer.
 
@@ -23,8 +23,7 @@ exactly; the only difference is that you never stop to ask.
    already exists for this work, start from it instead of writing a new one.
 2. **`plan`** — write `plan.md` and pass the handoff-readiness validator.
 3. **`implement`** — work the task list, quality gate, runtime verification.
-4. **`pr`** — open the pull request with the verification record.
-5. **`review`** — review the branch, fix what the findings justify, iterate to
+4. **`review`** — review the branch, fix what the findings justify, iterate to
    `lgtm`.
 
 Then set `status: shipped` and the `shipped:` date in `change.md`, tick the
@@ -75,9 +74,10 @@ in `change.md`.
 
 ## Then
 
-Report the PR URL, the criteria verified and how, anything left
+Report the branch, the criteria verified and how, anything left
 `needs-human-verification`, and the list of decisions you recorded. Read that
 list back explicitly — it is the part the maintainer most needs to see, and the
 part they had no chance to weigh in on.
 
-Merging is theirs.
+Publishing the branch and merging it are theirs. Once it lands, **`/sw:archive`**
+(`$sw:archive` in Codex) closes the change out.

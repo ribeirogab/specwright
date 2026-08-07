@@ -48,7 +48,6 @@ nesting:
 .specwright/changes/YYYY-MM-DD-<slug>/
 ├── change.md
 ├── plan.md
-├── pr.md                  only when sw:pr could not reach GitHub
 └── ...                    change-specific evidence
 ```
 
