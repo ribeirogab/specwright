@@ -21,13 +21,13 @@ You are about to write a code review. LLM training pushes you toward headers, em
 The review enforces two things, in this order:
 
 1. The **universal coding standard** below — the reviewer's built-in rubric. It always applies.
-2. The project-specific `.specwright/conventions/` — any convention relevant to the changed files (e.g. skill validation requirements when a `SKILL.md` changed), plus every applicable canonical `AGENTS.md` or `AGENTS.override.md` for the areas the diff touches. A `CLAUDE*.md` path is only a host adapter symlink, never the canonical source.
+2. The **project's own standards**, read from every applicable canonical `AGENTS.md` or `AGENTS.override.md` for the areas the diff touches. A `CLAUDE*.md` path is only a host adapter symlink, never the canonical source. When such a file carries a `## Conventions` section, **open every document it links** and treat each as a project standard — a linked convention is as binding as one written inline, and skipping the links silently drops coverage.
 
 A finding that maps to a rubric rule or a convention cites it by name (e.g. "Meaningful Comments", "Modularity", "skill-validation convention").
 
 ## Universal coding standard
 
-The reviewer's built-in rubric. PROJECT-SPECIFIC standards come from `.specwright/conventions/`; the rules here are the floor that always holds. Findings may cite a rubric rule by name (e.g. "Meaningful Comments", "Modularity").
+The reviewer's built-in rubric. PROJECT-SPECIFIC standards come from the canonical AGENTS instructions and the conventions they link; the rules here are the floor that always holds. Findings may cite a rubric rule by name (e.g. "Meaningful Comments", "Modularity").
 
 Unix/ESR philosophy rules:
 
@@ -118,14 +118,14 @@ You may also list line-anchorable findings below it, same shape as Template C.
 A blocker MUST change before merge. Real blockers here:
 
 - a violation of a universal-standard rule (e.g. a comment that restates *what* the code does or embeds a task or tracker reference — Meaningful Comments; a secret committed or logged — Basic security; untrusted input reaching a sink unescaped — Basic security; speculative out-of-scope scope — Parsimony).
-- a violation of a project convention in `.specwright/conventions/` relevant to the changed files.
+- a violation of a project convention — written in the canonical AGENTS instructions or in a document their `## Conventions` section links — relevant to the changed files.
 - a `SKILL.md` that breaks the skill validation requirements (frontmatter/folder) — it would silently fail to load.
 - a committed artifact not in English; chat may be PT-BR, files may not.
 - a Claude adapter that is not the required relative symlink to its canonical
   AGENTS file.
 - new logic with zero tests in an area that has tests.
 - an acceptance criterion (`AC-N`) in the change satisfied by nothing in the diff — flag it by ID.
-- an `AC-N` ticked as verified with no runtime-verification evidence in the PR body, or a criterion silently skipped instead of marked `needs-human-verification`.
+- an `AC-N` ticked as verified with no runtime-verification evidence recorded in the change ticket, or a criterion silently skipped instead of marked `needs-human-verification`.
 - a silent test-integrity regression in a tested area (installed repos with a test suite): the touched area's test count drops, or an assertion is weakened/`skip`ped/deleted, with no justification recorded in the plan.
 - a live doc left contradicting the behavior this diff introduces — a stale flow/step/count/artifact reference in `README`, canonical AGENTS instructions, a command/skill doc, or a convention. Shipped changes and deliveries under `.specwright/changes/` and `.specwright/deliveries/` are historical record and exempt.
 
@@ -145,7 +145,7 @@ Scan your draft for: any emoji; the strings `## Review` / `### Blocker` / `### S
 ## Workflow
 
 1. Resolve the scope (default: branch vs main + uncommitted work).
-2. Read the reviewer's standard (the universal standard above, plus `.specwright/conventions/` and the touched-area canonical AGENTS instructions).
+2. Read the reviewer's standard (the universal standard above, plus the touched-area canonical AGENTS instructions and every document their `## Conventions` section links).
 3. Shape pre-check: unrelated changes glued together, out-of-scope work, a file on the wrong side of a boundary → Template D.
 4. Review in order: correctness/bugs → security → tests → rubric/conventions compliance → readability → DRY/SOLID. Classify each finding per the calibration list.
 5. Run the pre-reply gate, then send exactly one template.
@@ -157,16 +157,16 @@ about the same diff, not different reviewers — one pass answers all three and
 returns one verdict.
 
 - **1 — rubric and conventions.** Does the diff obey the universal coding
-  standard above, the applicable canonical AGENTS instructions, and
-  `.specwright/conventions/`? Correctness and bugs, security, tests,
+  standard above, the applicable canonical AGENTS instructions, and the
+  conventions those instructions link? Correctness and bugs, security, tests,
   readability, DRY/SOLID, per the calibration above.
 - **2 — change conformance.** Does the diff deliver **this change**? Walk the
-  `AC-N` in `change.md` against the diff, citing each by ID:
+  `AC-N` in `proposal.md` against the diff, citing each by ID:
   - **Completeness** — every `AC-N` is satisfied by a concrete change; one that
     is not is a **blocker**.
   - **Correctness** — the change meets the criterion and its edge cases rather
     than gesturing at it.
-  - **Verification** — the PR body's runtime-verification record covers each
+  - **Verification** — the ticket's runtime-verification record covers each
     `AC-N`: verified by observed behavior, or explicitly marked
     `needs-human-verification` with a reason. A ticked criterion with neither is
     a **blocker**.

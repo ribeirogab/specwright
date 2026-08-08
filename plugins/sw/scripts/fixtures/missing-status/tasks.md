@@ -6,9 +6,9 @@ branch: feat/sample-change
 worktree: null
 delivery: null
 ---
-# Sample Change — Plan
+# Sample Change — Tasks
 
-**Change:** see the sibling `change.md`.
+**Proposal:** see the sibling `proposal.md`.
 
 ## Architecture
 

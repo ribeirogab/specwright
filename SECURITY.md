@@ -72,9 +72,9 @@ the session's — so a model choice is never a permission decision.
 ### Delivery dispatch isolation
 
 Each change owner works in its own branch and worktree and may edit only its own
-change's artifacts, branch, and pull request. An owner that writes another
-change's folder, edits the delivery's *why* sections, approves its own review, or
-merges a pull request is a security defect.
+change's artifacts and branch. An owner that writes another change's folder,
+edits the delivery's *why* sections, approves its own review, or merges anything
+is a security defect.
 
 The orchestrator is a pure conductor: it never edits code, and it pastes a
 blocked report unmodified rather than composing one. In local mode it copies

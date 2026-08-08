@@ -1,10 +1,10 @@
 ---
-name: change
+name: propose
 user-invocable: false
-description: "Use when explicitly invoked to turn intent into an approved change ticket: harvest the conversation so far, explore whatever is still open, decide whether the work is one change or a delivery, and write change.md with binary acceptance criteria. Trigger on '/sw:change', '$sw:change', or a direct request to turn this into a change."
+description: "Use when explicitly invoked to turn intent into an approved change ticket: harvest the conversation so far, explore whatever is still open, decide whether the work is one change or a delivery, and write proposal.md with binary acceptance criteria. Trigger on '/sw:propose', '$sw:propose', or a direct request to turn this into a change."
 ---
 
-# change — intent into an approved ticket
+# propose — intent into an approved ticket
 
 Produce the ticket: what is being built, why, and the acceptance criteria that
 decide when it is done. The technical *how* is not written here — that is
@@ -18,10 +18,10 @@ Resolve `SW_PLUGIN_ROOT` before reading a template:
 
 1. use `PLUGIN_ROOT` when it contains `.codex-plugin/plugin.json`;
 2. otherwise use `CLAUDE_PLUGIN_ROOT` when it contains `.claude-plugin/plugin.json`;
-3. otherwise derive the root from this loaded `skills/change/SKILL.md` real path
-   (two parents above the `skills/change/` directory).
+3. otherwise derive the root from this loaded `skills/propose/SKILL.md` real path
+   (two parents above the `skills/propose/` directory).
 
-Require `templates/change.md` and `templates/delivery.md` beneath that root. Stop
+Require `templates/proposal.md` and `templates/delivery.md` beneath that root. Stop
 before writing if resolution fails. Never look for bundled resources inside the
 target repository.
 
@@ -69,14 +69,14 @@ overhead.
 
 ## Write the artifacts
 
-**One change** — copy `"$SW_PLUGIN_ROOT/templates/change.md"` to
-`.specwright/changes/YYYY-MM-DD-<slug>/change.md` and fill it. Changes live flat
+**One change** — copy `"$SW_PLUGIN_ROOT/templates/proposal.md"` to
+`.specwright/changes/YYYY-MM-DD-<slug>/proposal.md` and fill it. Changes live flat
 in that directory whether or not they belong to a delivery; membership is the
 `delivery:` key, never directory nesting.
 
 **A delivery** — copy `"$SW_PLUGIN_ROOT/templates/delivery.md"` to
 `.specwright/deliveries/YYYY-MM-DD-<slug>/delivery.md`, fill its *why* and its
-change table, then write one `change.md` per decomposed change with `delivery:`
+change table, then write one `proposal.md` per decomposed change with `delivery:`
 pointing at the delivery folder. Keep each change ticket shallow at this stage —
 purpose, boundaries, acceptance criteria. Each change's own `sw:plan` writes its
 technical detail later, with the benefit of what shipped before it.
@@ -96,7 +96,7 @@ implementation.
 - **Stated once** — a constraint lives in the one criterion or non-goal that owns
   it. Every restatement is a place for the two copies to disagree later.
 
-These IDs are the spine of everything downstream: `plan.md` tasks reference them,
+These IDs are the spine of everything downstream: the tasks in `tasks.md` reference them,
 runtime verification walks them one by one, and `sw:review` blocks on any
 criterion the diff does not deliver. A vague criterion here becomes an
 unfalsifiable claim at the end.

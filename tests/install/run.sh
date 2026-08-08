@@ -108,7 +108,7 @@ run_package() {
   local claude_manifest="$ROOT/plugins/sw/.claude-plugin/plugin.json"
   local codex_manifest="$ROOT/plugins/sw/.codex-plugin/plugin.json"
   local skill role
-  local -a skills=(change delivery implement init plan pr review ship)
+  local -a skills=(archive delivery implement init plan propose review ship)
   local -a roles=(change-owner reviewer)
 
   assert_json_file "Claude marketplace" "$claude_marketplace"
@@ -147,23 +147,24 @@ run_package() {
   done
 
   # The ladder is only navigable if each step names the next one.
-  assert_yes "init names /sw:change" "$(grep -Fq '/sw:change' "$ROOT/plugins/sw/skills/init/SKILL.md" && echo yes || echo no)"
-  assert_yes "change names /sw:plan" "$(grep -Fq '/sw:plan' "$ROOT/plugins/sw/skills/change/SKILL.md" && echo yes || echo no)"
+  assert_yes "init names /sw:propose" "$(grep -Fq '/sw:propose' "$ROOT/plugins/sw/skills/init/SKILL.md" && echo yes || echo no)"
+  assert_yes "propose names /sw:plan" "$(grep -Fq '/sw:plan' "$ROOT/plugins/sw/skills/propose/SKILL.md" && echo yes || echo no)"
   assert_yes "plan names /sw:implement" "$(grep -Fq '/sw:implement' "$ROOT/plugins/sw/skills/plan/SKILL.md" && echo yes || echo no)"
-  assert_yes "implement names /sw:pr" "$(grep -Fq '/sw:pr' "$ROOT/plugins/sw/skills/implement/SKILL.md" && echo yes || echo no)"
-  assert_yes "pr names /sw:review" "$(grep -Fq '/sw:review' "$ROOT/plugins/sw/skills/pr/SKILL.md" && echo yes || echo no)"
+  assert_yes "implement names /sw:review" "$(grep -Fq '/sw:review' "$ROOT/plugins/sw/skills/implement/SKILL.md" && echo yes || echo no)"
+  assert_yes "ship names /sw:archive" "$(grep -Fq '/sw:archive' "$ROOT/plugins/sw/skills/ship/SKILL.md" && echo yes || echo no)"
 
-  for skill in change plan delivery; do
+  for skill in propose plan delivery; do
     assert_yes "$skill resolves bundled resources from SW_PLUGIN_ROOT" \
       "$(grep -q 'SW_PLUGIN_ROOT' "$ROOT/plugins/sw/skills/$skill/SKILL.md" && echo yes || echo no)"
     assert_eq "$skill has no consumer-relative bundled path" no \
       "$(grep -Eq 'plugins/sw/(templates|scripts)/' "$ROOT/plugins/sw/skills/$skill/SKILL.md" && echo yes || echo no)"
   done
 
-  assert_eq "template inventory is canonical" "$(printf 'change.md\ndelivery.md\nplan.md\n')" \
+  assert_eq "template inventory is canonical" "$(printf 'delivery.md\ndesign.md\nproposal.md\ntasks.md\n')" \
     "$(find "$ROOT/plugins/sw/templates" -maxdepth 1 -type f -name '*.md' -exec basename {} \; | sort)"
   assert_absent "retired spec template" "$ROOT/plugins/sw/templates/spec.md"
-  assert_absent "retired tasks template" "$ROOT/plugins/sw/templates/tasks.md"
+  assert_absent "retired change template" "$ROOT/plugins/sw/templates/change.md"
+  assert_absent "retired plan template" "$ROOT/plugins/sw/templates/plan.md"
   assert_absent "retired board template" "$ROOT/plugins/sw/templates/board.md"
   assert_absent "retired updater" "$ROOT/plugins/sw/scripts/sw_update.py"
   assert_absent "retired spec validator" "$ROOT/plugins/sw/scripts/validate-spec.sh"
@@ -260,8 +261,8 @@ run_role_agents() {
 
 assert_vault() {
   local label="$1" project="$2" directory
-  assert_eq "$label vault conventions exists" yes "$([ -d "$project/.specwright/conventions" ] && echo yes || echo no)"
-  assert_file "$label vault conventions signpost" "$project/.specwright/conventions/README.md"
+  assert_eq "$label vault holds only the two record directories" "changes deliveries" \
+    "$(ls "$project/.specwright" | tr '\n' ' ' | sed 's/ $//')"
   for directory in changes deliveries; do
     assert_file "$label vault marker $directory" "$project/.specwright/$directory/.gitkeep"
   done
@@ -291,7 +292,7 @@ run_init_shared() {
   assert_eq "second shared run writes nothing" "$before" "$after"
   assert_eq "second shared run creates nothing" 0 \
     "$(grep -c '^  created' "$temporary_root/shared-second.out" || true)"
-  assert_eq "second shared run reports every path present" 6 \
+  assert_eq "second shared run reports every path present" 5 \
     "$(grep -c '^  present' "$temporary_root/shared-second.out" || true)"
 }
 

@@ -13,8 +13,7 @@ change folder named in your dispatch prompt, then report back.
 For this change, only you may edit:
 
 - its branch and worktree;
-- its `change.md` and `plan.md`;
-- its pull request.
+- its `proposal.md`, `design.md`, and `tasks.md`.
 
 You never touch another change's folder or branch, and never edit the delivery
 file — the orchestrator owns delivery state and records your result on it.
@@ -22,15 +21,15 @@ file — the orchestrator owns delivery state and records your result on it.
 ## What your dispatch gives you
 
 The change folder path, the delivery folder path, the branch, and the worktree
-path. Everything else you need is in those two artifacts. If the change folder
-holds no `change.md`, or its plan contradicts it, stop and report `blocked`
+path. Everything else you need is in the change folder. If the change folder
+holds no `proposal.md`, or its plan contradicts it, stop and report `blocked`
 rather than guessing at the intent.
 
 ## Autonomy
 
 You run unattended: no question reaches the maintainer mid-flight. Every choice
 the ticket left open is yours to make — take the reversible one, and record it
-under `## Decisions and discoveries` in `change.md` with what you rejected and
+under `## Decisions and discoveries` in `proposal.md` with what you rejected and
 why. That section is how the maintainer audits your run afterwards, so an
 unrecorded decision is a defect.
 
@@ -38,7 +37,7 @@ unrecorded decision is a defect.
 
 The same gate or acceptance criterion failing **three times identically** means
 stop. Do not thrash, do not try a fourth variation. Set `status: blocked` in
-`change.md`, write the paste-ready report below, and return.
+`proposal.md`, write the paste-ready report below, and return.
 
 ## Return contract
 
@@ -46,9 +45,9 @@ Report exactly one of these, and nothing else:
 
 ```text
 status: shipped
-pr: <url>
+branch: <name>
 decisions:
-- <one line per decision recorded in change.md>
+- <one line per decision recorded in proposal.md>
 ```
 
 ```text

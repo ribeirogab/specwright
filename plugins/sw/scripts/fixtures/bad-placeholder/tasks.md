@@ -6,9 +6,9 @@ branch: feat/sample-change
 worktree: null
 delivery: null
 ---
-# Sample Change — Plan
+# Sample Change — Tasks
 
-**Change:** see the sibling `change.md`.
+**Proposal:** see the sibling `proposal.md`.
 
 ## Architecture
 
@@ -27,7 +27,7 @@ Single phase.
 
 ## Constraints
 
-Python 3.11 and the standard library only.
+{{technical, organizational, or timing constraints}}
 
 ## Tasks
 
@@ -51,7 +51,7 @@ Python 3.11 and the standard library only.
 **Files:**
 - Modify: `src/sample/cli.py`
 - Modify: `tests/test_cli.py`
-**Validation:**
+**Validation:** `pytest tests/test_cli.py::test_empty_input -q`
 
 - [ ] Write the failing test asserting exit code 2 and `empty input` on stderr
 - [ ] Run `pytest tests/test_cli.py::test_empty_input -q` and confirm it fails

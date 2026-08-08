@@ -76,7 +76,7 @@ A second run must report every path as `present` and create nothing. Then confir
 
 - the canonical AGENTS file is a regular file containing one `## specwright` section;
 - the Claude adapter is a relative symlink to it (`readlink` returns the bare filename);
-- `.specwright/` holds `conventions/`, `changes/`, and `deliveries/`;
+- `.specwright/` holds `changes/` and `deliveries/`;
 - in local mode, `git check-ignore` reports the vault, both instruction paths, and
   the profiles as ignored, while unrelated project files are not.
 
@@ -114,6 +114,7 @@ inline instead of spawning, exactly as on any agent without subagents.
 Report the mode and the paths created. Do not stage or commit them unless the
 maintainer separately authorizes Git actions.
 
-Say what comes next: **`/sw:change`** (`$sw:change` in Codex) turns a conversation
-into a change. The `## specwright` section now tells this repository's agents to
-offer that command rather than starting the workflow on their own.
+Say what comes next: **`/sw:propose`** (`$sw:propose` in Codex) turns a
+conversation into a change. The `## specwright` section now tells this
+repository's agents to offer that command rather than starting the workflow on
+their own.

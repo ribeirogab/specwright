@@ -1,6 +1,6 @@
 {
   "name": "sw",
-  "version": "2026.7.31",
+  "version": "2026.8.8",
   "description": "The specwright change ladder for Claude Code and Codex.",
   "author": {
     "name": "Gabriel Ribeiro"
@@ -8,8 +8,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "specwright",
-    "shortDescription": "Climb a change from ticket to reviewed PR",
-    "longDescription": "One command per step: write the ticket, plan it, implement it, open the PR, review it. Or run the whole ladder autonomously with ship, or decompose a large outcome with delivery.",
+    "shortDescription": "Climb a change from ticket to reviewed branch",
+    "longDescription": "One command per step: write the ticket, plan it, implement it, review it. Or run the whole ladder autonomously with ship, decompose a large outcome with delivery, and close out a merged change with archive.",
     "developerName": "Gabriel Ribeiro",
     "category": "Productivity",
     "capabilities": [

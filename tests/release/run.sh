@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-SKILLS=(change delivery implement init plan pr review ship)
+SKILLS=(archive delivery implement init plan propose review ship)
 
 fail() {
   printf 'FAIL: %s\n' "$1" >&2
