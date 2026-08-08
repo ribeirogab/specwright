@@ -133,7 +133,13 @@ Tick each `[x]` when verified by observed behavior.
   `/sw:implement` commit straight to `main` with no warning. The gate moves into
   `implement`, where it fires before the first commit rather than after every
   commit is already written.
-- **[discovery]** `validate-change.sh` is only ever invoked on one folder at a
-  time — by `sw:plan` or by hand — and nothing sweeps the vault. Historical
-  folders in the old schema therefore never reach the validator, which is what
-  makes a no-backfill rename safe.
+- **[discovery]** CI **does** sweep the vault, contrary to what the skills and
+  references suggest: `.github/workflows/release-smoke.yml` runs the validator
+  over every change folder, and its guard keyed on `plan.md` — so the new
+  validator met a July-schema folder and failed. The guard now keys on
+  `proposal.md`, the one file only the current schema has.
+- **[discovery]** The vault carries **three** schemas, not two. Beyond the
+  July-era `change.md` + `plan.md` pair, most folders predate it entirely and
+  hold `change.md` + `spec.md` + `tasks.md`. A guard keyed on `tasks.md` would
+  therefore have swept about twenty ancient folders into the new validator —
+  which is why the guard keys on `proposal.md` instead.

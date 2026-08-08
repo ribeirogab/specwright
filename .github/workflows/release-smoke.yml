@@ -39,9 +39,12 @@ jobs:
           done
 
       - name: Every change artifact is handoff-ready
+        # proposal.md is what marks a folder as current-schema. Older changes are
+        # historical record and are never migrated, so they are skipped rather
+        # than failed.
         run: |
           for change in .specwright/changes/*/; do
-            [ -f "$change/plan.md" ] || continue
+            [ -f "$change/proposal.md" ] || continue
             plugins/sw/scripts/validate-change.sh "$change"
           done
 
